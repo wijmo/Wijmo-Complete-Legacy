@@ -1,0 +1,140 @@
+﻿WIJMO COMMERCIAL LICENSE AGREEMENT
+
+THIS COMMERCIAL LICENSE AGREEMENT (THIS CLA) CONTAINS THE TERMS AND
+CONDITIONS FOR YOUR USE OF WIJMO COMPLETE, A SUITE OF JQUERY UI
+WIDGETS (THE Software).  THIS CLA IS A BINDING AGREEMENT BETWEEN YOU
+AND COMPONENTONE, LLC ("C1"); HOWEVER, IF YOU ARE ACTING AS AN AGENT
+FOR ANOTHER, SUCH AS ON BEHALF OF YOUR EMPLOYER, THEN "YOU" MEANS THE
+OTHER PERSON.  BY INSTALLING, COPYING, USING OR OTHERWISE ACCESSING
+THE SOFTWARE, YOU AGREE TO BE BOUND BY THESE TERMS AND CONDITIONS.  
+
+The term "Software" includes all source and object code, in whole
+and/or part; all printed materials; online or electronic
+documentation; data, data engines, images; updates and upgrades; and
+anything provided for use with or in conjunction with the Software. 
+
+1.  Grant of License.  Subject to the payment of the fee required and
+the term and conditions herein, you are hereby granted a limited,
+revocable, non-exclusive right to use the Software to design, develop,
+test and distribute software products that are developed through or by
+the use of the Software (Applications). 
+
+	a. You are hereby granted one (1) license for you as one (1)
+designated user to use the Software for the purpose of developing
+Applications ("Developer").  You must purchase another separate
+license to the Software for each and any additional Developer.  There
+is no limit or restriction on the number of installations of Software,
+which may be on different machines; provided, however, that the
+Software may not be used by anyone other than you as a single
+Developer.  For example, if a company has five developers using the
+Software, the company needs to purchase five licenses, irrespective of
+how the Software is accessed or how many installations are accessed.
+The Software is not transferrable by you, except with the prior
+written consent of C1.
+
+	b. You are granted the right to use and to modify the source
+code of the Software for use in Ap-plications.  You own any original
+work authored by you; C1 continues to retain all copyright and other
+intellectual property rights in the Software.  You are not permitted
+to move, remove, edit, or obscure any copyright, trademark,
+attribution, warning or disclaimer notices in the Software.
+
+	c. You may use the Software only to create Applications that
+are significantly different than and do not compete with the Software.
+You are granted the license to distribute the Software as part of your
+Applications on a royalty-free basis.  Users of your Applications are
+not permitted to use the Software or your modifications of the
+Software for development purposes unless they also purchase a separate
+com-mercial license from C1 for each of the users.  
+
+d. You agree to indemnify, hold harmless, and defend C1, its suppliers
+and resellers, from and against any claims or lawsuits, including
+attorney's fees that may arise from the use or distribution of your
+Applications.
+
+ 2.  Copyright and Other Rights and Limitations.  
+
+The Software is licensed, not sold.  The Software is protected by
+copyright laws and international copyright treaties, as well as by
+other intellectual property laws and treaties.  You agree that C1 owns
+all right, title, and interest in and to the Software, including any
+copyrights, and all other intellectual property rights in and to the
+Software.  C1s copyright includes, but is not limited to,
+documentation and C1s significant online developer assistance
+resources, source code, and any images, photographs, animations,
+video, audio, music, and text incorporated into the Software.  You may
+not rent, lease or sublicense the Software.  Without prejudice to any
+other rights it may have, this CLA shall automatically terminate if
+you fail to comply with the terms and conditions of this CLA, with the
+exception of any provisions which, by their nature, are intended to
+survive termination.  Upon termination, you agree to destroy all
+copies of the Software.  You agree that C1 may identify you as a
+customer in C1 marketing materials.  C1 reserves all rights not
+otherwise expressly and specifically granted herein.  
+
+The Software is of U.S. origin.  The license and distribution of the
+Software is subject to the export control laws and regulations of the
+United States of America which restrict exports and re-exports of
+software, technical data, and direct products of technical data,
+including services and applications created with or derived from use
+of the Software.  You agree that you will comply all with such laws.  
+
+3.  Warranties and Remedies.
+
+	C1 EXPRESSLY DISCLAIMS ANY WARRANTY.  THE SOFTWARE IS PROVIDED
+AS IS WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK
+ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE IS AND REMAINS WITH
+YOU. THIS LIMITED WARRANTY GIVES YOU SPECIFIC LEGAL RIGHTS. YOU MAY
+HAVE OTHERS WHICH VARY FROM STATE TO STATE.
+
+	C1'S ENTIRE LIABILITY AND YOUR EXCLUSIVE REMEDY UNDER THIS CLA
+SHALL BE, AT C1'S OPTION, EITHER: (a) RETURN OF THE PRICE PAID FOR THE
+SOFTWARE, OR (b) REPLACEMENT, UPDATE OR UPGRADE OF THE SOFTWARE.
+EXCEPT AS STATED IN THE PRECEDING SENTENCE, IN NO EVENT SHALL C1 BE
+LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION,
+GENERAL, COMPENSATORY, CONSEQENTIAL AND/OR INCIDENTAL DAMAGES, DAMAGES
+FOR LOSS OF BUSINESS PROFIT, BUSINESS INTERRUPTION, LOSS OF
+INFORMATION, OR ANY OTHER LOSS) ARISING OUT OF THE USE OR INABILITY TO
+USE THE SOFTWARE, EVEN IF C1 HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.  BECAUSE SOME STATES/JURISDICTIONS DO NOT ALLOW THE
+EXCLUSION OR LIMITATION OF LIABILITY FOR CONSEQUENTIAL OR INCIDENTAL
+DAMAGES IN CERTAIN CASES, THE ABOVE LIMITATION MAY NOT APPLY TO YOU.
+
+4. MISCELLANEOUS.
+
+	This CLA (including any additional terms, addendum or
+amendment to this CLA included with the Software) is the final,
+complete and exclusive statement of the entire agreement between you
+and C1 relating to the Software and supersedes any prior and
+contemporaneous communications, whether oral or written.  This CLA may
+not be modified unless in writing or by a manner in which the parties
+are bound to this CLA (such as by "clicking-through" acceptance, etc.)
+You agree to indemnify, hold harmless, and defend C1 and its suppliers
+and resellers from and against any and all claims or lawsuits,
+including attorney's fees, that arise or result from this CLA.
+
+	If for any reason a court of competent jurisdiction finds any
+provision of this Agreement, or any portion thereof, to be
+unenforceable, that provision of the Agreement will be enforced to the
+maximum extent permissible so as to effect the intent of the parties,
+and the remainder of this Agreement will continue in full force and
+effect.  Failure by either party to enforce any provision of this
+agreement will not be deemed a waiver of future enforcement of that or
+any other provision.  Except as otherwise required or superseded by
+law, this Agreement is governed by the laws of the State of
+Pennsylvania, without regard to its conflict of laws principles. The
+parties consent to the personal jurisdiction and venue of the
+Commonwealth of Pennsylvania, in the County of Allegheny, and agree
+that any legal proceedings arising out of this Agreement shall be
+conducted solely in such Commonwealth.  If the Software was acquired
+out-side the United States, then local law may apply.
+
+	Use, duplication, or disclosure by the U.S. Government is
+subject to restrictions as set forth above and in subparagraph (c) (1)
+(ii) of the Rights in Technical Data and Computer Software clause at
+DFARS 252.2277013.  Rights for non-DOD U.S. Government departments and
+agencies are as set forth in FAR 52.22719(c) (1,2).  ComponentOne,
+L.L.C., 201 South Highland Avenue, 3rd Floor, Pittsburgh, PA
+15206-9926, USA.
