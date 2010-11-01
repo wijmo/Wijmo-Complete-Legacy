@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Grid - Grouping</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
+    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.ui.wijgrid.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../external/jquery-1.4.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery.wijmo-open.0.8.0.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.ui.wijdatasource.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.ui.wijgrid.js" type="text/javascript"></script>
+
+    <script id="scriptInit" type="text/javascript">
+        $(document).ready(function () {
+            $("#demo").wrap("<div />").parent().wijgrid({
+                allowSorting: true,
+                columns: [
+                    {
+                        sortDirection: "ascending",
+                        aggregate: "count",
+                        groupInfo: {
+                            position: "header",
+                            outlineMode: "startCollapsed",
+                            headerText: "{1}:{0}, Count={2}"
+                        }
+                    },
+                    {},
+                    { dataType: "currency", aggregate: "sum" },
+                    { dataType: "number", dataFormatString: "n0", aggregate: "sum" }
+                ]
+            });
+        });
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Grouping</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <table id="demo">
+                <thead>
+                    <tr>
+                        <th>OrderID</th><th>ProductID</th><th>UnitPrice</th><th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>10248</td><td>11</td><td>14</td><td>12</td>
+                    </tr><tr>
+                        <td>10248</td><td>42</td><td>9.8</td><td>10</td>
+                    </tr><tr>
+                        <td>10248</td><td>72</td><td>34.8</td><td>5</td>
+                    </tr><tr>
+                        <td>10249</td><td>14</td><td>18.6</td><td>9</td>
+                    </tr><tr>
+                        <td>10249</td><td>51</td><td>42.4</td><td>40</td>
+                    </tr><tr>
+                        <td>10250</td><td>41</td><td>7.7</td><td>10</td>
+                    </tr><tr>
+                        <td>10250</td><td>51</td><td>42.4</td><td>35</td>
+                    </tr><tr>
+                        <td>10250</td><td>65</td><td>16.8</td><td>15</td>
+                    </tr><tr>
+                        <td>10251</td><td>22</td><td>16.8</td><td>6</td>
+                    </tr><tr>
+                        <td>10251</td><td>57</td><td>15.6</td><td>15</td>
+                    </tr><tr>
+                        <td>10251</td><td>65</td><td>16.8</td><td>20</td>
+                    </tr><tr>
+                        <td>10252</td><td>20</td><td>64.8</td><td>40</td>
+                    </tr><tr>
+                        <td>10252</td><td>33</td><td>2</td><td>25</td>
+                    </tr><tr>
+                        <td>10252</td><td>60</td><td>27.2</td><td>40</td>
+                    </tr><tr>
+                        <td>10253</td><td>31</td><td>10</td><td>20</td>
+                    </tr><tr>
+                        <td>10253</td><td>39</td><td>14.4</td><td>42</td>
+                    </tr><tr>
+                        <td>10253</td><td>49</td><td>16</td><td>40</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- End demo markup -->
+            <div class="demo-options">
+            <!-- Begin options markup -->
+                
+            <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

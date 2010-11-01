@@ -1,0 +1,106 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <title>BarChart - Overview</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
+    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.4.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael.js" type="text/javascript"></script>
+    <script src="../../external/raphael-popup.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.ui.wijchartcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.ui.wijbarchart.js" type="text/javascript"></script>
+    <script id="scriptInit" type="text/javascript">
+        $(document).ready(function () {
+            $("#wijbarchart").wijbarchart({
+                axis: {
+                    y: {
+                        text: "Percentage (%)"
+                    },
+                    x: {
+                        text: "Graphics Card"
+                    }
+                },
+                legend: {
+                    text: "Month"
+                },
+                header: {
+                    text: "Steam Top 10 Video Cards - Hardware Survey"
+                },
+                seriesList: [{
+                    label: "May",
+                    legendEntry: true,
+                    data: { x: ['Mobile Intel 4 Series Express', 'NVIDIA GeForce 8600', 'NVIDIA GeForce GTS 150', 'NVIDIA GeForce 9600', 'NVIDIA GeForce GTX 260', 'NVIDIA GeForce 9800', 'NVIDIA GeForce 8800', 'ATI Radeon HD 4800', 'ATI Radeon HD 5700', 'ATI Radeon HD 5800'], y: [1.91, 1.90, 1.61, 2.23, 2.85, 3.64, 4.46, 5.89, 4.22, 4.66] }
+                }, {
+                    label: "Jun",
+                    legendEntry: true,
+                    data: { x: ['Mobile Intel 4 Series Express', 'NVIDIA GeForce 8600', 'NVIDIA GeForce GTS 150', 'NVIDIA GeForce 9600', 'NVIDIA GeForce GTX 260', 'NVIDIA GeForce 9800', 'NVIDIA GeForce 8800', 'ATI Radeon HD 4800', 'ATI Radeon HD 5700', 'ATI Radeon HD 5800'], y: [1.82, 1.88, 1.77, 2.33, 2.97, 3.70, 4.42, 5.93, 4.92, 5.20] }
+                }, {
+                    label: "Jul",
+                    legendEntry: true,
+                    data: { x: ['Mobile Intel 4 Series Express', 'NVIDIA GeForce 8600', 'NVIDIA GeForce GTS 150', 'NVIDIA GeForce 9600', 'NVIDIA GeForce GTX 260', 'NVIDIA GeForce 9800', 'NVIDIA GeForce 8800', 'ATI Radeon HD 4800', 'ATI Radeon HD 5700', 'ATI Radeon HD 5800'], y: [1.94, 1.80, 1.81, 2.23, 2.83, 3.57, 4.23, 5.90, 5.46, 5.62] }
+                }, {
+                    label: "Aug",
+                    legendEntry: true,
+                    data: { x: ['Mobile Intel 4 Series Express', 'NVIDIA GeForce 8600', 'NVIDIA GeForce GTS 150', 'NVIDIA GeForce 9600', 'NVIDIA GeForce GTX 260', 'NVIDIA GeForce 9800', 'NVIDIA GeForce 8800', 'ATI Radeon HD 4800', 'ATI Radeon HD 5700', 'ATI Radeon HD 5800'], y: [1.89, 1.84, 1.96, 2.29, 2.93, 3.79, 4.11, 5.79, 5.84, 6.02] }
+                }, {
+                    label: "Sep",
+                    legendEntry: true,
+                    data: { x: ['Mobile Intel 4 Series Express', 'NVIDIA GeForce 8600', 'NVIDIA GeForce GTS 150', 'NVIDIA GeForce 9600', 'NVIDIA GeForce GTX 260', 'NVIDIA GeForce 9800', 'NVIDIA GeForce 8800', 'ATI Radeon HD 4800', 'ATI Radeon HD 5700', 'ATI Radeon HD 5800'], y: [1.72, 1.80, 2.17, 2.40, 3.30, 3.97, 4.40, 6.59, 6.82, 7.04] }
+                }],
+                seriesStyles: [{
+                    opacity: 0.8, fill: "0-#333333-#2d2d2d", stroke: "#2d2d2d", "stroke-width": "1.5"
+                }, {
+                    opacity: 0.8, fill: "0-#6aaba7-#5f9996", stroke: "#5f9996", "stroke-width": "1.5"
+                }, {
+                    opacity: 0.8, fill: "0-#c3ff00-#afe500", stroke: "#afe500", "stroke-width": "1.5"
+                }, {
+                    opacity: 0.8, fill: "0-#c7de7a-#b2c76d", stroke: "#b2c76d", "stroke-width": "1.5"
+                }, {
+                    opacity: 0.8, fill: "0-#a6a6a6-#959595", stroke: "#959595", "stroke-width": "1.5"
+                }],
+                seriesHoverStyles: [{
+                    opacity: 1, "stroke-width": "1.5"
+                }, {
+                    opacity: 1, "stroke-width": "1.5"
+                }, {
+                    opacity: 1, "stroke-width": "1.5"
+                }, {
+                    opacity: 1, "stroke-width": "1.5"
+                }, {
+                    opacity: 1, "stroke-width": "1.5"
+                }]
+            });
+        });
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Overview</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="wijbarchart" class="ui-widget ui-widget-content ui-corner-all" style="width: 800px;
+                height: 600px">
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
