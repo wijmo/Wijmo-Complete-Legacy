@@ -1,3 +1,10 @@
+.ui-wijgrid
+{
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border-right: none;
+}
 .ui-wijgrid-loading
 {
     background: transparent url('images/ui-anim_basic_16x16.gif') left top no-repeat;
@@ -22,11 +29,44 @@
     border-top: none;
     border-right: none;
     border-bottom: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
 }
-        
+
+.ui-wijgrid .ui-wijgrid-table .ui-wijgrid-filter-input
+{
+    width: auto;
+    height: 16px;
+    border: none;
+    padding: 5px 3px;
+    color: inherit;
+    outline: none;
+    position: relative;
+    z-index: 5;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    background: none;
+}
+
 .ui-wijgrid .ui-wijgrid-filter
 {
-    position : relative;
+    position: relative;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+}
+
+.ui-wijgrid .ui-wijgrid-filter .ui-wijinput
+{
+    border: none;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
 }
 
 .ui-wijgrid-filtericon
@@ -128,7 +168,8 @@
 {
     border-collapse: collapse;
     outline: none;
-    width:100%;
+    width: 100%;
+    table-layout: fixed;
 }
 
 .ui-wijgrid-rowheader
@@ -138,29 +179,35 @@
 
 .ui-wijgrid .ui-wijgrid-header, .ui-wijgrid .ui-wijgrid-footer
 {
-    border: none !important;
+    border-left: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
     padding: 0.2em;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+}
+
+.ui-wijgrid tr.ui-wijgrid-row
+{
+    border-bottom: none;
 }
 
 .ui-wijgrid tr.ui-wijgrid-row td
 {
-    border:0;
+    border: none;
     border-right-color: inherit;
     border-right-style: solid;
     border-right-width: 1px;
-    border-bottom-color: inherit;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
+    border-top-color: inherit;
+    border-top-style: solid;
+    border-top-width: 1px;
     text-align: left;
     padding: 0 2px;
     overflow: hidden;
     white-space: nowrap;
 }
 
-.ui-wijgrid tr.ui-wijgrid-row td:last-child
-{
-    border-right-color:transparent;
-}
 
 .ui-wijgrid .wijgridtd
 {
@@ -170,35 +217,37 @@
 
 .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
 {
-    zoom:1;
-	overflow:hidden;
+    zoom: 1;
+    overflow: hidden;
     border-left: 0;
-    border-top:0;
+    border-top: 0;
 }
-/*add padding to header cell to avoid disalignment in IE6,7*/ 
-*:first-child+html .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield{
+/*add padding to header cell to avoid disalignment in IE6,7*/
+*:first-child + html .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
+{
     padding: 0 2px;
 }
 
-* html  .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield{
+* html .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
+{
     padding: 0 2px;
 }
 .ui-wijgrid .ui-wijgrid-headerrow .ui-wijgrid-headertext
 {
     padding: 0.5em 1em;
     display: block;
-    text-align:center;
+    text-align: center;
     position: relative;
 }
 .ui-wijgrid .ui-wijgrid-headerrow .ui-icon
 {
-    width:16px;
-    height:16px;
+    width: 16px;
+    height: 16px;
     position: absolute;
     right: 0;
     top: 50%;
     margin-top: -8px;
-    z-index:99;
+    z-index: 99;
 }
 
 .ui-wijgrid .ui-wijgrid-filterrow
@@ -291,4 +340,40 @@
 .ui-wijgrid-scroller
 {
     border: 0px;
+}
+
+
+.ui-wijgrid .ui-wijsuperpanel-vbar-buttontop
+{
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    top: -1px;
+}
+
+.ui-wijgrid .ui-wijsuperpanel-vbar-buttonbottom
+{
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    bottom: -1px;
+}
+
+.ui-wijgrid .wijgridinput
+{
+    width: 100%;
+    margin: 0;
+    border: none;
+    padding: 0;
+    text-align: inherit;
+}
+
+.ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-currency, .ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-number, .ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-date
+{
+    text-align: right;
+}
+
+.ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-boolean
+{
+    text-align: center;
 }

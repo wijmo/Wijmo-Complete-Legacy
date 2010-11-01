@@ -1,16 +1,16 @@
 /*
- *
- * Wijmo Library 0.7.0
- * http://wijmo.com/
- *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
- * 
- * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
- * licensing@wijmo.com
- * http://wijmo.com/license
- *
- *
- ** Wijmo Tree widget.
+*
+* Wijmo Library 0.8.0
+* http://wijmo.com/
+*
+* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* 
+* Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
+* licensing@wijmo.com
+* http://wijmo.com/license
+*
+*
+** Wijmo Tree widget.
 *
 * Depends:
 *  jquery.ui.core.js
@@ -184,22 +184,23 @@
 
 		_createTree: function () {//create by dom
 			var self = this, options = self.options, nodes = [];
-			this._owner = null;
 
-			this.element.addClass("ui-wijtree ui-widget ui-widget-content  ui-helper-clearfix ui-corner-all");
-			this.$nodes = this.element.find("ul:first");
-			this.$nodes.addClass("ui-wijtree-list ui-helper-reset");
-
-			this.$nodes.children("li").each(function () {
-				var $li = $(this);
-				self._createNodeWidget($li, options); //the arg must be jquerify
-				var nodeWidget = self._getNodeWidget($(this));
-				nodes.push(nodeWidget);
-			});
-			this._hasChildren = nodes.length > 0;
-			this._setField("nodes", nodes);
-			this.nodes = nodes;
-			this.element.append($("<div>").css("clear", "both"));
+			if (self.element.is("ul")) {
+				self.element.wrap("<div></div>");
+				self.widgetDom = self.element.parent();
+				self.widgetDom.addClass("ui-wijtree ui-widget ui-widget-content ui-helper-clearfix ui-corner-all");
+				self.element.addClass("ui-wijtree-list ui-helper-reset");
+				self.element.children("li").each(function () {
+					var $li = $(this);
+					self._createNodeWidget($li, options);
+					var nodeWidget = self._getNodeWidget($(this));
+					nodes.push(nodeWidget);
+				});
+				self._hasChildren = nodes.length > 0;
+				self._setField("nodes", nodes);
+				self.nodes = nodes;
+				self.widgetDom.append($("<div>").css("clear", "both"));
+			}
 		},
 
 		_createNodeWidget: function ($li, options) {
@@ -222,7 +223,7 @@
 
 		_attachDroppable: function () {
 			var self = this;
-			self.element.droppable({
+			self.widgetDom.droppable({
 				drop: function (event, ui) {
 					var d = ui.draggable;
 					var dragNode = self._getNodeWidget(d);
@@ -282,11 +283,6 @@
             .bind("keydown." + this.widgetName, $.proxy(this._onKeyDown, this));
 		},
 
-		_collectionChanged: function () {//this function of tree is different from node
-			this._hasChildren = this._getChildren();
-			this._refreshNodesClass();
-		},
-
 		_onClick: function (event) {
 			this._callEvent(event, '_onClick');
 		},
@@ -338,14 +334,13 @@
 			/// Destroy the widget
 			/// </summary>
 			var self = this;
-			self.element.removeData("nodes")
-			.removeClass("ui-wijtree ui-widget ui-widget-content ui-helper-clearfix ui-corner-all");
+			self.widgetDom.removeClass("ui-wijtree ui-widget ui-widget-content ui-helper-clearfix ui-corner-all");
 
-			var $nodes = self.element.find("ul:first");
-			if (self.element.data("droppable")) {
-				self.element.droppable("destroy");
+			var $nodes = self.element;
+			if (self.widgetDom.data("droppable")) {
+				self.widgetDom.droppable("destroy");
 			}
-			$nodes.removeClass("ui-wijtree-list ui-helper-reset");
+			$nodes.removeData("nodes").removeClass("ui-wijtree-list ui-helper-reset");
 			$nodes.children("li").each(function () {
 				var nodeWidget = self._getNodeWidget($(this));
 				if (nodeWidget) {
@@ -399,20 +394,15 @@
 			var originalLength = nodes.length;
 			nodes.splice(position, 0, nodeWidget);
 
-			if (!this.$nodes) {
-				this.$nodes = $("<ul>");
-				this.element.append(this.$nodes);
-			}
 			if (originalLength > 0 && originalLength != position) {
 				if (nodeWidget.element.get(0) != nodes[position + 1].element.get(0)) {
 					nodeWidget.element.insertBefore(nodes[position + 1].element);
 				}
 			}
 			else {
-				this.$nodes.append(nodeWidget.element);
+				this.element.append(nodeWidget.element);
 			}
-			this._collectionChanged("add");
-
+			this._refreshNodesClass();
 		},
 
 		remove: function (node) {
@@ -438,7 +428,7 @@
 			var nodeWidget = nodes[idx];
 			nodeWidget.element.detach();
 			nodes.splice(idx, 1);
-			this._collectionChanged("remove");
+			this._refreshNodesClass();
 		},
 
 
@@ -478,18 +468,18 @@
 
 		_setAllowDrop: function (value) {
 			if (value) {
-				if (!this.element.data("droppable")) {
+				if (!this.widgetDom.data("droppable")) {
 					this._attachDroppable();
 				}
 			}
-			else if (this.element.droppable) {
-				this.element.droppable("destroy");
+			else if (this.widgetDom.droppable) {
+				this.widgetDom.droppable("destroy");
 			}
 		},
 
 		_setCheckBoxes: function (value) {
 			var self = this;
-			self.$nodes.children("li").each(function () {
+			self.element.children("li").each(function () {
 				var nodeWidget = self._getNodeWidget($(this));
 				if (nodeWidget != null) {
 					nodeWidget._setCheckBoxes(value);
@@ -499,7 +489,7 @@
 
 		_setHitArea: function (value) {
 			var self = this;
-			self.$nodes.children("li").each(function () {
+			self.element.children("li").each(function () {
 				var nodeWidget = self._getNodeWidget($(this));
 				if (nodeWidget != null) {
 					nodeWidget._setHitArea(value);
@@ -523,10 +513,6 @@
 
 		_getNodeByDom: function (el) {//Arg :Dom Element
 			return $(el).closest(":ui-wijtreenode");
-		},
-
-		_getChildren: function () {
-			return this.element.children("ul:first").length > 0 ? this.element.children("ul:first") : false;
 		},
 
 		_refreshNodesClass: function () {
@@ -620,7 +606,7 @@
 		/*widget Method*/
 		_setOption: function (key, value) {
 			var self = this;
-			
+
 			switch (key) {
 				case "accessKey":
 					if (this.$navigateUrl != null) {
@@ -633,7 +619,7 @@
 				case "collapsedIconClass":
 				case "expandedIconClass":
 				case "itemIconClass":
-					this.options[key]=value;
+					this.options[key] = value;
 					self._initNodeImg();
 					break;
 				case "expanded":
@@ -656,7 +642,7 @@
 		},
 
 		_initState: function () {// declare the properity of node
-			this._tree = null, this._owner = null, this._dropTarget = null; ;
+			this._tree = null, this._dropTarget = null;
 			this._checkState = "unChecked"; //Checked,UnChecked,Indeterminate
 			this._value = this._text = this._navigateUrl = "";
 			this._insertPosition = "unKnown"; //end,after,before
@@ -918,19 +904,19 @@
 			this._animation(false);
 		},
 
-		_animation:function(show){
+		_animation: function (show) {
 			var self = this, el = self.$nodes;
 			if (el) {
-				var animation=show?"expandAnimation":"collapseAnimation";
-				var event=show?"nodeExpanded":"nodeCollapsed";
+				var animation = show ? "expandAnimation" : "collapseAnimation";
+				var event = show ? "nodeExpanded" : "nodeCollapsed";
 				if ($.effects && !!self._tree.options[animation].duration) {//v 1.8.2
-					el[show?"show":"hide"](self._tree.options[animation].effect, {},
+					el[show ? "show" : "hide"](self._tree.options[animation].effect, {},
                             self._tree.options[animation].duration,
 							function () {
 								self._tree._trigger(event, null, self);
 							});
 				} else {
-					el[show?"show":"hide"](self._tree.options[animation].duration,
+					el[show ? "show" : "hide"](self._tree.options[animation].duration,
 							function () {
 								self._tree._trigger(event, null, self);
 							});
@@ -996,7 +982,7 @@
 				start: function (event) {
 					self._tree._isDragging = true;
 					self._tree._trigger("nodeDragStarted", event, self);
-					self._tree.element.prepend(self._insertionTemplate);
+					self._tree.widgetDom.prepend(self._insertionTemplate);
 					$item.hide();
 				},
 				distance: $.browser.msie ? 1 : 10,  //this curse a draggable error in IE 7.0/6.0,but the jqueryui demo is success
