@@ -153,24 +153,25 @@
 			var self = this, isResetHitArea = false;
 
 			switch (key) {
-				case "allowDrag":
-					self._setAllowDrag(value);
-					break;
-				case "allowDrop":
-					self._setAllowDrop(value);
-					break;
-				case "showCheckBoxes":
-					self._setCheckBoxes(value);
-					break;
-				case "showExpandCollapse":
-					if (self.options.showExpandCollapse != value) {
-						isResetHitArea = true;
-					}
-					break;
-				default: break;
+			case "allowDrag":
+				self._setAllowDrag(value);
+				break;
+			case "allowDrop":
+				self._setAllowDrop(value);
+				break;
+			case "showCheckBoxes":
+				self._setCheckBoxes(value);
+				break;
+			case "showExpandCollapse":
+				if (self.options.showExpandCollapse !== value) {
+					isResetHitArea = true;
+				}
+				break;
+			default: 
+				break;
 			}
 			$.Widget.prototype._setOption.apply(self, arguments); //use Widget disable
-			if (isResetHitArea == true) {
+			if (isResetHitArea === true) {
 				self._setHitArea(value);
 			}
 		},
@@ -231,7 +232,7 @@
 						var dropNode = dragNode._dropTarget;
 						if (dropNode) {
 							var position = dragNode._insertPosition;
-							if (dropNode && position != "unKnown") {//remove node at reference tree.
+							if (dropNode && position !== "unKnown") {//remove node at reference tree.
 								var oldOwner = d.data("owner");
 								if (oldOwner) {
 									oldOwner.remove(d);
@@ -245,11 +246,11 @@
 									d.show();
 									dropNode.add(d);
 								}
-								else if (position == "before" || position == "after") {
+								else if (position === "before" || position === "after") {
 									var parent = dropNode._getField("owner");
 									var brothers = parent._getField("nodes");
 									var idx = $.inArray(dropNode, brothers);
-									if (idx != -1) {
+									if (idx !== -1) {
 										d.show();
 										if (position === "before") {
 											parent.add(d, idx);
@@ -307,7 +308,7 @@
 			var el = event.target;
 			if (el) {
 				var node = this._getNodeWidgetByDom(el);
-				if (node == null) {
+				if (node === null) {
 					return;
 				}
 				node[type](event);
@@ -363,10 +364,10 @@
 			/// <param name="position" type="Int">
 			/// the position to insert at
 			/// </param>
-			var nodeWidget = null, o = this.options;
+			var nodeWidget = null, o = this.options, $node;
 			if (typeof node === "string") {
 				var itemDom = "<li><a>{0}</a></li>";
-				var $node = $(itemDom.replace(/\{0\}/, node));
+				$node = $(itemDom.replace(/\{0\}/, node));
 				this._createNodeWidget($node, o);
 				nodeWidget = $node.data($node.data("widgetName"));
 			}
@@ -382,7 +383,7 @@
 				nodeWidget = $node.data($node.data("widgetName"));
 			}
 
-			if (nodeWidget == null) {
+			if (nodeWidget === null) {
 				return;
 			}
 			var nodes = this._getField("nodes");
@@ -394,7 +395,7 @@
 			var originalLength = nodes.length;
 			nodes.splice(position, 0, nodeWidget);
 
-			if (originalLength > 0 && originalLength != position) {
+			if (originalLength > 0 && originalLength !== position) {
 				if (nodeWidget.element.get(0) != nodes[position + 1].element.get(0)) {
 					nodeWidget.element.insertBefore(nodes[position + 1].element);
 				}
@@ -418,7 +419,7 @@
 			if (node.jquery) {
 				idx = node.index();
 			}
-			else if (typeof node == "number") {
+			else if (typeof node === "number") {
 				idx = node;
 			}
 			var nodes = this._getField("nodes");
@@ -441,7 +442,7 @@
 			/// </param>
 			/// <returns type="wijtreenode" />
 			var nodes = $(".ui-wijtree-node a>span", this.element).filter(function () {
-				return $(this).text() == txt;
+				return $(this).text() === txt;
 			});
 			if (nodes.length) {
 				return this._getNodeWidgetByDom(nodes.get(0));
@@ -481,7 +482,7 @@
 			var self = this;
 			self.element.children("li").each(function () {
 				var nodeWidget = self._getNodeWidget($(this));
-				if (nodeWidget != null) {
+				if (nodeWidget !== null) {
 					nodeWidget._setCheckBoxes(value);
 				}
 			});
@@ -491,7 +492,7 @@
 			var self = this;
 			self.element.children("li").each(function () {
 				var nodeWidget = self._getNodeWidget($(this));
-				if (nodeWidget != null) {
+				if (nodeWidget !== null) {
 					nodeWidget._setHitArea(value);
 				}
 			});
@@ -608,41 +609,45 @@
 			var self = this;
 
 			switch (key) {
-				case "accessKey":
-					if (this.$navigateUrl != null) {
-						this.$navigateUrl.attr("accesskey", value);
-					}
-				case "checked":
-					this._checkState = value ? "checked" : "unChecked";
-					self._setChecked(value);
-					break;
-				case "collapsedIconClass":
-				case "expandedIconClass":
-				case "itemIconClass":
-					this.options[key] = value;
-					self._initNodeImg();
-					break;
-				case "expanded":
-					self._setExpanded(value);
-					break;
-				case "selected":
-					self._setSelected(value);
-					break;
-				case "text":
-					self._setText(value);
-					break;
-				case "toolTip":
-					this._setToolTip(value);
-					break;
-				case "navigateUrl":
-					this._setNavigateUrlHref(value);
-				default: break;
+			case "accessKey":
+				if (this.$navigateUrl !== null) {
+					this.$navigateUrl.attr("accesskey", value);
+				}
+				break;
+			case "checked":
+				this._checkState = value ? "checked" : "unChecked";
+				self._setChecked(value);
+				break;
+			case "collapsedIconClass":
+			case "expandedIconClass":
+			case "itemIconClass":
+				this.options[key] = value;
+				self._initNodeImg();
+				break;
+			case "expanded":
+				self._setExpanded(value);
+				break;
+			case "selected":
+				self._setSelected(value);
+				break;
+			case "text":
+				self._setText(value);
+				break;
+			case "toolTip":
+				this._setToolTip(value);
+				break;
+			case "navigateUrl":
+				this._setNavigateUrlHref(value);
+				break;
+			default: 
+				break;
 			}
 			$.Widget.prototype._setOption.apply(self, arguments);
 		},
 
 		_initState: function () {// declare the properity of node
-			this._tree = null, this._dropTarget = null;
+			this._tree = null;
+			this._dropTarget = null;
 			this._checkState = "unChecked"; //Checked,UnChecked,Indeterminate
 			this._value = this._text = this._navigateUrl = "";
 			this._insertPosition = "unKnown"; //end,after,before
@@ -660,20 +665,25 @@
 			var $li = this.element, self = this, nodes = [];
 			this.$navigateUrl = $li.children("a");
 
-			if (this._tree == null) {
+			if (this._tree === null) {
 				this._tree = this._getTree();
 			}
-			this.$nodeBody = null, this.$checkBox = null, this.$nodeImage = $("<span>"), this.$hitArea = null, this.$nodes = null, this.$nodeBody = $("<div>");
+			this.$nodeBody = null;
+			this.$checkBox = null; 
+			this.$nodeImage = $("<span>"); 
+			this.$hitArea = null; 
+			this.$nodes = null; 
+			this.$nodeBody = $("<div>");
 			if (this._tree.options.showCheckBoxes === true) {
 				this.$checkBox = $("<div>");
 			}
 
-			if (this.$navigateUrl.length == 0) {
+			if (this.$navigateUrl.length === 0) {
 				this.$navigateUrl = $("<a>");
 				this.$navigateUrl.attr("href", "#");
 			}
 			this.$text = this.$navigateUrl.find("span:eq(0)");
-			if (this.$text.length == 0) {
+			if (this.$text.length === 0) {
 				this.$navigateUrl.wrapInner("<span></span>");
 				this.$text = this.$navigateUrl.find("span:eq(0)");
 			}
@@ -685,7 +695,7 @@
 				this.$nodeBody.addClass("ui-wijtree-node ui-wijtree-header ui-state-default");
 				this.$hitArea = $("<span>");
 				this.$inner.append(this.$navigateUrl);
-				if (this.$checkBox != null) {
+				if (this.$checkBox !== null) {
 					this.$inner.prepend(this.$checkBox);
 					this.$checkBox.wijtreecheck();
 				}
@@ -706,7 +716,7 @@
 				$li.addClass("ui-wijtree-item");
 				this.$nodeBody.addClass("ui-wijtree-node ui-state-default");
 				this.$inner.append(this.$navigateUrl);
-				if (this.$checkBox != null) {
+				if (this.$checkBox !== null) {
 					this.$inner.prepend(this.$checkBox);
 					this.$checkBox.wijtreecheck();
 				}
@@ -723,7 +733,7 @@
 			var hitClass = "ui-icon " + (o.expanded ? "ui-icon-triangle-1-se" : "ui-icon-triangle-1-e");
 			if (self._tree.options.showExpandCollapse) {
 				if (self._hasChildren) {
-					if (self.$hitArea != null) {
+					if (self.$hitArea !== null) {
 						self.$hitArea.removeClass('ui-icon ui-icon-triangle-1-se ui-icon-triangle-1-e').addClass(hitClass);
 					}
 					else {
@@ -772,10 +782,10 @@
 
 		_initNodeImg: function () {//ui-icon instead of image
 			var self = this, o = this.options;
-			if (this.$nodeImage == null || !this.$nodeImage.length) {
+			if (this.$nodeImage === null || !this.$nodeImage.length) {
 				this.$nodeImage = $("<span>");
 			}
-			if (self.options.collapsedIconClass != "" && self.options.expandedIconClass != "") {
+			if (self.options.collapsedIconClass !== "" && self.options.expandedIconClass !== "") {
 				this.$nodeImage.removeClass().addClass("ui-icon");
 				this.$nodeImage.addClass(self._expanded ? o.expandedIconClass : o.collapsedIconClass);
 				if (!self._tree.options.showExpandCollapse) {
@@ -783,7 +793,7 @@
 				}
 				this.$nodeImage.insertBefore(this.$checkBox);
 			}
-			else if (self.options.itemIconClass != "") {
+			else if (self.options.itemIconClass !== "") {
 				this.$nodeImage.removeClass().addClass("ui-icon");
 				this.$nodeImage.addClass(self.options.itemIconClass);
 				this.$nodeImage.insertBefore(this.$checkBox);
@@ -792,7 +802,7 @@
 
 		_setNavigateUrlHref: function (href) {
 			if (this.$navigateUrl) {
-				if (href === "" || typeof href == "undefined") {
+				if (href === "" || typeof href === "undefined") {
 					href = "#";
 				}
 				this.$navigateUrl.attr("href", href);
@@ -811,10 +821,10 @@
 		},
 
 		_editionComplete: function (event) {
-			var self = event.data;
+			var self = event.data, text;
 			self._tree._editMode = false;
 			if (self.$editArea) {
-				var text = self.$editArea.val();
+				text = self.$editArea.val();
 				self.$editArea.remove();
 			}
 			self.$navigateUrl.show();
@@ -823,9 +833,9 @@
 		},
 
 		_changeText: function (text) {
-			if (this.$text != null && text != "") {
+			if (this.$text !== null && text !== "") {
 				this.$text.text(text);
-				this._tree._trigger("nodeTextChanged", this)
+				this._tree._trigger("nodeTextChanged", this);
 			}
 		},
 
@@ -842,7 +852,7 @@
 			if (!this._tree.options.disabled) {
 				if (expand) {
 					if (this.options.expandDelay > 0) {
-						if (typeof this._expandTimer != "undefined") {
+						if (typeof this._expandTimer !== "undefined") {
 							this._expandTimer = window.clearTimeout(this._expandTimer);
 						}
 						this._expandTimer = window.setTimeout(this._expandNodeVisually, this.options.expandDelay);
@@ -873,9 +883,9 @@
 					if (widget._expanded) {
 						widget._setExpanded(false);
 					}
-				})
+				});
 			}
-			if (self.options.collapsedIconClass != "" && self.options.expandedIconClass != "") {
+			if (self.options.collapsedIconClass !== "" && self.options.expandedIconClass !== "") {
 				self.$nodeImage.removeClass(self.options.collapsedIconClass).addClass(self.options.expandedIconClass);
 			}
 			self._internalSetNodeClass(true);
@@ -884,7 +894,7 @@
 
 		_collapseNodeVisually: function () {
 			var self = this;
-			if (self.options.collapsedIconClass != "" && self.options.expandedIconClass != "") {
+			if (self.options.collapsedIconClass !== "" && self.options.expandedIconClass !== "") {
 				self.$nodeImage.removeClass(self.options.expandedIconClass).addClass(self.options.collapsedIconClass);
 			}
 			self._internalSetNodeClass(false);
@@ -1041,7 +1051,7 @@
 		_checkClick: function () {//check , uncheck, indeterminate
 			if (!this._tree.options.disabled) {
 				if (this._checked && this._checkState === "indeterminate") {
-					this._checkState = "checked"
+					this._checkState = "checked";
 					this._checkItem();
 				}
 				else {
@@ -1054,18 +1064,18 @@
 
 		_checkItem: function () {//access
 			var self = this;
-			if (this._tree == null || !this._tree.options.showCheckBoxes) {
+			if (this._tree === null || !this._tree.options.showCheckBoxes) {
 				return;
 			}
 			var autoCheck = false;
-			if (this._tree.options.autoCheckNodes && self._checkState != "indeterminate") {
+			if (this._tree.options.autoCheckNodes && self._checkState !== "indeterminate") {
 				autoCheck = true;
 				this._changeCheckState(this._checked);
 			}
 			if (this._tree.options.allowTriState) {
 				this._setParentCheckState();
 			}
-			this._checked ? this._checkNode(autoCheck) : this._unCheckNode(autoCheck);
+			this[this._checked ? "_checkNode" : "_unCheckNode"](autoCheck);
 			this._tree._trigger("nodeCheckChanged", null, this);
 		},
 
@@ -1078,7 +1088,7 @@
 			if (this._checkState === "checked") {
 				this.$checkBox.wijtreecheck("option", "checkState", "check"); //use wijtreecheck
 			}
-			else if (this._checkState == "indeterminate") {//todo: tristate Style
+			else if (this._checkState === "indeterminate") {//todo: tristate Style
 				this.$checkBox.wijtreecheck("option", "checkState", "triState");
 			}
 			var nodes = this._getField("nodes");
@@ -1127,10 +1137,15 @@
 			var hasChildrenChecked = false;
 			var triState = false;
 			for (var i = 0; i < nodes.length; i++) {
-				if (nodes[i]._checkState == "indeterminate") {
+				if (nodes[i]._checkState === "indeterminate") {
 					triState = true;
 				}
-				nodes[i]._checked ? hasChildrenChecked = true : allChecked = false;
+				if (nodes[i]._checked) { 
+					hasChildrenChecked = true;
+				}
+				else {
+					allChecked = false;
+				}
 				if (!allChecked && hasChildrenChecked) {
 					break;
 				}
@@ -1196,8 +1211,7 @@
 
 		_onMouseOver: function (event) {
 			var el = $(event.target), self = this, rel = $(event.relatedTarget);
-			if (el.closest(".ui-wijtree-inner", self.element).length > 0
-            && (this._tree._overNode != self || rel.is(':ui-wijtreenode'))) {
+			if (el.closest(".ui-wijtree-inner", self.element).length > 0 && (this._tree._overNode !== self || rel.is(':ui-wijtreenode'))) {
 				self._mouseOver(event);
 				this._tree._overNode = self;
 			}
@@ -1206,8 +1220,7 @@
 
 		_onMouseOut: function (event) {
 			var el = $(event.target), self = this, rel = $(event.relatedTarget), node = this._getNodeWidget(rel);
-			if (el.closest(".ui-wijtree-inner", self.element).length > 0
-            && (this._tree._overNode != node || rel.is(':ui-wijtreenode'))) {
+			if (el.closest(".ui-wijtree-inner", self.element).length > 0 && (this._tree._overNode !== node || rel.is(':ui-wijtreenode'))) {
 				self._mouseOut(event);
 				if (!node) {
 					this._tree._overNode = null;
@@ -1245,7 +1258,7 @@
 					return;
 				}
 				this._isClick = true;
-				this._tree._ctrlKey = event.ctrlKey
+				this._tree._ctrlKey = event.ctrlKey;
 				if (this._selected && this._tree._ctrlKey) {
 					this._setSelected(false);
 				}
@@ -1268,7 +1281,7 @@
 				var ctrlKey = this._tree._ctrlKey, idx;
 				if (ctrlKey) {
 					idx = $.inArray(this, this._tree._selectedNodes);
-					if (idx != -1 && !select) {
+					if (idx !== -1 && !select) {
 						this._tree._selectedNodes.splice(idx, 1);
 						this.$inner.removeClass("ui-state-active");
 					}
@@ -1283,7 +1296,7 @@
 				}
 				if (select) {
 					idx = $.inArray(this, this._tree._selectedNodes);
-					if (idx == -1) {
+					if (idx === -1) {
 						this._tree._selectedNodes.push(this);
 					}
 					this.$inner.addClass("ui-state-active");
@@ -1305,58 +1318,58 @@
 			}
 			var el = e.target;
 			if (el) {
-				if (this._tree._editMode && e.keyCode != $.ui.keyCode.ENTER) {
+				if (this._tree._editMode && e.keyCode !== $.ui.keyCode.ENTER) {
 					return;
 				}
 				switch (e.keyCode) {
-					case $.ui.keyCode.UP:
-						this._moveUp();
-						break;
-					case $.ui.keyCode.DOWN:
-						this._moveDown();
-						break;
-					case $.ui.keyCode.RIGHT:
-						if (this._tree.options.showExpandCollapse) {
-							this._moveRight();
-						}
-						break;
-					case $.ui.keyCode.LEFT:
-						if (this._tree.options.showExpandCollapse) {
-							this._moveLeft();
-						}
-						break;
-					case 83: //key s
-						if (!this._tree._editMode && this._tree.options.allowSorting) {
-							this.sortNodes();
-						}
-						break;
-					case 113: //key f2
-						if (this._tree.options.allowEdit) {
-							this._editNode();
-						}
-						break;
-					case 109: //key -
-						if (this._tree.options.showExpandCollapse && this._expanded) {
-							this._setExpanded(false);
-						}
-						break;
-					case 107: //key +
-						if (this._tree.options.showExpandCollapse && !this._expanded) {
-							this._setExpanded(true);
-						}
-						break;
-					case $.ui.keyCode.ENTER:
-						if (this._tree._editMode) {
-							e.data = this;
-							this._editionComplete(e);
-						}
-						break;
-					case $.ui.keyCode.SPACE: //check
-						if (this._tree.options.showCheckBoxes) {
-							this._checkState = this._checked ? "unChecked" : "checked";
-							this._setChecked(!this._checked);
-						}
-						break;
+				case $.ui.keyCode.UP:
+					this._moveUp();
+					break;
+				case $.ui.keyCode.DOWN:
+					this._moveDown();
+					break;
+				case $.ui.keyCode.RIGHT:
+					if (this._tree.options.showExpandCollapse) {
+						this._moveRight();
+					}
+					break;
+				case $.ui.keyCode.LEFT:
+					if (this._tree.options.showExpandCollapse) {
+						this._moveLeft();
+					}
+					break;
+				case 83: //key s
+					if (!this._tree._editMode && this._tree.options.allowSorting) {
+						this.sortNodes();
+					}
+					break;
+				case 113: //key f2
+					if (this._tree.options.allowEdit) {
+						this._editNode();
+					}
+					break;
+				case 109: //key -
+					if (this._tree.options.showExpandCollapse && this._expanded) {
+						this._setExpanded(false);
+					}
+					break;
+				case 107: //key +
+					if (this._tree.options.showExpandCollapse && !this._expanded) {
+						this._setExpanded(true);
+					}
+					break;
+				case $.ui.keyCode.ENTER:
+					if (this._tree._editMode) {
+						e.data = this;
+						this._editionComplete(e);
+					}
+					break;
+				case $.ui.keyCode.SPACE: //check
+					if (this._tree.options.showCheckBoxes) {
+						this._checkState = this._checked ? "unChecked" : "checked";
+						this._setChecked(!this._checked);
+					}
+					break;
 				}
 				e.preventDefault();
 				e.stopPropagation();
@@ -1379,7 +1392,7 @@
 			var nextNode = node, nextNodes = node._getField("nodes");
 			if (node._expanded && nextNodes.length > 0) {
 				var newNode = nextNodes[nextNodes.length - 1];
-				if (newNode != null) {
+				if (newNode !== null) {
 					nextNode = this._getNextExpandedNode(newNode);
 				}
 			}
@@ -1418,13 +1431,13 @@
 			}
 			else {
 				var nextNode = this._nextNode(this);
-				if (nextNode != null) {
+				if (nextNode !== null) {
 					nextNode._setFocused(true);
 				}
 				else {
 					var owner = this._getOwner();
 					var pNextNode = this._getNextNode(owner);
-					if (pNextNode != null) {
+					if (pNextNode !== null) {
 						pNextNode._setFocused(true);
 					}
 				}
@@ -1435,7 +1448,7 @@
 			if (this._expanded) {
 				this._setExpanded(false);
 			}
-			else if (this._getOwner()._getOwner() != null) {
+			else if (this._getOwner()._getOwner() !== null) {
 				var nextNode = this._getOwner();
 				nextNode._setFocused(true);
 			}
@@ -1448,7 +1461,7 @@
 				}
 				else {
 					var nextNode = this._getField("nodes")[0];
-					if (nextNode != null) {
+					if (nextNode !== null) {
 						nextNode._setFocused(true);
 					}
 				}
@@ -1474,14 +1487,14 @@
 		},
 
 		_mouseOverNode: function () {
-			if (this.$inner != null && !this._isOverNode) {
+			if (this.$inner !== null && !this._isOverNode) {
 				this.$inner.addClass("ui-state-hover");
 				this._isOverNode = true;
 			}
 		},
 
 		_mouseOutNode: function () {
-			if (this.$inner != null && this._isOverNode) {
+			if (this.$inner !== null && this._isOverNode) {
 				this.$inner.removeClass("ui-state-hover");
 				this._isOverNode = false;
 			}
@@ -1577,10 +1590,10 @@
 			/// <param name="position" type="Int">
 			/// the position to insert at
 			/// </param>
-			var nodeWidget = null;
-			if (typeof node == "string") {
+			var nodeWidget = null, $node;
+			if (typeof node === "string") {
 				var itemDom = "<li><a>{0}</a></li>";
-				var $node = $(itemDom.replace(/\{0\}/, node));
+				$node = $(itemDom.replace(/\{0\}/, node));
 				this._createNodeWidget($node);
 				nodeWidget = $node.data($node.data("widgetName"));
 			}
@@ -1596,12 +1609,12 @@
 				nodeWidget = $node.data($node.data("widgetName"));
 			}
 
-			if (nodeWidget == null) {
+			if (nodeWidget === null) {
 				return;
 			}
 			var nodes = this._getField("nodes");
 			if (!position || position > nodes.length) {
-				if (position != 0) {
+				if (position !== 0) {
 					position = nodes.length;
 				}
 			}
@@ -1612,7 +1625,7 @@
 				this.$nodes = $("<ul class='ui-wijtree-list ui-helper-reset ui-wijtree-child'></ul>");
 				this.element.append(this.$nodes);
 			}
-			if (originalLength > 0 && originalLength != position) {
+			if (originalLength > 0 && originalLength !== position) {
 				if (nodeWidget.element.get(0) != nodes[position].element.get(0)) {
 					nodeWidget.element.insertBefore(nodes[position].element);
 				}
@@ -1638,7 +1651,7 @@
 			if (node.jquery) {
 				idx = node.index();
 			}
-			else if (typeof node == "number") {
+			else if (typeof node === "number") {
 				idx = node;
 			}
 			var nodes = this._getField("nodes");
@@ -1703,7 +1716,7 @@
 		/*region prvite Methods*/
 		_insertBefore: function (i) {
 			var $lis = this.element.parent().children("li");
-			if (this.element.index() != i) {
+			if (this.element.index() !== i) {
 				this.element.insertBefore($lis.eq(i));
 			}
 		},
@@ -1728,13 +1741,13 @@
 		},
 
 		_compare2NodeTextAcs: function (a, b) {
-			if (a != null && b != null) {
+			if (a !== null && b !== null) {
 				return a._text.localeCompare(b._text);
 			}
 		},
 
 		_compare2NodeTextDesc: function (a, b) {
-			if (a != null && b != null) {
+			if (a !== null && b !== null) {
 				return -1 * a._text.localeCompare(b._text);
 			}
 		},
@@ -1755,7 +1768,7 @@
 
 		_setChecked: function (value) {
 			var self = this;
-			if (self._checked == value && self._checkState != "indeterminate") {
+			if (self._checked === value && self._checkState !== "indeterminate") {
 				return;
 			}
 			self._checked = value;
@@ -1765,7 +1778,7 @@
 
 		_setExpanded: function (value) {
 			var self = this;
-			if (self._expanded == value) {
+			if (self._expanded === value) {
 				return;
 			}
 			if (self._hasChildren) {
@@ -1794,14 +1807,14 @@
 		},
 
 		_setText: function (value) {
-			if (this._text != value && value.length) {
+			if (this._text !== value && value.length) {
 				this._text = value;
 				this._changeText(value);
 			}
 		},
 
 		_setSelected: function (value) {
-			if (this.options.selected != value) {
+			if (this.options.selected !== value) {
 				this._selected = value;
 				this.options.selected = value;
 				this._selectNode(value);
@@ -1816,7 +1829,7 @@
 			if (self.$nodes) {
 				self.$nodes.children("li").each(function () {
 					var nodeWidget = self._getNodeWidget($(this));
-					if (nodeWidget != null) {
+					if (nodeWidget !== null) {
 						nodeWidget._setCheckBoxes(value);
 					}
 				});
@@ -1848,7 +1861,7 @@
 			if (self.$nodes) {
 				self.$nodes.children("li").each(function () {
 					var nodeWidget = self._getNodeWidget($(this));
-					if (nodeWidget != null) {
+					if (nodeWidget !== null) {
 						nodeWidget._setHitArea(value);
 					}
 				});
@@ -1918,15 +1931,15 @@
 			checkState: "unCheck" //"check","triState"
 		},
 		_create: function () {
-			var self = this, o = this.options
+			var self = this, o = this.options;
 			if (self.element.is("div")) {
 				self.element.addClass("ui-checkbox ui-widget");
 				self.$icon = $("<span>");
 				self.$icon.addClass("ui-checkbox-icon");
-				if (o.checkState == "check") {
+				if (o.checkState === "check") {
 					self.$icon.addClass("ui-icon ui-icon-check");
 				}
-				else if (o.checkState == "triState") {
+				else if (o.checkState === "triState") {
 					self.$icon.addClass("ui-icon ui-icon-stop");
 				}
 				self.$body = $('<div class="ui-checkbox-box ui-widget ui-corner-all ui-state-default"></div>').css({ position: "relative" }).append(self.$icon);
@@ -1945,14 +1958,14 @@
 
 		_setOption: function (key, value) {
 			var self = this;
-			if (key == "checkState") {
-				if (value == "unCheck") {
+			if (key === "checkState") {
+				if (value === "unCheck") {
 					self.$icon.removeClass("ui-icon ui-icon-check ui-icon-stop");
 				}
-				else if (value == "check") {
+				else if (value === "check") {
 					self.$icon.removeClass(triStateClass).addClass(checkClass);
 				}
-				else if (value == "triState") {
+				else if (value === "triState") {
 					self.$icon.removeClass(checkClass).addClass(triStateClass);
 				}
 			}
