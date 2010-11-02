@@ -31,7 +31,7 @@
             }
 
             $("#wijlinechart").wijlinechart({
-                showDefaultChartLabels: false,
+                showChartLabels: false,
                 width: 558,
                 height: 300,
                 shadow: false,
@@ -71,7 +71,7 @@
         function animateChart() {
             var path = $("#wijlinechart").wijlinechart("getLinePath", 0);
             var markers = $("#wijlinechart").wijlinechart("getLineMarkers", 0);
-            var box = path.wijGetBBox();
+            var box = path.getBBox();
             path.animate({ translation: "-50, 0" }, duration);
             if (path.shadow) {
                 var pathShadow = path.shadow;
