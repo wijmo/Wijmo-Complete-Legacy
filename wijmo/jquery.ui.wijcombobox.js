@@ -264,13 +264,13 @@
 			t.repaint();
 			t._checkSelectIndex();
 		},
-		
-		_checkSelectIndex: function (){
+
+		_checkSelectIndex: function () {
 			var self = this;
 			var o = self.options;
 			var index = o.selectedIndex;
-			
-			if (!self._usingRemoteData() && (index >=0 || $.isArray(index))){
+
+			if (!self._usingRemoteData() && (index >= 0 || $.isArray(index))) {
 				self.search(null, "checkindex");
 			}
 		},
@@ -284,7 +284,7 @@
 			/// </returns>
 
 			var self = this;
-			if (self.element.is(":visible") || (self._select != undefined && self._input.is(":visible"))) {
+			if (self.element.is(":visible") || (self._select !== undefined && self._input.is(":visible"))) {
 				self._showTrigger();
 				if (self.options.disabled) {
 					self.disable();
@@ -300,7 +300,7 @@
 			var o = self.options;
 			// self.element is an html input element.
 			input.bind("keydown.wijcombobox", function (event) {
-				if (o.disabled == true) {
+				if (o.disabled === true) {
 					return;
 				}
 				var code = event.keyCode;
@@ -321,17 +321,18 @@
 						if (self.menu.active) {
 							event.preventDefault();
 						}
-						//passthrough - ENTER and TAB both select the current element
+						break;
+					//passthrough - ENTER and TAB both select the current element    
 					case keyCode.TAB:
 						input.trigger("wijcomboblur");
-						if (!self.menu.active || (o.selectionMode == "multiple" && keyCode.TAB === code)) {
+						if (!self.menu.active || (o.selectionMode === "multiple" && keyCode.TAB === code)) {
 							return;
 						}
 						self.menu.select(event);
 						// remove selection from input.
 						var end = input.val().length;
 						self._selectText(end, end, input);
-						
+
 						break;
 					case keyCode.ESCAPE:
 						self.close(event);
@@ -347,24 +348,25 @@
 					case keyCode.PAGE_DOWN:
 						// ignore metakeys (shift, ctrl, alt)
 						break;
-                    case 18: //alt key
-                        input.trigger("wijcomboblur");
+					case 18: //alt key
+						input.trigger("wijcomboblur");
+						break;
 					default:
 						// keypress is triggered before the input value is changed
 						clearTimeout(self.searching);
-						if (o.isEditable == false){
-							if (self._cacheKey == undefined){
+						if (o.isEditable === false) {
+							if (self._cacheKey === undefined) {
 								self._cacheKey = "";
 							}
 							self._cacheKey += String.fromCharCode(code);
 						}
 						self.searching = setTimeout(function () {
 							var term;
-							if (o.isEditable == false){
+							if (o.isEditable === false) {
 								term = self._cacheKey;
 								self._cacheKey = undefined;
 							}
-							else{
+							else {
 								term = input.val();
 							}
 							self.search(term, event);
@@ -378,24 +380,24 @@
 				self.closing = setTimeout(function () {
 					self.close(event, true);
 				}, 150);
-				
-			}).bind("focus.wijcombobox", function (){
+
+			}).bind("focus.wijcombobox", function () {
 				self._addInputFocus(true, stateFocus);
-			}).bind("blur.wiicombobox", function (){
-				if (!self.menu.element.is(":visible")){
+			}).bind("blur.wiicombobox", function () {
+				if (!self.menu.element.is(":visible")) {
 					input.trigger("wijcomboblur");
 				}
 				self._change();
 			});
 		},
-		
-		_addInputFocus: function (add, css){
+
+		_addInputFocus: function (add, css) {
 			var self = this;
 			var wrap = self._input.parent();
-			var key = add?"addClass":"removeClass";
+			var key = add ? "addClass" : "removeClass";
 			var arrow = self._triggerArrow;
 			wrap[key](css);
-			if (arrow!= undefined){
+			if (arrow !== undefined) {
 				arrow[key](css);
 			}
 		},
@@ -405,15 +407,15 @@
 			$.each(this.options.columns, function (index, column) {
 				var li = $("<li class='ui-wijcombobox-cell ui-widget-header'></li>");
 				li.html(column.name);
-				if (column.width != undefined) {
+				if (column.width !== undefined) {
 					li.width(column.width);
 				}
 				li.appendTo(ul);
 			});
 			header.append(ul);
 		},
-		
-		_hasSameValueText: function (item1, item2){
+
+		_hasSameValueText: function (item1, item2) {
 			return item1.label === item2.label && item1.value === item2.value;
 		},
 
@@ -449,18 +451,18 @@
 					var mode = o.selectionMode;
 					var item = ui.item;
 					if (self._trigger("select", event, item)) {
-						if (mode == "single") { // single mode selection
+						if (mode === "single") { // single mode selection
 							// local data select
 							if (!self._usingRemoteData()) {
 								var newIndex = $.inArray(item, self.items);
-								if (newIndex != o.selectedIndex) {
+								if (newIndex !== o.selectedIndex) {
 									self._input.val(item.label);
 									var oldItem = self.selectedItem;
 									self.selectedItem = item;
 									var oldIndex = o.selectedIndex;
 									o.selectedIndex = newIndex;
 									// fire select change event 
-									if (self._select != undefined) {
+									if (self._select !== undefined) {
 										self._select[0].selectedIndex = o.selectedIndex;
 										self._select.trigger("change");
 									}
@@ -472,9 +474,9 @@
 									});
 								}
 							}
-							else{
+							else {
 								// If items have the same text and value, they are considered to be same in remote mode.
-								if (self.selectedItem === null || !self._hasSameValueText(item, self.selectedItem)){
+								if (self.selectedItem === null || !self._hasSameValueText(item, self.selectedItem)) {
 									self._input.val(item.label);
 									self.selectedItem = item;
 									self._trigger("changed", null, {
@@ -485,7 +487,7 @@
 						}
 						else { // multiple selection mode
 							if (!self._usingRemoteData()) {
-								
+
 								self.selectedItems = ui.selectedItems;
 								self._selectedItemsToInputVal(self.selectedItems);
 								self._trigger("changed", null, {
@@ -494,12 +496,9 @@
 								});
 								///TODO: show helper list
 							}
-							else{
-								
-							}
 						}
 					}
-					if ((ui.data == undefined || !ui.data.notCloseAfterSelected) && mode == "single") {
+					if ((ui.data === undefined || !ui.data.notCloseAfterSelected) && mode === "single") {
 						self.close(event);
 					}
 				},
@@ -521,7 +520,7 @@
 					if (css.length > 0) {
 						item.element.addClass(css);
 					}
-					if (self._keypress && o.isEditable && o.columns.length == 0 && o.highlightMatching && $.trim(self._input.val()).length > 0) {
+					if (self._keypress && o.isEditable && o.columns.length === 0 && o.highlightMatching && $.trim(self._input.val()).length > 0) {
 						item.text = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + self._escapeRegex(self._input.val()) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<span class='ui-priority-primary'>$1</span>");
 					}
 					else {
@@ -530,7 +529,7 @@
 				},
 				itemrendered: function (event, data) {
 					var item = data;
-					if (item.cells == undefined) {
+					if (item.cells === undefined) {
 						return;
 					}
 					var li = item.element;
@@ -564,7 +563,7 @@
 			var self = this;
 			var sep = self.options.multipleSelectionSeparator;
 			self.selectedItems = items;
-			
+
 			$.each(items, function (index, item) {
 				s += item.label + sep;
 			});
@@ -586,14 +585,14 @@
 			var input;
 			self._comboElement = comboElement;
 			// create from a select element
-			if (ele[0].tagName.toLowerCase() == "select"){
+			if (ele[0].tagName.toLowerCase() === "select") {
 				self._select = ele;
 				// add class to set font size to get the correct width of select.
 				ele.addClass("ui-widget");
 				input = self._input = $("<input />").insertAfter(ele);
 				self.options.data = self._convertSelectOptions();
 			}
-			else{
+			else {
 				input = self._input = ele;
 			}
 			comboElement.insertBefore(input);
@@ -605,27 +604,27 @@
 				"aria-haspopup": "true"
 			}).addClass(inputCSS);
 			self._oldWidth = ele.css("width");
-			if (self.options.isEditable ==false){
+			if (self.options.isEditable === false) {
 				input.attr("readonly", "readonly");
 			}
-			comboElement.bind("mouseenter", function (){
+			comboElement.bind("mouseenter", function () {
 				self._addInputFocus(true, stateHover);
-			}).bind("mouseleave", function (){
+			}).bind("mouseleave", function () {
 				self._addInputFocus(false, stateHover);
 			});
 		},
-		
-		_convertSelectOptions: function (){
+
+		_convertSelectOptions: function () {
 			var items = [];
 			var self = this;
-			$.each(self._select.attr("options"),function (idx, opt){
-				items.push({label: opt.text, value: opt.value});
+			$.each(self._select.attr("options"), function (idx, opt) {
+				items.push({ label: opt.text, value: opt.value });
 			});
 			self.options.selectedIndex = self._select[0].selectedIndex;
 			return items;
 		},
-		
-		getComboElement: function (){
+
+		getComboElement: function () {
 			return this._comboElement;
 		},
 
@@ -639,8 +638,8 @@
 			var label = self._label;
 
 			// set size
-			if (self._select != undefined){
-				input.width(self._select.width() + (o.data.length >20 ? o.selectElementWidthFix : 0));
+			if (self._select !== undefined) {
+				input.width(self._select.width() + (o.data.length > 20 ? o.selectElementWidthFix : 0));
 				self._select.hide();
 			}
 			comboElement.width(inputWrapper[0].offsetWidth);
@@ -652,7 +651,7 @@
 				inputWrapper.append(label.html(o.labelText));
 			}
 			else {
-				if (label != undefined) {
+				if (label !== undefined) {
 					label.remove();
 					self._label = undefined;
 				}
@@ -660,17 +659,17 @@
 
 			if (o.showTrigger) {
 				input.removeClass("ui-corner-all");
-				if (trigger == undefined) {
+				if (trigger === undefined) {
 					trigger = self._triggerArrow = $(triggerHTML);
 					comboElement.append(trigger);
 					trigger.bind("mouseover.triggerevent", self, function (e) {
-						if (o.disabled == true) {
+						if (o.disabled === true) {
 							return;
 						}
 						var ct = $(e.currentTarget);
 						ct.addClass(stateHover);
 					}).bind("mousedown.triggerevent", self, function (e) {
-						if (o.disabled == true) {
+						if (o.disabled === true) {
 							return;
 						}
 						var ct = $(e.currentTarget);
@@ -679,7 +678,7 @@
 						var ct = $(e.currentTarget);
 						ct.removeClass(stateActive);
 					}).bind("click.triggerevent", self, function () {
-						if (o.disabled == true) {
+						if (o.disabled === true) {
 							return;
 						}
 						self._triggerClick();
@@ -701,7 +700,7 @@
 				sp.css("margin-top", (trigger.innerHeight() - sp[0].offsetHeight) / 2);
 			}
 			else {
-				if (trigger != undefined) {
+				if (trigger !== undefined) {
 					trigger.unbind(".triggerevent");
 					trigger.remove();
 					self._triggerArrow = undefined;
@@ -714,19 +713,19 @@
 			// padding
 			var padding = 0;
 			var labelPadding = 0, triggerPadding = 0;
-			if (label != undefined) {
+			if (label !== undefined) {
 				labelPadding += label[0].offsetWidth;
 			}
-			if (trigger != undefined) {
+			if (trigger !== undefined) {
 				triggerPadding = trigger[0].offsetWidth;
 			}
 			padding = labelPadding + triggerPadding;
 			input.setOutWidth(inputWrapper.innerWidth() - padding);
-			padding = padding == 0 ? "" : padding;
+			padding = padding === 0 ? "" : padding;
 			if (o.triggerPosition === "right") {
 				input.css("margin-left", "");
 				input.css("margin-right", padding);
-				if (label != undefined) {
+				if (label !== undefined) {
 					label.css("left", "");
 					label.css("right", triggerPadding);
 				}
@@ -735,7 +734,7 @@
 				input.css("margin-right", "");
 				input.css("margin-left", padding);
 
-				if (label != undefined) {
+				if (label !== undefined) {
 					label.css("right", "");
 					label.css("left", triggerPadding);
 				}
@@ -765,20 +764,20 @@
 
 			var self = this,
 			ele = self.element;
-			if (self.options.isEditable == false){
+			if (self.options.isEditable === false) {
 				ele.removeAttr("readonly");
 			}
-			if (self._select != undefined){
+			if (self._select !== undefined) {
 				self._select.removeClass("ui-widget");
 				self._select.show();
 				self._input.remove();
 			}
-			else{
+			else {
 				ele.css("width", self._oldWidth);
 				ele.removeClass(inputCSS);
 				ele.removeAttr("autocomplete").removeAttr("role").removeAttr("aria-wijcombobox").removeAttr("aria-haspopup");
 				ele.insertBefore(self._comboElement);
-				ele.css("padding","");
+				ele.css("padding", "");
 			}
 			self._comboElement.remove();
 			self.menu.destroy();
@@ -791,22 +790,22 @@
 			var ele = self._comboElement;
 			var input = self.element;
 			$.Widget.prototype._setOption.apply(self, arguments);
-			if (key == "disabled") {
+			if (key === "disabled") {
 				if (value) {
 					ele.addClass("ui-wijcombobox-disabled ui-state-disabled");
-					input.attr("disabled","disabled");
+					input.attr("disabled", "disabled");
 					self.close();
 				}
-				else{
+				else {
 					ele.removeClass("ui-wijcombobox-disabled ui-state-disabled");
 					input.removeAttr("disabled");
 				}
 			}
-			else if (key == "isEditable"){
-				if (value){
-					input.attr("readonly","readonly");
+			else if (key === "isEditable") {
+				if (value) {
+					input.attr("readonly", "readonly");
 				}
-				else{
+				else {
 					input.removeAttr("readonly");
 				}
 			}
@@ -833,18 +832,18 @@
 			// load data when data is not loaded yet or datasource is using a proxy to obtain data.
 			if (datasource != null) {
 				// check index will skip search event
-				if (!(eventObj === "checkindex")){
+				if (!(eventObj === "checkindex")) {
 					if (self._trigger("search", eventObj, { datasrc: datasource, term: d }) === false) {
 						return;
 					}
 				}
-				
+
 				if ($.isArray(datasource)) {
 					self._hideShowArrow(false);
 					self._onListLoaded(datasource, d);
 				}
 				else {
-					if (self._usingRemoteData() && eventObj!= undefined && value.length < o.minLength){
+					if (self._usingRemoteData() && eventObj !== undefined && value.length < o.minLength) {
 						return;
 					}
 					self._hideShowArrow(false);
@@ -853,11 +852,11 @@
 				}
 			}
 		},
-		
-		_usingRemoteData: function (){
+
+		_usingRemoteData: function () {
 			var o = this.options.data;
 			var r = false;
-			if (!$.isArray(o) && o !== null && o.proxy !== null){
+			if (!$.isArray(o) && o !== null && o.proxy !== null) {
 				r = true;
 			}
 			return r;
@@ -868,7 +867,7 @@
 			var self = this;
 			var input = self.element;
 			var arrow = self._triggerArrow;
-			if (arrow != undefined) {
+			if (arrow !== undefined) {
 				arrow[show ? "show" : "hide"]();
 			}
 			input[show ? "removeClass" : "addClass"]("ui-wijcombobox-loading");
@@ -881,17 +880,17 @@
 			var searchTerm = data.value;
 			var items = $.isArray(datasource) ? datasource : datasource.items;
 			self.items = items;
-			if (data.e === "checkindex"){
+			if (data.e === "checkindex") {
 				var idx = o.selectedIndex;
-				if (o.selectionMode === "multiple" && $.isArray(idx)){
-					$.each(idx,function (i,n){
+				if (o.selectionMode === "multiple" && $.isArray(idx)) {
+					$.each(idx, function (i, n) {
 						var itm = items[n];
 						itm.selected = true;
 						self.selectedItems.push(itm);
 					});
 					ele.val(self._selectedItemsToInputVal(self.selectedItems));
 				}
-				else{
+				else {
 					items[idx].selected = true;
 					self.selectedItem = items[idx];
 					ele.val(self.selectedItem.label);
@@ -899,7 +898,7 @@
 				self._hideShowArrow(true);
 				return;
 			}
-			
+			var itemsToRender;
 			// only fileter result when using local data.
 			if (!self._usingRemoteData()) {
 				self._filter(items, searchTerm);
@@ -909,7 +908,7 @@
 			}
 			else {
 				self._topHit = null;
-				var itemsToRender = items;
+				itemsToRender = items;
 			}
 			if (itemsToRender.length > 0) {
 				// open dropdown list
@@ -934,19 +933,19 @@
 			/// <param name="skipAnimation" type="Boolean">
 			/// A value indicating whehter to skip animation.
 			/// </param>
-
-			clearTimeout(this.closing);
-			if (this.menu.element.is(":visible")) {
-				this._trigger("close", event);
-				this.menu.deactivate();
-				var hidingAnimation = this.options.hidingAnimation;
-				if (skipAnimation != true && hidingAnimation != null) {
-					this.menu.element.hide(hidingAnimation.effect, hidingAnimation.options, hidingAnimation.speed, hidingAnimation.callback);
+			var self = this;
+			clearTimeout(self.closing);
+			if (self.menu.element.is(":visible")) {
+				self._trigger("close", event);
+				self.menu.deactivate();
+				var hidingAnimation = self.options.hidingAnimation;
+				if (skipAnimation !== true && hidingAnimation != null) {
+					self.menu.element.hide(hidingAnimation.effect, hidingAnimation.options, hidingAnimation.speed, hidingAnimation.callback);
 				}
 				else {
-					this.menu.element.hide();
+					self.menu.element.hide();
 				}
-				this._addInputFocus(false, stateFocus);
+				self._addInputFocus(self, stateFocus);
 				$(document).unbind("click", self.closeOnClick);
 			}
 		},
@@ -962,18 +961,18 @@
 			var itm = self.selectedItem;
 
 			if (f) {
-				if (m == "single") {
+				if (m === "single") {
 					if (itm != null) {
-						if (itm.label !== t){
+						if (itm.label !== t) {
 							ele.val(itm.label);
 						}
 					}
-					else{
+					else {
 						ele.val("");
 					}
 				}
 			}
-			if (m == "multiple") {
+			if (m === "multiple") {
 				self._selectedItemsToInputVal(self.selectedItems);
 			}
 		},
@@ -981,7 +980,7 @@
 		_openlist: function (items, data) {
 			var self = data.self;
 			var eventObj = data.e;
-			var keypress = self._keypress = (eventObj != undefined || eventObj != null);
+			var keypress = self._keypress = (eventObj !== undefined || eventObj != null);
 			var textWidth;
 			var o = self.options;
 			var menuElement = self.menu.element;
@@ -991,7 +990,7 @@
 			self.menu.renderList();
 			// show dropdown
 			self.menu.element.show();
-			if (o.dropdownWidth == "auto") {
+			if (o.dropdownWidth === "auto") {
 				textWidth = self._comboElement.outerWidth();
 			}
 			else {
@@ -1004,39 +1003,39 @@
 
 			var verticalBorder = 2;
 			var dropDownHeight = o.dropdownHeight;
-			if (self._select!=undefined){
-				dropDownHeight = 20*self._menuUL.children(".ui-wijlist-item:first").outerHeight();
+			if (self._select !== undefined) {
+				dropDownHeight = 20 * self._menuUL.children(".ui-wijlist-item:first").outerHeight();
 			}
 			var h = Math.min(self._menuUL.outerHeight() + verticalBorder, dropDownHeight);
 			menuElement.setOutHeight(h);
 			self.menu.refreshSuperPanel();
 			self._positionList();
-			if (!keypress && self.selectedItem != undefined) {
+			if (!keypress && self.selectedItem !== undefined) {
 				self.menu.activate(null, self.selectedItem, true);
 			}
-			if (keypress && eventObj.keyCode != jQuery.ui.keyCode.BACKSPACE) {
-				if (o.isEditable){
+			if (keypress && eventObj.keyCode !== $.ui.keyCode.BACKSPACE) {
+				if (o.isEditable) {
 					self._runAutoComplete();
 				}
-				else{
+				else {
 					self.menu.activate(null, self._topHit, true);
 				}
 			}
 			else {
 				var showingAnimation = self.options.showingAnimation;
-				if (self.options.showingAnimation != null && !(eventObj !== undefined && eventObj.keyCode === jQuery.ui.keyCode.BACKSPACE)) {
+				if (self.options.showingAnimation != null && !(eventObj !== undefined && eventObj.keyCode === $.ui.keyCode.BACKSPACE)) {
 					self.menu.element.hide();
 					self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, showingAnimation.callback);
 				}
 			}
-			$(document).bind("click", self,self.closeOnClick);
+			$(document).bind("click", self, self.closeOnClick);
 		},
-		
-		closeOnClick: function (e){
+
+		closeOnClick: function (e) {
 			var self = e.data;
 			var t = e.target;
-			
-			if (!$.contains(self._comboElement[0], t) && !$.contains(self.menu.element[0], t)){
+
+			if (!$.contains(self._comboElement[0], t) && !$.contains(self.menu.element[0], t)) {
 				self.close();
 			}
 		},
@@ -1074,11 +1073,11 @@
 			var v = input.val();
 			var inputElement = input.get(0);
 			if (v.length > 0) {
-				if (inputElement.setSelectionRange != undefined) {
+				if (inputElement.setSelectionRange !== undefined) {
 					inputElement.setSelectionRange(start, end);
 				}
 				else
-					if (inputElement.createTextRange != undefined) {
+					if (inputElement.createTextRange !== undefined) {
 						var range = inputElement.createTextRange();
 						range.moveStart("character", start);
 						range.moveEnd("character", end - v.length);
@@ -1121,7 +1120,7 @@
 			var matcher = new RegExp(term1, "i");
 			var topHit = null;
 			$.each(array, function (index, item) {
-				if (term1 === undefined || term1.length == 0) {
+				if (term1 === undefined || term1.length === 0) {
 					item.match = true;
 					return;
 				}
@@ -1130,7 +1129,7 @@
 					item.match = false;
 				}
 				else {
-					if (topHit == null && matchResult.index == 0) {
+					if (topHit == null && matchResult.index === 0) {
 						topHit = item;
 					}
 					item.match = matchResult.index >= 0;
