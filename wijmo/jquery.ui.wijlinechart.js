@@ -460,7 +460,7 @@ $.widget("ui.wijlinechart", $.ui.wijchartcore, {
 						}
 					}
 				}
-				if(o.showDefaultChartLabels) {
+				if(o.showChartLabels) {
 					var defaultChartLabel = this.canvas.text(X, Y, valY);
 					this.chartLabelEles.push(defaultChartLabel);
 					var dclBox = defaultChartLabel.wijGetBBox();
