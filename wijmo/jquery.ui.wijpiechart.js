@@ -182,7 +182,7 @@ $.widget("ui.wijpiechart", $.ui.wijchartcore, {
 			self._addClass($(sector.node), "wijchart-canvas-object");
 			$(sector.node).data("wijchartDataObj", series);		
 					
-			if(o.showDefaultChartLabels) {
+			if(o.showChartLabels) {
 				var pos = paper.wij.getPositionByAngle(cx, cy, series.offset + r*2/3, angle + anglePlus/2);
 				var textStyle = $.extend(true, {}, o.textStyle, o.chartLabelStyle);
 				paper.text(pos.x, pos.y, series.label).attr(textStyle);
