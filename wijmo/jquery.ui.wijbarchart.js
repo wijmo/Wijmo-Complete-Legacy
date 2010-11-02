@@ -26,6 +26,16 @@
 	$.widget("ui.wijbarchart", $.ui.wijchartcore, {
 		options: {
 			/// <summary>
+			/// A value that determines whether the bar chart renders horizontal or vertical.
+			/// Default: true.
+			/// Type: Boolean.
+			/// Code example:
+	        ///  $("#barchart").wijbarchart({
+		    ///      horizontal: false
+	        ///  });
+			/// </summary>
+			horizontal: true,
+			/// <summary>
 			/// A value that determines whether to show a stacked chart.
 			/// Default: false.
 			/// Type: Boolean.
@@ -131,14 +141,17 @@
 				"0-#6c88e3-#6079cb",
 				"0-#6cb4e3-#60a0cb"
 			];
-			$.extend(true, this.options.axis, {
-				x: {
-					compass: "west"
-				},
-				y: {
-					compass: "south"
-				}
-			});
+			var o = this.options;
+			if (o.horizontal) {			
+				$.extend(true, o.axis, {
+					x:{
+						compass:"west"
+					},
+					y:{
+						compass:"south"
+					}
+				})
+			}
 
 			$.ui.wijchartcore.prototype._create.apply(this, arguments);
 
@@ -207,12 +220,18 @@
 			return val;
 		},
 
-		_transformPoints: function (xscale, yscale, xlate, ylate, points) {
+		_transformPoints: function (inverted, xscale, yscale, xlate, ylate, points) {
 			$.each(points, function (idx, point) {
 				var x = point.x;
 				var y = point.y;
-				point.y = xscale * x + xlate;
-				point.x = yscale * y + ylate;
+				point.x = xscale * x + xlate;
+				point.y = yscale * y + ylate;
+				
+				if (inverted){
+					var temp = point.x;
+					point.x = point.y;
+					point.y = temp;
+				}
 			})
 
 			return points;
@@ -228,6 +247,7 @@
 				return;
 			}
 
+            var inverted = o.horizontal;
 			var stacked = o.stacked;
 			var is100Percent = stacked && o.is100Percent;
 			var seriesList = o.seriesList;
@@ -248,7 +268,6 @@
 			var clusterSpacing = o.clusterSpacing + shadowOffset;
 			var animatedBar = null;
 
-			var inverted = true;
 			if (inverted && !stacked){
 				seriesList.reverse();
 				seriesStyles.reverse();
@@ -268,10 +287,10 @@
 				var chartLabels = this.canvas.set();
 				var animation = o.animation;
 				var animated = animation && animation.enabled;
-				var xscale = this._getScaling(true, xaxis.max, xaxis.min, height);
-				var yscale = this._getScaling(false, yaxis.max, yaxis.min, width);
-				var xlate = this._getTranslation(true, startLocation, xaxis.max, xaxis.min, xscale);
-				var ylate = this._getTranslation(false, startLocation, yaxis.max, yaxis.min, yscale);
+				var xscale = this._getScaling(inverted, xaxis.max, xaxis.min, inverted ? height : width);
+				var yscale = this._getScaling(!inverted, yaxis.max, yaxis.min, inverted ? width : height);
+				var xlate = this._getTranslation(inverted, startLocation, xaxis.max, xaxis.min, xscale);
+				var ylate = this._getTranslation(!inverted, startLocation, yaxis.max, yaxis.min, yscale);
 				plotInfos.xscale = xscale;
 				plotInfos.yscale = yscale;
 				plotInfos.xlate = xlate;
@@ -279,7 +298,7 @@
 
 				// adjust the bar width (bw) to account for overlap
 				if (nSeries > 1 && !stacked) {
-					clusterOverlap -= (nPoints * (nSeries - 1) * clusterSpacing) / height;
+				clusterOverlap -= (nPoints*(nSeries - 1)*clusterSpacing)/(inverted?height:width);
 					bw /= (nSeries * (1 - clusterOverlap) + clusterOverlap);
 				}
 
@@ -346,7 +365,7 @@
 						x[1].x = this._adjustToLimits(x[1].x, xaxis.min, xaxis.mMax);
 						x[1].y = this._adjustToLimits(x[1].y, yaxis.min, yaxis.max);
 
-						x = this._transformPoints(xscale, yscale, xlate, ylate, x);
+						x = this._transformPoints(inverted, xscale, yscale, xlate, ylate, x);
 
 						var hold = 0;
 
@@ -385,11 +404,17 @@
 						plotInfos.rects[s][p] = rf;
 						var defaultChartLabel = null;
 
-						if (o.showDefaultChartLabels) {
+						if (o.showChartLabels) {
 							var textStyle = $.extend(true, {}, o.textStyle, o.chartLabelStyle);
-							defaultChartLabel = this._text(rf.x + rf.width, rf.y + rf.height / 2, ps[s].y).attr(textStyle);
+							var pos = inverted? {x:rf.x + rf.width, y:rf.y + rf.height / 2} : {x:rf.x + rf.width/2, y:rf.y};
+							defaultChartLabel = this._text(pos.x, pos.y, ps[s].y).attr(textStyle);
 							var dclBox = defaultChartLabel.getBBox();
-							defaultChartLabel.translate(dclBox.width / 2, 0);
+							if (inverted){
+								defaultChartLabel.translate(dclBox.width / 2, 0);
+							}
+							else{
+								defaultChartLabel.translate(0, -dclBox.height/2);
+							}
 							chartLabels.push(defaultChartLabel);
 						}
 
@@ -427,15 +452,26 @@
 
 						if (animated) {
 							if (r) {
-								bar = this.canvas.wij.roundRect(rf.x, rf.y, rf.width - strokeWidth, rf.height - strokeWidth, 0, 0, r, r).hide();
-
-								animatedBar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
+								if (inverted){
+									bar = this.canvas.wij.roundRect(rf.x, rf.y, rf.width - strokeWidth, rf.height - strokeWidth, 0, 0, r, r).hide();
+									animatedBar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
+								}
+								else{
+									bar = this.canvas.wij.roundRect(rf.x, rf.y, rf.width - strokeWidth, rf.height - strokeWidth, r, 0, 0, r).hide();
+									animatedBar = this.canvas.rect(rf.x, startLocation.y + height - strokeWidth, rf.width, 0);
+								}
+								
 								this._paintShadow(animatedBar, shadowOffset);
 								animatedBar.wijAttr(style);
 								animatedBar.bar = bar;
 							}
 							else {
-								bar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
+								if (inverted){
+									bar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
+								}
+								else{
+									bar = this.canvas.rect(rf.x, startLocation.y + height - strokeWidth, rf.width, 0);
+								}
 								animatedBar = bar;
 							}
 
@@ -445,7 +481,9 @@
 							}
 
 							animatedBar.left = rf.x;
+							animatedBar.top = rf.y;
 							animatedBar.width = rf.width - strokeWidth;
+							animatedBar.height = rf.height - strokeWidth;
 							animatedBar.r = r;
 						}
 						else {
@@ -483,7 +521,8 @@
 				var easing = animation.easing ? animation.easing : "linear";
 				for (var idx = 0; idx < animatedBars.length; idx++) {
 					animatedBar = animatedBars[idx];
-					animatedBar.wijAnimate({ width: animatedBar.width, x: animatedBar.left }, duration, easing, function () {
+					var params = inverted? {width: animatedBar.width, x: animatedBar.left} : {height:animatedBar.height, y:animatedBar.top};
+					animatedBar.wijAnimate(params, duration, easing, function () {
 						var b = this;
 						var r = b.r;
 						var bar = b;
