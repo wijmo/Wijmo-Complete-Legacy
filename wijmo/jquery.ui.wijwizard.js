@@ -267,7 +267,7 @@ $.widget("ui.wijwizard", {
 			
 			var fragmentId = /^#.+/; // Safari 2 reports '#' for an empty hash
 			this.panels.each(function(i, p) {
-				var url = $(p).attr('url');
+				var url = $(p).attr('src');
 				// inline
 				if (url && !fragmentId.test(url)) { 
 					$.data(p, 'load.wijwizard', url.replace(/#.*$/, '')); // mutable data
@@ -494,8 +494,8 @@ $.widget("ui.wijwizard", {
 	},
 
 	add: function(index, title, desc) {
-	    /// <summary>Add a new panel.</summary>
-	    /// <param name="index" type="Number">Zero-based position where to insert the new panel.</param>
+		/// <summary>Add a new panel.</summary>
+		/// <param name="index" type="Number">Zero-based position where to insert the new panel.</param>
 		/// <param name="title" type="String">The step title.</param>
 		/// <param name="desc" type="String">The step description.</param>
 		if (index === undefined) {
@@ -552,8 +552,8 @@ $.widget("ui.wijwizard", {
 	},
 
 	remove: function(index) {
-	    /// <summary>Remove a panel.</summary>
-	    /// <param name="index" type="Number">The zero-based index of the panel to be removed.</param>
+		/// <summary>Remove a panel.</summary>
+		/// <param name="index" type="Number">The zero-based index of the panel to be removed.</param>
 		var $panel = this.panels.eq(index).remove();
 		
 		if (this.lis){
@@ -583,10 +583,12 @@ $.widget("ui.wijwizard", {
 			.animate(props, o.showOption.duration || 'normal', function() {
 				self._resetStyle($show);
 				self._trigger('show', null, self._ui($show[0]));
+				self._removeSpinner();
 			});
 		}else{
 			$show.removeClass('ui-wijwizard-hide');
 			this._trigger('show', null, this._ui($show[0]));
+			self._removeSpinner();
 		}
 	},
 	
@@ -609,8 +611,8 @@ $.widget("ui.wijwizard", {
 	},
 
 	show: function(index) {
-	    /// <summary>Active and display the panel at specified position.</summary>
-	    /// <param name="index" type="Number">The zero-based index of the panel to be actived.</param>
+		/// <summary>Active and display the panel at specified position.</summary>
+		/// <param name="index" type="Number">The zero-based index of the panel to be actived.</param>
 		if (index < 0 || index >= this.panels.length) { return this; }
 		
 		// previous animation is still processing
@@ -685,9 +687,9 @@ $.widget("ui.wijwizard", {
 	},
 	
 	load: function(index) {
-	    /// <summary>Reload the content of an Ajax panel programmatically.</summary>
-	    /// <param name="index" type="Number">The zero-based index of the panel to be loaded</param>
-        var self = this, o = this.options, p = this.panels.eq(index)[0], url = $.data(p, 'load.wijwizard');
+		/// <summary>Reload the content of an Ajax panel programmatically.</summary>
+		/// <param name="index" type="Number">The zero-based index of the panel to be loaded</param>
+		var self = this, o = this.options, p = this.panels.eq(index)[0], url = $.data(p, 'load.wijwizard');
 
 		this.abort();
 
@@ -699,15 +701,14 @@ $.widget("ui.wijwizard", {
 
 		// load remote from here on
 		this.element.addClass('ui-state-processing');
-
 		if (o.spinner) {
-			var spinner = this.element.data('spinner.winwizard');
+			var spinner = this.element.data('spinner.wijwizard');
 			if (!spinner){
 				spinner = $('<div/>');
 				spinner.addClass('ui-wijwizard-spinner');
 				spinner.html(o.spinner);
 				spinner.appendTo(document.body);
-				this.element.data('spinner.winwizard', spinner);
+				this.element.data('spinner.wijwizard', spinner);
 				spinner.wijpopup({
 					showEffect: 'blind',
 					hideEffect: 'blind'
@@ -726,9 +727,6 @@ $.widget("ui.wijwizard", {
 			success: function(r, s) {
 				$(p).html(r);
 
-				// take care of spinner
-				self._removeSpinner();
-
 				if (o.cache) {
 					$.data(p, 'cache.wijwizard', true); // if loaded once do not load them again
 				}
@@ -736,20 +734,21 @@ $.widget("ui.wijwizard", {
 				// callbacks
 				self._trigger('load', null, self._ui(self.panels[index]));
 				try {
-					o.ajaxOptions.success(r, s);
+					if (o.ajaxOptions && o.ajaxOptions.success){
+						o.ajaxOptions.success(r, s);
+					}
 				}
 				catch (e) {}
 			},
 			error: function(xhr, s, e) {
-				// take care of spinner
-				self._removeSpinner();
-
 				// callbacks
 				self._trigger('load', null, self._ui(self.panels[index]));
 				try {
 					// Passing index avoid a race condition when this method is
 					// called after the user has selected another panel.
-					o.ajaxOptions.error(xhr, s, index, p);
+					if (o.ajaxOptions && o.ajaxOptions.error){
+						o.ajaxOptions.error(xhr, s, index, p);
+					}
 				}
 				catch (e) {}
 			}
@@ -762,7 +761,7 @@ $.widget("ui.wijwizard", {
 	},
 
 	abort: function() {
-	    /// <summary>Terminate all running panel ajax requests and animations.</summary>	    
+		/// <summary>Terminate all running panel ajax requests and animations.</summary>	    
 		this.element.queue([]);
 		this.panels.stop(false, true);
 
@@ -782,16 +781,16 @@ $.widget("ui.wijwizard", {
 	},
 
 	url: function(index, url) {
-	    /// <summary>Change the url from which an Ajax (remote) panel will be loaded.</summary>
-	    /// <param name="index" type="Number">The zero-based index of the panel of which its URL is to be updated.</param>
-	    /// <param name="url" type="String">A URL the content of the panel is loaded from.</param>
-        this.panels.eq(index).removeData('cache.wijwizard').data('load.wijwizard', url);
+		/// <summary>Change the url from which an Ajax (remote) panel will be loaded.</summary>
+		/// <param name="index" type="Number">The zero-based index of the panel of which its URL is to be updated.</param>
+		/// <param name="url" type="String">A URL the content of the panel is loaded from.</param>
+		this.panels.eq(index).removeData('cache.wijwizard').data('load.wijwizard', url);
 		return this;
 	},
 
 	count: function() {
-	    /// <summary>Retrieve the number panels.</summary>
-        return this.panels.length;
+		/// <summary>Retrieve the number panels.</summary>
+		return this.panels.length;
 	}
 
 });
