@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -17,7 +17,6 @@
  *	raphael-popup.js
  *	jquery.glob.min.js
  *	jquery.ui.widget.js
- *	jquery.ui.svgdom.js
  *	jquery.ui.wijchartcore.js
  *
  */

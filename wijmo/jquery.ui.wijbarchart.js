@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -15,9 +15,8 @@
  * Depends:
  *  raphael.js
  *  raphael-popup.js
- *  jquery.glob.js
+ *  jquery.glob.min.js
  *  jquery.ui.widget.js
- *  jquery.ui.svgdom.js
  *  jquery.ui.wijchartcore.js
  *
  */
@@ -30,9 +29,9 @@
 			/// Default: true.
 			/// Type: Boolean.
 			/// Code example:
-	        ///  $("#barchart").wijbarchart({
-		    ///      horizontal: false
-	        ///  });
+			///  $("#barchart").wijbarchart({
+			///      horizontal: false
+			///  });
 			/// </summary>
 			horizontal: true,
 			/// <summary>
@@ -67,7 +66,7 @@
 			clusterOverlap: 0,
 			/// <summary>
 			/// A value that indicates the percentage of the plotarea that each bar cluster occupies.
-			/// Default: 50.
+			/// Default: 85.
 			/// Type: Number.
 			/// Code example:
 			///  $("#barchart").wijbarchart({
@@ -97,7 +96,7 @@
 			clusterSpacing: 0,
 			/// <summary>
 			/// A value that indicates whether to show animation and the duration for the animation.
-			/// Default: {enabled:true, duration:2000}.
+			/// Default: {enabled:true, duration:400, easing: "easeOutExpo"}.
 			/// Type: Object.
 			/// Code example:
 			///  $("#barchart").wijbarchart({
@@ -113,13 +112,13 @@
 				enabled: true,
 				/// <summary>
 				/// A value that indicates the duration for the animation.
-				/// Default: 2000.
+				/// Default: 400.
 				/// Type: Number.
 				/// </summary>
 				duration: 400,
 				/// <summary>
 				/// A value that indicates the easing for the animation.
-				/// Default: "linear".
+				/// Default: "easeOutExpo".
 				/// Type: string.
 				/// </summary>
 				easing: "easeOutExpo"
@@ -128,52 +127,62 @@
 
 		_create: function () {
 			var defFill = [
-				"0-#8ac4c0-#77b3af",
-				"0-#73a19e-#67908e",
-				"0-#4f687b-#465d6e",
-				"0-#69475b-#5d3f51",
-				"0-#7a3b3f-#682e32",
-				"0-#9d5b5b-#8c5151",
-				"0-#e5a36d-#ce9262",
-				"0-#e6cc70-#ceb664",
-				"0-#8ec858-#7fb34f",
-				"0-#3a9073-#2a7b5f",
-				"0-#6c88e3-#6079cb",
-				"0-#6cb4e3-#60a0cb"
-			];
-			var o = this.options;
-			if (o.horizontal) {			
+					"0-#8ac4c0-#77b3af",
+					"0-#73a19e-#67908e",
+					"0-#4f687b-#465d6e",
+					"0-#69475b-#5d3f51",
+					"0-#7a3b3f-#682e32",
+					"0-#9d5b5b-#8c5151",
+					"0-#e5a36d-#ce9262",
+					"0-#e6cc70-#ceb664",
+					"0-#8ec858-#7fb34f",
+					"0-#3a9073-#2a7b5f",
+					"0-#6c88e3-#6079cb",
+					"0-#6cb4e3-#60a0cb"
+				],
+				self = this,
+				o = self.options;
+
+			if (o.horizontal) {
 				$.extend(true, o.axis, {
-					x:{
-						compass:"west"
+					x: {
+						compass: "west"
 					},
-					y:{
-						compass:"south"
+					y: {
+						compass: "south"
 					}
-				})
+				});
 			}
 
-			$.ui.wijchartcore.prototype._create.apply(this, arguments);
-
-			this.chartElement.addClass("ui-wijbarchart");
 			$.extend(true, {
 				compass: "east"
-			}, this.options.hint);
+			}, o.hint);
+
 			// default some fills
-			$.each(this.options.seriesStyles, function (idx, style) {
-				if (style.fill == null) {
+			$.each(o.seriesStyles, function (idx, style) {
+				if (!style.fill) {
 					style.fill = defFill[idx];
 				}
 			});
+
+			$.ui.wijchartcore.prototype._create.apply(self, arguments);
+			self.chartElement.addClass("ui-wijbarchart");
 		},
 
-		/*_setOption: function (key, value) {
-		switch (key) {
-		default:
-		break;
-		}
-		$.ui.wijchartcore.prototype._setOption.apply(this, arguments);
-		},*/
+		_setOption: function (key, value) {			
+			if (key === "horizontal" && !value) {
+				$.extend(true, this.options.axis, {
+					x: {
+						compass: "south"
+					},
+					y: {
+						compass: "west"
+					}
+				});
+			}
+
+			$.ui.wijchartcore.prototype._setOption.apply(this, arguments);
+		},
 
 		destroy: function () {
 			this.chartElement
@@ -222,75 +231,77 @@
 
 		_transformPoints: function (inverted, xscale, yscale, xlate, ylate, points) {
 			$.each(points, function (idx, point) {
-				var x = point.x;
-				var y = point.y;
+				var x = point.x,
+					y = point.y,
+					temp = 0;
 				point.x = xscale * x + xlate;
 				point.y = yscale * y + ylate;
-				
-				if (inverted){
-					var temp = point.x;
+
+				if (inverted) {
+					temp = point.x;
 					point.x = point.y;
 					point.y = temp;
 				}
-			})
+			});
 
 			return points;
 		},
 
 		_paintPlotArea: function () {
-			var o = this.options;
-			var plotArea = $.extend(true, {
-				visible: true
-			}, o.plotArea);
+			var o = this.options,
+				plotArea = $.extend(true, {
+					visible: true
+				}, o.plotArea);
 
 			if (!plotArea || !plotArea.visible) {
 				return;
 			}
 
-            var inverted = o.horizontal;
-			var stacked = o.stacked;
-			var is100Percent = stacked && o.is100Percent;
-			var seriesList = o.seriesList;
-			var nSeries = seriesList.length;
-			var seriesStyles = o.seriesStyles.slice(0, nSeries);
-			var seriesHoverStyles = o.seriesHoverStyles.slice(0, nSeries);
-			var xaxis = o.axis.x; //todo need add chartarea
-			var yaxis = o.axis.y;
-			var clusterOverlap = this._get_clusterOverlap(o.clusterOverlap);
-			var clusterWidth = this._get_clusterWidth(o.clusterWidth);
-			var startLocation = { x: this.canvasBounds.startX, y: this.canvasBounds.startY };
-			var width = this.canvasBounds.endX - startLocation.x;
-			var height = this.canvasBounds.endY - startLocation.y;
-			var plotInfos = {};
-			var bars = [];
-			var animatedBars = [];
-			var shadowOffset = 1;
-			var clusterSpacing = o.clusterSpacing + shadowOffset;
-			var animatedBar = null;
+			var inverted = o.horizontal,
+				stacked = o.stacked,
+				is100Percent = stacked && o.is100Percent,
+				seriesList = [].concat(o.seriesList),
+				nSeries = seriesList.length,
+				seriesStyles = [].concat(o.seriesStyles.slice(0, nSeries)),
+				seriesHoverStyles = [].concat(o.seriesHoverStyles.slice(0, nSeries)),
+				xaxis = o.axis.x, //todo need add chartarea
+				yaxis = o.axis.y,
+				clusterOverlap = this._get_clusterOverlap(o.clusterOverlap),
+				clusterWidth = this._get_clusterWidth(o.clusterWidth),
+				startLocation = { x: this.canvasBounds.startX, y: this.canvasBounds.startY },
+				width = this.canvasBounds.endX - startLocation.x,
+				height = this.canvasBounds.endY - startLocation.y,
+				plotInfos = {},
+				bars = [],
+				animatedBars = [],
+				shadowOffset = 1,
+				clusterSpacing = o.clusterSpacing + shadowOffset,
+				animatedBar = null,
+				animation = o.animation,
+				animated = animation && animation.enabled;
 
-			if (inverted && !stacked){
+			if (inverted && !stacked) {
 				seriesList.reverse();
 				seriesStyles.reverse();
 				seriesHoverStyles.reverse();
 			}
-			
+
 			if (nSeries > 0) {
 				var bpl = this._barPointList(seriesList);
 				if (stacked) {
 					bpl = this._stackValues(bpl);
 				}
 
-				var nPoints = bpl.length;
-				var minDX = this._getMinDX(bpl);
-				var dx = minDX * clusterWidth;
-				var bw = dx;
-				var chartLabels = this.canvas.set();
-				var animation = o.animation;
-				var animated = animation && animation.enabled;
-				var xscale = this._getScaling(inverted, xaxis.max, xaxis.min, inverted ? height : width);
-				var yscale = this._getScaling(!inverted, yaxis.max, yaxis.min, inverted ? width : height);
-				var xlate = this._getTranslation(inverted, startLocation, xaxis.max, xaxis.min, xscale);
-				var ylate = this._getTranslation(!inverted, startLocation, yaxis.max, yaxis.min, yscale);
+				var nPoints = bpl.length,
+					minDX = this._getMinDX(bpl),
+					dx = minDX * clusterWidth,
+					bw = dx,
+					chartLabels = this.canvas.set(),
+					xscale = this._getScaling(inverted, xaxis.max, xaxis.min, inverted ? height : width),
+					yscale = this._getScaling(!inverted, yaxis.max, yaxis.min, inverted ? width : height),
+					xlate = this._getTranslation(inverted, startLocation, xaxis.max, xaxis.min, xscale),
+					ylate = this._getTranslation(!inverted, startLocation, yaxis.max, yaxis.min, yscale);
+
 				plotInfos.xscale = xscale;
 				plotInfos.yscale = yscale;
 				plotInfos.xlate = xlate;
@@ -298,16 +309,16 @@
 
 				// adjust the bar width (bw) to account for overlap
 				if (nSeries > 1 && !stacked) {
-				clusterOverlap -= (nPoints*(nSeries - 1)*clusterSpacing)/(inverted?height:width);
+					clusterOverlap -= (nPoints * (nSeries - 1) * clusterSpacing) / (inverted ? height : width);
 					bw /= (nSeries * (1 - clusterOverlap) + clusterOverlap);
 				}
 
 				// plot a bar group for each datapoint
 				for (var p = 0; p < nPoints; p++) {
-					var xs = bpl[p];
-					var ps = xs.paSpec;
-					var ns = ps.length;
-					var sx;
+					var xs = bpl[p],
+						ps = xs.paSpec,
+						ns = ps.length,
+						sx;
 					if (stacked) {
 						sx = bw;
 					}
@@ -319,9 +330,10 @@
 					var rp = { x: xs.x - sx / 2, y: 0, width: bw, height: ps[0].y };
 
 					for (var s = 0; s < ps.length; s++) {
-						var series = seriesList[ps[s].sIdx];
-						var seriesStyle = seriesStyles[ps[s].sIdx];
-						var seriesHoverStyle = seriesHoverStyles[ps[s].sIdx];
+						var idx = ps[s].sIdx,
+							series = seriesList[idx],
+							seriesStyle = seriesStyles[idx],
+							seriesHoverStyle = seriesHoverStyles[idx];
 
 						// adjust the rectangle for this point
 						if (stacked) {
@@ -354,11 +366,11 @@
 							}
 						}
 
-						var x = [{ x: rp.x, y: rp.y }, { x: rp.x + rp.width, y: rp.y + rp.height}]
-						var inPlotArea = ((xaxis.min <= x[0].x && x[0].x <= xaxis.max)
-										|| (xaxis.min <= x[1].x && x[1].x <= xaxis.max))
-									   && ((yaxis.min <= x[0].y && x[0].y <= yaxis.max)
-										|| (yaxis.min <= x[1].y && x[1].y <= yaxis.max));
+						var x = [{ x: rp.x, y: rp.y }, { x: rp.x + rp.width, y: rp.y + rp.height}],
+							inPlotArea = ((xaxis.min <= x[0].x && x[0].x <= xaxis.max) ||
+										  (xaxis.min <= x[1].x && x[1].x <= xaxis.max)) &&
+										  ((yaxis.min <= x[0].y && x[0].y <= yaxis.max) ||
+										  (yaxis.min <= x[1].y && x[1].y <= yaxis.max));
 
 						x[0].x = this._adjustToLimits(x[0].x, xaxis.min, xaxis.max);
 						x[0].y = this._adjustToLimits(x[0].y, yaxis.min, yaxis.max);
@@ -384,20 +396,20 @@
 						var rf = { x: x[0].x, y: x[0].y, width: x[1].x - x[0].x, height: x[1].y - x[0].y };
 
 						if (inPlotArea) {
-							if (rf.width == 0) {
+							if (rf.width === 0) {
 								rf.width = 0.5;
 							}
 
-							if (rf.height == 0) {
+							if (rf.height === 0) {
 								rf.height = 0.5;
 							}
 						}
 
-						if (plotInfos.rects == null) {
+						if (!plotInfos.rects) {
 							plotInfos.rects = [];
 						}
 
-						if (plotInfos.rects[s] == null) {
+						if (!plotInfos.rects[s]) {
 							plotInfos.rects[s] = [];
 						}
 
@@ -405,24 +417,27 @@
 						var defaultChartLabel = null;
 
 						if (o.showChartLabels) {
-							var textStyle = $.extend(true, {}, o.textStyle, o.chartLabelStyle);
-							var pos = inverted? {x:rf.x + rf.width, y:rf.y + rf.height / 2} : {x:rf.x + rf.width/2, y:rf.y};
+							var textStyle = $.extend(true, {}, o.textStyle, o.chartLabelStyle),
+								pos = inverted ? { x: rf.x + rf.width, y: rf.y + rf.height / 2} : { x: rf.x + rf.width / 2, y: rf.y },
+								dclBox = null;
+
 							defaultChartLabel = this._text(pos.x, pos.y, ps[s].y).attr(textStyle);
-							var dclBox = defaultChartLabel.getBBox();
-							if (inverted){
+							dclBox = defaultChartLabel.getBBox();
+							if (inverted) {
 								defaultChartLabel.translate(dclBox.width / 2, 0);
 							}
-							else{
-								defaultChartLabel.translate(0, -dclBox.height/2);
+							else {
+								defaultChartLabel.translate(0, -dclBox.height / 2);
 							}
 							chartLabels.push(defaultChartLabel);
 						}
 
-						var bar = null;
-						var r = seriesStyle.r ? seriesStyle.r : o.clusterRadius;
+						var bar = null,
+							r = seriesStyle.r ? seriesStyle.r : o.clusterRadius,
 						//var r = series.style.r ? series.style.r : o.clusterRadius;
 						//var style = series.style;
-						var style = seriesStyle = $.extend(true, {
+							style = null;
+						style = seriesStyle = $.extend(true, {
 							fill: "#fff",
 							"fill-opacity": 1,
 							stroke: "#000",
@@ -439,10 +454,10 @@
 
 						//var strokeWidth = series.style["stroke-width"];
 						//var stroke = series.style["stroke"];
-						var strokeWidth = seriesStyle["stroke-width"];
-						var stroke = seriesStyle["stroke"];
+						var strokeWidth = seriesStyle["stroke-width"],
+							stroke = seriesStyle.stroke;
 
-						if (stroke != "none" && strokeWidth) {
+						if (stroke !== "none" && strokeWidth) {
 							strokeWidth = parseInt(strokeWidth);
 						}
 
@@ -452,24 +467,24 @@
 
 						if (animated) {
 							if (r) {
-								if (inverted){
+								if (inverted) {
 									bar = this.canvas.wij.roundRect(rf.x, rf.y, rf.width - strokeWidth, rf.height - strokeWidth, 0, 0, r, r).hide();
 									animatedBar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
 								}
-								else{
+								else {
 									bar = this.canvas.wij.roundRect(rf.x, rf.y, rf.width - strokeWidth, rf.height - strokeWidth, r, 0, 0, r).hide();
 									animatedBar = this.canvas.rect(rf.x, startLocation.y + height - strokeWidth, rf.width, 0);
 								}
-								
+
 								this._paintShadow(animatedBar, shadowOffset);
 								animatedBar.wijAttr(style);
 								animatedBar.bar = bar;
 							}
 							else {
-								if (inverted){
+								if (inverted) {
 									bar = this.canvas.rect(startLocation.x, rf.y, 0, rf.height - strokeWidth);
 								}
-								else{
+								else {
 									bar = this.canvas.rect(rf.x, startLocation.y + height - strokeWidth, rf.width, 0);
 								}
 								animatedBar = bar;
@@ -513,19 +528,19 @@
 				this.chartElement.data("plotInfos", plotInfos);
 				$.each(chartLabels, function (idx, chartLabel) {
 					chartLabel.toFront();
-				})
+				});
 			}
 
 			if (animated) {
-				var duration = animation.duration ? animation.duration : 2000;
-				var easing = animation.easing ? animation.easing : "linear";
+				var duration = animation.duration ? animation.duration : 2000,
+					easing = animation.easing ? animation.easing : "linear";
 				for (var idx = 0; idx < animatedBars.length; idx++) {
 					animatedBar = animatedBars[idx];
-					var params = inverted? {width: animatedBar.width, x: animatedBar.left} : {height:animatedBar.height, y:animatedBar.top};
+					var params = inverted ? { width: animatedBar.width, x: animatedBar.left} : { height: animatedBar.height, y: animatedBar.top };
 					animatedBar.wijAnimate(params, duration, easing, function () {
-						var b = this;
-						var r = b.r;
-						var bar = b;
+						var b = this,
+							r = b.r,
+							bar = b;
 
 						if (b.chartLabel) {
 							b.chartLabel.animate({ opacity: 1 }, 250);
@@ -538,7 +553,7 @@
 							if (b.shadow) {
 								b.shadow.remove();
 								b.shadow = null;
-							};
+							}
 							b.remove();
 							b = null;
 						}
@@ -550,15 +565,14 @@
 		},
 
 		_getChartLabelPointPosition: function (chartLabel) {
-			var o = this.options;
-			var method = chartLabel.attachMethod;
-			var data = chartLabel.attachMethodData;
-			var point = { x: 0, y: 0 };
-			var pi = null;
-			var seriesIndex = null;
-			var pointIndex = null;
-			var x = null;
-			var y = null;
+			var method = chartLabel.attachMethod,
+				data = chartLabel.attachMethodData,
+				point = { x: 0, y: 0 },
+				pi = null,
+				seriesIndex = null,
+				pointIndex = null,
+				x = null,
+				y = null;
 
 			switch (method) {
 				case "coordinate":
@@ -584,8 +598,8 @@
 					if (seriesIndex > -1) {
 						var rects = pi.rects;
 						if (rects.length > seriesIndex) {
-							var rs = rects[seriesIndex];
-							var rect = rs[pointIndex];
+							var rs = rects[seriesIndex],
+							rect = rs[pointIndex];
 							point.x = rect.x + rect.width;
 							point.y = rect.y + rect.height / 2;
 						}
@@ -595,7 +609,7 @@
 					seriesIndex = data.seriesIndex;
 					pointIndex = data.pointIndex;
 					if (seriesIndex > -1) {
-						var barData = o.seriesList[seriesIndex].data;
+						var barData = this.options.seriesList[seriesIndex].data;
 						x = barData.x[pointIndex];
 						y = data.y;
 						pi = this.chartElement.data("plotInfos");
@@ -613,58 +627,46 @@
 		},
 
 		_bindLiveEvents: function () {
-			var o = this.options;
-			var self = this;
-			var proxyObj = {
-				mousedown: function (e) {
-					this._trigger("mousedown", e, $(e.target).data("wijchartDataObj"));
-				},
-				mouseup: function (e) {
-					this._trigger("mouseup", e, $(e.target).data("wijchartDataObj"));
-				},
-				mouseover: function (e) {
-					this._trigger("mouseover", e, $(e.target).data("wijchartDataObj"));
-				},
-				mouseout: function (e) {
-					this._trigger("mouseout", e, $(e.target).data("wijchartDataObj"));
-				},
-				mousemove: function (e) {
-					this._trigger("mousemove", e, $(e.target).data("wijchartDataObj"));
-				},
-				click: function (e) {
-					this._trigger("click", e, $(e.target).data("wijchartDataObj"));
-				}
-			};
-			$(".wijchart-canvas-object", this.chartElement[0])
-					.live("mousedown.wijbarchart", $.proxy(proxyObj.mousedown, this))
-					.live("mouseup.wijbarchart", $.proxy(proxyObj.mouseup, this))
-					.live("mouseover.wijbarchart", $.proxy(proxyObj.mouseover, this))
-					.live("mouseout.wijbarchart", $.proxy(proxyObj.mouseout, this))
-					.live("mousemove.wijbarchart", $.proxy(proxyObj.mousemove, this))
-					.live("click.wijbarchart", $.proxy(proxyObj.click, this));
+			var self = this,
+				o = self.options,
+				hintEnable = o.hint.enable,
+				toolTipEle = self.toolTipEle;
 
-			$(".wijchart-canvas-object", this.chartElement[0])
-					.live("mouseout.wijbarchart", function () {
-						var dataObj = $(this).data("wijchartDataObj");
-						var bar = dataObj.bar;
+			if (hintEnable && !toolTipEle) {
+				toolTipEle = self.canvas.wij.tooltip(self);
+			}
 
-						if (!dataObj.hoverStyle) {
-							if (bar) {
-								bar.attr({ opacity: "1" });
-							}
+			$(".wijchart-canvas-object", self.chartElement[0])
+				.live("mousedown.wijbarchart", function (e) {
+					self._trigger("mousedown", e, $(e.target).data("wijchartDataObj"));
+				})
+				.live("mouseup.wijbarchart", function (e) {
+					self._trigger("mouseup", e, $(e.target).data("wijchartDataObj"));
+				})
+				.live("mouseover.wijbarchart", function (e) {
+					self._trigger("mouseover", e, $(e.target).data("wijchartDataObj"));
+				})
+				.live("mouseout.wijbarchart", function (e) {
+					var dataObj = $(e.target).data("wijchartDataObj"),
+						bar = dataObj.bar;
+					self._trigger("mouseout", e, dataObj);
+
+					if (!dataObj.hoverStyle) {
+						if (bar) {
+							bar.attr({ opacity: "1" });
 						}
-						else {
-							bar.attr(dataObj.style);
-						}
+					}
+					else {
+						bar.attr(dataObj.style);
+					}
 
-						if (self.tooltipEle) {
-							self.tooltipEle.hide();
-						}
-					});
-
-			$(".wijchart-canvas-object", this.chartElement[0])
+					if (toolTipEle) {
+						toolTipEle.hide();
+					}
+				})
 				.live("mousemove.wijbarchart", function (e) {
-					var dataObj = $(this).data("wijchartDataObj");
+					var dataObj = $(e.target).data("wijchartDataObj");
+					self._trigger("mousemove", e, dataObj);
 
 					//code for adding hover state effect.
 					var bar = dataObj.bar;
@@ -679,19 +681,18 @@
 					}
 					//end of code for adding hover state effect.
 
-					if (o.hint.enable) {
-						if (!self.tooltipEle) {
-							self.tooltipEle = self.canvas.wij.tooltip(self);
-						}
+					if (hintEnable) {
+						var index = dataObj.index,
+							data = dataObj.data,
+							chartPos = self.chartElement.offset(),
+							curPos = {
+								x: e.pageX,
+								y: e.pageY
+							},
+							valueX = null,
+							valueY = null,
+							style = null;
 
-						var index = dataObj.index;
-						var data = dataObj.data;
-						var chartPos = self.chartElement.offset();
-						var curPos = {
-							x: e.pageX,
-							y: e.pageY
-						};
-						var valueX, valueY;
 						if (data.x) {
 							valueX = data.x[index];
 							valueY = data.y[index];
@@ -723,12 +724,12 @@
 						self.element.trigger("hintShowing", data);
 
 						if (!data.cancel) {
-							var content = data.content;
-							var format = o.hint.formatter;
+							var content = data.content,
+								format = o.hint.formatter;
 
 							if (!content) {
 								if (format === null) {
-								    content = valueY;
+									content = valueY;
 								}
 								else if ($.isFunction(format)) {
 									var obj = {
@@ -736,8 +737,8 @@
 										y: valueY,
 										data: dataObj,
 										fmt: format
-									};
-									var fmt = $.proxy(obj.fmt, obj);
+									},
+										fmt = $.proxy(obj.fmt, obj);
 									content = fmt();
 								}
 								else {
@@ -745,23 +746,27 @@
 								}
 								//content = "x: " + valueX + "<br />y: " + valueY;
 							}
-							var style = dataObj.style;
+							style = dataObj.style;
 
-							self.tooltipEle.showDelay = data.showDelay;
-							self.tooltipEle.hideDelay = data.hideDelay;
-							self.tooltipEle.duration = data.duration;
-							self.tooltipEle.easing = data.easing;
-							self.tooltipEle.textAttr = $.extend(true, {}, o.textStyle, data.textStyle);
-							self.tooltipEle.rectAttr = $.extend({
-								stroke: style["stroke"] || style["fill"], "stroke-opacity": "0.9"
+							toolTipEle.showDelay = data.showDelay;
+							toolTipEle.hideDelay = data.hideDelay;
+							toolTipEle.duration = data.duration;
+							toolTipEle.easing = data.easing;
+							toolTipEle.textAttr = $.extend(true, {}, o.textStyle, data.textStyle);
+							toolTipEle.rectAttr = $.extend({
+								stroke: style.stroke || style.fill,
+								"stroke-opacity": "0.9"
 							}, data.style);
-							self.tooltipEle.text = content;
-							self.tooltipEle.offset = data.offset;
-							self.tooltipEle.compass = data.compass;
-							self.tooltipEle.showAt(point, 200);
+							toolTipEle.text = content;
+							toolTipEle.offset = data.offset;
+							toolTipEle.compass = data.compass;
+							toolTipEle.showAt(point, 200);
 							self._trigger("hintshown", null, data);
 						}
 					}
+				})
+				.live("click.wijbarchart", function (e) {
+					self._trigger("click", e, $(e.target).data("wijchartDataObj"));
 				});
 		},
 
@@ -773,42 +778,47 @@
 			$.ui.wijchartcore.prototype._calculateParameters.apply(this, arguments);
 
 			// check for bar chart and x axis expansion
-			if (axisInfo.id == "x") {
-				var minor = options.unitMinor;
-				var autoMin = options.autoMin;
-				var autoMax = options.autoMax;
-				var adj = this._getBarAdjustment(axisInfo);
+			if (axisInfo.id === "x") {
+				var minor = options.unitMinor,
+				//autoMin = options.autoMin,
+				//autoMax = options.autoMax,
+					adj = this._getBarAdjustment(axisInfo);
 
-				if (adj == 0) {
+				if (adj === 0) {
 					adj = minor;
 				}
 				else {
-					if (minor < adj && minor != 0) {
+					if (minor < adj && minor !== 0) {
 						adj = Math.floor(adj / minor) * minor;
 					}
 				}
 
-				if (autoMin) {
-					axisInfo.min -= adj;
+				/*if (autoMin) {
+				axisInfo.min -= adj;
 				}
 
 				if (autoMax) {
-					axisInfo.max += adj;
-				}
+				axisInfo.max += adj;
+				}*/
+
+				axisInfo.min -= adj;
+				axisInfo.max += adj;
 
 				this._calculateMajorMinor(options, axisInfo);
 			}
 		},
 
 		_getBarAdjustment: function (axisInfo) {
-			var len = 0;
-			var o = this.options;
-			var max = axisInfo.max;
-			var min = axisInfo.min;
-			var seriesList = o.seriesList;
+			var len = 0,
+				o = this.options,
+				max = axisInfo.max,
+				min = axisInfo.min,
+				seriesList = o.seriesList,
+				i = 0,
+				xLen = 0;
 
-			for (var i = 0; i < seriesList.length; i++) {
-				var xLen = seriesList[i].data.x.length;
+			for (i = 0; i < seriesList.length; i++) {
+				xLen = seriesList[i].data.x.length;
 
 				if (len < xLen) {
 					len = xLen;
@@ -818,8 +828,8 @@
 			if (len > 1) {
 				return (max - min) / len * o.clusterWidth * 0.0125;
 			}
-			else if (len == 1) {
-				if (min == 0.0 && max == 1.0) {
+			else if (len === 1) {
+				if (min === 0.0 && max === 1.0) {
 					min = -1.0;
 					axisInfo.min = min;
 				}
@@ -834,8 +844,8 @@
 
 	$.extend($.ui.wijbarchart.prototype, {
 		_barPointList: function (seriesList) {
-			var x = [];
-			var getXSortedPoints = this._getXSortedPoints;
+			var x = [],
+				getXSortedPoints = this._getXSortedPoints;
 
 			function xSpec(nx) {
 				this.x = nx;
@@ -852,28 +862,28 @@
 							ps0 = ps;
 						}
 					}
-				}
-			};
+				};
+			}
 
 			function addSeriesData(idx, series) {
-				var points = getXSortedPoints(series);
-				var nSeries = series.length;
-				var xs = null;
-				var lim = 0;
-				if (points != null) {
+				var points = getXSortedPoints(series),
+					nSeries = series.length,
+					xs = null,
+					lim = 0;
+				if (points) {
 					lim = points.length;
 				}
 
-				var j = 0;
-				var jlim = 0;
+				var j = 0,
+					jlim = 0;
 
-				if (x != null) {
+				if (x) {
 					jlim = x.length;
 				}
 
-				var first_point = true;
-				var xprev = 0;
-				var dupl = false;
+				var first_point = true,
+					xprev = 0,
+					dupl = false;
 
 				for (var p = 0; p < lim; p++) {
 					if (first_point) {
@@ -881,7 +891,7 @@
 						xprev = points[p].x;
 					}
 					else {
-						if (xprev == points[p].x) {
+						if (xprev === points[p].x) {
 							dupl = true;
 						}
 						else {
@@ -896,7 +906,7 @@
 
 					if (j < jlim) {
 						// use or insert before the existing item
-						if (x[j].x != points[p].x) {
+						if (x[j].x !== points[p].x) {
 							xs = new xSpec(points[p].x, nSeries);
 							x.splice(j, 0, xs);
 							jlim = x.length;
@@ -914,8 +924,8 @@
 
 					xs.paSpec.push({ y: points[p].y, sIdx: idx, pIdx: p, dupl: dupl });
 				}
-			};
-			
+			}
+
 			$.each(seriesList, function (idx, series) {
 				addSeriesData(idx, series);
 			});
@@ -930,7 +940,7 @@
 				var xs = x[idx];
 
 				if (xs.x >= x) {
-					if (xs.x == x) {
+					if (xs.x === x) {
 						return xs;
 					}
 
@@ -941,8 +951,8 @@
 		},
 
 		_getMinDX: function (x) {
-			var minDx = Number.MAX_VALUE;
-			var len = x.length;
+			var minDx = Number.MAX_VALUE,
+				len = x.length;
 
 			for (var idx = 1; idx < len; idx++) {
 				var dx = x[idx].x - x[idx - 1].x;
@@ -952,7 +962,7 @@
 				}
 			}
 
-			if (minDx == Number.MAX_VALUE) {
+			if (minDx === Number.MAX_VALUE) {
 				return 2;
 			}
 
@@ -962,10 +972,10 @@
 		_stackValues: function (x) {
 			$.each(x, function (idx, xSpec) {
 				xSpec.stackValues();
-			})
+			});
 
 			return x;
 		}
-	})
+	});
 
 })(jQuery);
