@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -29,7 +29,7 @@ $.widget("ui.wijwizard", {
 	options: {
 		///	<summary>
 		///		Determines the type of navigation buttons used with the wijwizard. 
-		///		Possible values are auto, common, edge and none.
+		///		Possible values are 'auto', 'common', 'edge' and 'none'.
 		///	</summary>
 		navButtons: 'auto',
 		///	<summary>
@@ -121,14 +121,10 @@ $.widget("ui.wijwizard", {
 	_setOption: function(key, value) {
 		$.Widget.prototype._setOption.apply(this, arguments);
 		
-		switch(key){
-			case 'activeIndex':
-				this.show(value);
-			break;
-			
-			default:
-				this._pageLize();
-			break;
+		if (key === 'activeIndex'){
+			this.show(value);
+		}else{
+			this._pageLize();
 		}
 	},
 	
@@ -166,9 +162,9 @@ $.widget("ui.wijwizard", {
 		if (o.blind === undefined) { o.blind = false; }
 		if (o.fade === undefined) { o.fade = false; }
 		if (o.duration === undefined) { o.duration = 200; }
-		if (typeof o.duration == 'string'){
+		if (typeof o.duration === 'string'){
 			try{
-				o.duration = parseInt(o.duration);
+				o.duration = parseInt(o.duration, 10);
 			}
 			catch(e){
 				o.duration = 200;
@@ -205,7 +201,7 @@ $.widget("ui.wijwizard", {
 				this.backBtn = $("<a href='#'><span class='ui-button-text'>back</span></a>")
 				.addClass('ui-widget ui-button ui-button-text-only ui-state-default ui-corner-all')
 				.appendTo(this.buttons).bind({
-					'click': function(){self.back();},
+					'click': function(){self.back(); return false;},
 					'mouseover': function() { addState('hover', $(this)); },
 					'mouseout': function() { removeState('hover', $(this)); },
 					'mousedown': function() { addState('active', $(this)); },
@@ -215,7 +211,7 @@ $.widget("ui.wijwizard", {
 				this.nextBtn = $("<a href='#'><span class='ui-button-text'>next</span></a>")
 				.addClass('ui-widget ui-button ui-button-text-only ui-state-default ui-corner-all')
 				.appendTo(this.buttons).bind({
-					'click': function(){self.next();},
+					'click': function(){self.next(); return false;},
 					'mouseover': function() { addState('hover', $(this)); },
 					'mouseout': function() { removeState('hover', $(this)); },
 					'mousedown': function() { addState('active', $(this)); },
@@ -226,7 +222,7 @@ $.widget("ui.wijwizard", {
 				.addClass('ui-wijwizard-prev ui-state-default ui-corner-right')
 				.append("<span class='ui-icon ui-icon-triangle-1-w'></span>")
 				.appendTo(this.buttons).bind({
-					'click': function(){self.back();},
+					'click': function(){self.back(); return false;},
 					'mouseover': function() { addState('hover', $(this)); },
 					'mouseout': function() { removeState('hover', $(this)); },
 					'mousedown': function() { addState('active', $(this)); },
@@ -237,7 +233,7 @@ $.widget("ui.wijwizard", {
 				.addClass('ui-wijwizard-next ui-state-default ui-corner-left')
 				.append("<span class='ui-icon ui-icon-triangle-1-e'></span>")
 				.appendTo(this.buttons).bind({
-					'click': function(){self.next();},
+					'click': function(){self.next(); return false;},
 					'mouseover': function() { addState('hover', $(this)); },
 					'mouseout': function() { removeState('hover', $(this)); },
 					'mousedown': function() { addState('active', $(this)); },
@@ -261,7 +257,7 @@ $.widget("ui.wijwizard", {
 		
 		if (init){
 			this.list = this.element.find('ol,ul').eq(0);
-			if (this.list && this.list.length == 0) { this.list = null; }
+			if (this.list && this.list.length === 0) { this.list = null; }
 			if (this.list){ this.lis = $('li', this.list); }
 			this.panels = $('> div', this.element);
 			
@@ -348,7 +344,7 @@ $.widget("ui.wijwizard", {
 		});
 		
 		if (this.element.innerWidth() < width){
-			if (this.scrollWrap == undefined){
+			if (this.scrollWrap === undefined){
 				this.list.wrap("<div class='scrollWrap'></div>");
 				this.scrollWrap = this.list.parent();
 				$.effects.save(this.list, ['width', 'height', 'overflow']);
@@ -394,7 +390,7 @@ $.widget("ui.wijwizard", {
 		}
 		
 		if (this.buttons && !o.loop){
-			this.backBtn[o.activeIndex == 0 ? 'addClass' : 'removeClass']('ui-state-disabled');
+			this.backBtn[o.activeIndex === 0 ? 'addClass' : 'removeClass']('ui-state-disabled');
 			this.nextBtn[o.activeIndex >= this.panels.length - 1 ? 'addClass' : 'removeClass']('ui-state-disabled');
 		}
 	},
@@ -502,13 +498,13 @@ $.widget("ui.wijwizard", {
 			index = this.panels.length; // append by default
 		}
 		
-		if (title == undefined){
+		if (title === undefined){
 			title = "Step " + index;
 		}
 
 		var self = this, o = this.options;
 
-		var $panel = $(o.panelTemplate).data('destroy.wijwizard', true);
+		var $panel = $(o.panelTemplate).data('destroy.wijwizard', true), $li;
 		$panel.addClass('ui-wijwizard-panel ui-widget-content ui-corner-all ui-wijwizard-hide');
 		
 		if (index >= this.panels.length) {
@@ -523,7 +519,7 @@ $.widget("ui.wijwizard", {
 		}
 		
 		if (this.list && this.lis){
-			var $li = $(o.stepHeaderTemplate.replace(/#\{title\}/g, title).replace(/#\{desc\}/g, desc));
+			$li = $(o.stepHeaderTemplate.replace(/#\{title\}/g, title).replace(/#\{desc\}/g, desc));
 			$li.addClass('ui-widget-header ui-corner-all').data('destroy.wijwizard', true);
 			
 			if (index >= this.lis.length) {
@@ -611,7 +607,7 @@ $.widget("ui.wijwizard", {
 	},
 
 	show: function(index) {
-		/// <summary>Active and display the panel at specified position.</summary>
+		/// <summary>Selects a panel Active and display the panel at specified position.</summary>
 		/// <param name="index" type="Number">The zero-based index of the panel to be actived.</param>
 		if (index < 0 || index >= this.panels.length) { return this; }
 		
@@ -738,7 +734,7 @@ $.widget("ui.wijwizard", {
 						o.ajaxOptions.success(r, s);
 					}
 				}
-				catch (e) {}
+				catch (e1) {}
 			},
 			error: function(xhr, s, e) {
 				// callbacks
@@ -750,7 +746,7 @@ $.widget("ui.wijwizard", {
 						o.ajaxOptions.error(xhr, s, index, p);
 					}
 				}
-				catch (e) {}
+				catch (e2) {}
 			}
 		}));
 

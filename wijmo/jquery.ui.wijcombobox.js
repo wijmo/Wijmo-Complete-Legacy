@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -322,7 +322,7 @@
 							event.preventDefault();
 						}
 						break;
-					//passthrough - ENTER and TAB both select the current element    
+					//passthrough - ENTER and TAB both select the current element           
 					case keyCode.TAB:
 						input.trigger("wijcomboblur");
 						if (!self.menu.active || (o.selectionMode === "multiple" && keyCode.TAB === code)) {
@@ -1025,7 +1025,19 @@
 				var showingAnimation = self.options.showingAnimation;
 				if (self.options.showingAnimation != null && !(eventObj !== undefined && eventObj.keyCode === $.ui.keyCode.BACKSPACE)) {
 					self.menu.element.hide();
-					self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, showingAnimation.callback);
+					//Add comments by RyanWu@20101105.
+					//For fixing the issue that list items are transparent when choosing bounce effect. 
+					//self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, showingAnimation.callback);
+					self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, function () {
+						if (showingAnimation.callback) {
+							showingAnimation.callback.apply(this, arguments);
+						}
+
+						if ($.browser.msie) {
+							menuElement.css("filter", "");
+						}
+					});
+					//end by RyanWu@20101105.
 				}
 			}
 			$(document).bind("click", self, self.closeOnClick);

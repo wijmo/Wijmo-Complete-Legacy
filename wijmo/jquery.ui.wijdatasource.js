@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -30,14 +30,14 @@
 		/// Default: {}.
 		/// Type: Object. 
 		/// </summary>
-		self.data = {},
+		self.data = {};
 		/// <summary>
 		/// The reader to use with wijdatasource. The wijdatasource class will call the read method of reader to read from rawdata.  
 		/// If no reader is configured with wijdatasource it will directly return the raw data.
 		/// Default: null.
 		/// Type: Object. 
 		/// </summary>
-		self.reader = null,
+		self.reader = null;
 		/// <summary>
 		/// The proxy to use with wijdatasource. The wijdatasource class will call the proxy object's request method.  
 		/// In the proxy object, you can send a request to a remote server to obtain data. 
@@ -45,13 +45,13 @@
 		/// Default: null.
 		/// Type: Object. 
 		/// </summary>
-		self.proxy = null,
+		self.proxy = null;
 		/// <summary>
 		/// The processed items from the raw data.  This can be obtained after datasource is loaded.
 		/// Default: [].
 		/// Type: Array. 
 		/// </summary>
-		self.items = [],
+		self.items = [];
 		/// <summary>
 		/// Function called before loading process starts
 		/// Default: null.
@@ -63,7 +63,7 @@
 		/// <param name="data" type="Object">
 		/// data passed in by load method.
 		/// </param>
-		self.loading = null,
+		self.loading = null;
 		/// <summary>
 		/// Function called after loading.
 		/// Default: null.
@@ -111,7 +111,7 @@
 			}
 			else {
 				// local data is loaded only once, if force loading is needed forceLocalReload should be true.
-				if (self.items.length == 0 || forceLocalReload) {
+				if (self.items.length === 0 || forceLocalReload) {
 					// no proxy, read raw data
 					this.read();
 				}
@@ -173,7 +173,7 @@
 		_map: function (data) {
 			var self = this;
 			var arr = [];
-			if (self.fields == undefined || self.fields.length == 0) {
+			if (self.fields === undefined || self.fields.length === 0) {
 				$.extend(true, arr, data);
 				return arr;
 			}
@@ -187,10 +187,10 @@
 							return true;
 						}
 						// use string field mapping or number index mapping.
-						var mapping = field.mapping != undefined ? field.mapping : field.name;
+						var mapping = field.mapping !== undefined ? field.mapping : field.name;
 						var v = value[mapping];
-						if (v == undefined) {
-							if (field.defaultValue != undefined) {
+						if (v === undefined) {
+							if (field.defaultValue !== undefined) {
 								v = field.defaultValue;
 							}
 							else {
@@ -241,7 +241,7 @@
 
 		_complete: function (data, datasource, callback, options, userData) {
 			// set raw data
-			datasource.data = options.key != undefined ? data[options.key] : data;
+			datasource.data = options.key !== undefined ? data[options.key] : data;
 			// read raw data using a data reader in datasource
 			datasource.read();
 			// fire loaded callback

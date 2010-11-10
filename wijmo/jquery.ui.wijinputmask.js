@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -108,7 +108,7 @@ var wijMaskedTextProvider = function (w, m, asciiOnly) {
 	this.descriptors = [];
 	this.noMask = false;
 	this.initialize();
-}
+};
 
 wijMaskedTextProvider.prototype = {
 	inputWidget: undefined,
@@ -366,7 +366,7 @@ wijMaskedTextProvider.prototype = {
 	},
 
 	findAssignedEditPositionInRange: function (start, end, direction) {
-		if (this.assignedCharCount == 0) { return -1; }
+		if (this.assignedCharCount === 0) { return -1; }
 		return this.findEditPositionInRange(start, end, direction, wijchartype.editRequired);
 	},
 
@@ -476,9 +476,7 @@ wijMaskedTextProvider.prototype = {
 			return false;
 		}
 		var num3 = this.findEditPositionFrom(rh.testPosition + 1, true);
-		if (!flag1) {
-		}
-		else {
+		if (flag1) {
 			var hint1 = new wijInputResult();
 			hint1.hint = hint1.unknown;
 			var repeat = true;
@@ -1014,7 +1012,7 @@ wijMaskedTextProvider.prototype = {
 		rh.hint = rh.positionOutOfRange;
 		return false;
 	}
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1024,11 +1022,12 @@ var wijCharDescriptor = function (maskPos, charType) {
 	this.caseConversion = 'none';
 	this.maskPosition = maskPos;
 	this.charType = charType;
-}
+};
+
 wijCharDescriptor.prototype = {
 	isAssigned: false,
 	maskPosition: 0
-}
+};
 	
 
 })(jQuery);

@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -49,25 +49,25 @@ $.widget("ui.wijinputnumber", $.extend(true, {}, wijinputcore, {
 		maxValue: 1000000000,
 		///	<summary>
 		///		Indicates whether the thousands group separator will be 
-		/// 	inserted between between each digital group 
-		/// 	(number of digits in thousands group depends on the 
-		/// 	selected Culture).
+		///		inserted between between each digital group 
+		///		(number of digits in thousands group depends on the 
+		///		selected Culture).
 		///	</summary>
 		showGroup: false,
 		///	<summary>
 		///		Indicates the number of decimal places to display.
 		///		Possible values are integer from -2 to 8. They are:
-		/// 	useDefault: -2,
-		/// 	asIs: -1,
-		/// 	zero: 0,
-		/// 	one: 1,
-		/// 	two: 2,
-		/// 	three: 3,
-		/// 	four: 4,
-		/// 	five: 5,
-		/// 	six: 6,
-		/// 	seven: 7,
-		/// 	eight: 8
+		///		useDefault: -2,
+		///		asIs: -1,
+		///		zero: 0,
+		///		one: 1,
+		///		two: 2,
+		///		three: 3,
+		///		four: 4,
+		///		five: 5,
+		///		six: 6,
+		///		seven: 7,
+		///		eight: 8
 		///	</summary>
 		decimalPlaces: 2
 	},
@@ -202,7 +202,7 @@ var wijNumberTextProvider = function (owner, t) {
 	this._type = t;
 	this._stringFormat = new wijNumberFormat(this._type, this.inputWidget.options.decimalPlaces, this.inputWidget.options.showGroup, this._getCulture());
 	this._stringFormat._setValueFromJSFloat(this.getValue());
-}
+};
 
 wijNumberTextProvider.prototype = {
 	_type: 'numeric',
@@ -382,7 +382,7 @@ wijNumberTextProvider.prototype = {
 		rh.testPosition = start;
 		try {
 			var curText = this._stringFormat._currentText;
-			if ((!(end - start)) && curText.substring(start, end + 1) === this.getDecimalSeparator()) {
+			if ((start === end) && curText.substring(start, end + 1) === this.getDecimalSeparator()) {
 				return false;
 			}
 			var curInsertText = curText.slice(0, start) + curText.slice(end + 1);
@@ -393,19 +393,18 @@ wijNumberTextProvider.prototype = {
 					var beginText = this._stringFormat._currentText.substring(0, start);
 					if (this.countSubstring(beginText, this._stringFormat._groupSeparator) !== this.countSubstring(curInsertText, this._stringFormat._groupSeparator)) {
 						rh.testPosition = rh.testPosition - 1;
-						if (curText.indexOf(nf.currency.symbol) === rh.testPosition 
-							|| curText.indexOf(nf.percent.symbol) === rh.testPosition) {
+						if (curText.indexOf(nf.currency.symbol) === rh.testPosition || curText.indexOf(nf.percent.symbol) === rh.testPosition) {
 							rh.testPosition = rh.testPosition + 1;
 						}
 					}
 				}
-				catch (e) {
+				catch (e1) {
 				}
 			}
 			this.checkAndRepairBounds(true, false);
 			return true;
 		}
-		catch (e) {
+		catch (e2) {
 		}
 		this.checkAndRepairBounds(true, false);
 		return true;
@@ -456,7 +455,8 @@ var wijNumberFormat = function (t, dp, g, c) {
 	this.digitsPlaces = dp;
 	this.showGroup = g;
 	this.culture = c;
-}
+};
+
 wijNumberFormat.prototype = {
 	_currentValueInString: '0',
 	_currentText: '0',
@@ -782,8 +782,8 @@ wijNumberFormat.prototype = {
 		if (decimalPos === -1) { decimalPos = absValue.indexOf(','); }
 		if (decimalPos === -1) { decimalPos = absValue.length; }
 		
-		var result = '', groupSizeIndex = 0, groupCount = 0, ch;
-		for (var i = absValue.length - 1; i >= 0; i--) {
+		var result = '', groupSizeIndex = 0, groupCount = 0, ch, i;
+		for (i = absValue.length - 1; i >= 0; i--) {
 			ch = absValue.charAt(i);
 			if (i < decimalPos) {
 				result = ch + result;
@@ -799,7 +799,7 @@ wijNumberFormat.prototype = {
 		}
 		if (decimals > 0) {
 			result = result + decimalSep;
-			for (var i = 0; i < decimals; i++) {
+			for (i = 0; i < decimals; i++) {
 				ch = '0';
 				if (i + decimalPos + 1 < absValue.length) {
 					ch = absValue.charAt(i + decimalPos + 1);
@@ -815,6 +815,6 @@ wijNumberFormat.prototype = {
 		}
 		return result;
 	}
-}	
+};
 
 })(jQuery);

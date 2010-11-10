@@ -1,6 +1,6 @@
 /*
 *
-* Wijmo Library 0.8.0
+* Wijmo Library 0.8.1
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -216,7 +216,7 @@
 		_attachEvent: function () {
 			var self = this;
 			self.element.bind($.browser.msie ? "focusin." : "focus." + self.widgetName, $.proxy(self._onFocus, self))
-            .bind("mouseover." + this.widgetName, $.proxy(self._onMouseOver, self));
+			.bind("mouseover." + this.widgetName, $.proxy(self._onMouseOver, self));
 			if (self.options.allowDrop) {
 				self._attachDroppable();
 			}
@@ -280,8 +280,8 @@
 
 		_attachNodeEvent: function () {
 			this.element.bind("click." + this.widgetName, $.proxy(this._onClick, this))
-            .bind("mouseout." + this.widgetName, $.proxy(this._onMouseOut, this))
-            .bind("keydown." + this.widgetName, $.proxy(this._onKeyDown, this));
+			.bind("mouseout." + this.widgetName, $.proxy(this._onMouseOut, this))
+			.bind("keydown." + this.widgetName, $.proxy(this._onKeyDown, this));
 		},
 
 		_onClick: function (event) {
@@ -700,7 +700,7 @@
 					this.$checkBox.wijtreecheck();
 				}
 				this.$inner.prepend(this.$nodeImage)
-                .prepend(this.$hitArea);
+				.prepend(this.$hitArea);
 				this.$nodes = $li.find("ul:eq(0)");
 				this.$nodes.addClass("ui-wijtree-list ui-helper-reset ui-wijtree-child");
 				this.$nodes.children().filter("li").each(function (i) {
@@ -921,7 +921,7 @@
 				var event = show ? "nodeExpanded" : "nodeCollapsed";
 				if ($.effects && !!self._tree.options[animation].duration) {//v 1.8.2
 					el[show ? "show" : "hide"](self._tree.options[animation].effect, {},
-                            self._tree.options[animation].duration,
+							self._tree.options[animation].duration,
 							function () {
 								self._tree._trigger(event, null, self);
 							});
@@ -1003,7 +1003,7 @@
 					if (self._insertionTemplate) {
 						self._insertionTemplate.hide();
 					}
-					var t = event.srcElement || event.originalTarget; //get document mouse move event(ie,chrome:srcElement,ff:originalTarget)
+					var t = event.srcElement || event.originalEvent.target; //get document mouse move event(ie,chrome:srcElement,ff:originalTarget)
 					//todo: t is not in the dragged node
 					var targetEl = $(t);
 					if (targetEl) {
@@ -1558,9 +1558,9 @@
 			}
 
 			self.$navigateUrl.unwrap().unwrap()
-            .removeClass("ui-state-default ui-state-active")
-            .unbind("mousedown")
-            .unbind("blur");
+			.removeClass("ui-state-default ui-state-active")
+			.unbind("mousedown")
+			.unbind("blur");
 			var $nodes = this.element.find("ul:first").show();
 			$nodes.removeClass();
 

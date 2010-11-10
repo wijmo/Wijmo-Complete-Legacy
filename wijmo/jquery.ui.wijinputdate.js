@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -21,6 +21,7 @@
  *	jquery.effects.blind.js
  *	jquery.glob.js
  *	jquery.plugin.wijtextselection.js
+ *	jquery.mousewheel.js
  *	jquery.ui.wijpopup.js
  *	jquery.ui.wijcalendar.js
  *	jquery.ui.wijinputcore.js
@@ -221,7 +222,7 @@ $.widget("ui.wijinputdate", $.extend(true, {}, wijinputcore, {
 		}
 
 		if (repeating && !this.element.data('breakSpinner')) {
-			window.setTimeout($.proxy(function () { this._doSpin(up, true) }, this),  this._calcSpinInterval());
+			window.setTimeout($.proxy(function () { this._doSpin(up, true); }, this),  this._calcSpinInterval());
 		}
 	},
 	
@@ -252,9 +253,9 @@ $.widget("ui.wijinputdate", $.extend(true, {}, wijinputcore, {
 			
 			case $.ui.keyCode.TAB:
 			case $.ui.keyCode.SPACE:
-			case 188: 	// ,
-			case 190:  	// .
-			case 110: 	// . on pad
+			case 188:	// ,
+			case 190:	// .
+			case 110:	// . on pad
 			case 191:	// /
 				if (e.shiftKey){
 					if (this.options.activeField > 0){
@@ -426,7 +427,7 @@ var wijDateTextProvider = function (w, f) {
 	this.desPostions = new Array(0);
 	this.fields = new Array(0);
 	this._setFormat(f);
-}
+};
 
 wijDateTextProvider.prototype = {
 	descriptors: undefined,
@@ -637,7 +638,7 @@ wijDateTextProvider.prototype = {
 			}
 			val = val * 1;
 			if (val < 0) {
-				if (resultObj && resultObj['isreset']) {
+				if (resultObj && resultObj.isreset) {
 					val = 1;
 				}else{
 					return false;
@@ -666,7 +667,7 @@ wijDateTextProvider.prototype = {
 				return true;
 			}
 			else {
-				if (resultObj && resultObj['isreset']) {
+				if (resultObj && resultObj.isreset) {
 					currentDate.setFullYear(1);
 					this._internalSetDate(currentDate);
 					return true;
@@ -703,7 +704,7 @@ wijDateTextProvider.prototype = {
 			var currentDate = this.getDate();
 			if (typeof (allowChangeOtherParts) !== 'undefined' && !allowChangeOtherParts) {
 				if (val > 12 || val < 1) {
-					if (resultObj && resultObj['isreset']) {
+					if (resultObj && resultObj.isreset) {
 						val = 1;
 					}else{
 						return false;
@@ -754,7 +755,7 @@ wijDateTextProvider.prototype = {
 			if (typeof (allowChangeOtherParts) !== 'undefined' && !allowChangeOtherParts) {
 				var mmm = this.daysInMonth(this.getMonth(), this.getYear());
 				if (val > mmm || val < 1) {
-					if (resultObj && resultObj['isreset']) {
+					if (resultObj && resultObj.isreset) {
 						return this.setDayOfMonth(1, allowChangeOtherParts, resultObj);
 					}
 					return false;
@@ -1428,7 +1429,7 @@ wijDateTextProvider.prototype = {
 		var dayNames = $.merge($.merge([], cf.days.names), cf.days.namesShort);
 		val = val + '';
 		format = format + '';
-		var i_val = 0, i_format = 0, c = '', token = '', x = 0, y = 0;
+		var i_val = 0, i_format = 0, c = '', token = '', x = 0, y = 0, i;
 		var now = new Date(), year = now.getFullYear(), month = now.getMonth() + 1;
 		var date = 1, hh = 0, mm = 0, ss = 0, ampm = '';
 		var comment = false, escape = false;
@@ -1478,7 +1479,7 @@ wijDateTextProvider.prototype = {
 			}
 			else if (token === 'MMMM' || token === 'MMM' || token === 'NNN') {
 				month = 0;
-				for (var i = 0; i < monthNames.length; i++) {
+				for (i = 0; i < monthNames.length; i++) {
 					var month_name = monthNames[i];
 					if (val.substring(i_val, i_val + month_name.length).toLowerCase() === month_name.toLowerCase()) {
 						if ((token === 'MMM' || token === 'MMMM') || (token === 'NNN' && i > 11)) {
@@ -1496,7 +1497,7 @@ wijDateTextProvider.prototype = {
 				}
 			}
 			else if (token === 'dddd' || token === 'ddd' || token === 'EE' || token === 'E') {
-				for (var i = 0; i < dayNames.length; i++) {
+				for (i = 0; i < dayNames.length; i++) {
 					var day_name = dayNames[i];
 					if (val.substring(i_val, i_val + day_name.length).toLowerCase() === day_name.toLowerCase()) {
 						i_val += day_name.length;
@@ -1720,7 +1721,7 @@ wijDateTextProvider.prototype = {
 		});
 		return sRes;
 	}
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1732,7 +1733,8 @@ var _iDateDescriptor = function (tp, id, type, len) {
 	this.type = type;
 	this.startIndex = 0;
 	this.maxLen = len || 2;
-}
+};
+
 _iDateDescriptor.prototype = {
 	_txtProvider: null,
 	id: 0,
@@ -1754,19 +1756,18 @@ _iDateDescriptor.prototype = {
 			}else{
 				break;
 			}
-		}while(t.length > 0)
+		}while(t.length > 0);
 		return t.length >= this.maxLen;
 	}
-}
+};
 
 var wijImplementInterface = function (target, interfaceType) {
-	for (var methodName in interfaceType.prototype) {
-		var method = interfaceType.prototype[methodName];
-		if (!target.prototype[methodName]) {
-			target.prototype[methodName] = method;
+	for (var name in interfaceType.prototype) {
+		if (!target.prototype[name]) {
+			target.prototype[name] = interfaceType.prototype[name];
 		}
 	}
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1775,15 +1776,15 @@ var wijImplementInterface = function (target, interfaceType) {
 var _dateDescriptor = function (owner, id) {
 	wijImplementInterface(_dateDescriptor, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, -1, 100]);
-}
+};
+
 _dateDescriptor.prototype = {
 	liternal: '',
 
 	getText: function () {
 		return this.liternal;
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor20
@@ -1792,7 +1793,8 @@ var _dateDescriptor20 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor20, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 20]);
 	this.name = 'Two-digit month';
-}
+};
+
 _dateDescriptor20.prototype = {
 	getText: function () {
 		var m = '' + this._txtProvider.getMonth() + '';
@@ -1810,8 +1812,7 @@ _dateDescriptor20.prototype = {
 	dec: function () {
 		this._txtProvider.setMonth(this._txtProvider.getMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor25
@@ -1820,7 +1821,8 @@ var _dateDescriptor25 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor25, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 25]);
 	this.name = 'month';
-}
+};
+
 _dateDescriptor25.prototype = {
 
 	getText: function () {
@@ -1839,8 +1841,7 @@ _dateDescriptor25.prototype = {
 	dec: function () {
 		this._txtProvider.setMonth(this._txtProvider.getMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor26
@@ -1849,7 +1850,8 @@ var _dateDescriptor26 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor26, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 26, 100]);
 	this.name = 'AbbreviatedMonthNames';
-}
+};
+
 _dateDescriptor26.prototype = {
 
 	getText: function () {
@@ -1873,8 +1875,7 @@ _dateDescriptor26.prototype = {
 	dec: function () {
 		this._txtProvider.setMonth(this._txtProvider.getMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor27
@@ -1883,7 +1884,8 @@ var _dateDescriptor27 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor27, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 27, 100]);
 	this.name = 'MonthNames';
-}
+};
+
 _dateDescriptor27.prototype = {
 
 	getText: function () {
@@ -1913,8 +1915,7 @@ _dateDescriptor27.prototype = {
 	dec: function () {
 		this._txtProvider.setMonth(this._txtProvider.getMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor30
@@ -1923,7 +1924,8 @@ var _dateDescriptor30 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor30, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 30]);
 	this.name = 'Two-digit day of month';
-}
+};
+
 _dateDescriptor30.prototype = {
 
 	getText: function () {
@@ -1945,8 +1947,7 @@ _dateDescriptor30.prototype = {
 	dec: function () {
 		this._txtProvider.setDayOfMonth(this._txtProvider.getDayOfMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor31
@@ -1955,7 +1956,8 @@ var _dateDescriptor31 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor31, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 31]);
 	this.name = 'Day of month';
-}
+};
+
 _dateDescriptor31.prototype = {
 
 	getText: function () {
@@ -1974,8 +1976,7 @@ _dateDescriptor31.prototype = {
 	dec: function () {
 		this._txtProvider.setDayOfMonth(this._txtProvider.getDayOfMonth() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor100
@@ -1984,7 +1985,8 @@ var _dateDescriptor100 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor100, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 100, 100]);
 	this.name = 'AbbreviatedDayNames';
-}
+};
+
 _dateDescriptor100.prototype = {
 
 	getText: function () {
@@ -2012,8 +2014,7 @@ _dateDescriptor100.prototype = {
 	needAdjustInsertPos: function () {
 		return false;
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor101
@@ -2022,7 +2023,8 @@ var _dateDescriptor101 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor101, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 101, 100]);
 	this.name = 'DayNames';
-}
+};
+
 _dateDescriptor101.prototype = {
 
 	getText: function () {
@@ -2050,8 +2052,7 @@ _dateDescriptor101.prototype = {
 	needAdjustInsertPos: function () {
 		return false;
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor10
@@ -2060,7 +2061,7 @@ var _dateDescriptor10 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor10, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 10, 4]);
 	this.name = 'Four-digit year';
-}
+};
 
 _dateDescriptor10.prototype = {
 	getText: function () {
@@ -2107,7 +2108,7 @@ _dateDescriptor10.prototype = {
 	dec: function () {
 		this._txtProvider.setYear(this._txtProvider.getYear() * 1 - 1, true);
 	}
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2117,7 +2118,8 @@ var _dateDescriptor1 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor1, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 1]);
 	this.name = 'One-digit year';
-}
+};
+
 _dateDescriptor1.prototype = {
 
 	getText: function () {
@@ -2163,8 +2165,7 @@ _dateDescriptor1.prototype = {
 	dec: function () {
 		this._txtProvider.setYear(this._txtProvider.getYear() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor2
@@ -2173,7 +2174,8 @@ var _dateDescriptor2 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor2, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 2]);
 	this.name = 'Two-digit year';
-}
+};
+
 _dateDescriptor2.prototype = {
 
 	getText: function () {
@@ -2217,8 +2219,7 @@ _dateDescriptor2.prototype = {
 	dec: function () {
 		this._txtProvider.setYear(this._txtProvider.getYear() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor45
@@ -2227,7 +2228,8 @@ var _dateDescriptor45 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor45, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 45]);
 	this.name = 'h';
-}
+};
+
 _dateDescriptor45.prototype = {
 
 	getText: function () {
@@ -2256,8 +2258,7 @@ _dateDescriptor45.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor46
@@ -2266,7 +2267,8 @@ var _dateDescriptor46 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor46, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 46]);
 	this.name = 'hh';
-}
+};
+
 _dateDescriptor46.prototype = {
 
 	getText: function () {
@@ -2298,8 +2300,7 @@ _dateDescriptor46.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor47
@@ -2308,7 +2309,8 @@ var _dateDescriptor47 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor47, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 47]);
 	this.name = 'H';
-}
+};
+
 _dateDescriptor47.prototype = {
 
 	getText: function () {
@@ -2327,8 +2329,7 @@ _dateDescriptor47.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor48
@@ -2337,7 +2338,8 @@ var _dateDescriptor48 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor48, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 48]);
 	this.name = 'HH';
-}
+};
+
 _dateDescriptor48.prototype = {
 
 	getText: function () {
@@ -2359,8 +2361,7 @@ _dateDescriptor48.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor250
@@ -2369,7 +2370,8 @@ var _dateDescriptor250 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor250, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 250]);
 	this.name = 't';
-}
+};
+
 _dateDescriptor250.prototype = {
 
 	getText: function () {
@@ -2397,8 +2399,7 @@ _dateDescriptor250.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 12, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor251
@@ -2407,7 +2408,8 @@ var _dateDescriptor251 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor251, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 251]);
 	this.name = 'tt';
-}
+};
+
 _dateDescriptor251.prototype = {
 
 	getText: function () {
@@ -2435,7 +2437,7 @@ _dateDescriptor251.prototype = {
 	dec: function () {
 		this._txtProvider.setHours(this._txtProvider.getHours() * 1 - 12, true);
 	}
-}
+};
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2445,7 +2447,8 @@ var _dateDescriptor50 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor50, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 50]);
 	this.name = 'mm';
-}
+};
+
 _dateDescriptor50.prototype = {
 
 	getText: function () {
@@ -2467,8 +2470,7 @@ _dateDescriptor50.prototype = {
 	dec: function () {
 		this._txtProvider.setMinutes(this._txtProvider.getMinutes() * 1 - 1, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor51
@@ -2477,7 +2479,8 @@ var _dateDescriptor51 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor51, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 51]);
 	this.name = 'm';
-}
+};
+
 _dateDescriptor51.prototype = {
 
 	getText: function () {
@@ -2496,8 +2499,7 @@ _dateDescriptor51.prototype = {
 	dec: function () {
 		this._txtProvider.setMinutes(this._txtProvider.getMinutes() * 1 - 12, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor60
@@ -2506,7 +2508,8 @@ var _dateDescriptor60 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor60, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 60]);
 	this.name = 'ss';
-}
+};
+
 _dateDescriptor60.prototype = {
 
 	getText: function () {
@@ -2528,8 +2531,7 @@ _dateDescriptor60.prototype = {
 	dec: function () {
 		this._txtProvider.setSeconds(this._txtProvider.getSeconds() * 1 - 12, true);
 	}
-}
-
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // _dateDescriptor61
@@ -2538,7 +2540,8 @@ var _dateDescriptor61 = function (owner, id) {
 	wijImplementInterface(_dateDescriptor61, _iDateDescriptor);
 	_iDateDescriptor.apply(this, [owner, id, 61]);
 	this.name = 's';
-}
+};
+
 _dateDescriptor61.prototype = {
 
 	getText: function () {
@@ -2557,6 +2560,6 @@ _dateDescriptor61.prototype = {
 	dec: function () {
 		this._txtProvider.setSeconds(this._txtProvider.getSeconds() * 1 - 12, true);
 	}
-}
+};
 
 })(jQuery);

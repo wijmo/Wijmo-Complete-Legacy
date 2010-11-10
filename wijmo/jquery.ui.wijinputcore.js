@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.0
+ * Wijmo Library 0.8.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -30,11 +30,11 @@ window.wijinputcore = {
 		///	</summary>
 		autoNextField: true,
 		///	<summary>
-		///		The culture id.
+		///		Determines the culture ID name.
 		///	</summary>
 		culture: '',
 		///	<summary>
-		///		The CSS class applied to the widget when invalid value is input.
+		///		The CSS class applied to the widget when an invalid value is entered.
 		///	</summary>
 		invalidClass: 'ui-state-error',
 		///	<summary>
@@ -218,24 +218,24 @@ window.wijinputcore = {
 			self.element.data('breakSpinner', false);
 			self._addState('active', $(this));
 			self._doSpin($(e.currentTarget).hasClass('ui-wijinput-spinup'), true);
-		}
+		};
 
 		var spinButtonUp = function (e) {
 			if (!isLeftButton(e)) { return; }
 			self._stopSpin();
 			self._removeState('active', $(this));
-		}
+		};
 
 		if (this.spinUp) { this.spinUp.bind({
-			'mouseover': function () { self._addState('hover', $(this)) },
-			'mouseout': function () { self._removeState('hover', $(this)) },
+			'mouseover': function () { self._addState('hover', $(this)); },
+			'mouseout': function () { self._removeState('hover', $(this)); },
 			'mousedown': spinButtonDown,
 			'mouseup': spinButtonUp
 		}); }
 
 		if (this.spinDown) { this.spinDown.bind({
-			'mouseover': function () { self._addState('hover', $(this)) },
-			'mouseout': function () { self._removeState('hover', $(this)) },
+			'mouseover': function () { self._addState('hover', $(this)); },
+			'mouseout': function () { self._removeState('hover', $(this)); },
 			'mousedown': spinButtonDown,
 			'mouseup': spinButtonUp
 		}); }
@@ -410,7 +410,7 @@ window.wijinputcore = {
 	},
 
 	_allowEdit: function () {
-		return !(this.element.attr('readOnly') && this.element.is(':disabled'))
+		return !(this.element.attr('readOnly') && this.element.is(':disabled'));
 	},
   
 	_updateText: function (restoreSelection) {
@@ -640,13 +640,8 @@ window.wijinputcore = {
 	
    _getKeyCode: function (e) {
 		var userAgent = window.navigator.userAgent;
-		if (userAgent.indexOf('iPod') !== -1 || userAgent.indexOf('iPhone') !== -1) {
-			switch (e.which) {
-				case 127:
-					return 8;
-				default:
-					break;
-			}
+		if ((userAgent.indexOf('iPod') !== -1 || userAgent.indexOf('iPhone') !== -1) && e.which === 127) {
+			return 8;
 		}
 		return e.which;
 	},
@@ -673,7 +668,7 @@ window.wijinputcore = {
 			}
 		}
 		
-		if (e.which == 0) { return; }
+		if (e.which === 0) { return; }
 		if (this._keyPressPreview(e)){
 			this._stopEvent(e);
 			return;
@@ -830,7 +825,7 @@ window.wijinputcore = {
 		this.element.data('prevCursorPos', rh.testPosition);
 		this.selectText(rh.testPosition, rh.testPosition);
 		if (repeating && !this.element.data('breakSpinner')) {
-			window.setTimeout($.proxy(function () { this._doSpin(up, true) }, this),  this._calcSpinInterval());
+			window.setTimeout($.proxy(function () { this._doSpin(up, true); }, this),  this._calcSpinInterval());
 		}
 	},
 
@@ -858,11 +853,11 @@ window.wijinputcore = {
 		}
 		
 		if (this._comboDiv === undefined){
-			this._comboDiv = $("<div></div>");
-			this._comboDiv.appendTo(document.body);
-			this._comboDiv.width(this.element.width())
-			this._comboDiv.height(this.options.comboHeight || 180)
-			this._comboDiv.css('position', 'absolute');
+			this._comboDiv = $("<div></div>")
+				.appendTo(document.body)
+				.width(this.element.width())
+				.height(this.options.comboHeight || 180)
+				.css('position', 'absolute');
 			
 			var content = this._normalize(this.options.comboItems);
 			var self = this;
