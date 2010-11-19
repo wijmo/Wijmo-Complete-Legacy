@@ -1,0 +1,46 @@
+
+Changes mode to version 0.8.1
+-----------------------------
+Datasource
+----------
+Modified wijhttpproxy request method. Fixed BUG: reported by Sergey. A copy 
+of options instead of the options object itself needs to be obtained to avoid 
+success method being regiestered multiple times.
+
+Combobox
+--------
+Upgrade bgiframe from 2.1.1 to 2.1.3-pre.  This version fixed the issue that 
+iframe is still created on the win7 and ie7/8/9.
+
+ChartCore
+---------
+Add width to the labels option of the axis.x and axis.y.  Provide text wrapping support.
+
+Grid
+----
+Selector changed from "div" to "table". Behavior changed: requested by
+John Ayers. wijrid should expect a table as its selector, not a div tag.
+
+Added dynamic data load from server. New feature.
+
+Changed column widths calculation algorithm and scrollbars positioning in
+scrolling mode. Behavior changed: requested by John Ayers. Now it looks
+more like ordinary table wrapped with div.
+
+Made top and bottom pagers position fixed. Fixed bug: reported by Sergey
+Suturin. Pagers behavior was not consistent with other wijgrid modes.
+
+Fixed filter functionality. Fixed bug: reported by Sergey Suturin. Filters
+were not applied if wijgrid is bound to an array of hashes.
+
+Fixed filter editor markup. Fixed bug: reported by Yan Kun. Filter
+editor markup was broken in scrolling mode if header is fixed.
+
+Hovering and currency fixed under IE6\IE7. Fixed bug: reported by Yan Kun.
+Hovering and currency did not work under IE6\IE7.
+
+Modified hover behavior. Fixed bug. The hover row does
+not disappear when the mouse moves out of the widget.
+
+Modified behavior of filter dropdown. Clicking the filter button does not 
+close the filter dropdown.
