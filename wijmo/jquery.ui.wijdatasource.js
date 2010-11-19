@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.1
+ * Wijmo Library 0.8.2
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -227,7 +227,7 @@
 			/// </param>
 
 			var self = this;
-			var o = self.options;
+			var o = $.extend({}, self.options);
 			var oldSuccess = o.success;
 
 			o.success = function (data) {
