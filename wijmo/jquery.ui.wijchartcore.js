@@ -1,7 +1,7 @@
 /*globals $, Raphael*/
 /*
  *
- * Wijmo Library 0.8.1
+ * Wijmo Library 0.8.2
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -96,6 +96,138 @@ Raphael.fn.wij = {
 		return this.path(pathData);
 	},
 
+	wrapText: function (x, y, text, width, textAlign, textStyle) {
+		var self = this,
+			rotation = textStyle.rotation,
+			style = rotation ? $.extend(true, {}, textStyle, { rotation: 0 }) : textStyle;
+
+		function splitString(text, width, textStyle) {
+			var tempText = null,
+				bounds = null,
+				words = text.split(' '),
+				lines = [],
+				line = [],
+				tempTxt = "";
+			while (words.length) {
+				tempTxt += ' ' + words[0];
+				tempText = self.text(-1000, -1000, tempTxt);
+				tempText.attr(textStyle);
+				bounds = tempText.wijGetBBox();
+
+				if (bounds.width > width) {
+					if (line.length) {
+						lines.push(line);
+						tempTxt = words[0];
+					}
+					line = [words.shift()];
+				}
+				else {
+					line.push(words.shift());
+				}
+
+				if (words.length == 0) {
+					lines.push(line);
+				}
+
+				tempText.remove();
+				tempText = null;
+			}
+
+			return lines;
+		}
+
+		var top = y,
+			texts = this.set(),
+			bounds = null,
+			textBounds = [];
+
+		$.each(splitString(text, width, style), function (idx, line) {
+			var lineText = line.join(' '),
+				align = textAlign || "near",
+				txt = self.text(x, top, lineText),
+				offsetX = 0,
+				offsetY = 0;
+
+			txt.attr(style);
+			bounds = txt.wijGetBBox();
+
+			switch (align) {
+				case "near":
+					offsetX = width - bounds.width / 2;
+					offsetY += bounds.height / 2;
+					top += bounds.height;
+					break;
+				case "center":
+					offsetX += width / 2;
+					offsetY += bounds.height / 2;
+					top += bounds.height;
+					break;
+				case "far":
+					offsetX += bounds.width / 2;
+					offsetY += bounds.height / 2;
+					top += bounds.height;
+					break;
+			}
+			bounds.x += offsetX;
+			bounds.y += offsetY;
+			txt.translate(offsetX, offsetY);
+			texts.push(txt);
+			textBounds.push(bounds);
+		});
+
+		if (rotation) {
+			if (texts.length > 1) {
+				bounds = texts.wijGetBBox();
+				var center = { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
+
+				$.each(texts, function (idx, txt) {
+					var math = Math,
+						tb = textBounds[idx],
+						txtCenter = { x: tb.x + tb.width / 2, y: tb.y + tb.height / 2 },
+						len = math.sqrt(math.pow(txtCenter.x - center.x, 2) + math.pow(txtCenter.y - center.y, 2)),
+						theta = 0;
+
+					txt.attr({ rotation: rotation });
+
+					if (len == 0) { 
+						return true;
+					}
+
+					theta = Raphael.deg(math.asin(math.abs(txtCenter.y - center.y) / len));
+
+					if (txtCenter.y > center.y) {
+						if (txtCenter.x > center.x) {
+							theta -= 360;
+						}
+						else {
+							theta = -1 * (theta + 180);
+						}
+					}
+					else {
+						if (txtCenter.x > center.x) {
+							theta *= -1;
+						}
+						else {
+							theta = -1 * (180 - theta);
+						}
+					}
+					newTxtCenter = self.wij.getPositionByAngle(center.x, center.y, len,
+											-1 * (rotation + theta));
+					
+					var rotatedTB = txt.wijGetBBox();
+
+					txt.translate(newTxtCenter.x - rotatedTB.x - rotatedTB.width / 2,
+							newTxtCenter.y - rotatedTB.y - rotatedTB.height / 2);
+				});
+			}
+			else {
+				texts[0].attr({ rotation: rotation });
+			}
+		}
+
+		return texts;
+	},
+
 	getPositionByAngle: function (cx, cy, r, angle) {
 		var point = {};
 		var rad = Raphael.rad(angle);
@@ -175,42 +307,42 @@ Raphael.fn.wij = {
 		for (var node = paper.bottom; node; node = node.next) {
 			if (node && node.type) {
 				switch (node.type) {
-				case "path":
-					var path = "";
+					case "path":
+						var path = "";
 
-					$.each(node.attrs.path, function (i, group) {
-						$.each(group, function (index, value) {
-							if (index < 1) {
-								path += value;
-							}
-							else {
-								if (index === (group.length - 1)) {
+						$.each(node.attrs.path, function (i, group) {
+							$.each(group, function (index, value) {
+								if (index < 1) {
 									path += value;
 								}
 								else {
-									path += value + ',';
+									if (index === (group.length - 1)) {
+										path += value;
+									}
+									else {
+										path += value + ',';
+									}
 								}
-							}
+							});
 						});
-					});
 
-					if (path && path.length > 0) {
-						node.attrs.d = path.replace(/,/g, ' ');
-					}
-					break;
-				case "text":
-					if (!node.attrs["text-anchor"]) {
-						node.attrs["text-anchor"] = "middle";
-					}
-					break;
-				case "image":
-					var trans = node.transformations;
-					node.attrs.transform = trans ? trans.join(' ') : '';
-					break;
-				case "ellipse":
-				case "rect":
-					svg += createSVGElement(node.type, node.attrs);
-					break;
+						if (path && path.length > 0) {
+							node.attrs.d = path.replace(/,/g, ' ');
+						}
+						break;
+					case "text":
+						if (!node.attrs["text-anchor"]) {
+							node.attrs["text-anchor"] = "middle";
+						}
+						break;
+					case "image":
+						var trans = node.transformations;
+						node.attrs.transform = trans ? trans.join(' ') : '';
+						break;
+					case "ellipse":
+					case "rect":
+						svg += createSVGElement(node.type, node.attrs);
+						break;
 				}
 			}
 		}
@@ -372,30 +504,30 @@ Raphael.fn.wij = {
 			this._convertCompassToPos = function (compass) {
 				var pos = "";
 				switch (compass) {
-				case "northeast":
-					pos = "top-left";
-					break;
-				case "northwest":
-					pos = "top-right";
-					break;
-				case "southeast":
-					pos = "bottom-left";
-					break;
-				case "southwest":
-					pos = "bottom-right";
-					break;
-				case "south":
-					pos = "bottom";
-					break;
-				case "north":
-					pos = "top";
-					break;
-				case "east":
-					pos = "right";
-					break;
-				default:
-					pos = "left";
-					break;
+					case "northeast":
+						pos = "top-left";
+						break;
+					case "northwest":
+						pos = "top-right";
+						break;
+					case "southeast":
+						pos = "bottom-left";
+						break;
+					case "southwest":
+						pos = "bottom-right";
+						break;
+					case "south":
+						pos = "bottom";
+						break;
+					case "north":
+						pos = "top";
+						break;
+					case "east":
+						pos = "right";
+						break;
+					default:
+						pos = "left";
+						break;
 				}
 				return pos;
 			};
@@ -407,16 +539,6 @@ Raphael.fn.wij = {
 };
 
 Raphael.el.wijGetBBox = function () {
-	var box = this.getBBox();
-	if (Raphael.vml && this.type === 'text') {
-		this.shape.style.display = "inline";
-		box.width = this.shape.scrollWidth;
-		box.height = this.shape.scrollHeight;
-	}
-	return box;
-};
-
-Raphael.el.getBBoxRotated = function () {
 	if (this.attrs.rotation) {
 		var degreesAsRadians = this._.rt.deg * Math.PI / 180;
 		var points = [];
@@ -440,12 +562,18 @@ Raphael.el.getBBoxRotated = function () {
 		var newHeight = parseInt(Math.abs(bb.bottom - bb.top));
 		newX = (box.x + (box.width) / 2) - newWidth / 2;
 		newY = (box.y + (box.height) / 2) - newHeight / 2;
-		return { x: newX, y: newY, width: newWidth, height: newHeight };
-	} else {
-		return this.getBBox();
-	}
-};
 
+		return { x: newX, y: newY, width: newWidth, height: newHeight };
+	} 
+
+	var box = this.getBBox();
+	if (Raphael.vml && this.type === 'text') {
+		this.shape.style.display = "inline";
+		box.width = this.shape.scrollWidth;
+		box.height = this.shape.scrollHeight;
+	}
+	return box;
+};
 
 Raphael.el.wijAnimate = function (params, ms, easing, callback) {
 	this.animate(params, ms, easing, callback);
@@ -544,15 +672,43 @@ Raphael.st.wijAnimate = function (params, ms, easing, callback) {
 	return this;
 };
 
+Raphael.st.wijGetBBox = function () {
+	var x = [],
+		y = [],
+		w = [],
+		h = [],
+		mmax = Math.max,
+		mmin = Math.min,
+		push = "push",
+		apply = "apply";
+	for (var i = this.items.length; i--;) {
+		var box = this.items[i].wijGetBBox();
+		x[push](box.x);
+		y[push](box.y);
+		w[push](box.x + box.width);
+		h[push](box.y + box.height);
+	}
+	x = mmin[apply](0, x);
+	y = mmin[apply](0, y);
+	return {
+		x: x,
+		y: y,
+		width: mmax[apply](0, w) - x,
+		height: mmax[apply](0, h) - y
+	};
+};
+
 function isSVGElem(node) {
 	var svgNS = "http://www.w3.org/2000/svg";
 	return (node.nodeType === 1 && node.namespaceURI === svgNS);
-}
+};
+
 $.expr.filter.CLASS = function (elem, match) {
 	var className = (!isSVGElem(elem) ? elem.className :
 		(elem.className ? elem.className.baseVal : elem.getAttribute('class')));
 	return (' ' + className + ' ').indexOf(match) > -1;
 };
+
 $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) {
 	match = ' ' + match[1].replace(/\\/g, '') + ' ';
 	if (isXML) {
@@ -1148,7 +1304,16 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						/// <remarks>
 						/// Options are 'near', 'center' and 'far'.
 						/// </remarks>
-						textAlign: "near"
+						textAlign: "near",
+						/// <summary>
+						/// A value that indicates the width major text of the X axis.
+						/// Default: null.
+						/// Type: Number.
+						/// <remarks>
+						/// If the value is null, then the width will be calculated automatically.
+						/// </remarks>
+						/// </summary>
+						width: null
 					},
 					/// <summary>
 					/// A value that indicates the compass of the X axis.
@@ -1403,7 +1568,16 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						/// <remarks>
 						/// Options are 'near', 'center' and 'far'.
 						/// </remarks>
-						textAlign: "center"
+						textAlign: "center",
+						/// <summary>
+						/// A value that indicates the width major text of the Y axis.
+						/// Default: null.
+						/// Type: Number.
+						/// <remarks>
+						/// If the value is null, then the width will be calculated automatically.
+						/// </remarks>
+						/// </summary>
+						width: null
 					},
 					/// <summary>
 					/// A value that indicates the compass of the Y axis.
@@ -1923,8 +2097,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_parseTable: function () {
-			var ele = this.element;
-			var o = this.options;
+			var ele = this.element,
+				o = this.options;
 			if (!ele.is("table")) {
 				return;
 			}
@@ -1948,22 +2122,22 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			}, o.legend);
 
 			//seriesList
-			var valuesX = [];
-			var theaders = $("thead th", ele);
+			var valuesX = [],
+				theaders = $("thead th", ele);
 			if (theaders.length) {
 				theaders.each(function () {
 					var val = $.trim($(this).text());
 					valuesX.push(val);
 				});
 			}
-			var seriesList = [];
-			var sList = $("tbody tr", ele);
+			var seriesList = [],
+				sList = $("tbody tr", ele);
 			if (sList.length) {
 				sList.each(function () {
-					var th = $("th", $(this));
-					var label = $.trim(th.text());
-					var valuesY = [];
-					var tds = $("td", $(this));
+					var th = $("th", $(this)),
+						label = $.trim(th.text()),
+						valuesY = [],
+						tds = $("td", $(this));
 					if (tds.length) {
 						tds.each(function () {
 							var td = $(this);
@@ -1999,9 +2173,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						clearTimeout(resizeTimer);
 						resizeTimer = setTimeout(function () {
 							self._unbindLiveEvents();
-							var width = self.element.width();
-							var height = self.element.height();
+							var width = self.element.width(),
+								height = self.element.height();
 							//self.canvas.width = width;
+							if (!width || !height) {
+								clearTimeout(resizeTimer);
+								return;
+							}
 							self.canvas.setSize(width, height);
 							self.width = width;
 							self.height = height;
@@ -2010,7 +2188,6 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						}, 250);
 					});
 				}
-
 			}
 		},
 
@@ -2081,8 +2258,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				return;
 			}
 
-			var series = seriesList[seriesIndex];
-			var data = series.data || [];
+			var series = seriesList[seriesIndex],
+				data = series.data || [];
 			data.x.push(point.x);
 			data.y.push(point.y);
 
@@ -2096,52 +2273,54 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 
 		/** Private methods */
 		_clearChartElement: function () {
-			var i, ii;
-			if (this.headerEles.length) {
-				for (i = 0, ii = this.headerEles.length; i < ii; i++) {
-					this.headerEles[i].remove();
+			var i = 0, 
+				ii = 0,
+				self = this;
+			if (self.headerEles.length) {
+				for (i = 0, ii = self.headerEles.length; i < ii; i++) {
+					self.headerEles[i].remove();
 				}
-				this.headerEles = [];
+				self.headerEles = [];
 			}
-			if (this.footerEles.length) {
-				for (i = 0, ii = this.footerEles.length; i < ii; i++) {
-					this.footerEles[i].remove();
+			if (self.footerEles.length) {
+				for (i = 0, ii = self.footerEles.length; i < ii; i++) {
+					self.footerEles[i].remove();
 				}
-				this.footerEles = [];
+				self.footerEles = [];
 			}
-			if (this.legendEles.length) {
-				for (i = 0, ii = this.legendEles.length; i < ii; i++) {
-					this.legendEles[i].remove();
+			if (self.legendEles.length) {
+				for (i = 0, ii = self.legendEles.length; i < ii; i++) {
+					self.legendEles[i].remove();
 				}
-				this.legendEles = [];
+				self.legendEles = [];
 			}
-			if (this.legends.length) {
-				for (i = 0, ii = this.legends.length; i < ii; i++) {
-					this.legends[i].remove();
+			if (self.legends.length) {
+				for (i = 0, ii = self.legends.length; i < ii; i++) {
+					self.legends[i].remove();
 				}
-				this.legends = [];
+				self.legends = [];
 			}
-			if (this.legendIcons.length) {
-				for (i = 0, ii = this.legendIcons.length; i < ii; i++) {
-					this.legendIcons[i].remove();
+			if (self.legendIcons.length) {
+				for (i = 0, ii = self.legendIcons.length; i < ii; i++) {
+					self.legendIcons[i].remove();
 				}
-				this.legendIcons = [];
+				self.legendIcons = [];
 			}
-			if (this.axisEles.length) {
-				for (i = 0, ii = this.axisEles.length; i < ii; i++) {
-					this.axisEles[i].remove();
+			if (self.axisEles.length) {
+				for (i = 0, ii = self.axisEles.length; i < ii; i++) {
+					self.axisEles[i].remove();
 				}
-				this.axisEles = [];
+				self.axisEles = [];
 			}
-			if (this.chartLabelEles.length) {
-				for (i = 0, ii = this.chartLabelEles.length; i < ii; i++) {
-					this.chartLabelEles[i].remove();
+			if (self.chartLabelEles.length) {
+				for (i = 0, ii = self.chartLabelEles.length; i < ii; i++) {
+					self.chartLabelEles[i].remove();
 				}
-				this.chartLabelEles = [];
+				self.chartLabelEles = [];
 			}
 
-			this.canvas.clear();
-			this.innerState = {};
+			self.canvas.clear();
+			self.innerState = {};
 		},
 
 		_text: function (x, y, text) {
@@ -2215,109 +2394,113 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				element.css("position", oldPosition);
 				element.hide();
 			}
-			/*if (this.options.disableDefaultTextStyle){
-			if (Raphael.vml){				
-			this.canvas.span.style.fontFamily = "";
-			this.canvas.span.style.fontSize = "";
-			$(this.canvas.span).css("font", "");
-
-			this.canvas.span.parentNode.removeChild(this.canvas.span);
-			}
-			}*/
 		},
 
 		_calculatePosition: function (compass, width, height) {
-			var point = { x: 0, y: 0 };
-			var marginX = 5;
-			var marginY = 5;
+			var point = { x: 0, y: 0 },
+				marginX = 5,
+				marginY = 5,
+				canvasBounds = this.canvasBounds;
 			switch (compass) {
 			case "north":
-				point.x = (this.canvasBounds.endX - this.canvasBounds.startX) / 2;
-				point.y = this.canvasBounds.startY + height / 2 + marginY;
-				this.canvasBounds.startY = this.canvasBounds.startY + marginY * 2 + height;
+				point.x = (canvasBounds.endX - canvasBounds.startX) / 2;
+				point.y = canvasBounds.startY + height / 2 + marginY;
+				canvasBounds.startY = canvasBounds.startY + marginY * 2 + height;
 				break;
 			case "south":
-				point.x = (this.canvasBounds.endX - this.canvasBounds.startX) / 2;
-				point.y = this.canvasBounds.endY - height / 2 - marginY;
-				this.canvasBounds.endY = this.canvasBounds.endY - marginY * 2 - height;
+				point.x = (canvasBounds.endX - canvasBounds.startX) / 2;
+				point.y = canvasBounds.endY - height / 2 - marginY;
+				canvasBounds.endY = canvasBounds.endY - marginY * 2 - height;
 				break;
 			case "east":
-				point.x = this.canvasBounds.endX - width / 2 - marginX;
-				point.y = (this.canvasBounds.endY - this.canvasBounds.startY) / 2;
-				this.canvasBounds.endX = this.canvasBounds.endX - marginX * 2 - width;
+				point.x = canvasBounds.endX - width / 2 - marginX;
+				point.y = (canvasBounds.endY - canvasBounds.startY) / 2;
+				canvasBounds.endX = canvasBounds.endX - marginX * 2 - width;
 				break;
 			case "west":
-				point.x = this.canvasBounds.startX + width / 2 + marginX;
-				point.y = (this.canvasBounds.endY - this.canvasBounds.startY) / 2;
-				this.canvasBounds.startX = this.canvasBounds.startX + marginX * 2 + width;
+				point.x = canvasBounds.startX + width / 2 + marginX;
+				point.y = (canvasBounds.endY - canvasBounds.startY) / 2;
+				canvasBounds.startX = canvasBounds.startX + marginX * 2 + width;
 				break;
 			}
 			return point;
 		},
 
 		_paintHeader: function () {
-			var headerMargin = 2;
-			var o = this.options;
-			var header = o.header;
+			var headerMargin = 2,
+				self = this,
+				o = self.options,
+				header = o.header;
+
 			if (header.text && header.text.length > 0 && header.visible) {
-				var compass = header.compass;
-				var headerText = this._text(0, 0, header.text);
-				var textStyle = $.extend(true, {}, o.textStyle, header.textStyle);
+				var compass = header.compass,
+					headerText = self._text(0, 0, header.text),
+					textStyle = $.extend(true, {}, o.textStyle, header.textStyle);
+
 				headerText.attr(textStyle);
-				var bBox = headerText.wijGetBBox();
-				var point = this._calculatePosition(compass, bBox.width, bBox.height);
+				var bBox = headerText.wijGetBBox(),
+					point = self._calculatePosition(compass, bBox.width, bBox.height);
+
 				headerText.translate(point.x, point.y);
-				var box = headerText.wijGetBBox();
-				var headerContainer = this.canvas.rect(box.x - headerMargin, box.y - headerMargin, box.width + 2 * headerMargin, box.height + 2 * headerMargin);
+				var box = headerText.wijGetBBox(),
+					headerContainer = self.canvas.rect(
+										box.x - headerMargin, box.y - headerMargin, 
+										box.width + 2 * headerMargin, box.height + 2 * headerMargin);
 				headerContainer.attr(header.style);
 				headerContainer.toBack();
 
-				this.headerEles.push(headerText);
-				this.headerEles.push(headerContainer);
+				self.headerEles.push(headerText);
+				self.headerEles.push(headerContainer);
 			}
-			//return canvasBounds;
 		},
 
 		_paintFooter: function () {
-			var footerMargin = 2;
-			var o = this.options;
-			var footer = o.footer;
+			var footerMargin = 2,
+				self = this,
+				o = self.options,
+				footer = o.footer;
+
 			if (footer.text && footer.text.length > 0 && footer.visible) {
-				var compass = footer.compass;
-				var footerText = this._text(0, 0, footer.text);
-				var textStyle = $.extend(true, {}, o.textStyle, footer.textStyle);
+				var compass = footer.compass,
+					footerText = self._text(0, 0, footer.text),
+					textStyle = $.extend(true, {}, o.textStyle, footer.textStyle);
+
 				footerText.attr(textStyle);
-				var bBox = footerText.wijGetBBox();
-				var point = this._calculatePosition(compass, bBox.width, bBox.height);
+				var bBox = footerText.wijGetBBox(),
+					point = self._calculatePosition(compass, bBox.width, bBox.height);
+
 				footerText.translate(point.x, point.y);
-				var box = footerText.wijGetBBox();
-				var footerContainer = this.canvas.rect(box.x - footerMargin, box.y - footerMargin, box.width + 2 * footerMargin, box.height + 2 * footerMargin);
+				var box = footerText.wijGetBBox(),
+					footerContainer = self.canvas.rect(
+									box.x - footerMargin, box.y - footerMargin, 
+									box.width + 2 * footerMargin, box.height + 2 * footerMargin);
+
 				footerContainer.attr(footer.style);
 				footerContainer.toBack();
 
-				this.footerEles.push(footerText);
-				this.footerEles.push(footerContainer);
+				self.footerEles.push(footerText);
+				self.footerEles.push(footerContainer);
 			}
-			//return canvasBounds;
 		},
 
 		_paintLegend: function () {
-			var o = this.options;
-			var legendMargin = 2;
-			var legend = {
-				size: {
-					width: 22,
-					height: 10
-				}
-			};
-			var textStyle = null,
+			var self = this,
+				o = self.options,
+				legendMargin = 2,
+				textStyle = null,
 				i = 0, ii = 0,
 				chartSeries = null,
 				chartSeriesStyle = null,
 				chartStyle = null,
 				text = null,
 				chtStyle = null,
-				icon = null;
+				icon = null,
+				legend = {
+					size: {
+						width: 22,
+						height: 10
+					}
+				};
 
 			$.extend(true, legend, o.legend);
 			if (legend.visible) {
@@ -2325,10 +2508,10 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					orientation = legend.orientation,
 					legendTitle;
 				if (legend.text && legend.text.length) {
-					legendTitle = this._text(0, 0, legend.text);
+					legendTitle = self._text(0, 0, legend.text);
 					textStyle = $.extend(true, {}, o.textStyle, legend.textStyle, legend.titleStyle);
 					legendTitle.attr(textStyle);
-					this.legendEles.push(legendTitle);
+					self.legendEles.push(legendTitle);
 				}
 				var chartsSeries = o.seriesList,
 					chartsSeriesStyles = o.seriesStyles,
@@ -2345,14 +2528,14 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 							stroke: "black"
 						}, chartSeriesStyle);
 						if (chartSeries.legendEntry) {
-							text = this._text(0, 0, chartSeries.label);
+							text = self._text(0, 0, chartSeries.label);
 							textStyle = $.extend(true, {}, o.textStyle, legend.textStyle);
 							text.attr(textStyle);
-							this.legends.push(text);
+							self.legends.push(text);
 							chtStyle = $.extend(chartStyle, { "stroke-width": 1 });
-							icon = this.canvas.rect(0, 0, iconWidth, iconHeight);
+							icon = self.canvas.rect(0, 0, iconWidth, iconHeight);
 							icon.attr(chtStyle);
-							this.legendIcons.push(icon);
+							self.legendIcons.push(icon);
 						}
 					}
 				}
@@ -2367,22 +2550,22 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 							stroke: "black"
 						}, chartSeriesStyle);
 						if (chartSeries.legendEntry) {
-							text = this._text(0, 0, chartSeries.label);
+							text = self._text(0, 0, chartSeries.label);
 							textStyle = $.extend(true, {}, o.textStyle, legend.textStyle);
 							text.attr(textStyle);
-							this.legends.push(text);
+							self.legends.push(text);
 							chtStyle = $.extend(chartStyle, { "stroke-width": 1 });
-							icon = this.canvas.rect(0, 0, iconWidth, iconHeight);
+							icon = self.canvas.rect(0, 0, iconWidth, iconHeight);
 							icon.attr(chtStyle);
-							this.legendIcons.push(icon);
+							self.legendIcons.push(icon);
 						}
 					}
 				}
 				var width = 0, titleWidth = 0, maxWidth = 0,
 					height = 0, titleHeight = 0, maxHeight = 0,
-					legendLen = this.legends.length,
-					canvasWidth = this.canvasBounds.endX - this.canvasBounds.startX,
-					canvasHeight = this.canvasBounds.endY - this.canvasBounds.startY,
+					legendLen = self.legends.length,
+					canvasWidth = self.canvasBounds.endX - self.canvasBounds.startX,
+					canvasHeight = self.canvasBounds.endY - self.canvasBounds.startY,
 					columnNum = 1,
 					textMargin = legend.textMargin,
 					totalWidth = 0, totalHeight = 0;
@@ -2394,7 +2577,7 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				}
 				if (legendLen) {
 					for (i = 0, ii = legendLen; i < ii; i++) {
-						var legendText = this.legends[i];
+						var legendText = self.legends[i];
 						var bBox = legendText.wijGetBBox();
 						if (bBox.width > maxWidth) {
 							maxWidth = bBox.width;
@@ -2454,13 +2637,15 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				width = columnNum * (maxWidth + iconWidth + legendMargin) + columnNum * (textMargin.left + textMargin.right);
 				height = maxHeight * Math.ceil(legendLen / columnNum) + titleHeight + columnNum * (textMargin.top + textMargin.bottom);
 
-				var point = this._calculatePosition(compass, width, height);
-				var xx = point.x - width / 2;
-				var yy = point.y - height / 2;
-				var legendContainer = this.canvas.rect(xx - legendMargin, yy - legendMargin, width + 2 * legendMargin, height + 2 * legendMargin);
+				var point = self._calculatePosition(compass, width, height),
+					xx = point.x - width / 2,
+					yy = point.y - height / 2,
+					legendContainer = self.canvas.rect(
+										xx - legendMargin, yy - legendMargin, 
+										width + 2 * legendMargin, height + 2 * legendMargin);
 				legendContainer.attr(legend.style);
 				legendContainer.toBack();
-				this.legendEles.push(legendContainer);
+				self.legendEles.push(legendContainer);
 				var len = 0;
 				if (legendTitle) {
 					legendTitle.translate(xx + width / 2, yy + len + titleHeight / 2);
@@ -2470,12 +2655,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				}
 				var idx = 0, offsetY = titleHeight;
 				for (i = 0, ii = legendLen; i < ii; i++) {
-					var l = this.legends[i];
-					var b = l.wijGetBBox();
-					icon = this.legendIcons[i];
+					var l = self.legends[i],
+						b = l.wijGetBBox();
+					icon = self.legendIcons[i];
 
-					var x = xx + idx * (iconWidth + maxWidth + legendMargin) + (idx + 1) * textMargin.left + idx * textMargin.right;
-					var y = yy + offsetY + b.height / 2 + textMargin.top;
+					var x = xx + idx * (iconWidth + maxWidth + legendMargin) + 
+							(idx + 1) * textMargin.left + idx * textMargin.right,
+						y = yy + offsetY + b.height / 2 + textMargin.top;
 					icon.translate(x, y - icon.wijGetBBox().height / 2);
 					l.translate(x + iconWidth + legendMargin + b.width / 2, y);
 					l.toFront();
@@ -2497,28 +2683,28 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_applyAxisText: function (axisOptions) {
-			var text = axisOptions.text;
-			var textBounds = null;
+			var	self = this, 
+				text = axisOptions.text,
+				textBounds = null;
 
 			if (text && text.length > 0) {
-				var tempText = this._text(-100, -100, text);
-
-				var textStyle = $.extend(true, {}, this.options.textStyle, axisOptions.textStyle);
+				var tempText = self._text(-100, -100, text),
+					textStyle = $.extend(true, {}, self.options.textStyle, axisOptions.textStyle);
 				tempText.attr(textStyle);
 				textBounds = tempText.wijGetBBox();
 
 				switch (axisOptions.compass) {
 				case "north":
-					this.canvasBounds.startY += textBounds.height;
+					self.canvasBounds.startY += textBounds.height;
 					break;
 				case "south":
-					this.canvasBounds.endY -= textBounds.height;
+					self.canvasBounds.endY -= textBounds.height;
 					break;
 				case "east":
-					this.canvasBounds.endX -= textBounds.height;
+					self.canvasBounds.endX -= textBounds.height;
 					break;
 				case "west":
-					this.canvasBounds.startX += textBounds.height;
+					self.canvasBounds.startX += textBounds.height;
 					break;
 				}
 				tempText.remove();
@@ -2528,23 +2714,26 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_paintChartArea: function () {
-			this._applyMargins();
-			if (!this.options.seriesList || this.options.seriesList.length === 0) {
+			var self = this,
+				o = self.options;
+
+			self._applyMargins();
+			if (!o.seriesList || o.seriesList.length === 0) {
 				return;
 			}
-			if (this._hasAxes()) {
+			if (self._hasAxes()) {
 				//Restore from cache.
-				if (this.innerState.axisInfo) {
-					this.axisInfo = this.innerState.axisInfo;
-					this.canvasBounds = this.innerState.canvasBounds;
+				if (self.innerState.axisInfo) {
+					self.axisInfo = self.innerState.axisInfo;
+					self.canvasBounds = self.innerState.canvasBounds;
 				}
 				else {
-					var axisOption = this.options.axis;
-					var axisTextOffset = 2; //The value is used to offset the tick major text from the tick rect.
-					var xTextBounds = this._applyAxisText(axisOption.x);
-					var yTextBounds = this._applyAxisText(axisOption.y);
+					var axisOption = o.axis,
+						axisTextOffset = 2, //The value is used to offset the tick major text from the tick rect.
+						xTextBounds = self._applyAxisText(axisOption.x),
+						yTextBounds = self._applyAxisText(axisOption.y);
 
-					this.axisInfo = {
+					self.axisInfo = {
 						x: {
 							id: "x",
 							tprec: 0,
@@ -2556,7 +2745,11 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 							minorTickRect: null,
 							annoFormatString: null,
 							textBounds: xTextBounds,
-							axisTextOffset: axisTextOffset
+							axisTextOffset: axisTextOffset,
+							autoMax: true,
+							autoMin: true,
+							autoMajor: true,
+							autoMinor: true
 						},
 						y: {
 							id: "y",
@@ -2569,72 +2762,77 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 							minorTickRect: null,
 							annoFormatString: null,
 							textBounds: yTextBounds,
-							axisTextOffset: axisTextOffset
+							axisTextOffset: axisTextOffset,
+							autoMax: true,
+							autoMin: true,
+							autoMajor: true,
+							autoMinor: true
 						}
 					};
-					var extremeValue = this._getDataExtreme();
-					if (axisOption.x.autoMin) {
+					var extremeValue = self._getDataExtreme();
+					if (axisOption.x.autoMin && self.axisInfo.x.autoMin) {
 						axisOption.x.min = extremeValue.txn;
 					}
-					if (axisOption.x.autoMax) {
+					if (axisOption.x.autoMax && self.axisInfo.x.autoMax) {
 						axisOption.x.max = extremeValue.txx;
 					}
-					if (axisOption.y.autoMin) {
+					if (axisOption.y.autoMin && self.axisInfo.y.autoMin) {
 						axisOption.y.min = extremeValue.tyn;
 					}
-					if (axisOption.y.autoMax) {
+					if (axisOption.y.autoMax && self.axisInfo.y.autoMax) {
 						axisOption.y.max = extremeValue.tyx;
 					}
 
-					var maxtries = 5;
-					var axis = this.options.axis;
+					var maxtries = 5,
+						axis = o.axis;
 					do {
-						var offsetY = this._autoPosition(this.axisInfo.y, axis.y);
-						var offsetX = this._autoPosition(this.axisInfo.x, axis.x);
+						var offsetY = self._autoPosition(self.axisInfo.y, axis.y),
+							offsetX = self._autoPosition(self.axisInfo.x, axis.x);
 
-						if (offsetY === this.axisInfo.y.offset && offsetX === this.axisInfo.x.offset) {
+						if (offsetY === self.axisInfo.y.offset && offsetX === self.axisInfo.x.offset) {
 							maxtries = 0;
 							break;
 						}
-						if (offsetY !== this.axisInfo.y) {
+						if (offsetY !== self.axisInfo.y) {
 							this.axisInfo.y.offset = offsetY;
 						}
-						if (offsetX !== this.axisInfo.x) {
+						if (offsetX !== self.axisInfo.x) {
 							this.axisInfo.x.offset = offsetX;
 						}
 						maxtries--;
 					} while (maxtries > 0);
 
-					this._adjustPlotArea(axis.x, this.axisInfo.x);
-					this._adjustPlotArea(axis.y, this.axisInfo.y);
+					self._adjustPlotArea(axis.x, self.axisInfo.x);
+					self._adjustPlotArea(axis.y, self.axisInfo.y);
 
-					this.innerState.axisInfo = this.axisInfo;
-					this.innerState.canvasBounds = this.canvasBounds;
+					self.innerState.axisInfo = self.axisInfo;
+					self.innerState.canvasBounds = self.canvasBounds;
 				}
-
-				this._paintAxes();
-				this._paintPlotArea();
+				self._paintAxes();
+				self._paintPlotArea();
 			}
 			else {
-				this._paintPlotArea();
+				self._paintPlotArea();
 			}
 		},
 
 		_adjustPlotArea: function (axisOptions, axisInfo) {
+			var canvasBounds = this.canvasBounds;
 			axisOptions.max = axisInfo.max;
 			axisOptions.min = axisInfo.min;
+
 			switch (axisOptions.compass) {
 			case "north":
-				this.canvasBounds.startY += axisInfo.offset;
+				canvasBounds.startY += axisInfo.offset;
 				break;
 			case "south":
-				this.canvasBounds.endY -= axisInfo.offset;
+				canvasBounds.endY -= axisInfo.offset;
 				break;
 			case "east":
-				this.canvasBounds.endX -= axisInfo.offset;
+				canvasBounds.endX -= axisInfo.offset;
 				break;
 			case "west":
-				this.canvasBounds.startX += axisInfo.offset;
+				canvasBounds.startX += axisInfo.offset;
 				break;
 			}
 		},
@@ -2646,44 +2844,46 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_autoPositionCartesianAxis: function (axisInfo, axisOptions) {
-			var extent = null;
+			var extent = null,
+				self = this;
 
 			switch (axisOptions.compass) {
 			case "north":
 			case "south":
-				this._calculateParameters(axisInfo, axisOptions);
-				extent = this._getMaxExtents(axisInfo, axisOptions);
+				self._calculateParameters(axisInfo, axisOptions);
+				extent = self._getMaxExtents(axisInfo, axisOptions);
 				return extent.height;
 			case "east":
 			case "west":
-				this._calculateParameters(axisInfo, axisOptions);
-				extent = this._getMaxExtents(axisInfo, axisOptions);
+				self._calculateParameters(axisInfo, axisOptions);
+				extent = self._getMaxExtents(axisInfo, axisOptions);
 				return extent.width;
 			}
 		},
 
 		_getMaxExtents: function (axisInfo, axisOptions, axisRect) {
-			var rMajor = this._getTickRect(axisInfo, axisOptions, true, true, axisRect);
-			var rMinor = this._getTickRect(axisInfo, axisOptions, false, true, axisRect);
+			var self = this,
+				o = self.options,
+				rMajor = self._getTickRect(axisInfo, axisOptions, true, true, axisRect),
+				rMinor = self._getTickRect(axisInfo, axisOptions, false, true, axisRect);
 
 			axisInfo.majorTickRect = rMajor;
 			axisInfo.minorTickRect = rMinor;
 
-			var majorTickValues = this._getMajorTickValues(axisInfo, axisOptions);
+			var majorTickValues = self._getMajorTickValues(axisInfo, axisOptions),
+				maxExtent = {
+					width: 0,
+					height: 0
+				},
+				min = axisInfo.min,
+				max = axisInfo.max,
+				isTime = axisInfo.isTime,
+				formatString = axisOptions.annoFormatString;
 
-			//var valueX = !this._isVertical(axisOptions.compass);
-			var maxExtent = {
-				width: 0,
-				height: 0
-			};
-			var o = this.options;
-			var min = axisInfo.min;
-			var max = axisInfo.max;
-			var isTime = axisInfo.isTime;
-			var formatString = axisOptions.annoFormatString;
 			if (!formatString) {
 				formatString = axisInfo.annoFormatString;
 			}
+
 			if (majorTickValues && majorTickValues.length) {
 				var is100pc = o.is100Percent;
 				for (var i = 0, idx = 0; i < majorTickValues.length; i++, idx++) {
@@ -2704,7 +2904,7 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						else if (axisOptions.annoMethod === "values") {
 							if (formatString && formatString.length) {
 								if (isTime) {
-									mtv = this._fromOADate(mtv);
+									mtv = self._fromOADate(mtv);
 								}
 
 								mtv = $.format(mtv, formatString);
@@ -2714,19 +2914,23 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 							}
 						}
 
-						var textStyle = $.extend(true, {}, o.textStyle, axisOptions.textStyle, axisOptions.labels.style);
-						var txt = this._text(-100, -100, mtv).attr(textStyle);
-						var width, height, size;
-						if (textStyle.rotation) {
-							size = txt.getBBoxRotated();
-							width = size.width;
-							height = size.height;
+						var textStyle = $.extend(true, {}, o.textStyle, axisOptions.textStyle, axisOptions.labels.style),
+							//txt = self._text(-100, -100, mtv).attr(textStyle),
+							txt = null,
+							width = 0, 
+							height = 0, 
+							size = null,
+							labels = axisOptions.labels;
+						if (labels.width) {
+							txt = self.canvas.wij.wrapText(-100, -100, mtv, labels.width, labels.textAlign, textStyle);
 						}
 						else {
-							size = txt.wijGetBBox();
-							width = size.width;
-							height = size.height;
+							txt = self._text(-100, -100, mtv).attr(textStyle);
 						}
+						
+						size = txt.wijGetBBox();
+						width = size.width;
+						height = size.height;
 						txt.remove();
 						if (size.width > maxExtent.width) {
 							maxExtent.width = width;
@@ -2740,6 +2944,11 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					}
 				}
 			}
+			if(maxExtent.width < labels.width) {
+				maxExtent.width = labels.width;
+			}
+			
+			axisInfo.labelWidth = maxExtent.width;
 			return maxExtent;
 		},
 
@@ -2761,8 +2970,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_getTickValues: function (smax, smin, unit, tickprec, round) {
-			var vals = [];
-			var sminOriginal = smin;
+			var vals = [],
+				sminOriginal = smin;
 			try {
 				if (unit === 0) {
 					vals = [smax, smin];
@@ -2778,9 +2987,9 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					if (smin2 < smax) {
 						smin = smin2;
 					}
-					var imax = parseInt(this.canvas.wij.round(smax / unit, 5));
-					var imin = parseInt(this.canvas.wij.round(smin / unit, 5));
-					var n = parseInt(imax - imin + 1);
+					var imax = parseInt(this.canvas.wij.round(smax / unit, 5)),
+						imin = parseInt(this.canvas.wij.round(smin / unit, 5)),
+						n = parseInt(imax - imin + 1);
 					if (n > 1) {
 						var xs = imin * unit;
 						if (xs < smin) {
@@ -2814,12 +3023,12 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 
 		//_getTickRect: function(axisInfo, axisOptions, isMajor, inAxisRect, axisRect) {
 		_getTickRect: function (axisInfo, axisOptions, isMajor, inAxisRect) {
-			var compass = axisOptions.compass;
-			var sizeFactor = 0;
-			var tick = null;
-			var majorSizeFactor = 3;
-			var minorSizeFactor = 2;
-			var thickness = 2;
+			var compass = axisOptions.compass,
+				sizeFactor = 0,
+				tick = null,
+				majorSizeFactor = 3,
+				minorSizeFactor = 2,
+				thickness = 2;
 			if (isMajor) {
 				tick = axisOptions.tickMajor.position;
 				sizeFactor = (majorSizeFactor * axisOptions.tickMajor.factor);
@@ -2901,11 +3110,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_applyMargins: function () {
-			var o = this.options;
-			this.canvasBounds.startX += o.marginLeft;
-			this.canvasBounds.endX -= o.marginRight;
-			this.canvasBounds.startY += o.marginTop;
-			this.canvasBounds.endY -= o.marginBottom;
+			var o = this.options,
+				canvasBounds = this.canvasBounds;
+
+			canvasBounds.startX += o.marginLeft;
+			canvasBounds.endX -= o.marginRight;
+			canvasBounds.startY += o.marginTop;
+			canvasBounds.endY -= o.marginBottom;
 		},
 
 		_paintAxes: function () {
@@ -3015,7 +3226,6 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			if (!formatString) {
 				formatString = axisInfo.annoFormatString;
 			}
-
 			for (var i = 0; i < lenMajor; idx++, i++) {
 				val = majorTickValues[i];
 				var text = val;
@@ -3051,7 +3261,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					var textStyle = $.extend(true, {}, this.options.textStyle, axisOptions.textStyle, labels.style),
 						textInfo = this._paintMajorMinor(max, min, val, tickMajor, unitMajor, tickRectMajor, 
 										compass, startPoint, endPoint, axisSize, axisTextOffset, tickMajorStyle, 
-										text, gridMajor, axisOptions.textVisible, textStyle, labels.textAlign);
+										text, gridMajor, axisOptions.textVisible, textStyle, labels.textAlign, 
+										labels.width ? axisInfo.labelWidth : null);
 
 					if (textInfo) {
 						textInfos.push(textInfo);
@@ -3065,25 +3276,28 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				}
 			}
 
-			$.each(textInfos, function (idx, textInfo) {
-				var textElement = textInfo.text;
-				var offset = (textInfo.len - maxLen) / 2;
-				offset = labels.textAlign === "near" ? offset * -1 : offset;
+			if (!labels.width){
+				$.each(textInfos, function (idx, textInfo) {
+					var textElement = textInfo.text;
+					var offset = (textInfo.len - maxLen) / 2;
+					offset = labels.textAlign === "near" ? offset * -1 : offset;
 
-				if (isVertical) {
-					textElement.translate(offset, 0);
-				}
-				else {
-					textElement.translate(0, offset);
-				}
-			});
+					if (isVertical) {
+						textElement.translate(offset, 0);
+					}
+					else {
+						textElement.translate(0, offset);
+					}
+				});
+			}
 
 			for (idx = 0; idx < lenMinor; idx++) {
 				val = minorTickValues[idx];
 				if (val > min && val < max) {
 					this._paintMajorMinor(max, min, val, tickMinor, unitMinor, tickRectMinor, 
 							compass, startPoint, endPoint, axisSize, axisTextOffset, tickMinorStyle, 
-							null, gridMinor, axisOptions.textVisible);
+							null, gridMinor, axisOptions.textVisible, textStyle, labels.textAlign, 
+							labels.width ? axisInfo.labelWidth : null);
 				}
 			}
 
@@ -3183,14 +3397,15 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			return minorTickValues;
 		},
 
-		_paintMajorMinor: function (max, min, val, tick, unit, tickRect, compass, startPoint, endPoint, axisSize, axisTextOffset, tickStyle, text, grid, textVisible, textStyle, textAlign) {
-			var x = startPoint.x;
-			var y = startPoint.y;
-			var tickX = -1;
-			var tickY = -1;
-			var isVertical = true;
-			var bs = this.canvasBounds;
-			var textInfo = null;
+		_paintMajorMinor: function (max, min, val, tick, unit, tickRect, compass, startPoint, endPoint, axisSize, axisTextOffset, tickStyle, text, grid, textVisible, textStyle, textAlign, labelWidth) {
+			var x = startPoint.x,
+				y = startPoint.y,
+				tickX = -1,
+				tickY = -1,
+				isVertical = true,
+				bs = this.canvasBounds,
+				textInfo = null;
+				
 			switch (compass) {
 			case "south":
 				if (tick === "inside") {
@@ -3199,7 +3414,14 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				else if (tick === "cross") {
 					y -= tickRect.height / 2;
 				}
-				tickY = y + axisTextOffset + tickRect.height + axisSize / 2;
+
+				if (labelWidth){
+					tickY = y + axisTextOffset + tickRect.height;
+				}
+				else {
+					tickY = y + axisTextOffset + tickRect.height + axisSize / 2;
+				}
+								
 				isVertical = false;
 				break;
 			case "west":
@@ -3209,7 +3431,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				else if (tick === "cross") {
 					x -= tickRect.width / 2;
 				}
-				tickX = x - (axisTextOffset + axisSize / 2);
+
+				if (labelWidth){
+					tickX = x - (axisTextOffset + axisSize);
+				}
+				else {
+					tickX = x - (axisTextOffset + axisSize / 2);
+				}
 				break;
 			case "north":
 				if (tick === "outside") {
@@ -3218,7 +3446,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				else if (tick === "cross") {
 					y -= tickRect.height / 2;
 				}
-				tickY = y - (axisTextOffset + axisSize / 2);
+
+				if (labelWidth) {
+					tickY = y - (axisTextOffset + axisSize);
+				}
+				else {
+					tickY = y - (axisTextOffset + axisSize / 2);
+				}
 				isVertical = false;
 				break;
 			case "east":
@@ -3228,7 +3462,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				else if (tick === "cross") {
 					x -= tickRect.width / 2;
 				}
-				tickX = x + axisTextOffset + tickRect.width + axisSize / 2;
+				
+				if (labelWidth)	{
+					tickX = x + axisTextOffset + tickRect.width;
+				}
+				else {
+					tickX = x + axisTextOffset + tickRect.width + axisSize / 2;
+				}
 				break;
 			}
 			var tickElement = null,
@@ -3237,7 +3477,9 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				p = null,
 				style = {
 					"stroke-width": 2
-				};
+				},
+				txt = null;
+
 			if (isVertical) {
 				y += (val - min) / (max - min) * (endPoint.y - startPoint.y);
 				if (grid.visible) {
@@ -3248,7 +3490,7 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						this.axisEles.push(p);
 					}
 				}
-				//y -= tickRect.height / 2
+
 				tickY = y;
 
 				pathArr = ["M", x, y, "h", tickRect.width];
@@ -3264,9 +3506,14 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 						this.axisEles.push(p);
 					}
 				}
-				//x -=  tickRect.width / 2;
-				tickX = x;
 
+				if (labelWidth) {
+					tickX = x - labelWidth / 2;
+				}
+				else {
+					tickX = x;
+				}
+				
 				pathArr = ["M", x, y, "v", tickRect.height];
 				tickStyle["stroke-width"] = tickRect.width;
 			}
@@ -3276,21 +3523,25 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			tickElement.attr(style);
 			this.axisEles.push(tickElement);
 
-			//var rect = this.canvas.rect(x, y , tickRect.width, tickRect.height);
-			//if (autoFormat) {
-			//	rect.attr(tickStyle);
-			//}
-			//this.axisEles.push(rect);
 			if (text) {
-				var txt = this._text(tickX, tickY, text.toString());
-				txt.attr(textStyle);
+				if (labelWidth) {
+					txt = this.canvas.wij.wrapText(tickX, tickY, text.toString(), labelWidth, textAlign, textStyle);
+				
+					if(isVertical) {
+						txt.translate(0, -txt.getBBox().height / 2);
+					}
+				}
+				else {
+					txt = this._text(tickX, tickY, text.toString());
+					txt.attr(textStyle);
+				}
+
 				this.axisEles.push(txt);
 				if (!textVisible) {
 					txt.hide();
 				}
-
 				if (textAlign !== "center") {
-					var textBounds = txt.wijGetBBox();
+					var textBounds = txt.getBBox();
 					textInfo = { text: txt, len: isVertical ? textBounds.width : textBounds.height };
 				}
 			}
@@ -4000,11 +4251,13 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		},
 
 		_getDataExtremes: function (val) {
-			var o = this.options,
+			var self = this,
+				o = self.options,
 				seriesList = o.seriesList,
 				stacked = o.stacked,
 				is100Percent = o.is100Percent,
-				axis = o.axis;
+				axis = o.axis,
+				axisInfo = self.axisInfo;
 
 			if (!seriesList || seriesList.length === 0) {
 				return val;
@@ -4052,8 +4305,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					valuesY0 = [].concat(valuesY);
 				}
 
-				var xMinMax = this._getMinMaxValue(valuesX),
-					yMinMax = this._getMinMaxValue(valuesY);
+				var xMinMax = self._getMinMaxValue(valuesX),
+					yMinMax = self._getMinMaxValue(valuesY);
 				if (i === 0) {
 					val.txx = xMinMax.max;
 					val.txn = xMinMax.min;
@@ -4084,8 +4337,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			var valueLabel = null,
 				valueLabels = [];
 			if (valuesX.length) {
-				if (this._isDate(valuesX[0])) {
-					this.axisInfo.x.isTime = true;
+				if (self._isDate(valuesX[0])) {
+					axisInfo.x.isTime = true;
 				}
 				else if (typeof (valuesX[0]) !== "number") {
 					//var valueX = valuesX[0];
@@ -4098,14 +4351,14 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					}
 					axis.x.annoMethod = "valueLabels";
 					axis.x.valueLabels = valueLabels;
-					axis.x.autoMax = false;
-					axis.x.autoMin = false;
 					axis.x.max = ii - 1;
 					axis.x.min = 0;
-					axis.x.autoMajor = false;
-					axis.x.autoMinor = false;
 					axis.x.unitMajor = 1;
 					axis.x.unitMinor = 0.5;
+					axisInfo.x.autoMax = false;
+					axisInfo.x.autoMin = false;
+					axisInfo.x.autoMajor = false;
+					axisInfo.x.autoMinor = false;
 				}
 			}
 			if (valuesY.length) {
@@ -4120,14 +4373,14 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					}
 					axis.y.annoMethod = "valueLabels";
 					axis.y.valueLabels = valueLabels;
-					axis.x.autoMax = false;
-					axis.x.autoMin = false;
 					axis.x.max = ii - 1;
 					axis.x.min = 0;
-					axis.y.autoMajor = false;
-					axis.y.autoMinor = false;
 					axis.y.unitMajor = 1;
 					axis.x.unitMinor = 0.5;
+					axisInfo.y.autoMax = false;
+					axisInfo.y.autoMin = false;
+					axisInfo.y.autoMajor = false;
+					axisInfo.y.autoMinor = false;
 				}
 				/*else if (this._isDate(valuesY[0])) {
 					//this.axisInfo.y.isTime = true;
