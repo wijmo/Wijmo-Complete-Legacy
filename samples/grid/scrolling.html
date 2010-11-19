@@ -10,7 +10,7 @@
     <link href="../base-reset.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
     <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.1.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.2.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.ui.wijgrid.css" rel="stylesheet" type="text/css" />
 
     <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
@@ -18,7 +18,7 @@
     <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.0.8.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.0.8.2.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.ui.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.ui.wijgrid.js" type="text/javascript"></script>
     <style type="text/css">
@@ -30,7 +30,7 @@
     </style>
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
-            $("#demo").wrap("<div style=\"height:300px\" />").parent().wijgrid({
+            $("#demo").wijgrid({
                 staticRowIndex: 0,
                 showRowHeader: false,
                 selectionMode: "none",
@@ -55,7 +55,7 @@
         </div>
         <div class="main demo">
             <!-- Begin demo markup -->
-            <table id="demo" >
+            <table id="demo" style="height:300px;">
                 <thead>
                     <tr>
                         <th>

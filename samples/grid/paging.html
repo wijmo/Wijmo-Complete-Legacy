@@ -10,7 +10,7 @@
     <link href="../base-reset.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
     <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.1.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.2.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.ui.wijpager.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.ui.wijgrid.css" rel="stylesheet" type="text/css" />
 
@@ -19,33 +19,33 @@
     <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.0.8.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.0.8.2.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.ui.wijpager.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.ui.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.ui.wijgrid.js" type="text/javascript"></script>
 
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
-            $("#demo").wrap("<div id=\"demo-wrapper\" />").parent().wijgrid({
+            $("#demo").wijgrid({
                 allowPaging: true,
                 pageSize: 5,
                 pagerSettings: { position: "topAndBottom" }
             });
 
             $("#pagerPosition").change(function (e) {
-                var pagerSettings = $.extend({}, $("#demo-wrapper").wijgrid("option", "pagerSettings"));
+                var pagerSettings = $.extend({}, $("#demo").wijgrid("option", "pagerSettings"));
                 pagerSettings.position = $(e.target).val();
-                $("#demo-wrapper").wijgrid("option", "pagerSettings", pagerSettings);
+                $("#demo").wijgrid("option", "pagerSettings", pagerSettings);
             });
 
             $("#pagerMode").bind("change", function (e) {
-                var pagerSettings = $.extend({}, $("#demo-wrapper").wijgrid("option", "pagerSettings"));
+                var pagerSettings = $.extend({}, $("#demo").wijgrid("option", "pagerSettings"));
                 pagerSettings.mode = $(e.target).val();
-                $("#demo-wrapper").wijgrid("option", "pagerSettings", pagerSettings);
+                $("#demo").wijgrid("option", "pagerSettings", pagerSettings);
             });
 
             $("#pageSize").bind("change", function (e) {
-                $("#demo-wrapper").wijgrid("option", "pageSize", parseInt($(e.target).val()));
+                $("#demo").wijgrid("option", "pageSize", parseInt($(e.target).val()));
             });
         });
     </script>
