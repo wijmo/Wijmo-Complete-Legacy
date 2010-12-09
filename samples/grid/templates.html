@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Grid - Templating</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Overview" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
+    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.0.9.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery.wijmo-open.0.9.0.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var genre = "Sci-Fi Cult Classics", pageIndex = 1, pageSize = 20, pageCount = 0,
+        cart = { bookings: {}, count: 0, sortBy: 0 }, bookingTmplItems = {}, selectedBooking;
+
+        function getMovies(index) {
+            var query = "http://odata.netflix.com/Catalog/Genres('" + genre + "')/Titles" +
+            "?$format=json" + 
+            "&$inlinecount=allpages" + 
+            "&$skip=" + (index - 1) * pageSize + 
+            "&$top=" + pageSize;
+
+            pageIndex = index;
+
+            $("#demo tbody")
+            .fadeOut("medium", function () {
+                $.ajax({
+                    dataType: "jsonp",
+                    url: query,
+                    jsonp: "$callback",
+                    success: showMovies
+                });
+            });
+        }
+
+        function showMovies(data) {
+            pageCount = Math.ceil(data.d.__count / pageSize),
+            movies = data.d.results;
+
+            $("#movieTmpl").tmpl(movies).appendTo("#demo tbody");
+
+            $("#demo").wijgrid({
+                allowSorting: true,
+                allowPaging: true,
+                pageSize: 10,
+                columns: [
+                    {},
+                    {},
+                    {},
+                    {},
+                    { dataType: "number" }
+                ]
+        });
+        }
+    </script>
+    <script id="scriptInit" type="text/javascript">
+        $(document).ready(function () {
+            getMovies(pageIndex);
+        });
+    </script>
+    <script id="movieTmpl" type="text/x-jquery-tmpl">
+        <tr>
+            <td><img src="${BoxArt.SmallUrl}" /></td>
+            <td>${Name}</td>
+            <td>${Rating}</td>
+            <td>${ReleaseYear}</td>
+            <td>${AverageRating}</td>
+        </tr>
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Templating</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <table id="demo">
+                <thead>
+                    <tr>
+                        <th>
+                            Box
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Rated
+                        </th>
+                        <th>
+                            Year
+                        </th>
+                        <th>
+                            Rating
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

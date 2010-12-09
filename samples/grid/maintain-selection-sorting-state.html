@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Grid - Sorting</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="wijgrid provides sorting feature" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
+    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.0.9.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.cookie.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery.wijmo-open.0.9.0.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+
+    <script id="scriptInit" type="text/javascript">
+        $(document).ready(function () {
+
+            var selectionRestored = false,
+                $grid = $("#demo");
+
+            $grid.wijgrid({
+                allowSorting: true,
+                selectionMode: "multiRange",
+                columns: restoreSort([ { uid: "col0" }, { uid: "col1" }, { uid: "col2" } ]),
+
+                sorted: function (e, args) {
+                    $.cookie("sortUID", args.options.uid.toString());
+                    $.cookie("sortDirection", args.options.sortDirection.toString());
+                },
+
+               selectionchanged: function (e, args) {
+                   if (selectionRestored || !$.cookie("selectedCells")) {
+                       storeSelection($grid.wijgrid("selection").selectedCells());
+                   }
+               }
+            });
+
+            restoreSelection($grid);
+
+            function restoreSort(columns) {
+                var result = columns,
+                    uid = $.cookie("sortUID");
+
+                if (uid) {
+                    $.each(columns, function (index, item) {
+                        if (item.uid === uid) {
+                            item.sortDirection = $.cookie("sortDirection");
+                        }
+                    });
+                }
+
+                return result;
+            }
+
+            function storeSelection(selectedCells) {
+                var result = "", i, len, cell;
+
+                for (i = 0, len = selectedCells.length(); i < len; i++) {
+                    cell = selectedCells.item(i);
+                    result += cell.cellIndex() + ":" + cell.rowIndex() + " ";
+                }
+
+                $.cookie("selectedCells", result);
+            }
+
+            function restoreSelection($jq) {
+                var cookieVal = $.cookie("selectedCells"),
+                    cells, cell, selectionObj, x, y;
+
+                if (cookieVal) {
+                    selectionObj = $jq.wijgrid("selection");
+
+                    selectionObj.beginUpdate();
+
+                    selectionObj.clear();
+
+                    $.each(cookieVal.split(" "), function (index, item) {
+                        if (item) {
+                            cell = item.split(":");
+                            x = parseInt(cell[0], 10);
+                            y = parseInt(cell[1], 10);
+
+                            selectionObj.addRange(x, y, x, y);
+                        }
+                    });
+
+                    selectionObj.endUpdate();
+                }
+
+                selectionRestored = true;
+            }
+        });
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Save Sorting and Selection State</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <table id="demo">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Company</th><th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ANATR</td><td>Ana Trujillo Emparedados y helados</td><td>Ana Trujillo</td>
+                    </tr>
+                    <tr>
+                        <td>ANTON</td><td>Antonio Moreno Taqueria</td><td>Antonio Moreno</td>
+                    </tr>
+                    <tr>
+                        <td>AROUT</td><td>Around the Horn</td><td>Thomas Hardy</td>
+                    </tr>
+                    <tr>
+                        <td>BERGS</td><td>Berglunds snabbkop</td><td>Christina Berglund</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                Select any row or sort any column, the state will be stored in the cookie.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
