@@ -1,6 +1,7 @@
+/*globals window jQuery */
 /*
  *
- * Wijmo Library 0.8.2
+ * Wijmo Library 0.9.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -19,11 +20,14 @@
 *	jquery.ui.wijlist.js
 *
 */
+"use strict";
 (function ($) {
 	/// <summary>
-	/// wijdatasource reads local raw data or remote raw data through proxy by using a DataReader and provide tabular object data for widgets. 
+	/// wijdatasource reads local raw data or remote raw data through proxy by using
+	/// a DataReader and provide tabular object data for widgets. 
 	/// </summary>
-	var wijdatasource = function (options) {
+	var wijdatasource, wijarrayreader, wijhttpproxy;
+	wijdatasource = function (options) {
 		var self = this;
 		/// <summary>
 		/// The data to process using the wijdatasource class.
@@ -32,22 +36,27 @@
 		/// </summary>
 		self.data = {};
 		/// <summary>
-		/// The reader to use with wijdatasource. The wijdatasource class will call the read method of reader to read from rawdata.  
-		/// If no reader is configured with wijdatasource it will directly return the raw data.
+		/// The reader to use with wijdatasource. The wijdatasource class will call the
+		/// read method of reader to read from rawdata.  
+		/// If no reader is configured with wijdatasource it will directly return the
+		/// raw data.
 		/// Default: null.
 		/// Type: Object. 
 		/// </summary>
 		self.reader = null;
 		/// <summary>
-		/// The proxy to use with wijdatasource. The wijdatasource class will call the proxy object's request method.  
-		/// In the proxy object, you can send a request to a remote server to obtain data. 
+		/// The proxy to use with wijdatasource. The wijdatasource class will call
+		/// the proxy object's request method.  
+		/// In the proxy object, you can send a request to a remote server to
+		/// obtain data. 
 		/// Then you can use the wijdatasource reader to process the raw data in the call.
 		/// Default: null.
 		/// Type: Object. 
 		/// </summary>
 		self.proxy = null;
 		/// <summary>
-		/// The processed items from the raw data.  This can be obtained after datasource is loaded.
+		/// The processed items from the raw data.  This can be obtained after
+		/// datasource is loaded.
 		/// Default: [].
 		/// Type: Array. 
 		/// </summary>
@@ -94,23 +103,27 @@
 			/// The data to pass to the loading and loaded event handler.
 			/// </param>
 			/// <param name="forceLocalReload" type="Boolean">
-			/// Normally local data is only load for one time, if needs to reload the data, try to set forceLocalReload to true.
+			/// Normally local data is only load for one time,
+			/// if needs to reload the data, try to set forceLocalReload to true.
 			/// </param>
 
-			var self = this;
-			var p = self.proxy;
+			var self = this,
+			p = self.proxy;
 			//var d = self.data;
 			// fire loading event.
 			if ($.isFunction(self.loading)) {
 				self.loading(self, data);
 			}
-			// if datasource has an proxy object, it will use the request method of proxy to retrive the raw data.
-			if (p != null) {
-				// pass callback function to request method so that proxy could call the function when request is finished.
+			// if datasource has an proxy object, it will use the request method of
+			// proxy to retrive the raw data.
+			if (p) {
+				// pass callback function to request method so that proxy could
+				// call the function when request is finished.
 				p.request(self, self.loaded, data);
 			}
 			else {
-				// local data is loaded only once, if force loading is needed forceLocalReload should be true.
+				// local data is loaded only once, if force loading is needed
+				// forceLocalReload should be true.
 				if (self.items.length === 0 || forceLocalReload) {
 					// no proxy, read raw data
 					this.read();
@@ -124,13 +137,14 @@
 
 		read: function () {
 			/// <summary>
-			/// Triggers data reading process of wijdatasource by using a DataReader if presented.
+			/// Triggers data reading process of wijdatasource
+			/// by using a DataReader if presented.
 			/// </summary>
 
-			var self = this;
-			var d = self.data;
+			var self = this,
+			d = self.data;
 			// reads using a reader object
-			if (d != null && self.reader != null) {
+			if (d  && self.reader) {
 				self.reader.read(self);
 			}
 			else {
@@ -144,7 +158,7 @@
 	/// <summary>
 	/// wijdatasource ArrayReader reads from a array and processes items.
 	/// </summary>
-	var wijarrayreader = function (fields) {
+	wijarrayreader = function (fields) {
 		// this.fields to store the fields info
 		if ($.isArray(fields)) {
 			this.fields = fields;
@@ -171,8 +185,7 @@
 		},
 
 		_map: function (data) {
-			var self = this;
-			var arr = [];
+			var self = this, arr = [];
 			if (self.fields === undefined || self.fields.length === 0) {
 				$.extend(true, arr, data);
 				return arr;
@@ -181,14 +194,16 @@
 				$.each(data, function (index, value) {
 					var i = {};
 					$.each(self.fields, function (index, field) {
-						// mapping property is a function, the return value will be used as value.
+						// mapping property is a function,
+						// the return value will be used as value.
 						if ($.isFunction(field.mapping)) {
 							i[field.name] = field.mapping(value);
 							return true;
 						}
 						// use string field mapping or number index mapping.
-						var mapping = field.mapping !== undefined ? field.mapping : field.name;
-						var v = value[mapping];
+						var mapping = field.mapping !== undefined ? 
+											field.mapping : field.name,
+						v = value[mapping];
 						if (v === undefined) {
 							if (field.defaultValue !== undefined) {
 								v = field.defaultValue;
@@ -209,7 +224,7 @@
 	/// <summary>
 	/// wijdatasource HttpProxy fetches data by using Ajax request.
 	/// </summary>
-	var wijhttpproxy = function (options) {
+	wijhttpproxy = function (options) {
 		this.options = options;
 	};
 	window.wijhttpproxy = wijhttpproxy;
@@ -226,9 +241,9 @@
 			/// The function to call after requesting data successfully.
 			/// </param>
 
-			var self = this;
-			var o = $.extend({}, self.options);
-			var oldSuccess = o.success;
+			var self = this,
+			o = $.extend({}, this.options),
+			oldSuccess = o.success;
 
 			o.success = function (data) {
 				if ($.isFunction(oldSuccess)) {

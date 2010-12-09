@@ -1064,7 +1064,7 @@
       <Region>
         <Lng>0.0</Lng>
         <Value>15</Value>
-        <Name>Côte d’Ivoire</Name>
+        <Name>CÃƒÂ´te dÃ¢â‚¬â„¢Ivoire</Name>
         <Lat>0.0</Lat>
         <Id>CI</Id>
         <ColorKey>15</ColorKey>
@@ -1320,7 +1320,7 @@
       <Region>
         <Lng>0.0</Lng>
         <Value>3</Value>
-        <Name>Réunion</Name>
+        <Name>RÃƒÂ©union</Name>
         <Lat>0.0</Lat>
         <Id>RE</Id>
         <ColorKey>3</ColorKey>

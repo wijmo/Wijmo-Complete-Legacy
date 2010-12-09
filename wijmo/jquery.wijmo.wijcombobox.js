@@ -1,6 +1,7 @@
+/*globals jQuery,window,document*/
 /*
  *
- * Wijmo Library 0.8.1
+ * Wijmo Library 0.9.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -19,19 +20,21 @@
  *	jquery.ui.wijlist.js
  *
  */
+"use strict";
 (function ($) {
-	var inputCSS = "ui-wijcombobox-input",
+	var inputCSS = "wijmo-wijcombobox-input",
 		stateHover = "ui-state-hover",
 		stateActive = "ui-state-active",
 		stateFocus = "ui-state-focus",
 		conerLeft = "ui-corner-left",
 		conerRight = "ui-corner-right",
-		triggerHTML = "<div class='ui-wijcombobox-trigger ui-state-default ui-corner-right'>" +
+		triggerHTML = "<div class='wijmo-wijcombobox-trigger ui-state-default " +
+							"ui-corner-right'>" +
 							"<span class='ui-icon ui-icon-triangle-1-s'></span>" +
 						"</div>",
-		labelHTML = "<label class='ui-wijcombobox-label ui-widget-content'></label>";
+		labelHTML = "<label class='wijmo-wijcombobox-label ui-widget-content'></label>";
 
-	$.widget("ui.wijcombobox", {
+	$.widget("wijmo.wijcombobox", {
 		options: {
 			/// <summary>
 			/// A value that specifies the underlying data source provider of wijcombobox.
@@ -39,7 +42,9 @@
 			/// Type: wijdatasource/Array
 			/// </summary>
 			/// <remarks>
-			/// This option could either be a wijdatasource object or an Object Array containing an item such as {label: "label text", value: "value"}.
+			/// This option could either be a wijdatasource object 
+			/// or an Object Array containing an item such as 
+			/// {label: "label text", value: "value"}.
 			/// </remarks>
 			data: null,
 			/// <summary>
@@ -49,25 +54,29 @@
 			/// </summary>
 			labelText: null,
 			/// <summary>
-			/// A value that determines the minimum length of text that can be entered in the wijcombobox text box to issue an AJAX request.
+			/// A value that determines the minimum length of text 
+			/// that can be entered in the wijcombobox text box to issue an AJAX request.
 			/// Default: 4.
 			/// Type: Number.
 			/// </summary>
 			minLength: 4,
 			/// <summary>
-			/// A value that determines the duration (in milliseconds) of the time to delay before autocomplete begins after typing stops.
+			/// A value that determines the duration (in milliseconds) of the time 
+			/// to delay before autocomplete begins after typing stops.
 			/// Default: 300.
 			/// Type: Number.
 			/// </summary>
 			delay: 300,
 			/// <summary>
-			/// A value that specifies the animation options for a drop-down list when it is visible.
+			/// A value that specifies the animation options for a drop-down list
+			/// when it is visible.
 			/// Default: null.
 			/// Type: Object.
 			/// </summary>
 			showingAnimation: null,
 			/// <summary>
-			/// A value specifies the animation options for the drop-down list when it is hidden.
+			/// A value specifies the animation options for the drop-down list
+			/// when it is hidden.
 			/// Default: null.
 			/// Type: Object.
 			/// </summary>
@@ -100,29 +109,35 @@
 			/// Type: Number/String("auto").
 			/// </summary>
 			/// <remarks>
-			/// When this option is set to "auto", the width of the drop-down list is equal to the width of wijcombobox.
+			/// When this option is set to "auto", the width of the drop-down
+			/// list is equal to the width of wijcombobox.
 			/// </remarks>
 			dropdownWidth: "auto",
 			/// <summary>
-			/// A value that determines whether to select the item when the item gains focus or is activated.
+			/// A value that determines whether to select the item 
+			/// when the item gains focus or is activated.
 			/// Default: false.
 			/// Type: Boolean.
 			/// </summary>
 			selectOnItemFocus: false,
 			/// <summary>
-			/// A value determines whether to shorten the drop-down list items by matching the text in the textbox after typing.
+			/// A value determines whether to shorten the drop-down list items 
+			/// by matching the text in the textbox after typing.
 			/// Default: true.
 			/// Type: Boolean.
 			/// </summary>
 			autoFilter: true,
 			/// <summary>
-			/// A value that determines whether to start the auto-complete function after typing in the text if a match exists.
+			/// A value that determines whether to start the auto-complete 
+			/// function after typing in the text if a match exists.
 			/// Default: true.
 			/// Type: Boolean.
 			/// </summary>
 			autoComplete: true,
 			/// <summary>
-			/// A value that determines whether to highlight the keywords in an item. If "abc" is typed in the textbox, all "abc" matches are highlighted in the drop-down list.
+			/// A value that determines whether to highlight the keywords in an item. 
+			/// If "abc" is typed in the textbox, 
+			/// all "abc" matches are highlighted in the drop-down list.
 			/// Default: true.
 			/// Type: Boolean.
 			/// </summary>
@@ -136,7 +151,9 @@
 			dropDownListPosition: {},
 			/// <summary>
 			/// An array that specifies the column collections of wijcombobox.
-			/// Example: columns: [{name: "header1", width: 150},{name: "header2", width: 150},{name: "header3", width: 150}]
+			/// Example: columns: [{name: "header1", width: 150},
+			///                    {name: "header2", width: 150},
+			///                    {name: "header3", width: 150}]
 			/// Default: [].
 			/// Type: Array.
 			/// </summary>
@@ -151,18 +168,21 @@
 			/// </summary>
 			selectionMode: "single",
 			/// <summary>
-			/// A value that specifies the separator for the multiple selected items text in the textbox.
+			/// A value that specifies the separator for 
+			/// the multiple selected items text in the textbox.
 			/// Default: ",".
 			/// Type: String.
 			/// </summary>
 			multipleSelectionSeparator: ",",
 			/// <summary>
-			/// A value that determines whether to check the input text against the text of the selected item when the focus blurs. 
+			/// A value that determines whether to check the input text against 
+			/// the text of the selected item when the focus blurs. 
 			/// Default: false.
 			/// Type: Boolean.
 			/// </summary>
 			/// <remarks>
-			/// If the text does not match any item, input text will restore to text the selected item or empty if no item is selected.  
+			/// If the text does not match any item, input text will restore 
+			/// to text the selected item or empty if no item is selected.  
 			/// </remarks>
 			forceSelectionText: false,
 			/// <summary>
@@ -184,8 +204,10 @@
 			/// </summary>
 			isEditable: true,
 			/// <summary>
-			/// A value that specifies the index of the item to select when using single mode.
-			/// If the selectionMode is "multiple", then this option could be set to an array of Number which contains the indices of the items to select.
+			/// A value that specifies the index of the item to select 
+			/// when using single mode.
+			/// If the selectionMode is "multiple", then this option could be set 
+			/// to an array of Number which contains the indices of the items to select.
 			/// Default: -1.
 			/// Type: Number/Array.
 			/// </summary>
@@ -212,12 +234,15 @@
 			/// </param>
 			close: null,
 			/// <summary>
-			/// A value added to the width of the target select element to account for the scroll bar width of superpanel.
+			/// A value added to the width of the target select element 
+			/// to account for the scroll bar width of superpanel.
 			/// Default: 6.
 			/// Type: Number.
 			/// <remarks>
 			/// Unit for this value is pixel.
-			/// Because the width of the scroll bar may be different between browsers if wijcombobox is initialized with the width of the HTML select element, the text may be hidden by the scroll bar of wijcombobox. 
+			/// Because the width of the scroll bar may be different between browsers 
+			/// if wijcombobox is initialized with the width of the HTML select element, 
+			/// the text may be hidden by the scroll bar of wijcombobox. 
 			/// </remarks>
 			/// </summary>
 			selectElementWidthFix: 6,
@@ -247,8 +272,14 @@
 			/// data.newItem: The new item.
 			/// data.oldIndex: The old index of selected item.
 			/// data.newIndex: The new index of selected item.
-			/// </param
-			changed: null
+			/// </param>
+			changed: null,
+			/// <summary>
+			/// The object contains the options of wijlist.
+			/// Default: null.
+			/// Type: Object.
+			/// </summary>
+			listOptions: null
 		},
 
 		_create: function () {
@@ -266,10 +297,9 @@
 		},
 
 		_checkSelectIndex: function () {
-			var self = this;
-			var o = self.options;
-			var index = o.selectedIndex;
+			var self = this, index;
 
+			index = self.options.selectedIndex;
 			if (!self._usingRemoteData() && (index >= 0 || $.isArray(index))) {
 				self.search(null, "checkindex");
 			}
@@ -277,14 +307,16 @@
 
 		repaint: function () {
 			/// <summary>
-			/// Repaints wijcombobox. Returns true if it succeeds; otherwise, returns false.
+			/// Repaints wijcombobox. Returns true if it succeeds; 
+			/// otherwise, returns false.
 			/// </summary>
 			/// <returns type="Boolean">
 			/// Returns true if it succeeds; otherwise, returns false.
 			/// </returns>
 
 			var self = this;
-			if (self.element.is(":visible") || (self._select !== undefined && self._input.is(":visible"))) {
+			if (self.element.is(":visible") || 
+			(self._select !== undefined && self._input.is(":visible"))) {
 				self._showTrigger();
 				if (self.options.disabled) {
 					self.disable();
@@ -295,89 +327,93 @@
 		},
 
 		_bindInputEvents: function () {
-			var self = this;
-			var input = self._input;
-			var o = self.options;
+			var self = this, input, o, code, keyCode;
+
+			input = self._input;
+			o = self.options;
 			// self.element is an html input element.
 			input.bind("keydown.wijcombobox", function (event) {
 				if (o.disabled === true) {
 					return;
 				}
-				var code = event.keyCode;
-				var keyCode = $.ui.keyCode;
+				code = event.keyCode;
+				keyCode = $.ui.keyCode;
 				switch (code) {
-					case keyCode.UP:
-						self._move("previous", event);
-						// prevent moving cursor to beginning of text field in some browsers
+				case keyCode.UP:
+					self._move("previous", event);
+					// prevent moving cursor to beginning of text field in some browsers
+					event.preventDefault();
+					break;
+				case keyCode.DOWN:
+					self._move("next", event);
+					// prevent moving cursor to end of text field in some browsers
+					event.preventDefault();
+					break;
+				case keyCode.ENTER:
+					// when menu is open or has focus
+					if (self.menu.active) {
 						event.preventDefault();
-						break;
-					case keyCode.DOWN:
-						self._move("next", event);
-						// prevent moving cursor to end of text field in some browsers
-						event.preventDefault();
-						break;
-					case keyCode.ENTER:
-						// when menu is open or has focus
-						if (self.menu.active) {
-							event.preventDefault();
-						}
-						break;
-					//passthrough - ENTER and TAB both select the current element           
-					case keyCode.TAB:
-						input.trigger("wijcomboblur");
-						if (!self.menu.active || (o.selectionMode === "multiple" && keyCode.TAB === code)) {
-							return;
-						}
-						self.menu.select(event);
-						// remove selection from input.
-						var end = input.val().length;
-						self._selectText(end, end, input);
+						self.menu.select(event); 
+					}
+					break;
+					//passthrough - ENTER and TAB both select the current element
+				case keyCode.TAB:
+					input.trigger("wijcomboblur");
+					if (!self.menu.active || 
+					(o.selectionMode === "multiple" && keyCode.TAB === code)) {
+						return;
+					}
+					self.menu.select(event);
+					// remove selection from input.
+					var end = input.val().length;
+					self._selectText(end, end, input);
 
-						break;
-					case keyCode.ESCAPE:
-						self.close(event);
-						break;
-					case keyCode.LEFT:
-					case keyCode.RIGHT:
-					case keyCode.SHIFT:
-					case keyCode.CONTROL:
-					case keyCode.HOME:
-					case keyCode.END:
-					case keyCode.DELETE:
-					case keyCode.PAGE_UP:
-					case keyCode.PAGE_DOWN:
-						// ignore metakeys (shift, ctrl, alt)
-						break;
-					case 18: //alt key
-						input.trigger("wijcomboblur");
-						break;
-					default:
-						// keypress is triggered before the input value is changed
-						clearTimeout(self.searching);
-						if (o.isEditable === false) {
-							if (self._cacheKey === undefined) {
-								self._cacheKey = "";
-							}
-							self._cacheKey += String.fromCharCode(code);
+					break;
+				case keyCode.ESCAPE:
+					self.close(event);
+					break;
+				case keyCode.LEFT:
+				case keyCode.RIGHT:
+				case keyCode.SHIFT:
+				case keyCode.CONTROL:
+				case keyCode.HOME:
+				case keyCode.END:
+				case keyCode.DELETE:
+				case keyCode.PAGE_UP:
+				case keyCode.PAGE_DOWN:
+					// ignore metakeys (shift, ctrl, alt)
+					break;
+				case 18: //alt key
+					input.trigger("wijcomboblur");
+					break;
+				default:
+					// keypress is triggered before the input value is changed
+					window.clearTimeout(self.searching);
+					if (o.isEditable === false) {
+						if (self._cacheKey === undefined) {
+							self._cacheKey = "";
 						}
-						self.searching = setTimeout(function () {
-							var term;
-							if (o.isEditable === false) {
-								term = self._cacheKey;
-								self._cacheKey = undefined;
-							}
-							else {
-								term = input.val();
-							}
-							self.search(term, event);
-						}, o.delay);
-						break;
+						self._cacheKey += String.fromCharCode(code);
+					}
+					self.searching = window.setTimeout(function () {
+						var term;
+						if (o.isEditable === false) {
+							term = self._cacheKey;
+							self._cacheKey = undefined;
+						}
+						else {
+							term = input.val();
+						}
+						self.search(term, event);
+					}, o.delay);
+					break;
 				}
 			}).bind("wijcomboblur.wijcombobox", function (event) {
-				clearTimeout(self.searching);
+				window.clearTimeout(self.searching);
 				self._addInputFocus(false, stateFocus);
-				// TODO try to implement this without a timeout, see clearTimeout in search()
-				self.closing = setTimeout(function () {
+				// TODO try to implement this without a timeout, 
+				// see clearTimeout in search()
+				self.closing = window.setTimeout(function () {
 					self.close(event, true);
 				}, 150);
 
@@ -392,10 +428,11 @@
 		},
 
 		_addInputFocus: function (add, css) {
-			var self = this;
-			var wrap = self._input.parent();
-			var key = add ? "addClass" : "removeClass";
-			var arrow = self._triggerArrow;
+			var self = this, wrap, key, arrow;
+
+			wrap = self._input.parent();
+			key = add ? "addClass" : "removeClass";
+			arrow = self._triggerArrow;
 			wrap[key](css);
 			if (arrow !== undefined) {
 				arrow[key](css);
@@ -403,9 +440,9 @@
 		},
 
 		_renderColumnsHeader: function (header) {
-			var ul = $("<ul class='ui-wijcombobox-rowheader'></ul>");
+			var ul = $("<ul class='wijmo-wijcombobox-rowheader'></ul>");
 			$.each(this.options.columns, function (index, column) {
-				var li = $("<li class='ui-wijcombobox-cell ui-widget-header'></li>");
+				var li = $("<li class='wijmo-wijcombobox-cell ui-widget-header'></li>");
 				li.html(column.name);
 				if (column.width !== undefined) {
 					li.width(column.width);
@@ -420,20 +457,23 @@
 		},
 
 		_initDropDownList: function () {
-			var self = this;
-			var doc = self.element[0].ownerDocument;
-			var menuElement = $("<div class='ui-wijcombobox-list'></div>");
-			var o = self.options;
+			var self = this, doc, menuElement, o, header, listOptions;
+
+			doc = self.element[0].ownerDocument;
+			menuElement = $("<div class='wijmo-wijcombobox-list'></div>");
+			o = self.options;
 			if (o.columns.length > 0) {
-				menuElement.addClass("ui-wijcombobox-multicolumn");
-				var header = $("<div class='ui-wijsuperpanel-header ui-state-default'></div>");
+				menuElement.addClass("wijmo-wijcombobox-multicolumn");
+				header = $("<div class='wijmo-wijsuperpanel-header " +
+				"ui-state-default'></div>");
 				self._renderColumnsHeader(header);
 				menuElement.append(header);
 			}
-			self.menu = menuElement.appendTo("body", doc).wijlist({
+
+			listOptions = {
 				keepHightlightOnMouseLeave: true,
 				selectionMode: o.selectionMode,
-				addHoverItemClass: !(o.columns.length > 0),
+				addHoverItemClass: o.columns.length === 0,
 				focus: function (e, item) {
 					var i = item;
 					if (o.selectOnItemFocus) {
@@ -442,24 +482,29 @@
 						});
 					}
 					if (o.columns.length > 0) {
-						i.element.prev().addClass("ui-wijcombobox-active-prev");
-						i.element.find(".ui-wijcombobox-row>.ui-wijcombobox-cell").addClass("ui-state-hover");
+						i.element.prev().addClass("wijmo-wijcombobox-active-prev");
+						i.element.find(".wijmo-wijcombobox-row>.wijmo-wijcombobox-cell")
+						.addClass("ui-state-hover");
 					}
 				},
 				selected: function (event, ui) {
-					clearTimeout(self.closing);
-					var mode = o.selectionMode;
-					var item = ui.item;
+					window.clearTimeout(self.closing);
+					var mode = o.selectionMode, item, newIndex, oldIndex, oldItem;
+
+					item = ui.item;
 					if (self._trigger("select", event, item)) {
 						if (mode === "single") { // single mode selection
 							// local data select
 							if (!self._usingRemoteData()) {
-								var newIndex = $.inArray(item, self.items);
+								newIndex = $.inArray(item, self.items);
 								if (newIndex !== o.selectedIndex) {
 									self._input.val(item.label);
-									var oldItem = self.selectedItem;
+									oldItem = self.selectedItem;
+									if (oldItem !== null) {
+										oldItem.selected = false;
+									}
 									self.selectedItem = item;
-									var oldIndex = o.selectedIndex;
+									oldIndex = o.selectedIndex;
 									o.selectedIndex = newIndex;
 									// fire select change event 
 									if (self._select !== undefined) {
@@ -475,8 +520,10 @@
 								}
 							}
 							else {
-								// If items have the same text and value, they are considered to be same in remote mode.
-								if (self.selectedItem === null || !self._hasSameValueText(item, self.selectedItem)) {
+								// If items have the same text and value, 
+								// they are considered to be same in remote mode.
+								if (self.selectedItem === null || 
+								!self._hasSameValueText(item, self.selectedItem)) {
 									self._input.val(item.label);
 									self.selectedItem = item;
 									self._trigger("changed", null, {
@@ -498,70 +545,86 @@
 							}
 						}
 					}
-					if ((ui.data === undefined || !ui.data.notCloseAfterSelected) && mode === "single") {
+					if ((ui.data === undefined || !ui.data.notCloseAfterSelected) && 
+					mode === "single") {
 						self.close(event);
 					}
 				},
-				blur: function (e, d) {
+				blur: function (e, item) {
+					var d = item.element;
 					if (o.columns.length > 0) {
-						d.find(".ui-wijcombobox-row>.ui-wijcombobox-cell").removeClass("ui-state-hover");
-						d.prev().removeClass("ui-wijcombobox-active-prev");
+						d.find(".wijmo-wijcombobox-row>.wijmo-wijcombobox-cell")
+						.removeClass("ui-state-hover");
+						d.prev().removeClass("wijmo-wijcombobox-active-prev");
 					}
 				},
 				itemrendering: function (event, data) {
-					var item = data;
-					var css = "";
+					var item = data, css;
+					css = "";
 					if (item.isSeparator) {
-						css += " ui-wijcombobox-separator";
+						css += " wijmo-wijcombobox-separator";
 					}
 					if (item.selected) {
-						css += " ui-wijcombobox-selecteditem";
+						css += " wijmo-wijcombobox-selecteditem";
 					}
 					if (css.length > 0) {
 						item.element.addClass(css);
 					}
-					if (self._keypress && o.isEditable && o.columns.length === 0 && o.highlightMatching && $.trim(self._input.val()).length > 0) {
-						item.text = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + self._escapeRegex(self._input.val()) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<span class='ui-priority-primary'>$1</span>");
+					if (self._keypress && o.isEditable && 
+					o.columns.length === 0 && o.highlightMatching && 
+					$.trim(self._input.val()).length > 0) {
+						item.text = item.label.replace(
+						new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + 
+						self._escapeRegex(self._input.val()) + 
+						")(?![^<>]*>)(?![^&;]+;)", "gi"), 
+						"<span class='ui-priority-primary'>$1</span>");
 					}
 					else {
 						item.text = undefined;
 					}
 				},
 				itemrendered: function (event, data) {
-					var item = data;
+					var item = data, li, u;
 					if (item.cells === undefined) {
 						return;
 					}
-					var li = item.element;
+					li = item.element;
 					li.empty();
-					var u = $("<ul class='ui-wijcombobox-row'></ul>");
+					u = $("<ul class='wijmo-wijcombobox-row'></ul>");
 					$.each(item.cells, function (index, cell) {
-						var l = $("<li class='ui-wijcombobox-cell ui-state-default'></li>");
+						var l = $("<li class='wijmo-wijcombobox-cell " +
+						"ui-state-default'></li>");
 						l.append(cell);
 						l.attr("title", cell);
 						u.append(l);
 					});
 					li.append(u);
 				},
-				resized: function (e, list) {
-					self.options.dropdownWidth = list.element.outerWidth();
-					self.options.dropdownHeight = list.element.outerHeight();
-					self._positionList();
+				superPanelOptions: {
+					resized: function (e) {
+						var m = self.menu, ele = m.element;
+						o.dropdownWidth = ele.outerWidth();
+						o.dropdownHeight = ele.outerHeight();
+						self._positionList();
+						self.menu.refreshSuperPanel();
+					}
 				}
-			}).zIndex(self._input.zIndex() + 1).css({
+			};
+			listOptions = $.extend(true, listOptions, o.listOptions);
+			self.menu = menuElement.appendTo("body", doc)
+						.wijlist(listOptions)
+						.zIndex(self._input.zIndex() + 1).css({
 				top: 0,
 				left: 0
 			}).hide().data("wijlist");
 			self._menuUL = self.menu.ul;
-			if ($.fn.bgiframe) {
-				self.menu.element.bgiframe();
-			}
 		},
 
 		_selectedItemsToInputVal: function (items) {
-			var s = "";
-			var self = this;
-			var sep = self.options.multipleSelectionSeparator;
+			var s = "", self, sep;
+
+			self = this;
+			sep = self.options.multipleSelectionSeparator;
 			self.selectedItems = items;
 
 			$.each(items, function (index, item) {
@@ -574,29 +637,32 @@
 		},
 
 		_createDOMElements: function () {
-			var self = this;
-			var comboElement =
-				$("<div class='ui-wijcombobox ui-widget ui-helper-clearfix'>" +
-					"<div class='ui-wijcombobox-wrapper ui-state-default ui-corner-all'>" +
+			var self = this, comboElement, ele, input;
+			comboElement =
+				$("<div role='combobox' class='wijmo-wijcombobox " +
+					"ui-widget ui-helper-clearfix'>" +
+					"<div class='wijmo-wijcombobox-wrapper " +
+					"ui-state-default ui-corner-all'>" +
 					"</div>" +
 				"</div>");
 			// check if element is  a select element
-			var ele = self.element;
-			var input;
+			ele = self.element;
 			self._comboElement = comboElement;
 			// create from a select element
 			if (ele[0].tagName.toLowerCase() === "select") {
 				self._select = ele;
 				// add class to set font size to get the correct width of select.
 				ele.addClass("ui-widget");
-				input = self._input = $("<input />").insertAfter(ele);
+				input = self._input = $("<input role='textbox' " +
+				"aria-autocomplete='list' aria-haspopup='true' />")
+				.insertAfter(ele);
 				self.options.data = self._convertSelectOptions();
 			}
 			else {
 				input = self._input = ele;
 			}
 			comboElement.insertBefore(input);
-			comboElement.children(".ui-wijcombobox-wrapper").append(input);
+			comboElement.children(".wijmo-wijcombobox-wrapper").append(input);
 			input.attr({
 				autocomplete: "off",
 				role: "textbox",
@@ -615,8 +681,9 @@
 		},
 
 		_convertSelectOptions: function () {
-			var items = [];
-			var self = this;
+			var items = [], self;
+
+			self = this;
 			$.each(self._select.attr("options"), function (idx, opt) {
 				items.push({ label: opt.text, value: opt.value });
 			});
@@ -629,24 +696,27 @@
 		},
 
 		_showTrigger: function () {
-			var self = this;
-			var o = self.options;
-			var input = self._input;
-			var inputWrapper = input.parent();
-			var comboElement = self._comboElement;
-			var trigger = self._triggerArrow;
-			var label = self._label;
+			var self = this, o, input, inputWrapper, comboElement, 
+			trigger, label, sp, padding, labelPadding, triggerPadding;
+
+			o = self.options;
+			input = self._input;
+			inputWrapper = input.parent();
+			comboElement = self._comboElement;
+			trigger = self._triggerArrow;
+			label = self._label;
 
 			// set size
 			if (self._select !== undefined) {
-				input.width(self._select.width() + (o.data.length > 20 ? o.selectElementWidthFix : 0));
+				input.width(self._select.width() + 
+				(o.data.length > 20 ? o.selectElementWidthFix : 0));
 				self._select.hide();
 			}
 			comboElement.width(inputWrapper[0].offsetWidth);
 			//comboElement.height(inputWrapper[0].offsetHeight);
 
 			// show label
-			if (o.labelText != null) {
+			if (o.labelText !== null) {
 				label = self._label = $(labelHTML);
 				inputWrapper.append(label.html(o.labelText));
 			}
@@ -695,7 +765,7 @@
 					trigger.addClass(conerLeft);
 				}
 				trigger.setOutHeight(comboElement.innerHeight());
-				var sp = trigger.find("span");
+				sp = trigger.find("span");
 				sp.css("margin-left", (trigger.innerWidth() - sp[0].offsetWidth) / 2);
 				sp.css("margin-top", (trigger.innerHeight() - sp[0].offsetHeight) / 2);
 			}
@@ -711,8 +781,7 @@
 			}
 
 			// padding
-			var padding = 0;
-			var labelPadding = 0, triggerPadding = 0;
+			padding = labelPadding = triggerPadding = 0;
 			if (label !== undefined) {
 				labelPadding += label[0].offsetWidth;
 			}
@@ -742,13 +811,12 @@
 		},
 
 		_triggerClick: function (e) {
-			var self = this;
-			clearTimeout(self.closing);
+			var self = this, term = "";
+			window.clearTimeout(self.closing);
 			if (self.menu.element.is(":visible")) {
 				self.close();
 			}
 			else {
-				var term = "";
 				// TODO: click open should not render again.
 				if (self._usingRemoteData()) {
 					term = self._input.val();
@@ -775,7 +843,8 @@
 			else {
 				ele.css("width", self._oldWidth);
 				ele.removeClass(inputCSS);
-				ele.removeAttr("autocomplete").removeAttr("role").removeAttr("aria-wijcombobox").removeAttr("aria-haspopup");
+				ele.removeAttr("autocomplete").removeAttr("role")
+				.removeAttr("aria-wijcombobox").removeAttr("aria-haspopup");
 				ele.insertBefore(self._comboElement);
 				ele.css("padding", "");
 			}
@@ -786,18 +855,18 @@
 		},
 
 		_setOption: function (key, value) {
-			var self = this;
-			var ele = self._comboElement;
-			var input = self.element;
+			var self = this, ele, input;
+			ele = self._comboElement;
+			input = self.element;
 			$.Widget.prototype._setOption.apply(self, arguments);
 			if (key === "disabled") {
 				if (value) {
-					ele.addClass("ui-wijcombobox-disabled ui-state-disabled");
+					ele.addClass("wijmo-wijcombobox-disabled ui-state-disabled");
 					input.attr("disabled", "disabled");
 					self.close();
 				}
 				else {
-					ele.removeClass("ui-wijcombobox-disabled ui-state-disabled");
+					ele.removeClass("wijmo-wijcombobox-disabled ui-state-disabled");
 					input.removeAttr("disabled");
 				}
 			}
@@ -819,21 +888,24 @@
 			/// Text to search in the drop-down list
 			/// </param>
 
-			var self = this;
-			var o = self.options;
-			var datasource = o.data;
-			clearTimeout(self.closing);
-			var d = {
+			var self = this, o, datasource, d;
+
+			o = self.options;
+			datasource = o.data;
+			window.clearTimeout(self.closing);
+			d = {
 				value: value,
 				e: eventObj,
 				self: self
 			};
 
-			// load data when data is not loaded yet or datasource is using a proxy to obtain data.
-			if (datasource != null) {
+			// load data when data is not loaded yet 
+			// or datasource is using a proxy to obtain data.
+			if (datasource !== null) {
 				// check index will skip search event
-				if (!(eventObj === "checkindex")) {
-					if (self._trigger("search", eventObj, { datasrc: datasource, term: d }) === false) {
+				if (eventObj !== "checkindex") {
+					if (self._trigger("search", eventObj, 
+					{ datasrc: datasource, term: d }) === false) {
 						return;
 					}
 				}
@@ -843,7 +915,8 @@
 					self._onListLoaded(datasource, d);
 				}
 				else {
-					if (self._usingRemoteData() && eventObj !== undefined && value.length < o.minLength) {
+					if (self._usingRemoteData() && 
+					eventObj !== undefined && value.length < o.minLength) {
 						return;
 					}
 					self._hideShowArrow(false);
@@ -854,8 +927,7 @@
 		},
 
 		_usingRemoteData: function () {
-			var o = this.options.data;
-			var r = false;
+			var o = this.options.data, r = false;
 			if (!$.isArray(o) && o !== null && o.proxy !== null) {
 				r = true;
 			}
@@ -864,31 +936,33 @@
 
 		_hideShowArrow: function (show) {
 			// hide arrow to show
-			var self = this;
-			var input = self.element;
-			var arrow = self._triggerArrow;
+			var self = this, input, arrow;
+
+			input = self.element;
+			arrow = self._triggerArrow;
 			if (arrow !== undefined) {
 				arrow[show ? "show" : "hide"]();
 			}
-			input[show ? "removeClass" : "addClass"]("ui-wijcombobox-loading");
+			input[show ? "removeClass" : "addClass"]("wijmo-wijcombobox-loading");
 		},
 
 		_onListLoaded: function (datasource, data) {
-			var self = data.self;
-			var ele = self._input;
-			var o = self.options;
-			var searchTerm = data.value;
-			var items = $.isArray(datasource) ? datasource : datasource.items;
+			var self = data.self, ele, o, searchTerm, items, idx, itemsToRender;
+
+			ele = self._input;
+			o = self.options;
+			searchTerm = data.value;
+			items = $.isArray(datasource) ? datasource : datasource.items;
 			self.items = items;
 			if (data.e === "checkindex") {
-				var idx = o.selectedIndex;
+				idx = o.selectedIndex;
 				if (o.selectionMode === "multiple" && $.isArray(idx)) {
 					$.each(idx, function (i, n) {
 						var itm = items[n];
 						itm.selected = true;
 						self.selectedItems.push(itm);
 					});
-					ele.val(self._selectedItemsToInputVal(self.selectedItems));
+					self._selectedItemsToInputVal(self.selectedItems);
 				}
 				else {
 					items[idx].selected = true;
@@ -898,7 +972,6 @@
 				self._hideShowArrow(true);
 				return;
 			}
-			var itemsToRender;
 			// only fileter result when using local data.
 			if (!self._usingRemoteData()) {
 				self._filter(items, searchTerm);
@@ -933,17 +1006,26 @@
 			/// <param name="skipAnimation" type="Boolean">
 			/// A value indicating whehter to skip animation.
 			/// </param>
-			var self = this;
-			clearTimeout(self.closing);
-			if (self.menu.element.is(":visible")) {
+			var self = this, menu, hidingAnimation;
+			menu = self.menu;
+			window.clearTimeout(self.closing);
+			// test parent element is need, 
+			// because some effect will wrap the target element.
+			if (menu.element.is(":visible") && !menu.element.is(":animated") &&
+				!menu.element.parent().is(":animated")) {
 				self._trigger("close", event);
-				self.menu.deactivate();
-				var hidingAnimation = self.options.hidingAnimation;
-				if (skipAnimation !== true && hidingAnimation != null) {
-					self.menu.element.hide(hidingAnimation.effect, hidingAnimation.options, hidingAnimation.speed, hidingAnimation.callback);
+				menu.deactivate();
+				hidingAnimation = self.options.hidingAnimation;
+				if (skipAnimation !== true && hidingAnimation) {
+					menu.element.hide(
+					hidingAnimation.effect,
+					hidingAnimation.options,
+					hidingAnimation.speed,
+					hidingAnimation.callback);
 				}
 				else {
-					self.menu.element.hide();
+					menu.element.hide();
+
 				}
 				self._addInputFocus(self, stateFocus);
 				$(document).unbind("click", self.closeOnClick);
@@ -952,17 +1034,18 @@
 
 		_change: function () {
 			// TODO: finish _change event.
-			var self = this;
-			var o = self.options;
-			var f = o.forceSelectionText;
-			var m = o.selectionMode;
-			var ele = self._input;
-			var t = ele.val();
-			var itm = self.selectedItem;
+			var self = this, o, f, m, ele, t, itm;
+
+			o = self.options;
+			f = o.forceSelectionText;
+			m = o.selectionMode;
+			ele = self._input;
+			t = ele.val();
+			itm = self.selectedItem;
 
 			if (f) {
 				if (m === "single") {
-					if (itm != null) {
+					if (itm !== null) {
 						if (itm.label !== t) {
 							ele.val(itm.label);
 						}
@@ -978,12 +1061,11 @@
 		},
 
 		_openlist: function (items, data) {
-			var self = data.self;
-			var eventObj = data.e;
-			var keypress = self._keypress = (eventObj !== undefined || eventObj != null);
-			var textWidth;
-			var o = self.options;
-			var menuElement = self.menu.element;
+			var self = data.self, eventObj = data.e, keypress, textWidth, menuElement, 
+			o, oldPadding, verticalBorder = 2, dropDownHeight, h, showingAnimation;
+			keypress = self._keypress = !!eventObj;
+			o = self.options;
+			menuElement = self.menu.element;
 
 			menuElement.zIndex(self.element.zIndex() + 1);
 			self.menu.setItems(items);
@@ -996,17 +1078,17 @@
 			else {
 				textWidth = o.dropdownWidth;
 			}
-			var oldPadding = menuElement.css("padding");
+			oldPadding = menuElement.css("padding");
 			menuElement.css("padding", "0px");
 			menuElement.setOutWidth(textWidth);
 			menuElement.css("padding", oldPadding);
 
-			var verticalBorder = 2;
-			var dropDownHeight = o.dropdownHeight;
+			dropDownHeight = o.dropdownHeight;
 			if (self._select !== undefined) {
-				dropDownHeight = 20 * self._menuUL.children(".ui-wijlist-item:first").outerHeight();
+				dropDownHeight = 20 * self._menuUL
+				.children(".wijmo-wijlist-item:first").outerHeight();
 			}
-			var h = Math.min(self._menuUL.outerHeight() + verticalBorder, dropDownHeight);
+			h = Math.min(self._menuUL.outerHeight() + verticalBorder, dropDownHeight);
 			menuElement.setOutHeight(h);
 			self.menu.refreshSuperPanel();
 			self._positionList();
@@ -1022,13 +1104,25 @@
 				}
 			}
 			else {
-				var showingAnimation = self.options.showingAnimation;
-				if (self.options.showingAnimation != null && !(eventObj !== undefined && eventObj.keyCode === $.ui.keyCode.BACKSPACE)) {
+				showingAnimation = self.options.showingAnimation;
+				if (o.showingAnimation !== null && 
+				!(eventObj !== undefined && 
+				eventObj.keyCode === $.ui.keyCode.BACKSPACE)) {
 					self.menu.element.hide();
 					//Add comments by RyanWu@20101105.
-					//For fixing the issue that list items are transparent when choosing bounce effect. 
-					//self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, showingAnimation.callback);
-					self.menu.element.show(showingAnimation.effect, showingAnimation.options, showingAnimation.speed, function () {
+					//For fixing the issue that list items are transparent 
+					//when choosing bounce effect. 
+
+					//self.menu.element.show(
+					//showingAnimation.effect, 
+					//showingAnimation.options, 
+					//showingAnimation.speed, 
+					//showingAnimation.callback);
+					self.menu.element.show(
+					showingAnimation.effect, 
+					showingAnimation.options, 
+					showingAnimation.speed, 
+					function () {
 						if (showingAnimation.callback) {
 							showingAnimation.callback.apply(this, arguments);
 						}
@@ -1044,18 +1138,18 @@
 		},
 
 		closeOnClick: function (e) {
-			var self = e.data;
-			var t = e.target;
+			var self = e.data, t = e.target;
 
-			if (!$.contains(self._comboElement[0], t) && !$.contains(self.menu.element[0], t)) {
+			if (!$.contains(self._comboElement[0], t) && 
+			!$.contains(self.menu.element[0], t)) {
 				self.close();
 			}
 		},
 
 		_positionList: function () {
-			var self = this;
-			var positionOptions = self.options.dropDownListPosition;
-			var defaultPosition = {
+			var self = this, positionOptions, defaultPosition;
+			positionOptions = self.options.dropDownListPosition;
+			defaultPosition = {
 				my: "left top",
 				at: "left bottom",
 				of: self._comboElement,
@@ -1066,35 +1160,33 @@
 		},
 
 		_runAutoComplete: function () {
-			var self = this;
-			var ele = self._input;
-			var topHit = self._topHit;
-			if (!self.options.autoComplete || topHit == null) {
+			var self = this, ele, topHit, oldText, fullText, start, end;
+			ele = self._input;
+			topHit = self._topHit;
+			if (!self.options.autoComplete || topHit === null) {
 				return;
 			}
 			self.menu.activate(null, topHit, true);
-			var oldText = ele.val();
-			var fullText = topHit.label;
+			oldText = ele.val();
+			fullText = topHit.label;
 			ele.val(fullText);
-			var start = oldText.length;
-			var end = fullText.length;
+			start = oldText.length;
+			end = fullText.length;
 			self._selectText(start, end, ele);
 		},
 
 		_selectText: function (start, end, input) {
-			var v = input.val();
-			var inputElement = input.get(0);
+			var v = input.val(), inputElement = input.get(0), range;
 			if (v.length > 0) {
 				if (inputElement.setSelectionRange !== undefined) {
 					inputElement.setSelectionRange(start, end);
 				}
-				else
-					if (inputElement.createTextRange !== undefined) {
-						var range = inputElement.createTextRange();
-						range.moveStart("character", start);
-						range.moveEnd("character", end - v.length);
-						range.select();
-					}
+				else if (inputElement.createTextRange !== undefined) {
+					range = inputElement.createTextRange();
+					range.moveStart("character", start);
+					range.moveEnd("character", end - v.length);
+					range.select();
+				}
 			}
 		},
 
@@ -1112,7 +1204,6 @@
 			}
 			if (this.menu.first() && /^previous/.test(direction) ||
 			this.menu.last() && /^next/.test(direction)) {
-				this._input.val(this.term);
 				this.menu.deactivate();
 				return;
 			}
@@ -1127,21 +1218,20 @@
 		},
 
 		_filter: function (array, searchTerm) {
-			var term1 = this._escapeRegex(searchTerm);
+			var term1 = this._escapeRegex(searchTerm), matcher, topHit = null;
 			/// TODO : start with or contains and case sensitive.
-			var matcher = new RegExp(term1, "i");
-			var topHit = null;
+			matcher = new RegExp(term1, "i");
 			$.each(array, function (index, item) {
 				if (term1 === undefined || term1.length === 0) {
 					item.match = true;
 					return;
 				}
 				var matchResult = matcher.exec(item.label);
-				if (matchResult == null) {
+				if (matchResult === null) {
 					item.match = false;
 				}
 				else {
-					if (topHit == null && matchResult.index === 0) {
+					if (topHit === null && matchResult.index === 0) {
 						topHit = item;
 					}
 					item.match = matchResult.index >= 0;

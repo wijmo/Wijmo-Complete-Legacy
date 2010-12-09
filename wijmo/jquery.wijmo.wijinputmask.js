@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.1
+ * Wijmo Library 0.9.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -21,8 +21,8 @@
  *	jquery.effects.blind.js
  *	jquery.glob.js
  *	jquery.plugin.wijtextselection.js
- *	jquery.ui.wijpopup.js
- *	jquery.ui.wijinputcore.js
+ *	jquery.wijmo.wijpopup.js
+ *	jquery.wijmo.wijinputcore.js
  *
  */
  (function ($) {
@@ -34,7 +34,7 @@ var wijchartype = {
 	literal: 8
 };
 
-$.widget("ui.wijinputmask", $.extend(true, {}, wijinputcore, {
+$.widget("wijmo.wijinputmask", $.extend(true, {}, wijinputcore, {
 	options: {
 		///	<summary>
 		///		Determines the input mask to use at run time. 
@@ -52,7 +52,7 @@ $.widget("ui.wijinputmask", $.extend(true, {}, wijinputcore, {
 	},
 	
 	_beginUpdate: function(){
-		this.element.addClass('ui-wijinput-mask');
+		this.element.addClass('wijmo-wijinput-mask');
 		this.element.data('defaultText', this.options.text);
 	},
 	

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <title>LineChart - AJAX Data</title>
@@ -14,9 +14,8 @@
     <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
     <script src="../../external/raphael.js" type="text/javascript"></script>
-    <script src="../../external/raphael-popup.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijchartcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijlinechart.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
             var netflx = "http://odata.netflix.com/Catalog/Genres('Horror')/Titles?$inlinecount=allpages&$callback=callback&$top=10&$format=json&$orderby=AverageRating desc";
@@ -61,7 +60,7 @@
             		}
             	},
             	hint: {
-            		formatter: function () {
+            		content: function () {
             			return this.x + '\n ' + this.y + '';
             		}
             	},

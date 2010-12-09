@@ -1,23 +1,25 @@
-.ui-wijgrid
+.wijmo-wijgrid
 {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
-    border-right: none;
+
+    overflow:hidden;
 }
-.ui-wijgrid-loading
+
+.wijmo-wijgrid-loading
 {
     background: transparent url('images/ui-anim_basic_16x16.gif') left top no-repeat;
     min-height: 16px;
     min-width: 16px;
 }
 
-.ui-wijgrid .ui-wijsuperpanel
+.wijmo-wijgrid .wijmo-wijsuperpanel
 {
-    border: none;
+    border: 0;
 }
 
-.ui-wijgrid .ui-wijgrid-table .ui-wijgrid-filter-trigger
+.wijmo-wijgrid .wijmo-wijgrid-table .wijmo-wijgrid-filter-trigger
 {
     position: absolute;
     right: 0;
@@ -34,12 +36,13 @@
     border-radius: 0;
 }
 
-.ui-wijgrid .ui-wijgrid-table .ui-wijgrid-filter-input
+.wijmo-wijgrid .wijmo-wijgrid-table .wijmo-wijgrid-filter-input
 {
     width: auto;
     height: 16px;
     border: none;
     padding: 5px 3px;
+    overflow: visible; /* ie6 padding issue fix */
     color: inherit;
     outline: none;
     position: relative;
@@ -50,7 +53,7 @@
     background: none;
 }
 
-.ui-wijgrid .ui-wijgrid-filter
+.wijmo-wijgrid .wijmo-wijgrid-filter
 {
     position: relative;
     -moz-border-radius: 0;
@@ -61,7 +64,7 @@
     border-bottom: none;
 }
 
-.ui-wijgrid .ui-wijgrid-filter .ui-wijinput
+.wijmo-wijgrid .wijmo-wijgrid-filter .wijmo-wijinput
 {
     border: none;
     -moz-border-radius: 0;
@@ -69,13 +72,14 @@
     border-radius: 0;
 }
 
-.ui-wijgrid-filtericon
+.wijmo-wijgrid-filtericon
 {
     background: url('images/filterop.png') no-repeat;
     text-indent: -9999px;
     overflow: hidden;
     height: 16px;
     width: 16px;
+    display: none;
 }
 .filter-nofilter
 {
@@ -152,32 +156,30 @@
     background-position: 0 -224px;
 }
 
-.ui-wijpager .ui-icon
+.wijmo-wijpager .ui-icon
 {
     cursor: pointer;
 }
 
-.ui-wijgrid .ui-wijgrid-grouptogglebtn
+.wijmo-wijgrid .wijmo-wijgrid-grouptogglebtn
 {
     float: left;
     cursor: pointer;
     margin-top: 3px;
 }
 
-.ui-wijgrid .ui-wijgrid-table
+.wijmo-wijgrid .wijmo-wijgrid-table
 {
     border-collapse: collapse;
     outline: none;
-    width: 100%;
-    table-layout: fixed;
 }
 
-.ui-wijgrid-rowheader
+.wijmo-wijgrid-rowheader
 {
     width: 21px;
 }
 
-.ui-wijgrid .ui-wijgrid-header, .ui-wijgrid .ui-wijgrid-footer
+.wijmo-wijgrid .wijmo-wijgrid-header, .wijmo-wijgrid .wijmo-wijgrid-footer
 {
     border-left: none !important;
     border-top: none !important;
@@ -188,12 +190,12 @@
     border-radius: 0;
 }
 
-.ui-wijgrid tr.ui-wijgrid-row
+.wijmo-wijgrid tr.wijmo-wijgrid-row
 {
     border-bottom: none;
 }
 
-.ui-wijgrid tr.ui-wijgrid-row td
+.wijmo-wijgrid tr.wijmo-wijgrid-row td
 {
     border: none;
     border-right-color: inherit;
@@ -203,43 +205,37 @@
     border-top-style: solid;
     border-top-width: 1px;
     text-align: left;
-    padding: 0 2px;
     overflow: hidden;
-    white-space: nowrap;
 }
 
+.wijgrid-vertical-scroller tr.wijmo-wijgrid-row td:last-child,
+.wijgrid-vertical-scroller tr.wijmo-wijgrid-headerrow th:last-child
+{
+    border-right-color:transparent;
+}
 
-.ui-wijgrid .wijgridtd
+.wijmo-wijgrid .wijgridtd
 {
     font-weight: normal;
 }
 
 
-.ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
+.wijmo-wijgrid .wijmo-wijgrid-headerrow .wijmo-c1basefield
 {
     zoom: 1;
     overflow: hidden;
     border-left: 0;
     border-top: 0;
 }
-/*add padding to header cell to avoid disalignment in IE6,7*/
-*:first-child + html .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
-{
-    padding: 0 2px;
-}
 
-* html .ui-wijgrid .ui-wijgrid-headerrow .ui-c1basefield
-{
-    padding: 0 2px;
-}
-.ui-wijgrid .ui-wijgrid-headerrow .ui-wijgrid-headertext
+.wijmo-wijgrid .wijmo-wijgrid-headerrow .wijmo-wijgrid-headertext
 {
     padding: 0.5em 1em;
     display: block;
     text-align: center;
     position: relative;
 }
-.ui-wijgrid .ui-wijgrid-headerrow .ui-icon
+.wijmo-wijgrid .wijmo-wijgrid-headerrow .ui-icon
 {
     width: 16px;
     height: 16px;
@@ -250,17 +246,17 @@
     z-index: 99;
 }
 
-.ui-wijgrid .ui-wijgrid-filterrow
+.wijmo-wijgrid .wijmo-wijgrid-filterrow
 {
 }
 
-.ui-wijgrid .ui-wijpager
+.wijmo-wijgrid .wijmo-wijpager
 {
     display: block;
     position: relative;
 }
 
-.ui-wijgrid-resizehandle
+.wijmo-wijgrid-resizehandle
 {
     position: absolute;
     z-index: 99999;
@@ -270,7 +266,7 @@
  *    Scrolling
  */
 
-.ui-wijgrid-v-splitter, .ui-wijgrid-h-splitter
+.wijmo-wijgrid-v-splitter, .wijmo-wijgrid-h-splitter
 {
     background-color: white;
     width: 4px;
@@ -279,19 +275,19 @@
     z-index: 10;
     display: none;
 }
-.ui-wijgrid-splits-enabled .ui-wijgrid-v-splitter
+.wijmo-wijgrid-splits-enabled .wijmo-wijgrid-v-splitter
 {
     border-right: 1px solid #000000;
     display: block;
     cursor: w-resize;
 }
-.ui-wijgrid-splits-enabled .ui-wijgrid-h-splitter
+.wijmo-wijgrid-splits-enabled .wijmo-wijgrid-h-splitter
 {
     border-bottom: 1px solid #000000;
     display: block;
     cursor: n-resize;
 }
-.ui-wijgrid-splits-enabled .ui-wijgrid-v-splitter.ui-draggable-dragging, .ui-wijgrid-splits-enabled .ui-wijgrid-h-splitter.ui-draggable-dragging
+.wijmo-wijgrid-splits-enabled .wijmo-wijgrid-v-splitter.ui-draggable-dragging, .wijmo-wijgrid-splits-enabled .wijmo-wijgrid-h-splitter.ui-draggable-dragging
 {
     background-color: #626262;
 }
@@ -321,29 +317,28 @@
         }       
 */
 
-.ui-wijgrid-filterlist
+.wijmo-wijgrid-filterlist
 {
     position: absolute;
     left: 0;
     top: 0;
     z-index: 100;
 }
-.ui-wijgrid-scroller
+.wijmo-wijgrid-scroller
 {
     overflow: hidden;
 }
-.ui-wijgrid-fixedview
+.wijmo-wijgrid-fixedview
 {
     position: relative;
 }
 
-.ui-wijgrid-scroller
+.wijmo-wijgrid-scroller
 {
     border: 0px;
 }
 
-
-.ui-wijgrid .ui-wijsuperpanel-vbar-buttontop
+.wijmo-wijgrid .wijmo-wijsuperpanel-vbar-buttontop
 {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
@@ -351,7 +346,7 @@
     top: -1px;
 }
 
-.ui-wijgrid .ui-wijsuperpanel-vbar-buttonbottom
+.wijmo-wijgrid .wijmo-wijsuperpanel-vbar-buttonbottom
 {
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
@@ -359,7 +354,7 @@
     bottom: -1px;
 }
 
-.ui-wijgrid .wijgridinput
+.wijmo-wijgrid .wijgridinput
 {
     width: 100%;
     margin: 0;
@@ -368,12 +363,19 @@
     text-align: inherit;
 }
 
-.ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-currency, .ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-number, .ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-date
+.wijmo-wijgrid tr.wijmo-wijgrid-row td.wijdata-type-currency,
+.wijmo-wijgrid tr.wijmo-wijgrid-row td.wijdata-type-number,
+.wijmo-wijgrid tr.wijmo-wijgrid-row td.wijdata-type-date
 {
     text-align: right;
 }
 
-.ui-wijgrid tr.ui-wijgrid-row td.wijdata-type-boolean
+.wijmo-wijgrid tr.wijmo-wijgrid-row td.wijdata-type-boolean
 {
     text-align: center;
+}
+
+.wijmo-wijgrid .wijmo-wijgrid-innercell
+{
+    padding: 0 2px;
 }
