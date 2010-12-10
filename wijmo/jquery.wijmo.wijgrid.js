@@ -3,7 +3,7 @@
 
 /*
  *
- * Wijmo Library 0.9.0
+ * Wijmo Library 0.9.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -663,7 +663,7 @@
 
 		_prepareColumnsOptions: function () {
 			$.wijmo.wijgrid.traverse(this.options.columns, function (column) {
-				column.isBand = ((column.columns) || (column.clientType === "c1band"));
+				column.isBand = ($.isArray(column.columns) || (column.clientType === "c1band"));
 			});
 
 			// set .isLeaf
@@ -944,17 +944,17 @@
 			return this._field("columns") || [];
 		},
 
-		currency: function (cellInfo /* cellIndex */, rowIndex /* opt */) {
+		currentCell: function (cellInfo /* cellIndex */, rowIndex /* opt */) {
 			/// <summary>
-			/// Gets or sets the currency of the grid.
-			/// Note: Use (-1, -1) value to hide currency.
+			/// Gets or sets the current cell for the grid.
+			/// Note: Use (-1, -1) value to hide the current cell.
 			/// Code example:
 			/// -) Getter:
-			///   var currency = $("#element).wijgrid("currency");
+			///   var current = $("#element).wijgrid("currentCell");
 			/// -) Setter:
-			///   $("#element).wijgrid("currency", new $.wijmo.wijgrid.cellInfo(0, 0));
+			///   $("#element).wijgrid("currenCell", new $.wijmo.wijgrid.cellInfo(0, 0));
 			///   or
-			///   $("#element).wijgrid("currency", 0, 0);
+			///   $("#element).wijgrid("currentCell", 0, 0);
 			/// </summary>
 			/// <param name="cellInfo" type="$.wijmo.wijgrid.cellInfo">Object that represents a single cell.</param>
 			/// <param name="cellIndex" type="Number" integer="true" optional="true">Zero-based index of the required cell inside the corresponding row.</param>
@@ -1212,7 +1212,7 @@
 
 		_postset_selectionMode: function (value, oldValue) {
 			var selection = this.selection(),
-				currency = this.currency();
+				currency = this.currentCell();
 
 			selection.beginUpdate();
 
@@ -1289,7 +1289,7 @@
 
 		_extendColumnOptions: function () {
 			$.wijmo.wijgrid.traverse(this.options.columns, $.proxy(function (column) {
-				column.isBand = ((column.columns) || (column.clientType === "c1band"));
+				column.isBand = ($.isArray(column.columns) || (column.clientType === "c1band"));
 
 				$.wijmo.wijgrid.shallowMerge(column, $.wijmo.c1basefield.prototype.options); // merge with the c1basefield default options
 
@@ -1579,15 +1579,15 @@
 			// currency
 			$(view.focusableElement()).attr("tabIndex", 0); // to handle keyboard\ focus events
 
-			if (this.currency()._isValid()) {
-				this.currency(this.currency());
+			if (this.currentCell()._isValid()) {
+				this.currentCell(this.currentCell());
 			} else {
-				this.currency(new $.wijmo.wijgrid.cellInfo(0, 0));
+				this.currentCell(new $.wijmo.wijgrid.cellInfo(0, 0));
 			}
 
 			// selection
 			this._field("selection", null); // always recreate selection object
-			currency = this.currency();
+			currency = this.currentCell();
 			if (currency._isValid()) {
 				this.selection()._startNewTransaction(currency);
 				this.selection()._selectRange(new $.wijmo.wijgrid.cellInfoRange(currency, currency), false, false, 0 /* none */, null);
@@ -1831,7 +1831,7 @@
 
 				this._changeCurrency(clickedCellInfo);
 
-				currency = this.currency();
+				currency = this.currentCell();
 				selection = this.selection();
 
 				if (!args.shiftKey || (!selection._multipleRangesAllowed() && this.options.selectionMode.toLowerCase() !== "singlerange")) {
@@ -1895,7 +1895,7 @@
 					return false;
 				} else
 				// ESC: cancel editing
-					if ((args.which === $.ui.keyCode.ESCAPE) && (this.currency()._isValid() && this.currency()._isEdit())) {
+					if ((args.which === $.ui.keyCode.ESCAPE) && (this.currentCell()._isValid() && this.currentCell()._isEdit())) {
 						this._endEditInternal(args);
 						return false;
 					}
@@ -1917,7 +1917,7 @@
 				case $.ui.keyCode.END:
 				case $.ui.keyCode.TAB:
 
-					curPos = this._getNextCurrencyPos(this._getDataCellsRange(), this.currency(), args.keyCode, args.shiftKey);
+					curPos = this._getNextCurrencyPos(this._getDataCellsRange(), this.currentCell(), args.keyCode, args.shiftKey);
 					canChangePos = this._canMoveToAnotherCell(args.target, args.which); // TODO: add tab navigation
 
 					break;
@@ -1926,7 +1926,7 @@
 			if (canChangePos) {
 				cell = this._changeCurrency(new $.wijmo.wijgrid.cellInfo(curPos.cellIndex, curPos.rowIndex));
 
-				currency = this.currency();
+				currency = this.currentCell();
 				selection = this.selection();
 
 				if (!args.shiftKey || (!selection._multipleRangesAllowed() && this.options.selectionMode.toLowerCase() !== "singlerange")) {
@@ -1948,7 +1948,7 @@
 		_onKeyPress: function (args) {
 			if (this._canInteract() && this.options.allowEditing) {
 				var charCode = args.which,
-					currency = this.currency(),
+					currency = this.currentCell(),
 					tag, table, domSubTables;
 
 				if (charCode && currency._isValid() && !currency._isEdit()) {
@@ -2053,7 +2053,7 @@
 		// * currency
 		_changeCurrency: function (cellInfo) {
 			var result = null,
-				currency = this.currency(),
+				currency = this.currentCell(),
 				dataRange = this._getDataCellsRange(),
 				args, cellEditCompleted;
 
@@ -2151,7 +2151,7 @@
 		// * editing
 		_beginEditInternal: function (e) {
 			if (this._canInteract() && this.options.allowEditing) {
-				var column = this.currency().column(),
+				var column = this.currentCell().column(),
 					res;
 
 				if (column && !column.readOnly) {
@@ -2168,7 +2168,7 @@
 
 		_endEditInternal: function (e) {
 			if (this._canInteract() && this.options.allowEditing) {
-				var column = this.currency().column(),
+				var column = this.currentCell().column(),
 					res = new $.wijmo.wijgrid.cellEditorHelper().currencyEditEnd(this, e);
 
 				if (res) {
@@ -2458,7 +2458,8 @@
 
 		// * misc
 	});
-})(jQuery);/*
+})(jQuery);
+/*
  Provides the base widget for columns in the wijgrid.
 */
 
@@ -3125,7 +3126,8 @@ provides the base widget for columns in the wijgrid.
 						$(this).removeClass("ui-state-hover ui-state-active");
 					}).bind("mouseup", this, function (e) {
 						$(this).removeClass("ui-state-active");
-					}).bind("mousedown", { column: this }, this._onFilterBtnClick);
+					}).bind("mousedown", { column: this }, this._onFilterBtnClick)
+					.bind("click", function (e) { e.preventDefault() }); // prevent # being added to url.
 			}
 		},
 
@@ -3318,16 +3320,16 @@ provides the base widget for columns in the wijgrid.
 
 
 /*(function($) {
-    $.widget("wijmo.c1boundfield", $.wijmo.c1field, {
-        options: {
-            dataField: null
-        },
+	$.widget("wijmo.c1boundfield", $.wijmo.c1field, {
+		options: {
+			dataField: null
+		},
 
-        _create: function() {
-            //$(this.element).data("widgetName", this.widgetName);
-            $.wijmo.c1field.prototype._create.apply(this, arguments);
-        }
-    })
+		_create: function() {
+			//$(this.element).data("widgetName", this.widgetName);
+			$.wijmo.c1field.prototype._create.apply(this, arguments);
+		}
+	})
 })(jQuery);*/
 
 
@@ -3686,7 +3688,8 @@ $.extend($.wijmo.wijgrid, {
 
 		return result;
 	}
-});$.extend($.wijmo.wijgrid, {
+});
+$.extend($.wijmo.wijgrid, {
 	htmlTableDataReader: function (gridView) {
 		this.readTHead = function () {
 			var $table = gridView.element,
@@ -5523,7 +5526,8 @@ $.extend($.wijmo.wijgrid, {
 			return false;
 		};
 	}
-});$.extend($.wijmo.wijgrid, {
+});
+$.extend($.wijmo.wijgrid, {
 	cellRange: function (row1, col1, row2, col2) {
 		switch (arguments.length) {
 			case 2:
@@ -5818,7 +5822,8 @@ $.extend($.wijmo.wijgrid, {
 			}
 		}
 	}
-});var wijgridStringParser = {
+});
+var wijgridStringParser = {
 	// DOM -> string
 	parseDOM: function (value, culture, format, nullString) {
 		return this.parse($.wijmo.wijgrid._getDOMText(value, true), culture, format, nullString);
@@ -5979,7 +5984,8 @@ var wijgridBoolParser = {
 
 		return (value) ? "true" : "false";
 	}
-};$.extend($.wijmo.wijgrid, {
+};
+$.extend($.wijmo.wijgrid, {
 	filterOperatorsCache: function () {
 		var _cache = {};
 
@@ -6337,7 +6343,8 @@ $.wijmo.wijgrid.embeddedFilters = [
 		return dataVal !== null;
 	}
   }
-];$.extend($.wijmo.wijgrid, {
+];
+$.extend($.wijmo.wijgrid, {
 	htmlTableAccessor: function (domTable) {
 		var offsets = [],
 			width = 0,
@@ -6537,7 +6544,8 @@ $.wijmo.wijgrid.embeddedFilters = [
 		};
 		/*<dma*/
 	}
-});$.wijmo.wijgrid.cellInfo = function (cellIndex, rowIndex) {
+});
+$.wijmo.wijgrid.cellInfo = function (cellIndex, rowIndex) {
 	/// <summary>
 	/// Object that represents a single cell.
 	/// Code example: var cell = new $.wijmo.wijgrid.cellInfo(0, 0);
@@ -6637,18 +6645,45 @@ $.wijmo.wijgrid.embeddedFilters = [
 		return null;
 	};
 
-	this.value = function () {
+	this.value = function (value/*opt*/) {
 		/// <summary>
-		/// Gets cell data.
-		/// Code example: var value = cellInfoObj.value();
-		/// </summary>
+		/// Gets or sets underlying cell data.
+		/// Code example:
+		/// -) Getter:
+		///   var value = cellInfoObj.value();
+		/// -) Setter:
+		///   cellInfoObj.value("value");
+		/// <summary>
+		/// <param name="value" type="Object">Value to set.</param>
 		/// <returns type="Object" />
-		if (_gridView && this._isValid()) {
-			var column = this.column();
-			return _gridView.dataTable[rowIndex][/*cellIndex*/column.dataIndex].value;
-		}
+		/// <remarks>
+		/// "invalid value" exception will be thrown by the setter if the value does not correspond to associated column.
+		/// <remarks>
+		var column, dataTableRow, dataTableCell;
 
-		return undefined;
+		if (_gridView && this._isValid()) {
+			dataTableRow = _gridView.dataTable[rowIndex];
+			if (dataTableRow.rowType & $.wijmo.wijgrid.rowType.data) {
+				column = this.column();
+
+				if (arguments.length === 0) { // getter
+					return dataTableRow[/*cellIndex*/column.dataIndex].value;
+				} else { // setter
+					// validation
+					value = _gridView._parse(column, value);
+
+					if ((value === null && column.valueRequired) ||
+						(column.dataType && column.dataType !== "string" && isNaN(value))) {
+						throw "invalid value";
+					} 
+
+					dataTableCell = dataTableRow[/*cellIndex*/column.dataIndex];
+					dataTableCell.value = value;
+
+					_gridView._dataStore.updateValue(dataTableCell.originalRowIndex, column.dataKey, value);
+				}
+			}
+		}
 	};
 
 	this.toString = function () {
@@ -6852,7 +6887,8 @@ $.wijmo.wijgrid.cellInfoRange = function (topLeft, bottomRight) {
 	};
 
 	// internal *
-};$.extend($.wijmo.wijgrid, {
+};
+$.extend($.wijmo.wijgrid, {
 	flatView: function (gridView) {
 		var _dataTable = null,
 			_contentArea = null,
@@ -8076,7 +8112,8 @@ $.wijmo.wijgrid.cellInfoOrderedCollection = function (gridView) {
 	};
 
 	// internal *
-};$.extend($.wijmo.wijgrid, {
+};
+$.extend($.wijmo.wijgrid, {
 	selectionui: function (gridView) {
 		var _gap_to_start = 10,
 			_evntFormat = "{0}." + gridView.widgetName + ".selectionui",
@@ -8513,11 +8550,12 @@ $.wijmo.wijgrid.rowAccessor = function (view, scope, offsetTop, offsetBottom) {
 
 		return res;
 	};
-};$.extend($.wijmo.wijgrid, {
+};
+$.extend($.wijmo.wijgrid, {
 	cellEditorHelper: function () {
 		this.currencyEditStart = function (grid, e) {
 			var result = false,
-				currency = grid.currency(),
+				currency = grid.currentCell(),
 				rowObj, dataIndex, args, $innerDiv;
 
 			if (currency._isValid() && !currency._isEdit() && (currency.column().dataIndex >= 0)) {
@@ -8561,9 +8599,9 @@ $.wijmo.wijgrid.rowAccessor = function (view, scope, offsetTop, offsetBottom) {
 		};
 
 		this.currencyEditEnd = function (grid, e) {
-			var currency = grid.currency(),
+			var currency = grid.currentCell(),
 				result = false,
-				rowObj, dataIndex, escPressed, args, valueIsChanged, a, b, column, value, ci, dataSliceRow;
+				rowObj, dataIndex, escPressed, args, valueIsChanged, a, b, value;
 
 			if (!currency._isValid() || !currency._isEdit()) {
 				return;
@@ -8603,25 +8641,15 @@ $.wijmo.wijgrid.rowAccessor = function (view, scope, offsetTop, offsetBottom) {
 						}
 
 						if (valueIsChanged) {
-							// update datasource
-							column = currency.column();
-
-							// validate value
-							value = grid._parse(column, args.value);
-							if ((value === null && column.valueRequired) ||
-								(column.dataType && column.dataType !== "string" && isNaN(value))) {
-
-								grid._trigger("invalidcellvalue", null, { cell: currency, value: args.value });
+							// ** update datasource
+							try {
+								currency.value(args.value);
+							} catch (ex) {
 								result = false;
-							} else {
-								ci = currency.cellIndex();
-								dataSliceRow = grid.dataTable[currency.rowIndex()];
+								grid._trigger("invalidcellvalue", null, { cell: currency, value: args.value });
+							}
 
-								dataSliceRow[ci].value = args.value;
-
-								//grid._field("rawData")[dataSliceRow[ci].originalRowIndex][ci].value = args.value;
-								grid._dataStore.updateValue(dataSliceRow[ci].originalRowIndex, column.dataKey, args.value);
-
+							if (result) {
 								grid._trigger("aftercellupdate", null, { cell: currency });
 							}
 						}
@@ -9970,7 +9998,8 @@ $.extend($.wijmo.wijgrid, {
 		}
 		// private
 	}
-});$.extend($.wijmo.wijgrid, {
+});
+$.extend($.wijmo.wijgrid, {
 
 	resizer: function (gridView) {
 		var _elements = [],
@@ -10202,7 +10231,7 @@ $.extend($.wijmo.wijgrid, {
 					if (allowEditing) {
 						$container.children("input").bind("mousedown", function (e) {
 							targetElement = $container.parent()[0];
-							currentCell = grid.currency();
+							currentCell = grid.currentCell();
 							if (currentCell.tableCell() !== targetElement) {
 								grid._onClick({ target: targetElement });
 							}
