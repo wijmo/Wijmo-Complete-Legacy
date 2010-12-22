@@ -376,7 +376,7 @@ div.wijmo-wijprogressbar-north
 }
 
 /* for ie 6 minimize*/
-.wijmo-wijdialog-defaultdockingzone .ui-dialog-titlebar {
+* html .wijmo-wijdialog-defaultdockingzone .ui-dialog-titlebar {
 	float:left;
 }
 /*.wijmo-wijaccordion.ui-helper-horizontal > .ui-widget-content
@@ -1245,6 +1245,7 @@ text-align:left;
 .wijmo-wijtooltip {
     position: absolute;
     z-index: 9999;
+    margin:0;
 }
 
 

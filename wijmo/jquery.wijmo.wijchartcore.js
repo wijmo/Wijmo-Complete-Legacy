@@ -1,7 +1,7 @@
  /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 0.9.0
+ * Wijmo Library 1.0.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -2987,7 +2987,6 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 					return false;
 				}
 				o.seriesList = value;
-				self.redraw();
 				self._trigger("serieschanged", null, value);
 			}
 			else {
@@ -2996,17 +2995,10 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				}
 				else {
 					o[key] = value;
-					if (key === "width" || key === "height") {
-						if (key === "width") {
-							self.width = value;
-						} else {
-							self.height = value;
-						}
-						self.canvas.setSize(self.width, self.height);
-					}
 				}
-				self.redraw();
 			}
+
+			self.redraw();
 
 			$.Widget.prototype._setOption.apply(self, arguments);
 		},
@@ -3015,50 +3007,37 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 		_create: function () {
 			var self = this,
 				o = self.options,
-				width = o.width,
-				height = o.height,
+				width = o.width || self.element.width(),
+				height = o.height || self.element.height(),
 				len = o.seriesList.length,
 				idx = 0, styleLen = 0, hoverStyleLen = 0,
-				ele = null, newEle = null;
+				newEle = null;
 
 			self.updating = 0;
 			self.innerState = {};
+
 			if (self.element.length > 0) {
-				ele = self.element[0];
 				if (self.element.is("table")) {
 					self._parseTable();
 					newEle = $("<div></div>");
+
 					if (width) {
 						newEle.css("width", width);
 					}
-					else {
-						newEle.css("width", self.element.width());
-					}
+
 					if (height) {
 						newEle.css("height", height);
 					}
-					else {
-						newEle.css("height", self.element.height());
-					}
+
 					self.element.after(newEle);
-					ele = newEle[0];
 					self.chartElement = newEle;
 				}
 				else {
 					self.chartElement = self.element;
 				}
+
 				self.chartElement.addClass("ui-widget");
-
-				if (!width) {
-					width = $(ele).width();
-				}
-				if (!height) {
-					height = $(ele).height();
-				}
-
-				self.canvas = new Raphael(ele, width, height);
-				self.width = width;
-				self.height = height;
+				self.canvas = new Raphael(self.chartElement[0], width, height);
 			}
 
 			self.headerEles = [];
@@ -3074,11 +3053,173 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			}
 
 			hoverStyleLen = o.seriesHoverStyles.length;
-			for (idx = hoverStyleLen; idx < hoverStyleLen; idx++) {
+			for (idx = hoverStyleLen; idx < len; idx++) {
 				o.seriesHoverStyles[idx] = o.seriesHoverStyles[idx % hoverStyleLen];
 			}
 		},
 
+		_init: function () {
+			var self = this;
+
+			if (!self.rendered) {
+				self._paint();
+
+				if (self.rendered) {
+					self._bindLiveEvents();
+				}
+			}
+		},
+
+		destroy: function () {
+			this._unbindLiveEvents();
+			this._clearChartElement();
+			this.chartElement.removeClass("ui-widget");
+			if (this.element !== this.chartElement) {
+				this.chartElement.remove();
+			}
+
+			$.Widget.prototype.destroy.apply(this, arguments);
+		},
+
+		/*****************************
+		Widget specific implementation
+		******************************/
+		/** public methods */
+		getCanvas: function () {
+			/// <summary>
+			/// Returns a reference to the Raphael canvas object.
+			/// </summary>
+			/// <returns type="Raphael">
+			/// Reference to raphael canvas object.
+			/// </returns>
+			return this.canvas;
+		},
+
+		addSeriesPoint: function (seriesIndex, point, shift) {
+			/// <summary>
+			/// Add series point to the series list.
+			/// </summary>
+			/// <param name="seriesIndex" type="Number">
+			/// The index of the series that the point will be inserted to.
+			/// </param>
+			/// <param name="point" type="Object">
+			/// The point that will be inserted to.
+			/// </param>
+			/// <param name="shift" type="Boolean">
+			/// A value that indicates whether to shift the first point.
+			/// </param>
+			var seriesList = this.options.seriesList,
+				series = null, data = null;
+
+			if (seriesIndex >= seriesList.length) {
+				return;
+			}
+
+			series = seriesList[seriesIndex];
+			data = series.data || [];
+			data.x.push(point.x);
+			data.y.push(point.y);
+
+			if (shift) {
+				data.x.shift();
+				data.y.shift();
+			}
+
+			this._setOption("seriesList", seriesList);
+		},
+
+		beginUpdate: function () {
+			var self = this;
+			self.updating++;
+		},
+
+		endUpdate: function () {
+			var self = this;
+			self.updating--;
+			self.redraw();
+		},
+
+		redraw: function (drawIfNeeded) {
+			/// <summary>
+			/// Redraw the chart.
+			/// </summary>
+			/// <param name="drawIfNeeded" type="Boolean">
+			/// A value that indicates whether to redraw the chart 
+			///	no matter whether the chart is painted.
+			/// If true, then only when the chart is not created before, 
+			/// it will be redrawn.  Otherwise, the chart will be forced to redraw.  
+			///	The default value is false.
+			/// </param>
+			var self = this,
+				o = self.options,
+				width = 0, 
+				height = 0;
+
+			if (self.updating > 0) {
+				return;
+			}
+
+			if (drawIfNeeded && self.rendered) {
+				return;
+			}
+
+			width = o.width || self.element.width();
+			height = o.height || self.element.height();
+
+			if (width < 1 || height < 1) {
+				return;
+			}
+			 
+			self.canvas.setSize(width, height);
+
+			self._unbindLiveEvents();
+			self._paint();
+			self._bindLiveEvents();
+		},
+
+		getSVG: function () {
+			if (Raphael.type === "SVG") {
+				return this.chartElement.html();
+			}
+
+			return this.canvas.wij.getSVG();
+		},
+
+		exportChart: function () {
+			var form = document.createElement("form"),
+			svg = this.getSVG();
+
+			form.action = "http://export.highcharts.com/";
+			form.method = "post";
+			form.style.display = "none";
+			document.body.appendChild(form);
+
+			$.each(['filename', 'type', 'width', 'svg'], function (idx, name) {
+				var input = document.createElement("input");
+
+				$(input).attr("name", name).attr("type", "hidden").attr("value", {
+					filename: 'chart',
+					type: "image/png",
+					width: 600,
+					svg: svg
+				}[name]);
+
+				form.appendChild(input);
+			});
+
+			form.submit();
+			document.body.removeChild(form);
+		},
+		
+		round: function (val, digits) {
+			var factor = Math.pow(10, digits),
+				tempVal = val * factor;
+			tempVal = Math.round(tempVal);
+
+			return tempVal / factor;
+		},
+
+		/** Private methods */
 		_parseTable: function () {
 			if (!this.element.is("table")) {
 				return;
@@ -3146,178 +3287,6 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			this.options.seriesList = seriesList;
 		},
 
-		// widget initializtion:
-		_init: function () {
-			var self = this;//,
-				//resizeTimer;
-				
-			if (!self._rendered) {
-				self._paint();
-				self._bindLiveEvents();
-				self._rendered = true;
-				//add browser resize event.
-//				if (!self.options.width || !self.options.height) {
-//					$(window).resize(function () {
-//						window.clearTimeout(resizeTimer);
-//						resizeTimer = window.setTimeout(function () {
-//							self._unbindLiveEvents();
-//							var width = self.element.width(),
-//								height = self.element.height();
-
-//							if (!width || !height) {
-//								window.clearTimeout(resizeTimer);
-//								return;
-//							}
-//							self.canvas.setSize(width, height);
-//							self.width = width;
-//							self.height = height;
-//							self._paint();
-//							self._bindLiveEvents();
-//						}, 250);
-//					});
-//				}
-			}
-		},
-
-		destroy: function () {
-			this._unbindLiveEvents();
-			this._clearChartElement();
-			this.chartElement.removeClass("ui-widget");
-			if (this.element !== this.chartElement) {
-				this.chartElement.remove();
-			}
-			//this.element
-			//	.removeClass("ui-widget");
-			$.Widget.prototype.destroy.apply(this, arguments);
-		},
-
-		/*****************************
-		Widget specific implementation
-		******************************/
-		/** public methods */
-		getCanvas: function () {
-			/// <summary>
-			/// Returns a reference to the Raphael canvas object.
-			/// </summary>
-			/// <returns type="Raphael">
-			/// Reference to raphael canvas object.
-			/// </returns>
-			return this.canvas;
-		},
-
-		addSeriesPoint: function (seriesIndex, point, shift) {
-			/// <summary>
-			/// Add series point to the series list.
-			/// </summary>
-			/// <param name="seriesIndex" type="Number">
-			/// The index of the series that the point will be inserted to.
-			/// </param>
-			/// <param name="point" type="Object">
-			/// The point that will be inserted to.
-			/// </param>
-			/// <param name="shift" type="Boolean">
-			/// A value that indicates whether to shift the first point.
-			/// </param>
-			var seriesList = this.options.seriesList,
-				series = null, data = null;
-
-			if (seriesIndex >= seriesList.length) {
-				return;
-			}
-
-			series = seriesList[seriesIndex];
-			data = series.data || [];
-			data.x.push(point.x);
-			data.y.push(point.y);
-
-			if (shift) {
-				data.x.shift();
-				data.y.shift();
-			}
-
-			this._setOption("seriesList", seriesList);
-		},
-
-		beginUpdate: function () {
-			var self = this;
-			self.updating++;
-		},
-
-		endUpdate: function () {
-			var self = this;
-			self.updating--;
-			self.redraw();
-		},
-
-		redraw: function (width, height) {
-			/// <summary>
-			/// Redraw the chart.
-			/// </summary>
-			/// <param name="width" type="Number">
-			/// A value that indicates the width of the canvas.  The value can be null.
-			/// </param>
-			/// <param name="height" type="Number">
-			/// A value that indicates the height of the canvas.  The value can be null.
-			/// </param>
-			var self = this;
-			if (self.updating > 0) {
-				return;
-			}
-
-			if (typeof(width) === "number" && typeof(height) === "number") {
-				self.canvas.setSize(width, height);
-				self.width = width;
-				self.height = height;
-			}
-
-			self._unbindLiveEvents();
-			self._paint();
-			self._bindLiveEvents();
-		},
-
-		getSVG: function () {
-			if (Raphael.type === "SVG") {
-				return this.chartElement.html();
-			}
-
-			return this.canvas.wij.getSVG();
-		},
-
-		exportChart: function () {
-			var form = document.createElement("form"),
-			svg = this.getSVG();
-
-			form.action = "http://export.highcharts.com/";
-			form.method = "post";
-			form.style.display = "none";
-			document.body.appendChild(form);
-
-			$.each(['filename', 'type', 'width', 'svg'], function (idx, name) {
-				var input = document.createElement("input");
-
-				$(input).attr("name", name).attr("type", "hidden").attr("value", {
-					filename: 'chart',
-					type: "image/png",
-					width: 600,
-					svg: svg
-				}[name]);
-
-				form.appendChild(input);
-			});
-
-			form.submit();
-			document.body.removeChild(form);
-		},
-		
-		round: function (val, digits) {
-			var factor = Math.pow(10, digits),
-				tempVal = val * factor;
-			tempVal = Math.round(tempVal);
-
-			return tempVal / factor;
-		},
-
-		/** Private methods */
 		_clearChartElement: function () {
 			var self = this;
 
@@ -3397,8 +3366,10 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 
 		_paint: function () {
 			var self = this,
+				o = self.options,
 				element = self.element,
-				hidden = element.is(":hidden"),
+				hidden = element.css("display") === "none" || 
+						element.css("visibility") === "hidden",
 				oldLeft = {},
 				oldPosition = null,
 				ev = $.Event("beforepaint");
@@ -3411,6 +3382,10 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 				element.show();
 			}
 
+			if (element.is(":hidden")) {
+				return;
+			}
+
 			self._clearChartElement();						
 			self._trigger("beforepaint", ev);
 
@@ -3420,11 +3395,9 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 
 			self.canvasBounds = {
 				startX: 0,
-				endX: self.width,
-				//endX: o.width || this.element.width(),
+				endX: o.width || element.width(),
 				startY: 0,
-				endY: self.height
-				//endY: o.height || this.element.height()
+				endY: o.height || element.height()
 			};
 			self._paintHeader();
 			self._paintFooter();
@@ -3433,6 +3406,8 @@ $.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) 
 			self._paintChartArea();
 			self._paintChartLabels();
 			self._trigger("painted");
+			
+			self.rendered = true;
 
 			if (hidden) {
 				element.css("left", oldLeft);

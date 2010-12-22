@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.9.0
+ * Wijmo Library 1.0.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -127,7 +127,8 @@
 		 },
 
 		 _resetData: function () {
-			 this.setValue(this.element.data('defaultValue'), true);
+			 if (this.element.data('defaultValue') !== undefined)
+				 this.setValue(this.element.data('defaultValue'), true);
 		 },
 
 		 _validateData: function () {

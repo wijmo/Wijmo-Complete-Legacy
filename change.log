@@ -1,3 +1,35 @@
+Changes made to version 0.9.1
+=============================
+
+LineChart
+---------
+Add some unit tests.
+
+BarChart, LineChart, PieChart
+-----------------------------
+Refactored the redraw method to add code to get the width/height of the chart.  Fix the issue that an exception is thrown 
+when chart is put in an inactive accordion pane.
+
+Change the code for jslint.
+
+Grid
+----
+Renamed currencychanging event to currentcellchanging.
+
+Renamed currencychanged event to currentcellchanged.
+
+Events and $data are not completely released after widget is destroyed.
+
+Changes made to version 0.9.0
+=============================
+
+Grid
+----
+Setter added into the cellInfo.value() method.
+
+Renamed currency() method to currentCell().
+
+
 Changes made to version 0.8.2
 =============================
 

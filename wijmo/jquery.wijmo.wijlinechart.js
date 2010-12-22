@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 0.9.0
+ * Wijmo Library 1.0.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -772,11 +772,14 @@ Raphael.fn.cross = function (x, y, length) {
 									}
 							
 									idx = lineSeries.index;
-									style = self.linesStyle[idx].lineStyle;
-									lineSeries.path.wijAttr({
-										"stroke-width": parseInt(style["stroke-width"], 
-											10) + 1
-									});
+									if (self.linesStyle[idx] &&
+											self.linesStyle[idx].lineStyle) {
+										style = self.linesStyle[idx].lineStyle;
+										lineSeries.path.wijAttr({
+											"stroke-width":
+												parseInt(style["stroke-width"], 10) + 1
+										});
+									}
 								}
 						
 								self.hoverLine = lineSeries;
@@ -808,11 +811,14 @@ Raphael.fn.cross = function (x, y, length) {
 										}
 								
 										idx = data.index;
-										style = self.linesStyle[idx].lineStyle;
-										data.path.wijAttr({
-											"stroke-width": parseInt(
-												style["stroke-width"], 10) + 1
-										});
+										if (self.linesStyle[idx] &&
+												self.linesStyle[idx].lineStyle) {
+											style = self.linesStyle[idx].lineStyle;
+											data.path.wijAttr({
+												"stroke-width": parseInt(
+													style["stroke-width"], 10) + 1
+											});
+										}
 									}
 							
 									self.hoverLine = data;
@@ -880,17 +886,17 @@ Raphael.fn.cross = function (x, y, length) {
 				elePos = self.chartElement.offset(),
 				zoomOnHover = o.zoomOnHover;
 			$(".wijchart-canvas-object", this.chartElement[0])
-					.live("mousedown.wijliechart", 
+					.live("mousedown.wijlinechart", 
 						$.proxy(proxyObj.mousedown, proxyObj))
-					.live("mouseup.wijliechart", 
+					.live("mouseup.wijlinechart", 
 						$.proxy(proxyObj.mouseup, proxyObj))
-					.live("mouseover.wijliechart", 
+					.live("mouseover.wijlinechart", 
 						$.proxy(proxyObj.mouseover, proxyObj))
-					.live("mouseout.wijliechart", 
+					.live("mouseout.wijlinechart", 
 						$.proxy(proxyObj.mouseout, proxyObj))
-					.live("mousemove.wijliechart", 
+					.live("mousemove.wijlinechart", 
 						$.proxy(proxyObj.mousemove, proxyObj))
-					.live("click.wijliechart", 
+					.live("click.wijlinechart", 
 						$.proxy(proxyObj.click, proxyObj));
 
 			if (hint.enable) {

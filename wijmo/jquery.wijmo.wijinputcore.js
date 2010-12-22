@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.9.0
+ * Wijmo Library 1.0.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -624,7 +624,7 @@
 					break;
 				case $.ui.keyCode.ESCAPE:
 					this._stopEvent(e);
-					window.setTimeout($.proxy(this, this._resetData), 1);
+					window.setTimeout($.proxy(this._resetData, this), 1);
 					return;
 				case $.ui.keyCode.PAGE_UP:
 				case $.ui.keyCode.PAGE_DOWN:

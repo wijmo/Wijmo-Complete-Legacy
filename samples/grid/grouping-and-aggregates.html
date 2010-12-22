@@ -8,9 +8,9 @@
     <meta name="keywords" content="" />
     <meta name="author" content="ComponentOne" />
     <link href="../base-reset.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
+    <link href="../../themes/aristo/jquery-wijmo.css" rel="stylesheet" type="text/css"/>
     <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo-open.0.9.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.1.0.0.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
 
     <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
@@ -18,7 +18,7 @@
     <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.0.9.0.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.1.0.0.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
 
@@ -105,6 +105,21 @@
         </div>
         <div class="footer demo-description">
             <p>
+              This sample shows how to use the <b>groupInfo</b> and <b>aggregate</b> options to create grouping within wijgrid.
+            </p>
+
+            <ul>
+              <li>
+                The <b>groupInfo</b> option determines whether a group should be created for the column, as well as the
+                appearance, position, and content of the group header and group footer rows.</li>
+              <li>
+                The <b>aggregate</b> option determines the type of aggregate that should be calculated for this column
+                and included in the group header and footer rows.</li>
+            </ul>
+            <p>
+              In this sample the sum value aggregate is used. To enable sorting, the <b>allowSorting</b> option should be
+              set to true. Once the <b>allowSorting</b> option is set to true you can determine the sort direction.
+              In this sample the sort direction is set to ascending.
             </p>
         </div>
     </div>

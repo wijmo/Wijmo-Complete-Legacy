@@ -1,181 +1,203 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Grid - Custom Editors</title>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="description" content="custom editors" />
-    <meta name="keywords" content="" />
-    <meta name="author" content="ComponentOne" />
-    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
-    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo-open.0.9.0.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo.wijcombobox.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo.wijinput.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
+	<title>Grid - Custom Editors</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="custom editors" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	<link href="../base-reset.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/aristo/jquery-wijmo.css" rel="stylesheet" type="text/css"/>
+	<link href="../demos-single.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo-open.1.0.0.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijcombobox.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijinput.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
 
-    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.0.9.0.min.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijcombobox.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.plugin.wijtextselection.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijinputcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijinputnumber.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+	<script src="../../external/jquery.wijmo-open.1.0.0.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijcombobox.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.plugin.wijtextselection.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijinputcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijinputnumber.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+	<style type="text/css">
+		.wijmo-wijgrid .wijmo-wijcombobox-wrapper
+		{
+			float: none;
+		}
+	</style>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+			var $element = $("#demo").wijgrid({
+				allowEditing: true,
+				allowKeyboardNavigation: true,
+				allowColSizing: true,
+				aftercelledit: afterCellEdit,
+				aftercellupdate: afterCellUpdate,
+				beforecelledit: beforeCellEdit,
+				beforecellupdate: beforeCellUpdate,
 
-    <script id="scriptInit" type="text/javascript">
-        $(document).ready(function () {
-            var $element = $("#demo").wijgrid({
-                allowEditing: true,
-                allowKeyboardNavigation: true,
+				data: [
+					{ Player: "Player0", Position: "GK", Acquired: 2001 },
+					{ Player: "Player1", Position: "RM", Acquired: 2004 },
+					{ Player: "Player2", Position: "GK", Acquired: 2009 },
+					{ Player: "Player3", Position: "AM", Acquired: 2008 },
+					{ Player: "Player4", Position: "RW", Acquired: 2008 },
+					{ Player: "Player5", Position: "CF", Acquired: 2007 }
+				]
+			});
 
-                aftercelledit: afterCellEdit,
-                aftercellupdate: afterCellUpdate,
-                beforecelledit: beforeCellEdit,
-                beforecellupdate: beforeCellUpdate,
+			$("#log").html(dump($element.wijgrid("data"))); 
+		});
 
-                data: [
-                    { Player: "Player0", Position: "GK", Acquired: 2001 },
-                    { Player: "Player1", Position: "RM", Acquired: 2004 },
-                    { Player: "Player2", Position: "GK", Acquired: 2009 },
-                    { Player: "Player3", Position: "AM", Acquired: 2008 },
-                    { Player: "Player4", Position: "RW", Acquired: 2008 },
-                    { Player: "Player5", Position: "CF", Acquired: 2007 }
-                ]
-            });
+		var positions = [
+			{ label: "GK", value: "GK" },
+			{ label: "SW", value: "SW" },
+			{ label: "LB", value: "LB" },
+			{ label: "CB", value: "CB" },
+			{ label: "RB", value: "RB" },
+			{ label: "DM", value: "DM" },
+			{ label: "LM", value: "LM" },
+			{ label: "CM", value: "CM" },
+			{ label: "RM", value: "RM" },
+			{ label: "AM", value: "AM" },
+			{ label: "LW", value: "LW" },
+			{ label: "SS", value: "SS" },
+			{ label: "RW", value: "RW" },
+			{ label: "CF", value: "CF" }
+		];
 
-            $("#log").html(dump($element.wijgrid("data"))); 
-        });
+		function beforeCellEdit(e, args) {
+			switch (args.cell.column().dataKey) {
+				case "Position":
+					$("<input />")
+						.val(args.cell.value())
+						.appendTo(args.cell.container().empty())
+						.wijcombobox({
+							data: $.map($.extend(true, [], positions), function (item, index) {
+								if (item.value === args.cell.value()) {
+									item.selected = true;
+								}
 
-        var positions = [
-            { label: "GK", value: "GK" },
-            { label: "SW", value: "SW" },
-            { label: "LB", value: "LB" },
-            { label: "CB", value: "CB" },
-            { label: "RB", value: "RB" },
-            { label: "DM", value: "DM" },
-            { label: "LM", value: "LM" },
-            { label: "CM", value: "CM" },
-            { label: "RM", value: "RM" },
-            { label: "AM", value: "AM" },
-            { label: "LW", value: "LW" },
-            { label: "SS", value: "SS" },
-            { label: "RW", value: "RW" },
-            { label: "CF", value: "CF" }
-        ];
+								return item;
+							}),
+							isEditable: false
+						});
 
-        function beforeCellEdit(e, args) {
-            switch (args.cell.column().dataKey) {
-                case "Position":
-                    $("<input />")
-                        .width("100%")
-                        .val(args.cell.value())
-                        .appendTo(args.cell.container().empty())
-                        .wijcombobox({
-                            data: $.map($.extend(true, [], positions), function (item, index) {
-                                if (item.value === args.cell.value()) {
-                                    item.selected = true;
-                                }
+					args.handled = true;
 
-                                return item;
-                            }),
-                            isEditable: false
-                        });
+					break;
 
-                    args.handled = true;
+				case "Acquired":
+					$("<input />")
+						.width("100%")
+						.appendTo(args.cell.container().empty())
+						.wijinputnumber({
+							decimalPlaces: 0,
+							showSpinner: true,
+							value: args.cell.value()
+						})
+						.focus();
 
-                    break;
+					args.handled = true;
 
-                case "Acquired":
-                    $("<input />")
-                        .width("100%")
-                        .appendTo(args.cell.container().empty())
-                        .wijinputnumber({
-                            decimalPlaces: 0,
-                            minValue: 1900,
-                            maxValue: new Date().getYear(),
-                            showSpinner: true,
-                            value: args.cell.value()
-                        });
+					break;
+			}
+		}
 
-                    args.handled = true;
+		function beforeCellUpdate(e, args) {
+			switch (args.cell.column().dataKey) {
+				case "Position":
+					args.value = args.cell.container().find("input").val();
+					break;
 
-                    break;
-            }
-        }
+				case "Acquired":
+					var $editor = args.cell.container().find("input"),
+						value = $editor.wijinputnumber("getValue"),
+						curYear = new Date().getFullYear();
 
-        function beforeCellUpdate(e, args) {
-            switch (args.cell.column().dataKey) {
-                case "Position":
-                case "Acquired":
-                    args.value = args.cell.container().find("input").val();
-                    break;
-            }
-        }
+					if (value < 1990 || value > curYear) {
+						$editor.addClass("ui-state-error")
 
-        function afterCellUpdate(e, args) {
-            $("#log").html(dump($("#demo").wijgrid("data")));
-        }
+						alert("value must be between 1990 and " + curYear);
 
-        function afterCellEdit(e, args) {
-            switch (args.cell.column().dataKey) {
-                case "Position":
-                    args.cell.container().find("input").wijcombobox("destroy");
-                    break;
+						$editor.focus();
 
-                case "Acquired":
-                    args.cell.container().find("input").wijinputnumber("destroy");
-                    break;
-            }
-        }
+						return false;
+					}
+					
+					args.value = value;
+					break;
+			}
+		}
 
-        function dump(d2array) {
-            var str = "<table class=\"ui-widget ui-widget-content\" rules=\"all\">" +
-                "<caption class=\"ui-widget-header\">dump</caption>\n";
+		function afterCellUpdate(e, args) {
+			$("#log").html(dump($("#demo").wijgrid("data")));
+		}
 
-            for (var i = 0, rowLen = d2array.length; i < rowLen; i++) {
-                var row = d2array[i];
+		function afterCellEdit(e, args) {
+			switch (args.cell.column().dataKey) {
+				case "Position":
+					args.cell.container().find("input").wijcombobox("destroy");
+					break;
 
-                str += "<tr>";
+				case "Acquired":
+					args.cell.container().find("input").wijinputnumber("destroy");
+					break;
+			}
+		}
 
-                for (var key in row) {
-                    if (row.hasOwnProperty(key)) {
-                        str += "<td>" + row[key] + "</td>";
-                    }
-                }
+		function dump(d2array) {
+			var str = "<table class=\"ui-widget ui-widget-content\" rules=\"all\">" +
+				"<caption class=\"ui-widget-header\">dump</caption>\n";
 
-                str += "</tr>\n";
-            }
+			for (var i = 0, rowLen = d2array.length; i < rowLen; i++) {
+				var row = d2array[i];
 
-            return str + "</table>";
-        }
-    </script>
+				str += "<tr>";
+
+				for (var key in row) {
+					if (row.hasOwnProperty(key)) {
+						str += "<td>" + row[key] + "</td>";
+					}
+				}
+
+				str += "</tr>\n";
+			}
+
+			return str + "</table>";
+		}
+	</script>
 </head>
 <body class="demo-single">
-    <div class="container">
-        <div class="header">
-            <h2>
-                Custom Editors</h2>
-        </div>
-        <div class="main demo">
-            <!-- Begin demo markup -->
-            <table id="demo"></table>
-            <div id="log">log</div>
-            <!-- End demo markup -->
-            <div class="demo-options">
-            <!-- Begin options markup -->
-                
-            <!-- End options markup -->
-            </div>
-        </div>
-        <div class="footer demo-description">
-            <p>
-            </p>
-        </div>
-    </div>
+	<div class="container">
+		<div class="header">
+			<h2>
+				Custom Editors</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<table id="demo"></table>
+			<div id="log">log</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+			<!-- Begin options markup -->
+				
+			<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				This sample shows how to customize the editors using the following wijgrid events: <b>beforecelledit</b>,
+				<b>beforecellupdate</b>, <b>aftercellupdate</b> and <b>aftercelledit</b>.
+			</p>
+		</div>
+	</div>
 </body>
 </html>

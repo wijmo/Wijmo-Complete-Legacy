@@ -2,7 +2,7 @@
 "use strict";
 /*
 *
-* Wijmo Library 0.9.0
+* Wijmo Library 1.0.0
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -1505,13 +1505,12 @@
 		},
 
 		_moveLeft: function () {
-			var nextNode;
+			var nextNode = this._getOwner();
 			if (this._expanded) {
 				this._setExpanded(false);
 			}
-			else if (this._getOwner() !== null && 
-			!this._getOwner().element.is("wijmo-wijtree")) {
-				nextNode = this._getOwner();
+			else if (nextNode !== null && 
+			!nextNode.element.is(":wijmo-wijtree")) {
 				nextNode._setFocused(true);
 			}
 		},
