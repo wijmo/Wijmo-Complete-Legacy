@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>LineChart - Animation</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+
+			$("#wijlinechartDefault").wijlinechart({
+				animation: {
+					direction: "vertical"
+				},
+				axis: {
+					y: {
+						text: "Number of Hits",
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": "11pt"
+							}
+						},
+						gridMajor: {
+							style: { stroke: "#353539", "stroke-dasharray": "- " }
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} },
+						tickMinor: { position: "outside", style: { stroke: "#7f7f7f"} },
+						autoMax: false,
+						max: 100,
+						autoMin: false,
+						min: 0
+					},
+					x: {
+						text: "Month of the Year",
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": "11pt",
+								rotation: -45
+							}
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} }
+					}
+				},
+				showChartLabels: false,
+				hint: {
+					content: function () {
+						return this.data.lineSeries.label + '\n' +
+						this.x + '\n' + this.y + '';
+					},
+					contentStyle: {
+						"font-size": "10pt"
+					},
+					offsetY: -10
+				},
+				legend: {
+					visible: false
+				},
+				seriesList: [createRandomSeriesList("2010")],
+				seriesStyles: [
+					{ stroke: "#ff9900", "stroke-width": "3" }
+				],
+				seriesHoverStyles: [
+					{"stroke-width": "4" }
+				]
+			});
+		});
+
+
+
+		function changeProperties() {
+			var animation = {},
+				seriesTransition = {},
+				enabled = $("#chkEnabled").is(":checked"),
+				direction = $("#selDirection").val(),
+				duration = $("#inpDuration").val(),
+				easing = $("#selEasing").val(),
+				stEnabled = $("#chkSTEnabled").is(":checked"),
+				stDuration = $("#inpSTDuration").val(),
+				stEasing = $("#selSTEasing").val();
+			animation.enabled = enabled;
+			animation.direction = direction;
+			if (duration && duration.length) {
+				animation.duration = parseFloat(duration);
+			}
+			animation.easing = easing;
+
+			seriesTransition.enabled = stEnabled;
+			if (stDuration && stDuration.length) {
+				seriesTransition.duration = parseFloat(stDuration);
+			}
+			seriesTransition.easing = stEasing;
+			$("#wijlinechartDefault").wijlinechart("option", "animation", animation);
+			$("#wijlinechartDefault").wijlinechart("option", "seriesTransition", seriesTransition);
+		}
+
+		function reload() {
+			$("#wijlinechartDefault").wijlinechart("option", "seriesList", [createRandomSeriesList("2010")]);
+		}
+
+		function createRandomSeriesList(label) {
+			var data = [],
+				randomDataValuesCount = 12,
+				labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+					"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+				idx;
+			for (idx = 0; idx < randomDataValuesCount; idx++) {
+				data.push(createRandomValue());
+			}
+			return {
+				label: "Steam",
+				legendEntry: true,
+				fitType: "spline",
+				markers: {
+					visible: true,
+					type: "circle"
+				},
+				data: { x: labels, y: data }
+			};
+		}
+
+		function createRandomValue() {
+			var val = Math.round(Math.random() * 100);
+			return val;
+		}
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Animation</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<input type="button" value="reload" onclick="reload()" />
+			<div id="wijlinechartDefault" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px; background: #242529;">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					<label for="chkEnabled">
+						Animation Settings: Enabled
+					</label>
+					<input id="chkEnabled" type="checkbox" checked="checked" />
+					<label for="selDirection">
+						Direction
+					</label>
+					<select id="selDirection">
+						<option value="horizontal">horizontal</option>
+						<option value="vertical">vertical</option>
+					</select>
+					<label for="inpDuration">
+						Duration
+					</label>
+					<input id="inpDuration" type="text" value="1000" />
+					<label for="selEasing">
+						Easing
+					</label>
+					<select id="selEasing">
+						<option value=">">></option>
+						<option value="<"><</option>
+						<option value="<>"><></option>
+						<option value="backIn">backIn</option>
+						<option value="backOut">backOut</option>
+						<option value="bounce">bounce</option>
+						<option value="elastic">elastic</option>
+					</select>
+					<label for="chkSTEnabled">
+						Series Transition Settings: Enabled
+					</label>
+					<input id="chkSTEnabled" type="checkbox" checked="checked" />
+					<label for="inpSTDuration">
+						Duration
+					</label>
+					<input id="inpSTDuration" type="text" value="1000" />
+					<label for="selSTEasing">
+						Easing
+					</label>
+					<select id="selSTEasing">
+						<option value=">">></option>
+						<option value="<"><</option>
+						<option value="<>"><></option>
+						<option value="backIn">backIn</option>
+						<option value="backOut">backOut</option>
+						<option value="bounce">bounce</option>
+						<option value="elastic">elastic</option>
+						<option value="easeInCubic">easeInCubic</option>
+						<option value="easeOutCubic">easeOutCubic</option>
+						<option value="easeInBack">easeInBack</option>
+						<option value="easeOutBack">easeOutBack</option>
+						<option value="easeOutElastic">easeOutElastic</option>
+						<option value="easeOutBounce">easeOutBounce</option>
+					</select>
+					<input type="button" value="Apply" onclick="changeProperties()" />
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+<p>This sample demonstrates how to set the animation of your linecharts. This example uses the <b>animation</b> and <b>seriesTransition</b> options of the line chart.</p>
+		
+		
+		</div>
+	</div>
+</body>
+</html>

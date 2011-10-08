@@ -1,6 +1,667 @@
+Wijmo-Complete v1.5.0
+=====================
 
-Changes mode to version 0.8.1
+The fifth major release of of Wijmo Complete v1 contains a number of bug fixes and support for jQuery globalize (breaking change).
+
+* Fixes:
+
+	Combobox
+	--------
+	ShowingAnimation and HidingAnimation support animated and duration child attribute.
+
+	Chart
+	-----
+	Fixed a tooltip bug. offsetX and offsetY of hint don't work properly.
+	Fixed a forum bug. hint throw exception when content and title are not set in chrome.
+
+	Grid
+	----
+	New events added: filtering and filtered.
+	We now use wijinputnumber( { type: "percent" } ) for the filter editor when percent data formatting is used for the column.
+	Fixed the problem of selection when editing.
+
+	Pager
+	-----
+	pageIndexChanged event is not fired if the very edge of the pager button is clicked.
+
+Wijmo-Complete v1.4.1
+=====================
+
+* Enhancements:
+
+	Input
+	-----
+		You can now change the AM/PM section by using the 'a' or 'p' key.
+		Added support for copy and paste.
+
+* Fixes:
+
+Tree
+----
+- Fixed bug on remove node.
+
+Chart
+-----
+- Changed the options for compass sub option of hint for all charts.  Now they 
+  are 'west', 'east', 'south', 'north', 'southEast', 'southWest', 'northEast' and 'northWest'.
+- Fixed a rendering bug when the parent element is invisible.
+- Fixed the issue that animation can't play properly after setting the origin of the bar chart.
+
+Grid
+----
+- The behavior of the columnDropping and columnDropped events is changed, these events are now fired when column is moved inside the columns area only.
+- dragSource and dropSource arguments are removed from the parameter of the columnDropping and columnDropped events.
+- New events added: columnGrouping (cancellable), columnGrouped, columnUngrouping (cancellable), columnUngrouped.
+- Now only "Max", "Min" and "Count" aggregates can be calculated for "string" columns.
+- Now column used to create the group header\ group footer is passed in args.column to cellStyleFormater, not null as before.
+- wijdata-type-<dataType> css class is added to group header and group footer cells.
+
+Wijmo-Complete v1.4.0
+=====================
+
+The fourth major release of of Wijmo Complete v1 contains a number of bug fixes and enhancements to the chart and grid widgets.
+
+* Enhancements:
+
+	Grid
+	----
+		Added showGroupArea and groupAreaCaption options to provide user with a convienient way of grouping.
+		readAttributesFromData option added.
+		"column" parameter is passed within the argument into the columnResizing and columnResized events now.
+
+	Chart
+	-----
+		The line chart now supports datetime on the y axis.
+		You can now offset the axis using the origin option.
+		The seriesHoverStyle option has been added to the line and pie chart.
+
+	Added Arctic Theme.
+
+* Bug fixes:
+
+combobox
+--------
+Incorrect rendering when the repaint method was called.
+The last item in the combo was losing the selection state when using the down arrow key.
+Size animation was not working.
+
+Tree
+----
+The parent checked state was not changed when dragging a checked node to an unchecked parent.
+setOption method when key == "allowDrag"
+expand method when set expandDelay > 0
+
+InputNumber
+-----------
+Cursor position is not correctly placed when showGroup is set to true.
+NullText is not displayed.
+
+InputDate
+---------
+'T' format doesn't work.
+
+InputDate, InputNumber, InputMask
+---------------------------------
+HideEnter doesn't work.
+Spin buttons still work when setting the disabled to true
+
+
+Wizard
+------
+Index is not refreshed when removing step dynamically.
+Setting disabled option to true, buttons still can be clicked.
+Dynamically add a page to a blank wizard, the header is not actived.
+
+
+ChartCore
+---------
+Setting autoMajor to false doesn't have any effect.
+Chart wasn't showing correct color when seriesList is set with a new value which contains over 12 series.
+axis.y.annoFormatString can't take effect on datetime values for y axis.
+vertical origination wasn't working in the header and footer (when compass is east and west, the header or footer will change to vertical).
+Setting annoFormatString of the axis.x to "d" can't show the major properly on axis x.
+Fixed the issue that even though the disabled option is set to true, tooltip still can be shown when hovering on the chart.
+Fixed the issue that "0" can't be drawn both on x and y axis.
+Fixed the issue that column bar can't be shown correctly after changing its width.
+
+BarChart
+---------
+Fixed the bug that setting seriesStyle via option can't take effect on bar chart.
+Fixed the issue that setting seriesList.x to a date time value will throw an exception.
+Fixed the issue that setting axis.x.origin to 0 can't take effect.
+
+LineChart
+---------
+Fixed bug: when reload data, chartlabel rendered error.
+Fixed bug: when set a series data to linechart, and the count of linechart's point is more than old line.  It throw an js exception.
+
+PieChart
+--------
+Fixed a bug that translation shows error after reload data.
+
+Upload
+------
+Fixed the issue that upload file dialog can't be opened when clicking the edge of the upload button.
+
+Grid
+----
+The default values of the GroupInfo.collapsedImageClass and GroupInfo.expandedImageClass are changed to "ui-icon-triangle-1-e" and "ui-icon-triangle-1-se" accordingly.
+When more than 2 columns are grouped then the innermost group can't be expanded by the first click if all groups were collapsed previously.
+
+
+Wijmo-Complete v1.3.0
+=====================
+
+The third major release of of Wijmo 1.x contains a number of bug fixes, breaking changes, and a new upload widget.
+
+* Breaking changes:
+	We standardized on event naming to ensure consistency within the toolkit.  All events are now lower camel-case.
+	For example, pageindexchanging was renamed to pageIndexChanging.
+
+* This release also contains a preview of the wijupload widget.
+
+* Enhancements:
+	You can now disable specific nodes in a tree.
+	Charts now support the following easing:  "easeInCubic","easeOutCubic","easeInBack","easeOutBack","easeOutElastic","easeOutBounce".
+	New option seriesTransition has been added to the charts.  This allows one to specify the animation between data points when the series is updated.
+	You can now specify the direction of the animation for the LineChart with the new direction property of the animation object.  Valid values are 'vertical'/'horizontal'.
+
+
+* Bug fixes:
+
+Tree
+----
+Fixed bug: Style issue in edit mode of chrome.
+
+Input
+-----
+Default value of nullText is changed to blank string.
+Can convert string value like "2011-5-18" to date.
+
+ChartCore
+---------
+Refactor chartcore's code.Move Raphael's extension functions into anonymous function.
+Fix the issue that all slices over 12 are in white when those series are set to chart by wijpiechart("option", series). 
+
+BarChart/LineChart
+------------------
+Fix a bug of auto adjusting axis labels to prevent them from overlapping each other.
+Fix a bug of rendering error when set various compass of hint.
+Fix a forum bug about Raphael's remove function.http://wijmo.com/groups/community/forum/topic/unexpected-behaviour-of-charts-1/
+
+PieChart
+--------
+Fix a forum bug when pie chart with one series of data.http://wijmo.com/groups/premium-support/forum/topic/pie-charts-with-one-series-of-data/.
+
+LineChart
+---------
+Add a sample "animation.html".
+Fix a submitted bug from a customer.update "if (isNaN(valX))" to "if (isNaN(valX) || typeof valX ==  'string')" when xvalue is string.
+
+Grid
+----
+Fixed Issue: scrolling with allowKeyboardNavigation: true throws an exception in IE8 when current cell position is changed.
+Internal number parser doesn't pass number values into the jquery.glob.parseFloat() function anymore (original values were broken because of this with some cultures).
+
+
+Wijmo-Complete v1.2.0
+=====================
+
+Changes for jQuery 1.6 compatability.
+
+Totally reworked the sample explorer.
+
+Enhancements to the AristO theme.
+
+BarChart/LineChart/PieChart
+---------------------------
+You can now position the axis text using the margin-left/margin-right/margin-top/margin-bottom 
+ options of the axis.x.textStyle and axis.y.textStyle objects.
+
+Tree
+----
+Fixed a dragdrop position bug of wijtree.
+Fixed bugs in function "getCheckedNodes".
+
+InputMask
+---------
+Fixed BackSpace issue.
+
+InputDate
+---------
+Fixed a showNullText issue.
+Fixed a TAB/SPACE key issue.
+Added 'isFocused' method.
+
+Wizard
+--------
+Added 'activeIndexChanged' event.
+
+Grid
+----
+Now the content will be scrolled automatically to currentCell position in scrolling mode if 
+ allowKeyboardNavigation is enabled.
+Data prefix used by wijgrid to store its data via $.data() method is changed from "wijgrid-" to "wijgrid". 
+wijinputnumber is used instead of wijinputdate as filter editor for datetime columns.
+
+Wijmo-Complete v1.1.6
+=====================
+
+InputNumber
+-----------
+Default value of minValue is changed from 0 to -1000000000
+Supports initialize value from the textbox.
+
+ComboBox
+--------
+Fixed bug about selectedIndex issue at http://wijmo.com/groups/community/forum/topic/question-about-wijcombobox-selectedindex-option/
+
+C1BarChart/C1LineChart/C1PieChart
+---------------------------------
+Change SeriesStyles/SeriesHoverStyles default value type from string to double.
+Fixed a bug when data of seriesList is empty.
+Fixed a bug on wijmo forum. http://wijmo.com/groups/community/forum/topic/piechart-legend-compass-south/
+
+PieChart
+--------
+You can now create PieCharts using a table as a selector.
+
+InputDate
+--------
+Supports custom date format, for example "yyyy/dd/MM"
+ShowNullText does not work.
+
+InputMask
+--------
+TAB, DEL, Fx keys don't work well.
+
+
+Grid
+----
+Added new option: columnsAutogenerationMode.
+Added new option: alwaysParseData.
+
+Fixed issue: paging can't be cancelled by returning false value in the pageindexchanging event of the wijgrid under FireFox 4.
+Fixed issue: when wijgrid cell editing is started and doRefresh() method is called then cell at the same position can't be edited again.
+Fixed issue: Ghost bottom line appears when scroll mode with fixed header is used and all grid rows initially fit into view port.
+Fixed issue: row() method of currentCell object and arguments of string-oriented events returns empty data, if scrolling is used with fixed header.
+Fixed issue: When scrolling with fixed header is used, an exception is thrown, when underlying data contains single row.
+Fixed issue: Navigation step increased twice after re-rendering when allowKeyboardNavigation option is turned on.
+Fixed issue: Browser window with active scrollbar is no more scrolled if wijgrid content is scrolled using mouse wheel to its upper or bottom bound.
+Fixed issue: Setting scrollMode to "auto" caused the vertical scrollbar to be displayed when using fixed headers.
+Fixed issue: Setting scrollMode to some value except "none" caused not showing the header when fixed header is used and underlying dataset contains no data.
+
+Changed calculation algorithm for total aggregates. If paging is enabled totals are calculated based upon
+the whole dataset, not just a visible page. If dynamic data load feature is used wijgrid sends
+to server a new totals parameter which is an array of <dataKey, aggregate> pairs. In response
+server must return totals parameter along with rows and totalRows. The totals parameter should contain
+the total values for the field passed in the request. The totals structure should be the same as
+the structure of the data elements, either one dimensional array or hash.
+
+Scrollbar positions are restored after re-rendering now.
+
+
+Wijmo-Complete v1.1.5
+=====================
+
+Tree
+----
+Added template support for wijtreenode.
+Fixed issue: Extract the selector of wijtree as a parameter.
+Fixed bug: a style error on mouse out the node (Webkit)
+Fixed issue: the dropped node style issue.
+
+Grid
+----
+Fixed issue: "context is undefined" exception is thrown during sorting when CDN (minified) scripts are used.
+args.column parameter is passed to the filteroperatorslistshowing event handler now.
+
+BarChart,PieChart
+-----------------
+Changed the default value of animation.easing to ">".
+
+LineChart
+---------
+Added a new option "easing" into animation, the default value is ">".
+
+Input
+-----
+Can't input minus sign when value is zero.
+
+Wijmo-Complete v1.1.4
+=====================
+
+Tree
+----
+Fixed Firefox 4 Release Candidate issues with the following widgets:
+- BarChart
+- LineChart
+- PieChart
+- Grid
+- Input
+- Combobox
+
+Synced with jQuery UI 1.8.11
+
+Grid
+----
+Fixed issue: an exception is thrown when a cell with empty value enters edit mode under non-IE browsers.
+
+ensureControl method added (_ensureControl method was made public). Now, instead of 
+  grid._requiresDataBinding = true;
+  grid._ensureControl();
+one must use this:
+  grid.ensureControl(true);
+
+cellInfo.row() method added.
+
+Input
+-----
+CSS was adjusted for an issue when input is put inside table cell.
+
+
+Wijmo-Complete v1.1.3
+=====================
+
+** Added two new themes: cobalt and sterling.
+
+LineChart
+---------
+Fixed a bug when manually setting max/min/unitMjaor/unitMinor.
+
+Grid
+----
+HTML markup can't be used within the c1band.headerText option.
+
+Banded column headers are rendered when parent band is invisible.
+
+Column moving feature added.
+	New options added to wijgrid: allowColMoving.
+	New events added to wijgrid: columndragging, columndragged, columndropping, columndropped.
+	New options added to c1basefield: allowMoving.
+
+Multisorting feature added (ability to sort multiple columns simultaneously by pressing the Ctrl key when clicking on the column header).
+
+Invisible columns are taken into consideration during sorting now.
+
+Now grouped columns are sorted automatically (in ascending order).
+
+args parameter is passed to the sorting and sorted event handlers now.
+
+Added columnresizing and columnresized events.
+
+Footers support added.
+	New option added to wijgrid: showFooter.
+	New option added to c1basefield: footerText.
+	New member added into the $.wijmo.wijgrid.rowType enumeration: footer.
+
+Inputs
+-------
+Changed event name 'tiggermousedown' to 'triggermousedown'
+
+Dialog
+------
+Minimizing the dialog was causing the content to be recreated.
+
+Tree
+----
+The nodeDropped event now passes in the parent and source node.
+
+Wijmo-Complete v1.1.2
+=====================
+
+** Breaking changes
+
+	Grid -	Arguments of the rowFormatter and cellFormatter are changed and grouped into the one argument.
+			The rowFormatter option of wijgrid is renamed to rowStyleFormatter.
+			The "wijmo-wijgrid-currency-x" css classes have been renamed to "wijmo-wijgrid-current-x".
+
+	Combobox - changed 'blur.wiicombobox' to 'blur.wijcombobox'.
+
+tree
+----
+Add icon attribute on initial markup.
+
+ComboBox
+--------
+if there are many comboboxes on the same page. There is bug If you click on drop-down list icon of first combobox (drop-down list appears), 
+then on second drop-down list icon (first drop-down list is closed, second is opened) and then on third drop-down list icon (third drop-down is opened, 
+but second is not closed).
+
+Clear the selectedItem and selectedIndex when new data is set.  Support adding the dynamical data to the combobox.
+
+Grid
+----
+
+cellStyleFormatter option added.
+
+$.wijmo.wijgrid.renderState enumeration added.
+
+Added a judgement to distinguish two ways for checkbox's entering the editing status(one is clicking the mouse, the other is pressing the key).
+Fixed the bug that after clicking the checkbox, pressing space key can't change the value.
+
+Cell headers are not displayed correctly when wijgrid is linked to an html table
+and html content is used inside the TH tag.
+
+wijgrid doesn't pass the culture option into the filter editors.
+
+Decimal places specified within the dataFormatString option now mapped into the
+filter editors.
+
+Now if dataKey option is set to null it means that column of wijgrid is not bound to any data field.
+
+Group headers and group footers are not affected by selection now.
+
+Added ajaxerror, dataloading, dataloaded, loading, loaded, rendering, rendered events.
+
+Pager
+-----
+Values of the mode option can be specified in lower case now.
+
+
+Wijmo-Complete v1.0.1
+=====================
+
+"use strict" has been moved into the main closure for all widgets.
+
+PieChart
+--------
+Changed the code for explode animation.  
+Fixed:  Slices don't always return to starting position after hovering out of the Pie chart.
+
+Grid
+----
+Fixed issue: outer div does not change its sizes during resizing if table
+initially had width set.
+
+Code refactoring purposing automatic clearing of $data when widget is
+destroyed.
+
+Before event handlers of column widgets were not deleted during wijgrid
+destruction. That caused an exception when column header or filter elements
+are clicked after widget destruction.
+
+Added Unit test case for flat view column width and scrolling.
+
+Fixed column width not working under chrome and make sure column width option work under different browsers.
+
+
+Changes made to version 0.9.1
+=============================
+
+LineChart
+---------
+Add some unit tests.
+
+BarChart, LineChart, PieChart
 -----------------------------
+Refactored the redraw method to add code to get the width/height of the chart.  Fix the issue that an exception is thrown 
+when chart is put in an inactive accordion pane.
+
+Change the code for jslint.
+
+Grid
+----
+Renamed currencychanging event to currentcellchanging.
+
+Renamed currencychanged event to currentcellchanged.
+
+Events and $data are not completely released after widget is destroyed.
+
+Changes made to version 0.9.0
+=============================
+
+Grid
+----
+Setter added into the cellInfo.value() method.
+
+Renamed currency() method to currentCell().
+
+
+Changes made to version 0.8.2
+=============================
+
+** Breaking changes.**
+---------------------- 
+All widgets have been renamed (file and namespaces) to conform to jQuery UI naming patterns.
+- The widget names have not changed, in most cases you only need to change the script reference.
+- Name change to specific wijmo css classnames.
+- The decorator widgets have been renamed.
+
+Pager
+-----
+WAI-ARIA support added.
+
+File name, namespace and css classes are changed.
+
+Improve source code to conform JSLint rule for only one var in one method.
+
+ToolTip
+-------
+Fixed a css reference bug in samples in ie6 & ie7.
+
+LineChart
+---------
+Fixed a tooltip bug when offset changed after page load.
+Fxied a tooltip offset bug.
+
+BarChart
+--------
+Removed the useless referrence "raphael-popup.js" from the page.  We already use our tooltip to replace raphael popup.
+
+BarChart, PieChart, LineChart
+-----------------------------
+Change the code for jslint.
+
+Move the code for calculating the tooltip's position from the constructor to the show method.  Fixed the issue
+that if we add a calendar before the chart, then the tooltip can't be shown in the correct location.
+
+Comments out the code for resizing and added the redraw method to the chart.  Fixed the chart's performance issue
+which was brought by changing the dom element.
+
+Change the methods related to axis calculation.  Make these changes to improve the performance.
+
+Change the default value of the hint.showDelay and hint.hideDelay.
+
+Add hoverintent to the animation of the piechart.
+
+Update the readme.txt with the change of the options.
+
+Add comments to the hint.offsetX and hint.offstY option.
+
+Added easing/showEasing/hideEasing to the hint option.
+
+Delete the raphael-popup.js file.  We wrote our tooltip to replace the raphael-popup.
+
+Refactored the code for JSLint.
+
+Change file name, namespace, class names.
+
+Add beforeShowing event for tooltip.
+
+Fix a bug that tooltip doesn't show in index.html page.
+
+Add "beginUpdate" and "endUpdate" methods.
+
+Add the default offset -2 to the tooltip in order to offset the tooltip to the mouse point. 
+The default position where the tooltip shows is too closer to the mouse point.
+
+Update the unit tests for bar/line chart in order to run correctly in other browsers except ie.  
+In svg, the computed value of the text is different with the one of the vml.
+
+
+Tree
+------
+Improve source code with JSLint.
+Change namespace,file name, css class name.
+Fixed Tree bugs on ie6,7 Chrome, Safari:
+1) drag & drop between two trees not reset the seleted node
+2) select a node but not foucs on it
+3) keyboard event error
+4) style issues on ie6
+5) focus issues on webkit 
+
+
+BarChart
+---------
+Divide the paintPlotArea method into several methods.  
+Obey the rule(only one var in one method) of jslint.
+
+Grid
+----
+Added width 100% to ui-wijgrid-root selector to make grid fill available space
+in wijgrid. Behavior changed: requested by John Ayers. Table should be sized
+to the outer div width.
+
+Synchronized top table width with content width of superpanel in refreshPanel 
+method. Fix bug: table header overlays on vertical bar.
+Top table element width is not correctly synchronized with bottom table.
+
+Added test for 0 width to return width of wijgrid when setting width to 
+superpanel. Fixed bug: width of superpanel is not correct when wijgrid is empty.
+The widht of superpanel should be the width of wijgrid outer div instead of 0 
+in this case.
+
+Re-insert table element before outer div in destory method. Fixed bug: wijgrid 
+is not restored for fixedview.  Table element is wrapped in superpanel and 
+should be restored to original place when destroying wijgrid.
+
+Added percentage width support for column.  This is requested in github forum.  
+Column only supports px width at present.
+
+Modified flat view column width calculation algorithm to make width work for 
+flat view.  This issue is reported by a user in github forum.  Width should 
+work for all mode.
+
+Modified flat view logic to set width on inner cell.  This is for fixing 
+column widht when enabling editing in cell.  Column should stay the same width.
+
+c1basefield.cellFormatter and wijgrid.rowFormatter options are added. New feature.
+
+WAI-ARIA support added.
+
+File name, namespaces and css classes are changed.
+
+Improve source code to conform JSLint rule for only one var in one method.
+
+Enhanced data handling to provide possibility for custom paging and
+wijdatasource support for local and remote data in case the result returned by
+the server does not confrom to wijgrid requirements.
+
+Now wijgrid accepts dynamic option of wijdatasource, not wijdatasource.proxy.
+
+wijgrid.doRefresh() method added.
+
+cellInfo.column() method added.
+
+cellInfo.contentElement() method renamed to container(), return type changed
+to jQuery.
+
+Filter editors look ugly under IE6.
+
+Changes made to version 0.8.1
+=============================
+
 Datasource
 ----------
 Modified wijhttpproxy request method. Fixed BUG: reported by Sergey. A copy 
@@ -11,6 +672,18 @@ Combobox
 --------
 Upgrade bgiframe from 2.1.1 to 2.1.3-pre.  This version fixed the issue that 
 iframe is still created on the win7 and ie7/8/9.
+
+Added overflow: hidden to ui-wijcombobox-list selector.
+This if for fixing a exception in IE6 when dropdown-list is shown.
+The overflow property should be there to avoid the content to expand outer div in IE6.
+
+Added selection logic after enter key is preseed.  Fixed bug active item is not selected after enter key is pressed.
+When enter key is pressed, the active item should be selected.
+
+Cleaned source with JSLint.
+
+Mofiied _onListLoaded method.  Fixed bug: selectedIndex is set to an array of number. The input text is not synchronized with selected items.  
+The input text should synchronized with the selected item text.
 
 ChartCore
 ---------
@@ -44,3 +717,4 @@ not disappear when the mouse moves out of the widget.
 
 Modified behavior of filter dropdown. Clicking the filter button does not 
 close the filter dropdown.
+

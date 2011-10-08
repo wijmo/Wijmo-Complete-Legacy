@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <title>LineChart - Table as DataSource</title>
@@ -7,32 +7,37 @@
     <meta name="description" content="%description%" />
     <meta name="keywords" content="" />
     <meta name="author" content="ComponentOne" />
-    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
-    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
+    
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    
+    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
     <script src="../../external/raphael.js" type="text/javascript"></script>
-    <script src="../../external/raphael-popup.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijchartcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijlinechart.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
     <script id="scriptInit" type="text/javascript">
-    	$(document).ready(function () {
-    	    $("#tb").wijlinechart({ width: 600, height: 300,
-    	        showChartLabels: false,
-    	        hint: {
-    	            formatter: function () {
-    	                return this.y;
-    	            },
-    	            offset: 10
-    	        },
-				 seriesStyles: [
-					{ stroke: "#00A0B0", "stroke-width": "3" },
-					{ stroke: "#CC333F", "stroke-width": "3" },
-					{ stroke: "#EB6841", "stroke-width": "3" },
-					{ stroke: "#EDC951", "stroke-width": "3" }
-				],
+        $(document).ready(function () {
+            $("#tb").wijlinechart({ width: 756, height: 475,
+                showChartLabels: false,
+                hint: {
+                    content: function () {
+                        return this.y;
+                    },
+                    offsetY: -10
+                },
+                 seriesStyles: [
+                    { stroke: "#00A0B0", "stroke-width": "3" },
+                    { stroke: "#CC333F", "stroke-width": "3" },
+                    { stroke: "#EB6841", "stroke-width": "3" },
+                    { stroke: "#EDC951", "stroke-width": "3" }
+                ],
+                 seriesHoverStyles: [
+                    { "stroke-width": "4" },
+                    { "stroke-width": "4" },
+                    { "stroke-width": "4" },
+                    { "stroke-width": "4" }
+                ],
                 axis: {
                     y: {
                     },
@@ -45,8 +50,8 @@
                         tickMajor: { position: "outside", style: { stroke: "#999999"} }
                     }
                 }
-    		});
-    	});
+            });
+        });
     </script>
 </head>
 <body class="demo-single">
@@ -157,7 +162,7 @@
         </div>
         <div class="footer demo-description">
             <p>
-                The wijlinechart supports to use table element as datasource.</p>
+                This sample demonstrates how to use a table as a data source. It's as easy as creating a table with rows and headers and then setting the table's ID property to the ID of the wijlinechart widget. </p>
         </div>
     </div>
 </body>

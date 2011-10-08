@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 0.8.1
+ * Wijmo Library 1.5.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -16,6 +16,8 @@
 
 
 (function ($) {
+"use strict";
+
 $.fn.extend({
 wijtextselection: function () {
 	/// <summary>jQuery plugins to get/set text selection for input element</summary>

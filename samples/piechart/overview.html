@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <title>Overview</title>
@@ -7,34 +7,29 @@
     <meta name="description" content="%description%" />
     <meta name="keywords" content="" />
     <meta name="author" content="ComponentOne" />
-    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
-    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
+    
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    
+    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
     <script src="../../external/raphael.js" type="text/javascript"></script>
-    <script src="../../external/raphael-popup.js" type="text/javascript"></script>
-    <script src="../../external/jquery.glob.min.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijchartcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijpiechart.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
     <style type="text/css">
         #wijpiechart
         {
-            width: 600px;
-            height: 400px;
+			width: 756px;
+			height: 475px;
         }
     </style>
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
-            var duration = 500;
-            var radiusOffset = 4;
-            var offset = {};
-
             $("#wijpiechart").wijpiechart({
                 radius: 140,
                 legend: { visible: true },
                 hint: {
-                    formatter: function () {
+                    content: function () {
                         return this.data.label + " : " + $.format(this.value / this.total, "p2");
                         }
                 },
@@ -45,7 +40,7 @@
                     label: "MacBook Pro",
                     legendEntry: true,
                     data: 46.78,
-                    offset: 15,
+                    offset: 15
                 }, {
                     label: "iMac",
                     legendEntry: true,
@@ -79,46 +74,6 @@
                     fill: "90-rgb(166,166,166)-rgb(149,149,149)", stroke: "rgb(149,149,149)", "stroke-width": "1.5"
                 }]
             });
-            $("#wijpiechart").bind("wijpiechartmouseover", function (e, objData) {
-                if (objData != null) {
-
-                    var series = objData;
-                    var sector = $("#wijpiechart").wijpiechart("getSector", series.index);
-                    var shadow = sector.shadow;
-
-                    offset = sector.getOffset(radiusOffset);
-
-                    sector.animate({
-                        translation: offset.x + " " + offset.y
-                    }, duration, "elastic");
-
-                    if (shadow) {
-                        shadow.animate({
-                            translation: offset.x + " " + offset.y
-                        }, duration, "elastic");
-                    }
-                }
-            });
-
-            $("#wijpiechart").bind("wijpiechartmouseout", function (e, objData) {
-                if (objData != null) {
-                    var series = objData;
-                    var sector = $("#wijpiechart").wijpiechart("getSector", series.index);
-                    var shadow = sector.shadow;
-
-                    sector.animate({
-                        translation: -offset.x + " " + offset.y * -1
-                    }, duration, "elastic");
-                    
-                    if (shadow) {
-                        shadow.animate({
-                            translation: -offset.x + " " + offset.y * -1
-                        }, duration, "elastic");
-                    }
-
-                    offset = {x:0, y:0};
-                }
-            });
         });
     </script>
 </head>
@@ -139,6 +94,12 @@
             </div>
         </div>
         <div class="footer demo-description">
+
+<p>The wijpiechart widget allows you to create customized pie charts. The samples in this section highlight some of the unique features of the widget, and they will help you get started with the wijpiechart widget.</p>
+
+<p>The source in this sample will show you how to add a header to the chart; how to add label text to the legend; how to populate the chart with data; and how to style the pie pieces.</p>
+
+
         </div>
     </div>
 </body>

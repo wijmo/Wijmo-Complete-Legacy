@@ -7,17 +7,17 @@
     <meta name="description" content="%description%" />
     <meta name="keywords" content="" />
     <meta name="author" content="ComponentOne" />
-    <link href="../base-reset.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/Aristo/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css" />
-    <link href="../demos-single.css" rel="stylesheet" type="text/css" />
-    <script src="../../external/jquery-1.4.3.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.6.custom.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery.wijmo-open.0.8.2.min.js" type="text/javascript"></script>
-    <link href="../../themes/wijmo/jquery.wijmo-open.0.8.2.css" rel="stylesheet" type="text/css" />
-    <link href="../../themes/wijmo/jquery.ui.wijcombobox.css" rel="stylesheet" type="text/css" />
+    
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    
+    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.1.5.0.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.1.5.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijcombobox.css" rel="stylesheet" type="text/css" />
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijdatasource.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.ui.wijcombobox.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijcombobox.js" type="text/javascript"></script>
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
             // put all your jQuery goodness in here.
@@ -39,6 +39,7 @@
                 data: testArray
             });
             $("#tags").wijcombobox({
+            	
                 data: datasource,
                 width: 150
             });
@@ -49,14 +50,14 @@
             showingSpeed = parseNumberFromString($('#showingSpeed').val());
             hidingSpeed = parseNumberFromString($('#hidingSpeed').val());
             var showingAnimation = {
-                effect: $('#showingEffectTypes').get(0).value,
+                animated: $('#showingEffectTypes').get(0).value,
                 options: null,
-                speed: showingSpeed
+                duration: showingSpeed
             };
             var hidingAnimation = {
-                effect: $('#hidingEffectTypes').get(0).value,
+            	animated: $('#hidingEffectTypes').get(0).value,
                 options: null,
-                speed: hidingSpeed
+                duration: hidingSpeed
             };
             var wij = $('#tags');
             wij.wijcombobox('option', 'showingAnimation', showingAnimation);
@@ -150,6 +151,7 @@
         </div>
         <div class="footer demo-description">
             <p>
+This sample demonstrates the different animation effects and how you can manipulate their speed.
             </p>
         </div>
     </div>

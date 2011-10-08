@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Grid - Overview</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Overview" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    
+    <link href="../../themes/wijmo/jquery.wijmo-open.1.5.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery.wijmo-open.1.5.0.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+
+    <script id="scriptInit" type="text/javascript">
+        $(document).ready(function () {
+            $("#demo").wijgrid({
+                allowSorting: true,
+                allowPaging: true,
+                pageSize: 10
+            });
+
+            $("#demo1").wijgrid({
+                allowSorting: true,
+                allowPaging: true,
+                pageSize: 10,
+
+                columns: [
+                  { // number
+                    dataKey: 0,
+                    headerText: "<span class='ui-icon ui-icon-calculator' style='left:0;'></span> Number"
+                  },
+                  {
+                    headerText: "<span class='ui-icon ui-icon-info' style='left:0;'></span>Personal info",
+                    columns: [
+                       // nationality
+                       { dataKey: 1, headerText: "<span class='ui-icon ui-icon-suitcase' style='left:0;'></span> Nationality" },
+                       // player 
+                       { dataKey: 2, headerText: "<span class='ui-icon ui-icon-person' style='left:0;'></span> Player" },
+                       // age
+                       { dataKey: 5, headerText: "<span class='ui-icon ui-icon-info' style='left:0;'></span> Age" },
+                       // birthplace
+                       { dataKey: 7, headerText: "<span class='ui-icon ui-icon-calendar' style='left:0;'></span> Birthplace" }  
+                    ]
+                  },
+                  {
+                    headerText: "<span class='ui-icon ui-icon-info' style='left:0;'></span>Team related info",
+                    columns: [
+                       { dataKey: 3, headerText: "<span class='ui-icon ui-icon-clipboard' style='left:0;'></span> Position" },
+                       { dataKey: 4, headerText: "<span class='ui-icon ui-icon-transferthick-e-w' style='left:0;'></span> Handedness" },
+                       { dataKey: 6, headerText: "<span class='ui-icon ui-icon-calendar' style='left:0;'></span> Acquired" }
+                    ]
+                  }
+                ],
+
+                data: $("#demo").wijgrid("data")
+            }); 
+        });
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Custom header icons</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <p>Using inline html:</p>
+            <table id="demo">
+                <thead>
+                    <tr>
+                        <th>
+                            <span class="ui-icon ui-icon-calculator" style="left:0;"></span> Number
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-suitcase" style="left:0;"></span> Nationality
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-person" style="left:0;"></span> Player
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-clipboard" style="left:0;"></span> Position
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-transferthick-e-w" style="left:0;"></span> Handedness
+                        </th>
+                        <th>
+                           <span class="ui-icon ui-icon-info" style="left:0;"></span> Age
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-calendar" style="left:0;"></span> Acquired
+                        </th>
+                        <th>
+                            <span class="ui-icon ui-icon-calendar" style="left:0;"></span> Birthplace
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>
+                            27
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Adams, Craig
+                        </td>
+                        <td>
+                            RW
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            32
+                        </td>
+                        <td>
+                            2009
+                        </td>
+                        <td>
+                            Seria, Brunei
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            43
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Boucher, Philippe
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            36
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Saint-Apollinaire, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            24
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Cooke, Matt
+                        </td>
+                        <td>
+                            LW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            30
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Belleville, Ontario
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            87
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Crosby, Sidney (C)
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            21
+                        </td>
+                        <td>
+                            2005
+                        </td>
+                        <td>
+                            Cole Harbour, Nova Scotia
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            1
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Curry, John
+                        </td>
+                        <td>
+                            G
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            25
+                        </td>
+                        <td>
+                            2007
+                        </td>
+                        <td>
+                            Shorewood, Minnesota
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            9
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Dupuis, Pascal
+                        </td>
+                        <td>
+                            W
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            30
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Laval, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            7
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Eaton, Mark
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            32
+                        </td>
+                        <td>
+                            2006
+                        </td>
+                        <td>
+                            Wilmington, Delaware
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            26
+                        </th>
+                        <td>
+                            Ukraine
+                        </td>
+                        <td>
+                            Fedotenko, Ruslan
+                        </td>
+                        <td>
+                            LW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            30
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Kiev, U.S.S.R.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            29
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Fleury, Marc-Andre
+                        </td>
+                        <td>
+                            G
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            24
+                        </td>
+                        <td>
+                            2003
+                        </td>
+                        <td>
+                            Sorel, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            32
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Garon, Mathieu
+                        </td>
+                        <td>
+                            G
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            31
+                        </td>
+                        <td>
+                            2009
+                        </td>
+                        <td>
+                            Chandler, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            2
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Gill, Hal
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            34
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Concord, Massachusetts
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            28
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Godard, Eric
+                        </td>
+                        <td>
+                            RW
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            29
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Vernon, British Columbia
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            3
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Goligoski, Alex
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            23
+                        </td>
+                        <td>
+                            2004
+                        </td>
+                        <td>
+                            Grand Rapids,
+                                Minnesota
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            55
+                        </th>
+                        <td>
+                            Russia
+                        </td>
+                        <td>
+                            Gonchar, Sergei (A)
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            35
+                        </td>
+                        <td>
+                            2005
+                        </td>
+                        <td>
+                            Chelyabinsk, U.S.S.R.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            13
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Guerin, Bill
+                        </td>
+                        <td>
+                            RW
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            38
+                        </td>
+                        <td>
+                            2009
+                        </td>
+                        <td>
+                            Worcester,
+                                Massachusetts
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            42
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Jeffrey, Dustin
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            21
+                        </td>
+                        <td>
+                            2007
+                        </td>
+                        <td>
+                            Sarnia, Ontario
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            48
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Kennedy, Tyler
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            22
+                        </td>
+                        <td>
+                            2004
+                        </td>
+                        <td>
+                            Sault Ste.
+                                Marie, Ontario
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            14
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Kunitz, Chris
+                        </td>
+                        <td>
+                            LW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            29
+                        </td>
+                        <td>
+                            2009
+                        </td>
+                        <td>
+                            Regina, Saskatchewan
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            58
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Letang, Kristopher
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            22
+                        </td>
+                        <td>
+                            2005
+                        </td>
+                        <td>
+                            Montreal, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            65
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Lovejoy, Ben
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            25
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Canaan, New Hampshire
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            71
+                        </th>
+                        <td>
+                            Russia
+                        </td>
+                        <td>
+                            Malkin, Evgeni (A)
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            22
+                        </td>
+                        <td>
+                            2004
+                        </td>
+                        <td>
+                            Magnitogorsk, U.S.S.R.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            14
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Minard, Chris
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            27
+                        </td>
+                        <td>
+                            2007
+                        </td>
+                        <td>
+                            Owen Sound, Ontario
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            44
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Orpik, Brooks
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            28
+                        </td>
+                        <td>
+                            2001
+                        </td>
+                        <td>
+                            San Francisco, California
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            81
+                        </th>
+                        <td>
+                            Slovakia
+                        </td>
+                        <td>
+                            Satan, Miroslav
+                        </td>
+                        <td>
+                            RW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            34
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Topo??any, Czechoslovakia
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            4
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Scuderi, Rob
+                        </td>
+                        <td>
+                            D
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            30
+                        </td>
+                        <td>
+                            1998
+                        </td>
+                        <td>
+                            Syosset, New York
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            11
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Staal, Jordan
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            20
+                        </td>
+                        <td>
+                            2006
+                        </td>
+                        <td>
+                            Thunder Bay, Ontario
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            17
+                        </th>
+                        <td>
+                            Czech Republic
+                        </td>
+                        <td>
+                            Sykora, Petr
+                        </td>
+                        <td>
+                            RW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            32
+                        </td>
+                        <td>
+                            2007
+                        </td>
+                        <td>
+                            PlzeÃ…Ë†, Czechoslovakia
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            22
+                        </th>
+                        <td>
+                            United States
+                        </td>
+                        <td>
+                            Taffe, Jeff
+                        </td>
+                        <td>
+                            LW
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            28
+                        </td>
+                        <td>
+                            2007
+                        </td>
+                        <td>
+                            Hastings, Minnesota
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            25
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Talbot, Maxime
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            L
+                        </td>
+                        <td>
+                            25
+                        </td>
+                        <td>
+                            2002
+                        </td>
+                        <td>
+                            LeMoyne, Quebec
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            15
+                        </th>
+                        <td>
+                            Canada
+                        </td>
+                        <td>
+                            Zigomanis, Michael
+                        </td>
+                        <td>
+                            C
+                        </td>
+                        <td>
+                            R
+                        </td>
+                        <td>
+                            28
+                        </td>
+                        <td>
+                            2008
+                        </td>
+                        <td>
+                            Toronto, Ontario
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Using the <b>headerText</b> option:</p>
+            <table id="demo1">
+            </table>
+	
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+               This sample shows how to customize column header.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
