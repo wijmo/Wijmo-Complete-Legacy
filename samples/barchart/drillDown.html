@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>BarChart - Column bar</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijbarchart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function() {
+			var drillDwonData =
+			{
+				MSIE: {
+					label: "MSIE",
+					legendEntry: true,
+					data: { x: ['MSIE 6.0', 'MSIE 7.0', 'MSIE 8.0', 'MSIE 9.0'], y: [0.1085, 0.0735, 0.3306, 0.0281] }
+				},
+				Firefox: {
+					label: "Firefox",
+					legendEntry: true,
+					data: { x: ['Firefox 2.0', 'Firefox 3.0', 'Firefox 3.5', 'Firefox 3.6', 'Firefox 4.0'], y: [0.002, 0.0083, 0.0158, 0.1312, 0.0543] }
+				},
+				Chrome: {
+					label: "Chrome",
+					legendEntry: true,
+					data: { x: ['Chrome 5.0', 'Chrome 6.0', 'Chrome 7.0', 'Chrome 8.0', 'Chrome 9.0', 'Chrome 10.0', 'Chrome 11.0', 'Chrome 12.0', ], y: [0.0012, 0.0019, 0.0012, 0.0036, 0.0032, 0.0991, 0.005, 0.0022] }
+				},
+				Safari: {
+					label: "Safari",
+					legendEntry: true,
+					data: { x: ['Safari 5.0', 'Safari 4.0', 'Safari Win 5.0', 'Safari 4.1', 'Safari/Maxthon','Safari 3.1', 'Safari 4.1'], y: [0.0455, 0.0142, 0.0023, 0.0021, 0.0020, 0.0019, 0.0014]
+					}
+				},
+				Opera: {
+					label: "Opera",
+					legendEntry: true,
+					data: { x: ['Opera 9.x', 'Opera 10.x', 'Opera 11.x'], y: [0.0032, 0.0037, 0.0165] }
+				}
+			},
+			seriesList = [{
+				label: "Browser brands",
+				legendEntry: true,
+				data: { x: ['MSIE', 'Firefox', 'Chrome', 'Safari', 'Opera'], y: [0.5511, 0.2163, 0.1194, 0.0715, 0.0214]}}];
+
+			var drawBrands = function(e, data) {
+//                $("#wijbarchart").wijbarchart("option", {
+//                    seriesList: seriesList,
+//                    click: drawVersions
+				//                });
+				$("#wijbarchart").wijbarchart("option", "click", drawVersions);
+				$("#wijbarchart").wijbarchart("option", "seriesList", seriesList);
+				
+			}
+
+			var drawVersions = function(e, data) {
+				var key = data.x, series = drillDwonData[key];
+//                $("#wijbarchart").wijbarchart("option", {
+//                    seriesList: [series],
+//                    click: drawBrands
+				//                });
+				$("#wijbarchart").wijbarchart("option", "click", drawBrands);
+				$("#wijbarchart").wijbarchart("option", "seriesList", [series]);
+				
+			}
+
+			$("#wijbarchart").wijbarchart({
+				horizontal: false,
+				axis: {
+					y: {
+						text: "Total Hardware",
+						annoFormatString: "p0"
+					},
+					x: {
+						text: ""
+					}
+				},
+//                hint: {
+//                    content: function() {
+//                        return this.data.label + '\n ' + this.y + '';
+//                       },
+//					enabled: false
+//                },
+				header: {
+					text: "Hardware Distribution"
+				},
+				seriesList: seriesList,
+				chartLabelFormatString: "p2",
+				click: drawVersions
+			});
+		});
+	</script>
+
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Column bar</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijbarchart" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px;
+				height: 475px">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				This sample depicts a clustered column bar chart. This is similar to the "Clustered
+				Chart" sample, although the horizontal option of the bar chart is set to false here.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

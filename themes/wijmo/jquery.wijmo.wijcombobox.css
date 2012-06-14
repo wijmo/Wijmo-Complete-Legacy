@@ -17,6 +17,7 @@
     color: inherit;
     padding: 3px 5px 3px 5px;
     outline: none;
+    margin: 0;
 }
 
 .wijmo-wijcombobox .wijmo-wijcombobox-label
@@ -29,7 +30,7 @@
 }
 .wijmo-wijcombobox-loading
 {
-    background: transparent url('images/ui-anim_basic_16x16.gif') right center no-repeat;
+    background: transparent url('images/waiting.gif') right center no-repeat;
 }
 /* dropdown list trigger
  ----------------------------------*/

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Lightbox - Inline Content</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+    <script src="../explore/js/swfobject.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo.wijlightbox.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.wijmo.wijlightbox.js" type="text/javascript"></script>	
+	
+	<script type="text/javascript">
+		$(function () {
+			$("#lightbox").wijlightbox({textPosition: 'outside', controlsPosition: 'outside'});
+		});
+	</script>
+	
+</head>
+
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>Overview</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="lightbox">
+				<a href="#content-1" rel="wijlightbox[stock]">
+					<img src="http://lorempixum.com/200/150/abstract/1" title="Abstract 1" alt="Abstract 1" /></a> 
+				<a href="#content-2" rel="wijlightbox[stock]">
+					<img src="http://lorempixum.com/200/150/abstract/1" title="Abstract 1" alt="Abstract 1" /></a> 
+				<a href="#content-3" rel="wijlightbox[stock]">
+					<img src="http://lorempixum.com/200/150/abstract/1" title="Abstract 1" alt="Abstract 1" /></a> 
+			</div>
+			
+			<div id="content-1" class="ui-helper-hidden">
+				<p>This is inline content opened in wijlightbox.</p>
+				<p>Our new web stack is the ultimate kit for web development. We have tools that range from pure client-side development to robust server-side development all powered by our core technology: Wijmo. This studio will help your team take on any style of web development all while using a single framework. We have you covered from WebForms to MVC and from client-side to server-side programming.</p>
+			</div>
+			
+			
+			<div id="content-2" class="ui-helper-hidden">
+				<p>As we see modern browsers launching new versions, we hear a lot about HTML5. HTML5 is a working spec from the W3C that is defining a revolution in how we develop web apps. When comes to data visualization, we believe that Scalable Vector Graphics (SVG) and HTML5 are the future of the Web. Learn more about how ComponentOne is utilizing HTML5 & SVG!</p>
+			</div>
+			
+			<div id="content-3" class="ui-helper-hidden">
+				<p>Greetings earthlings, start building a better web with Wijmo.</p>
+				<p>Wijmo is a complete kit of over 30 UI widgets with everything from interactive menus to rich charts. If you know jQuery, you know Wijmo. Complete with documentation and professional support, every widget is hand-crafted and includes premium themes.</p>
+			</div>
+			
+			
+			<!-- End demo markup -->
+			<div class="demo-options">
+			<!-- Begin options markup -->
+				
+			<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p></p>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Lightbox - Vimeo Samples</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+	<script src="../explore/js/swfobject.js" type="text/javascript"></script>
+	<link href="../../themes/wijmo/jquery.wijmo.wijlightbox.css" rel="stylesheet" type="text/css"/>	
+	<script src="../../wijmo/jquery.wijmo.wijlightbox.js" type="text/javascript"></script>
+	
+	
+	<script type="text/javascript">
+	    $(function () {
+	        $("#lightbox").wijlightbox({
+                controlsPosition: 'outside',
+				textPosition: 'outside'
+            });
+	    });
+	</script>
+</head>
+
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>Vimeo</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			
+			<div id="lightbox">
+				<a title="Mindrelic - time lapse summer/autumn 2009" href="http://player.vimeo.com/video/8087882" rel="wijlightbox;player=iframe"><img class=border alt="" src="http://cdn.wijmo.com/images/mindrelic.png"></a>
+				<a title="Rochester NY timelapse" href="http://player.vimeo.com/video/5244737" rel="wijlightbox;player=iframe"><img class=border alt="" src="http://cdn.wijmo.com/images/rochester.png"></a>
+				<a title="Lightning test" href="http://player.vimeo.com/video/5085363" rel="wijlightbox;player=iframe"><img class=border alt="" src="http://cdn.wijmo.com/images/lightning.png"></a>
+				<a title="Quick preview of Iceflow" href="http://player.vimeo.com/video/19746784" rel="wijlightbox;player=iframe"><img class=border alt="" src="http://cdn.wijmo.com/images/iceflow.png"></a>
+			</div>
+			
+			<!-- End demo markup -->
+			<div class="demo-options">
+			<!-- Begin options markup -->
+				
+			<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>This sample demonstrates how the wijlightbox widget can be used to videos in IFrame.</p>
+		</div>
+	</div>
+</body>
+
+</html>

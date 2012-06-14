@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Carousel</title>
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijcarousel.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery.wijmo-open.2.0.0b1.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijcarousel.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.auto = ko.observable(false);
+			self.showTimer = ko.observable(false);
+			self.interval = ko.observable(5000);
+			self.loop = ko.observable(true);
+			self.showPager = ko.observable(false);
+			self.showCaption = ko.observable(true);
+			self.display = ko.observable(1);
+			self.step = ko.observable(1);
+			self.preview = ko.observable(false);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+	<style type="text/css">
+		#wijcarousel0
+		{
+			width: 750px;
+			height: 300px;
+		}
+	</style>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Carousel</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijcarousel0" data-bind="wijcarousel: {disabled: disabled, auto: auto, showTimer: showTimer, interval: interval, loop: loop, 
+				showPager: showPager, showCaption: showCaption, display: display, preview: preview, step: step }">
+				<ul>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/1" alt="Sports 1" />
+						<span>
+							<h3>
+								Word Caption 1</h3>
+							Word Caption 1</span> </li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/2" alt="Sports 2" />
+						<span>Word Caption 2</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/3" alt="Sports 3" />
+						<span>Word Caption 3</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/4" alt="Sports 4" />
+						<span>Word Caption 4</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/5" alt="Sports 5" />
+						<span>Word Caption 5</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/6" alt="Sports 6" />
+						<span>Word Caption 6</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/7" alt="Sports 7" />
+						<span>Word Caption 7</span></li>
+					<li>
+						<img src="http://lorempixum.com/750/300/sports/8" alt="Sports 8" />
+						<span>Word Caption 8</span></li>
+				</ul>
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					auto:<input type="checkbox" data-bind="checked: auto" />
+				</div>
+				<div>
+					showTimer:<input type="checkbox" data-bind="checked: showTimer" />
+				</div>
+				<div>
+					interval:<input type="text" data-bind="value: interval" />
+				</div>
+				<div>
+					loop:<input type="checkbox" data-bind="checked: loop" />
+				</div>
+				<div>
+					showPager:<input type="checkbox" data-bind="checked: showPager" />
+				</div>
+				<div>
+					showCaption:<input type="checkbox" data-bind="checked: showCaption" />
+				</div>
+				<div>
+					display:<input type="text" data-bind="value: display" />
+				</div>
+				<div>
+					preview:<input type="checkbox" data-bind="checked: preview" />
+				</div>
+				<div>
+					step:<input type="text" data-bind="value: step" />
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

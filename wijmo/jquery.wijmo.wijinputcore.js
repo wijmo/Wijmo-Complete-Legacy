@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -132,6 +132,8 @@
             if (this.element[0].tagName.toLowerCase() !== 'input') {
                 throw "Target element is not a INPUT";
             }
+			
+			this.element.data("widgetName", this.widgetName);
 
             $.effects.save(this.element, ['width', 'height']);
             var width = this.element.width();
@@ -208,7 +210,7 @@
 
             var isLeftButton = function (e) { return (!e.which ? e.button : e.which) === 1; };
             var o = this.options, self = this;
-            if (this.triggerBtn && !o.disabled) {
+            if (this.triggerBtn && !o.disabledState) {
                 this.triggerBtn.bind({
                     'mouseover': function () { self._addState('hover', $(this)); },
                     'mouseout': function () { self._removeState('hover', $(this)); },
@@ -217,8 +219,7 @@
                         self._addState('active', $(this));
                         self._trigger('triggerMouseDown');
                     },
-                    'mouseup': function (e) {
-                        if (!isLeftButton(e)) { return; }
+                    'click': function (e) {
                         self._stopEvent(e);
                         self._stopSpin();
                         self._removeState('active', $(this));
@@ -243,19 +244,19 @@
                 self._removeState('active', $(this));
             };
 
-            if (this.spinUp && !o.disabled) {
+            if (this.spinUp && !o.disabledState) {
                 this.spinUp.bind({
                     'mouseover': function () { self._addState('hover', $(this)); },
-                    'mouseout': function () { self._removeState('hover', $(this)); },
+                    'mouseout': function () { self._removeState('hover', $(this)); self._removeState('active', $(this)); self._stopSpin(); },
                     'mousedown': spinButtonDown,
                     'mouseup': spinButtonUp
                 });
             }
 
-            if (this.spinDown && !o.disabled) {
+            if (this.spinDown && !o.disabledState) {
                 this.spinDown.bind({
                     'mouseover': function () { self._addState('hover', $(this)); },
-                    'mouseout': function () { self._removeState('hover', $(this)); },
+                    'mouseout': function () { self._removeState('hover', $(this)); self._removeState('active', $(this)); self._stopSpin(); },
                     'mousedown': spinButtonDown,
                     'mouseup': spinButtonUp
                 });
@@ -280,10 +281,13 @@
             this._endUpdate();
             this._updateText();
 
-            if (this.options.disabled) {
+            if (this.options.disabledState) {
+				var dis = o.disabled;
                 this.disable();
+				o.disabled = dis;
             }
 
+			this.element.data('initialized', true);
             this._trigger('initialized');
         },
 
@@ -351,6 +355,7 @@
         },
 
         widget: function () {
+            /// <summary>Gets element this widget is associated.</summary>
             return this.outerDiv;
         },
 
@@ -397,6 +402,12 @@
                 this._updateText();
             }
         },
+		
+		getPostValue: function(){
+			/// <summary>Gets the text value when the container form is posted back to server.</summary>
+			if (!this._isInitialized()) { return this.element.val(); }
+            return this._textProvider.toString(true, false, true);
+		},
 
         selectText: function (start, end) {
             /// <summary>Selects a range of text.</summary>
@@ -418,11 +429,13 @@
         },
 
         _raiseTextChanged: function () {
-            var txt = this.element.val();
-            if (this.element.data('preText') !== txt) {
+            var txt = this.element.val(), preText = this.element.data('preText');
+            if (!!this.element.data('initialized') && preText !== txt ) {
                 this._trigger('textChanged', null, { text: txt });
-                this.element.data('preText', txt);
+				this.element.data('changed', true);
             }
+			
+			this.element.data('preText', txt);
         },
 
         _raiseDataChanged: function () {
@@ -492,7 +505,7 @@
         },
 
         _fireIvalidInputEvent: function (chr) {
-            if (this._trigger('invalidInput', null, chr) === true) { return; };
+            if (this._trigger('invalidInput', null, { widget: this, char: chr } ) === true) { return; };
             if (!this.element.data('errorstate')) {
                 var cls = this.options.invalidClass || 'ui-state-error';
                 this.element.data('errorstate', true);
@@ -705,14 +718,12 @@
                     return;
                 }
             }
-
-            if (key === $.ui.keyCode.ENTER && !this.options.hideEnter) {
-                return true;
-            }
-
+			
             if (this._keyPressPreview(e)) {
                 return;
             }
+
+            if (key === $.ui.keyCode.ENTER && !this.options.hideEnter) { return true; }
 
             var selRange = this.element.wijtextselection();
             var ch = String.fromCharCode(key);
@@ -733,8 +744,9 @@
             }
         },
 
-        _isNullText: function () {
-            return this.options.showNullText && this.element.val() === this.options.nullText;
+        _isNullText: function (val) {
+			val = val || this.element.val();
+            return this.options.showNullText && val === this.options.nullText;
         },
 
         _doFocus: function () {
@@ -793,8 +805,20 @@
                 self._onChange();
                 self._updateText();
                 self._validateData();
+
+				if (!self._popupVisible() && !!self.element.data('changed')){
+					self._trigger('change');
+				}
+				
+				self.element.data('changed', false);
             }, 100);
+			
+			
         },
+		
+		_popupVisible: function(){
+			return this._isComboListVisible();
+		},
 
         _onMouseUp: function (e) {
             if (!this._isInitialized()) { return; }

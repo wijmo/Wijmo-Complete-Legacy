@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -157,7 +157,6 @@ $.widget("wijmo.wijinputmask", $.extend(true, {}, wijinputcore, {
 	
 	_onChange: function (e) {
 		if (!this.element) { return; }
-
 		var val = this.element.val();
 		var txt = this.getText();
 		if (txt !== val) {
@@ -887,6 +886,12 @@ wijMaskedTextProvider.prototype = {
 	},
 	
 	toString: function (ignorePasswordChar, includePrompt, includeLiterals, start, len) {
+		var val = this.inputWidget.options.text || "";
+		val = $.trim(val);
+		if (this.inputWidget.options.showNullText && !this.inputWidget.isFocused() && (val === "" || val === this.inputWidget.options.nullText)) {
+			return this.inputWidget.options.nullText;
+		}
+
 		ignorePasswordChar = (ignorePasswordChar === undefined) ? !this.isPassword() : ignorePasswordChar;
 		includePrompt = (includePrompt === undefined) ? (this.getHidePromptOnLeave() ? this.inputWidget.isFocused() : true) : includePrompt;
 		includeLiterals = (includeLiterals === undefined) ? true : includeLiterals;
@@ -953,6 +958,7 @@ wijMaskedTextProvider.prototype = {
 			builder1 = builder1 + ' ';
 			continue;
 		}
+
 		return builder1;
 	},
 

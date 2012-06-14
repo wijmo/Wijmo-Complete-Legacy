@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijutil.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijaccordion.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Main/Widgets/Wijmo-Complete/development-bundle/external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Complete/development-bundle/external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijutil.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijaccordion.js" type="text/javascript"></script>
+	<script src="Refs/knockout-2.0.0.debug.js" type="text/javascript"></script>
+	<script src="knockout-wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.requireOpenedPane = ko.observable(false);
+			self.selectedIndex = ko.observable(0);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body>
+	<div>
+		disabled:<input type="checkbox" data-bind="checked: disabled" />
+		requireOpenedPane:<input type="checkbox" data-bind="checked: requireOpenedPane" />
+		selectedIndex:<input type="text" data-bind="value: selectedIndex" />
+	</div>
+	<div data-bind="wijaccordion: {disabled: disabled, requireOpenedPane: requireOpenedPane, selectedIndex: selectedIndex, header: 'h3' }">
+		<div>
+			<h3>
+				<a href="#">First</a></h3>
+			<div>
+				<p>
+					Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque.
+					Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a
+					nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada.
+					Vestibulum a velit eu ante scelerisque vulputate.
+				</p>
+			</div>
+		</div>
+		<div>
+			<h3>
+				<a href="#">Second</a></h3>
+			<div>
+				<p>
+					Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus
+					hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum
+					tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna.
+				</p>
+			</div>
+		</div>
+		<div>
+			<h3>
+				<a href="#">Third</a></h3>
+			<div>
+				<p>
+					Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus
+					pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque
+					semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam
+					nisi, eu iaculis leo purus venenatis dui.
+				</p>
+			</div>
+		</div>
+		<div>
+			<h3>
+				<a href="#">Fourth</a></h3>
+			<div>
+				<p>
+					Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque.
+					Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a
+					nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada.
+					Vestibulum a velit eu ante scelerisque vulputate.
+				</p>
+			</div>
+		</div>
+		<div>
+			<h3>
+				<a href="#">Fifth</a></h3>
+			<div>
+				<p>
+					Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus
+					hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum
+					tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna.
+				</p>
+			</div>
+		</div>
+		<div>
+			<h3>
+				<a href="#">Sixth</a></h3>
+			<div>
+				<p>
+					Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus
+					pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque
+					semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam
+					nisi, eu iaculis leo purus venenatis dui.
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

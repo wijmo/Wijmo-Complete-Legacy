@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijbubblechart.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$("#wijbubblechart").wijbubblechart({
+				minimumSize: 3,
+				MaximumSize: 15,
+				chartLabel: {
+					chartLabelFormatString: "c2'kkk'"
+				},
+				axis: {
+					y: {
+						text: "Units Sold in Billions"
+
+					},
+					x: {
+						text: ""
+					}
+				},
+				hint: {
+					content: function () {
+						return 'x:' + this.x + ',y:' + this.y + ",y1:" + this.data.y1;
+					}
+				},
+				header: {
+					text: "Sales Trends in Top-Selling WorldWide Cars"
+				},
+				seriesList: [{
+					label: "Toyota",
+					legendEntry: true,
+					data: { x: [2006, 2007, 2008, 2009, 2010], 
+						y: [5, 6, 8, 7, 8.5], y1: [4, 4.4, 5.1, 5.5, 5.7] }
+				}, {
+					label: "General Motors",
+					legendEntry: true,
+					data: { x: [2006, 2007, 2008, 2009, 2010],
+						y: [3, 4, 6, 7.5, 8], y1: [2, 2.5, 3, 4, 5]
+					}
+				}, {
+					label: "Volkswagon",
+					legendEntry: true,
+					data: { x: [2006, 2007, 2008, 2009, 2010],
+						y: [4, 5, 6.5, 7.3, 6.6], y1: [2, 2.5, 4.5, 6, 5.5]
+					}
+				}, {
+					label: "Hyundai",
+					legendEntry: true,
+					data: { x: [2006, 2007, 2008, 2009, 2010],
+						y: [6, 1, 5, 2, 4], y1: [2, 3, 4.5, 1.5, 1]
+					}
+				}, {
+					label: "Ford",
+					legendEntry: true,
+					data: { x: [2006, 2007, 2008, 2009, 2010],
+						y: [6, 2, 3, 4.6, 5], y1: [4.5, 4, 3.8, 3, 2]
+					}
+				}]
+			});
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Overview</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijbubblechart" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px;">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			 <p>User can click the series' legend to show/hide the series' bubbles.</p>
+		</div>
+	</div>
+</body>
+
+</html>

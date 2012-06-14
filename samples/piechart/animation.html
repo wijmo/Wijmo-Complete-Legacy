@@ -10,10 +10,11 @@
 	
 	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
 	
-	<script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-	<script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
 	<script src="../../external/globalize.min.js" type="text/javascript"></script>
-	<script src="../../external/raphael.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
 	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
 	<script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
 	<style type="text/css">
@@ -33,13 +34,13 @@
 				showChartLabels: false,
 				hint: {
 					content: function () {
-						return this.data.label + " : " + $.format(this.value / this.total, "p2");
+						return this.data.label + " : " + Globalize.format(this.value / this.total, "p2");
 					}
 				},
 				header: {
 					text: "MMO Subscription Market Share"
 				},
-				animation:{
+				animation: {
 					enabled: false
 				},
 				seriesList: [{
@@ -109,38 +110,37 @@
 					offset: 0
 				}],
 				seriesStyles: [{
-					fill: "45-#466a85-#3e5f77", stroke: "#3e5f77", "stroke-width": "1.5"
+					fill: "45-#466a85-#3e5f77", stroke: "#3e5f77", "stroke-width": 1.5
 				}, {
-					fill: "45-#525252-#494949", stroke: "#494949", "stroke-width": "1.5"
+					fill: "45-#525252-#494949", stroke: "#494949", "stroke-width": 1.5
 				}, {
-					fill: "45-#555e5e-#4c5454", stroke: "#4c5454", "stroke-width": "1.5"
+					fill: "45-#555e5e-#4c5454", stroke: "#4c5454", "stroke-width": 1.5
 				}, {
-					fill: "45-#333333-#2d2d2d", stroke: "#2d2d2d", "stroke-width": "1.5"
+					fill: "45-#333333-#2d2d2d", stroke: "#2d2d2d", "stroke-width": 1.5
 				}, {
-					fill: "45-#6aaba7-#5f9996", stroke: "#5f9996", "stroke-width": "1.5"
+					fill: "45-#6aaba7-#5f9996", stroke: "#5f9996", "stroke-width": 1.5
 				}, {
-					fill: "45-#a6a6a6-#959595", stroke: "#959595", "stroke-width": "1.5"
+					fill: "45-#a6a6a6-#959595", stroke: "#959595", "stroke-width": 1.5
 				}, {
-					fill: "45-#6c8587-#617779", stroke: "#617779", "stroke-width": "1.5"
+					fill: "45-#6c8587-#617779", stroke: "#617779", "stroke-width": 1.5
 				}, {
-					fill: "45-#c7de7a-#b2c76d", stroke: "#b2c76d", "stroke-width": "1.5"
+					fill: "45-#c7de7a-#b2c76d", stroke: "#b2c76d", "stroke-width": 1.5
 				}, {
-					fill: "45-#8ede43-#7fc73c", stroke: "#7fc73c", "stroke-width": "1.5"
+					fill: "45-#8ede43-#7fc73c", stroke: "#7fc73c", "stroke-width": 1.5
 				}, {
-					fill: "45-#c3ff00-#afe500", stroke: "#afe500", "stroke-width": "1.5"
+					fill: "45-#c3ff00-#afe500", stroke: "#afe500", "stroke-width": 1.5
 				}, {
-					fill: "45-#a6a6a6-#959595", stroke: "#959595", "stroke-width": "1.5"
+					fill: "45-#a6a6a6-#959595", stroke: "#959595", "stroke-width": 1.5
 				}, {
-					fill: "45-#53b9fc-#4aa6e2", stroke: "#4aa6e2", "stroke-width": "1.5"
+					fill: "45-#53b9fc-#4aa6e2", stroke: "#4aa6e2", "stroke-width": 1.5
 				}, {
-					fill: "45-#537bfc-#4a6ee2", stroke: "#4a6ee2", "stroke-width": "1.5"
+					fill: "45-#537bfc-#4a6ee2", stroke: "#4a6ee2", "stroke-width": 1.5
 				}]
 			});
 
 			$("#wijpiechart").bind("wijpiechartmouseover", function (e, objData) {
 				if (objData != null) {
 					var animation = $("#selAnimation").val();
-
 					if (animation == "None") {
 						return;
 					}
@@ -148,17 +148,23 @@
 					var series = objData;
 					var sector = $("#wijpiechart").wijpiechart("getSector", series.index);
 					var shadow = sector.shadow;
+					var tracker = sector.tracker;
 
 					//Scale
 					if (animation == "Scale") {
 						var center = sector.center;
 						sector.animate({
-							scale: [1.1, 1.1, sector.center.x, sector.center.y]
+							transform: Raphael.format("s{0},{1},{2},{3}", 1.1, 1.1, sector.center.x, sector.center.y)
 						}, duration, "elastic");
 
-						if (shadow){
+						if (shadow) {
 							shadow.animate({
-								scale: [1.1, 1.1, sector.center.x, sector.center.y]
+								transform: Raphael.format("s{0},{1},{2},{3}", 1.1, 1.1, sector.center.x, sector.center.y)
+							}, duration, "elastic");
+						}
+						if (tracker) {
+							tracker.animate({
+								transform: Raphael.format("s{0},{1},{2},{3}", 1.1, 1.1, sector.center.x, sector.center.y)
 							}, duration, "elastic");
 						}
 					}
@@ -172,6 +178,11 @@
 
 						if (shadow) {
 							shadow.animate({
+								translation: offset.x + " " + offset.y
+							}, duration, "elastic");
+						}
+						if (tracker) {
+							tracker.animate({
 								translation: offset.x + " " + offset.y
 							}, duration, "elastic");
 						}
@@ -190,15 +201,21 @@
 					var series = objData;
 					var sector = $("#wijpiechart").wijpiechart("getSector", series.index);
 					var shadow = sector.shadow;
+					var tracker = sector.tracker;
 
 					//Scale
 					if (animation == "Scale") {
 						sector.animate({
-							scale: [1, 1, sector.center.x, sector.center.y]
+							transform: Raphael.format("s{0},{1},{2},{3}", 1, 1, sector.center.x, sector.center.y)
 						}, duration, "elastic");
 						if (shadow) {
 							shadow.animate({
-								scale: [1, 1, sector.center.x, sector.center.y]
+								transform: Raphael.format("s{0},{1},{2},{3}", 1, 1, sector.center.x, sector.center.y)
+							}, duration, "elastic");
+						}
+						if (tracker) {
+							tracker.animate({
+								transform: Raphael.format("s{0},{1},{2},{3}", 1, 1, sector.center.x, sector.center.y)
 							}, duration, "elastic");
 						}
 					}
@@ -213,7 +230,12 @@
 								translation: -offset.x + " " + offset.y * -1
 							}, duration, "elastic");
 						}
-						offset = {x:0, y:0};
+						if (tracker) {
+							tracker.animate({
+								translation: -offset.x + " " + offset.y * -1
+							}, duration, "elastic");
+						}
+						offset = { x: 0, y: 0 };
 					}
 				}
 			});

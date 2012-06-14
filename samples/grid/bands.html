@@ -9,16 +9,15 @@
     <meta name="author" content="ComponentOne" />
     
     <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css"/>
-    
-    <link href="../../themes/wijmo/jquery.wijmo-open.1.5.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
 
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
     <script src="../../external/globalize.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.1.5.0.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
 
@@ -26,7 +25,6 @@
         $(document).ready(function () {
             $("#demo").wijgrid({
               allowSorting: true,
-              allowKeyboardNavigation: true,
               selectionMode: "singleCell",
               columns: [
                 {}, // id
@@ -49,8 +47,7 @@
                           columns: [
                             {}, // address
                             {}, // city
-                            {}, // country
-                            {} // postal code
+                            {} // country
                           ]
                         },
                         {
@@ -80,32 +77,24 @@
             <table id="demo">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Company</th>
-                  <th>Name</th>
-                  <th>Title</th>
-                  <th>Address</th>
-                  <th>City</th>
-                  <th>Country</th>
-                  <th>PostalCode</th>
-                  <th>Phone</th><th>Fax</th>
+                  <th>ID</th><th>Company</th><th>Name</th><th>Title</th><th>Address</th><th>City</th><th>Country</th><th>Phone</th><th>Fax</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>ALFKI</td><td>Alfreds Futterkiste</td><td>Maria Anders</td><td>Sales Representative</td><td>Obere Str. 57</td><td>Berlin</td><td>Germany</td><td>12209</td><td>030-0074321</td><td>030-0076545</td>
+                  <td>ALFKI</td><td>Alfreds Futterkiste</td><td>Maria Anders</td><td>Sales Representative</td><td>Obere Str. 57</td><td>Berlin</td><td>Germany</td><td>030-0074321</td><td>030-0076545</td>
                 </tr>
                 <tr>
-                  <td>ANATR</td><td>Ana Trujillo Emparedados y helados</td><td>Ana Trujillo</td><td>Owner</td><td>Avda. de la Constitucion 2222</td><td>Mexico D.F.</td><td>Mexico</td><td>05021</td><td>(5) 555-4729</td><td>(5) 555-3745</td>
+                  <td>ANATR</td><td>Ana Trujillo Emparedados y helados</td><td>Ana Trujillo</td><td>Owner</td><td>Avda. de la Constitucion 2222</td><td>Mexico D.F.</td><td>Mexico</td><td>(5) 555-4729</td><td>(5) 555-3745</td>
                 </tr>
                 <tr>
-                  <td>ANTON</td><td>Antonio Moreno Taqueria</td><td>Antonio Moreno</td><td>Owner</td><td>Mataderos 2312</td><td>Mexico D.F.</td><td>Mexico</td><td>05023</td><td>(5) 555-3932</td><td> </td>
+                  <td>ANTON</td><td>Antonio Moreno Taqueria</td><td>Antonio Moreno</td><td>Owner</td><td>Mataderos 2312</td><td>Mexico D.F.</td><td>Mexico</td><td>(5) 555-3932</td><td> </td>
                 </tr>
                 <tr>
-                  <td>AROUT</td><td>Around the Horn</td><td>Thomas Hardy</td><td>Sales Representative</td><td>120 Hanover Sq.</td><td>London</td><td>UK</td><td>WA1 1DP</td><td>(171) 555-7788</td><td>(171) 555-6750</td>
+                  <td>AROUT</td><td>Around the Horn</td><td>Thomas Hardy</td><td>Sales Representative</td><td>120 Hanover Sq.</td><td>London</td><td>UK</td><td>(171) 555-7788</td><td>(171) 555-6750</td>
                 </tr>
                 <tr>
-                  <td>BERGS</td><td>Berglunds snabbkop</td><td>Christina Berglund</td><td>Order Administrator</td><td>Berguvsvagen 8</td><td>Lulea</td><td>Sweden</td><td>S-958 22</td><td>0921-12 34 65</td><td>0921-12 34 67</td>
+                  <td>BERGS</td><td>Berglunds snabbkop</td><td>Christina Berglund</td><td>Order Administrator</td><td>Berguvsvagen 8</td><td>Lulea</td><td>Sweden</td><td>0921-12 34 65</td><td>0921-12 34 67</td>
                 </tr>
               </tbody>
             </table>
@@ -118,8 +107,7 @@
         </div>
         <div class="footer demo-description">
             <p>
-               This sample illustrates how to create bands to organize columns into hierarchical structure implementing
-               multilevel column headers. The text is assigned to each band using the <b>headerText</b> option.
+               This sample illustrates how to create bands to organize columns into a hierarchical structure implementing multilevel column headers. The text is assigned to each band using the headerText option.
             </p>
         </div>
     </div>

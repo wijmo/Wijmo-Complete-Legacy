@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijlineargauge.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#gauge").wijlineargauge({
+                width: 400,
+                height: 50,
+                value: 50,
+                animation: {
+                        enabled: false
+                },
+                labels: {
+                  visible: false
+                },
+                tickMajor: {
+                    position: "center",
+                    factor: 3,
+                    style: { fill: "#efefef", stroke: "none" }
+                },
+                tickMinor: {
+                    position: "center",
+                    visible: true,
+                    style: { fill: "#efefef", stroke: "none" }
+                },
+                pointer: {
+                    length: 1,
+                    width: 20,
+                    style: { fill: "180-#FB7800-#C00100", stroke: "#FB7800", opacity: 0.8 }
+                },
+                face: {
+                    style: {
+                        fill: "none",
+                        stroke: "none"
+                    }
+                }
+            });
+
+
+        });
+    
+    
+// Position Variables
+var x = 0;
+
+// Speed - Velocity
+var vx = 0;
+
+// Acceleration
+var ax = 0;
+
+var delay = 10;
+var vMultiplier = 0.05;
+
+if (window.DeviceMotionEvent === undefined) {
+    //Device doesn't support motion API
+
+} else {
+    window.ondevicemotion = function (event) {
+        ax = event.accelerationIncludingGravity.x;
+        console.log("Accelerometer data - x: " + event.accelerationIncludingGravity.x + " y: " + event.accelerationIncludingGravity.y + " z: " + event.accelerationIncludingGravity.z);
+    };
+
+    setInterval(function () {
+        vx = vx + ax;
+
+        x = parseInt(x + vx * vMultiplier);
+
+        if (x < 0) { x = 0; vx = 0; }
+        if (x > 100) { x = 100; vx = 0; }
+
+        $("#level").wijlineargauge("option", "value", x);
+    }, delay);
+} 
+    </script>
+    <style type="text/css">
+        #gauge svg, #gauge vml
+        {
+            background: #000;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Temperature Gauge</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="gauge" class="ui-corner-all">
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                This sample uses the <b>tickMarker</b>, <b>tickMinor</b> and <b>pointer</b> options.</p>
+        </div>
+    </div>
+</body>
+</html>

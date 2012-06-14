@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wijmo Example Page</title>
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-208280-14']);
+            _gaq.push(['_trackPageview']);
+
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+    </script>
+    <link href="http://cdn.wijmo.com/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <!--jQuery References-->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js" type="text/javascript"></script>
+    <!--Wijmo Widgets CSS-->
+    <link href="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.0.0.min.css" rel="stylesheet" type="text/css" />
+    <!--Wijmo Widgets JavaScript-->
+    <script src="http://cdn.wijmo.com/jquery.wijmo-open.all.2.0.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.0.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.mmcreation.com/javascript/jquery.colorpicker/colorpicker.js" type="text/javascript"></script>
+    <link href="http://cdn.mmcreation.com/javascript/jquery.colorpicker/css/colorpicker.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //demo page script
+        var stylomatic = {};
+
+        function getStyle() {
+            stylomatic = {
+                fill: "#" + $("#fill").val(),
+                stroke: "#" + $("#stroke").val(),
+                "stroke-width": $("#strokesize").val(),
+                opacity: 0.8
+            }
+        }
+
+        $(document).ready(function () {
+            getStyle();
+            $("input").change(function () {
+                getStyle();
+                $("#chart").wijbarchart("option", "seriesStyles", [stylomatic]);
+            });
+            $('#fill').ColorPicker({
+                onChange: function (hsb, hex, rgb) {
+                    $('#fill').val(hex).trigger("change");
+                },
+                onBeforeShow: function () {
+                    $(this).ColorPickerSetColor(this.value);
+                }
+            }).wijtextbox();
+            $('#stroke').ColorPicker({
+                onChange: function (hsb, hex, rgb) {
+                    $('#stroke').val(hex).trigger("change");
+                },
+                onBeforeShow: function () {
+                    $(this).ColorPickerSetColor(this.value);
+                }
+            }).wijtextbox();
+            $("#strokesize").wijslider({
+                min: 0.5,
+                max: 10,
+                change: function (event, ui) {
+                    $("#strokesize").val(ui.value).trigger("change");
+                }
+            });
+            $("#chart").wijbarchart({
+                hint: {
+                    content: function () {
+                        return this.x + '\n ' + this.y + '';
+                    }
+                },
+                animation: {
+                    enabled: false
+                },
+                seriesTransition: {
+                    enabled: false
+                },
+                header: {
+                    text: "Browser Wars"
+                },
+                seriesList: [{
+                    label: "Browsers",
+                    legendEntry: false,
+                    data: { x: ['IE', 'Firefox', 'Chrome'], y: [44.94, 30.06, 17.47] }
+                }],
+                seriesStyles: [stylomatic],
+                seriesHoverStyles: [{
+                    opacity: 1
+                }]
+            });
+        });
+    </script>
+    <style type="text/css">
+        html
+        {
+            background: #333 url(http://wijmo.com/demo/explore/explore/css/images/texture.jpg) repeat top left;
+            color: #fff;
+        }
+        body
+        {
+            font-size: 80%;
+        }
+        #container
+        {
+            width: 960px;
+            margin: 0 auto;
+        }
+        #chart
+        {
+            width: 957px;
+            height: 400px;
+            margin-bottom: 1em;
+        }
+        .wijmo-wijslider-horizontal
+        {
+            display: inline-block;
+        }
+        label
+        {
+            padding: 4px;
+        }
+        fieldset
+        {
+            margin: 0;
+            padding: 6px;
+        }
+        h1
+        {
+            font-family: Arial, helvetica, Sans-Serif;
+            color: #fafafa;
+        }
+        legend
+        {
+            padding: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Chart Style</h1>
+        <div id="chart" class="ui-widget ui-widget-content ui-corner-all">
+        </div>
+        <fieldset class="ui-widget ui-widget-content ui-corner-all">
+            <legend class="ui-state-default ui-corner-all ui-helper-hidden">Chart Style </legend>
+            <div>
+                <label>
+                    Fill</label><input id="fill" type="text" value="8ede43" />
+                <label>
+                    Stroke</label><input id="stroke" type="text" value="8ede43" />
+                <label>
+                    Stroke-size</label><input id="strokesize" type="text" value="1.5" />
+            </div>
+        </fieldset>
+    </div>
+</body>
+</html>

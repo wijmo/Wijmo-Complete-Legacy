@@ -1,0 +1,232 @@
+.wijmo-wijlightbox
+{
+    position: absolute;
+    outline: 0;
+}
+
+.wijmo-wijlightbox-frame
+{
+    padding: 1em;
+    margin: 0;
+    /*overflow: hidden;*/
+    position: relative;
+    -moz-box-shadow: 0 0 20px rgba(0,0,0,0.50);
+    -webkit-box-shadow: 0 0 20px rgba(0,0,0,0.50);
+    box-shadow: 0 0 20px rgba(0,0,0,0.50);
+    border: none;
+}
+
+.wijmo-wijlightbox-content
+{
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.wijmo-wijlightbox-image, .wijmo-wijlightbox-iframe
+{
+    width: 100%;
+    height: 100%;
+}
+
+.wijmo-wijlightbox-text, .wijmo-wijlightbox-mask
+{
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    border: none;
+    bottom: 1em;
+    left: 1em;
+    cursor: default;
+}
+
+.wijmo-wijlightbox-text-overlay, .wijmo-wijlightbox-title-overlay, .wijmo-wijlightbox-text-titleoverlay, .wijmo-wijlightbox-title-titleoverlay
+{
+    background: none;
+    border: none;
+}
+
+.wijmo-wijlightbox-mask-overlay, .wijmo-wijlightbox-mask-titleoverlay
+{
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+}
+
+.wijmo-wijlightbox-text-inside
+{
+}
+
+.wijmo-wijlightbox-text-outside
+{
+    position: relative;
+    height: auto;
+    padding: 0.4em 1em;
+    left: auto;
+    bottom: auto;
+    margin: 3px 0;
+    -moz-box-shadow: 0 3px 5px rgba(0,0,0,0.50);
+    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.50);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.50);
+}
+
+.wijmo-wijlightbox-mask-overlay, .wijmo-wijlightbox-mask-titleoverlay
+{
+    background: #333;
+}
+
+.wijmo-wijlightbox-title-overlay, .wijmo-wijlightbox-title-titleoverlay
+{
+    color: #f1f1f1;
+}
+.wijmo-wijlightbox-detail-overlay, .wijmo-wijlightbox-detail-titleoverlay
+{
+    color: #f1f1f1;
+}
+
+.wijmo-wijlightbox-title
+{
+    background: none;
+    border: none;
+    padding: 3px 15px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.wijmo-wijlightbox-detail
+{
+    padding: 3px 15px 3px;
+    font-style: italic;
+    margin: 0;
+}
+
+.wijmo-wijlightbox-controls-inside .wijmo-wijlightbox-counter
+{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 100;
+    padding: 3px;
+    border-right: none;
+    border-bottom: none;
+    cursor: default;
+}
+.wijmo-wijlightbox-controls-outside .wijmo-wijlightbox-counter
+{
+    position: absolute;
+    bottom: -27px;
+    right: 0;
+    z-index: 100;
+    padding: 3px;
+    cursor: default;
+}
+
+.wijmo-wijlightbox-counter-item
+{
+    margin: 1px;
+    padding: 0 3px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.wijmo-wijlightbox-counter-active
+{
+    text-decoration: underline;
+}
+
+.wijmo-wijlightbox-toolbox
+{
+    position: absolute;
+    top: -25px;
+    right: -5px;
+    z-index: 99;
+    width: 100%;
+    margin: 3px;
+}
+
+.wijmo-wijlightbox-timerbar
+{
+    width: 50%;
+    padding: 1px;
+    position: absolute;
+    margin: 8px;
+}
+
+.wijmo-wijlightbox-timermeter
+{
+    width: 0%;
+    padding: 1px;
+    position: absolute;
+    margin: 8px;
+}
+
+.wijmo-wijlightbox-frame .wijmo-wijlightbox-toolbox-button, .wijmo-wijlightbox-frame .wijmo-wijlightbox-toolbox-sep
+{
+    float: right;
+    margin: 1px;
+}
+
+.wijmo-wijlightbox-toolbox-separator
+{
+    margin-left: 18px;
+}
+
+.wijmo-wijlightbox-button-next, .wijmo-wijlightbox-button-prev
+{
+    display: block;
+    position: absolute;
+    padding: 10px 5px;
+    top: 50%;
+}
+
+
+.wijmo-wijlightbox-controls-inside .wijmo-wijlightbox-button-next
+{
+    right: 0;
+    border-right: none;
+}
+
+
+.wijmo-wijlightbox-controls-inside .wijmo-wijlightbox-button-prev
+{
+    left: 0;
+    border-left: none;
+}
+
+.wijmo-wijlightbox-controls-outside .wijmo-wijlightbox-button-next
+{
+    right: -28px;
+
+}
+
+.wijmo-wijlightbox-controls-outside .wijmo-wijlightbox-button-prev
+{
+    left: -28px;
+
+}
+
+.wijmo-wijlightbox-aniwrapper
+{
+    position: relative;
+    left: 0;
+    top: 0;
+    border: none;
+}
+
+.wijmo-wijlightbox-waitingoverlay
+{
+    background: none;
+}
+
+.wijmo-wijlightbox-waiting
+{
+    width: 37px;
+    height: 37px;
+    border: none;
+    display: block;
+    position: relative;
+    background: transparent url('images/waiting.gif') no-repeat scroll;
+}
+

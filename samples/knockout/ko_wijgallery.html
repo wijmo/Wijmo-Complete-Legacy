@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Gallery</title>
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijcarousel.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijgallery.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery.wijmo-open.2.0.0b1.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijcarousel.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijgallery.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.autoPlay = ko.observable(false);
+			self.showTimer = ko.observable(true);
+			self.interval = ko.observable(5000);
+			self.showCaption = ko.observable(true);
+			self.showCounter = ko.observable(true);
+			self.showPager = ko.observable(false);
+			self.thumbsDisplay = ko.observable(5);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Gallery</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div data-bind="wijgallery: {disabled: disabled, autoPlay: autoPlay, showTimer: showTimer, interval: interval, showCaption: showCaption, 
+				showCounter: showCounter, showPager: showPager, thumbsDisplay: thumbsDisplay }">
+				<ul class="">
+					<li class=""><a href="http://lorempixum.com/750/300/sports/1">
+						<img alt="1" src="http://lorempixum.com/200/150/sports/1" title="Word Caption 1" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/2">
+						<img alt="2" src="http://lorempixum.com/200/150/sports/2" title="Word Caption 2" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/3">
+						<img alt="3" src="http://lorempixum.com/200/150/sports/3" title="Word Caption 3" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/4">
+						<img alt="4" src="http://lorempixum.com/200/150/sports/4" title="Word Caption 4" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/5">
+						<img alt="5" src="http://lorempixum.com/200/150/sports/5" title="Word Caption 5" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/6">
+						<img alt="6" src="http://lorempixum.com/200/150/sports/6" title="Word Caption 6" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/7">
+						<img alt="7" src="http://lorempixum.com/200/150/sports/7" title="Word Caption 7" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/8">
+						<img alt="8" src="http://lorempixum.com/200/150/sports/8" title="Word Caption 8" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/9">
+						<img alt="9" src="http://lorempixum.com/200/150/sports/9" title="Word Caption 9" />
+					</a></li>
+					<li class=""><a href="http://lorempixum.com/750/300/sports/10">
+						<img alt="10" src="http://lorempixum.com/200/150/sports/10" title="Word Caption 10" />
+					</a></li>
+				</ul>
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					autoPlay:<input type="checkbox" data-bind="checked: autoPlay" />
+				</div>
+				<div>
+					showTimer:<input type="checkbox" data-bind="checked: showTimer" />
+				</div>
+				<div>
+					interval:<input type="text" data-bind="value: interval" />
+				</div>
+				<div>
+					showCaption:<input type="checkbox" data-bind="checked: showCaption" />
+				</div>
+				<div>
+					showCounter:<input type="checkbox" data-bind="checked: showCounter" />
+				</div>
+				<div>
+					showPager:<input type="checkbox" data-bind="checked: showPager" />
+				</div>
+				<div>
+					thumbsDisplay:<input type="text" data-bind="value: thumbsDisplay" />
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

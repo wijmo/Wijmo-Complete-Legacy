@@ -9,18 +9,20 @@
     <meta name="author" content="ComponentOne" />
     
     <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
-    
-    <link href="../../themes/wijmo/jquery.wijmo-open.1.5.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
     <script src="../../external/globalize.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery.wijmo-open.1.5.0.min.js" type="text/javascript"></script>
+
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
             $("#demo").wijgrid({
@@ -49,529 +51,61 @@
             <table id="demo">
                 <thead>
                     <tr>
-                        <th width="5%">
-                            Number
-                        </th>
-                        <th width="6%">
-                            Nationality
-                        </th>
-                        <th width="24%">
-                            Player
-                        </th>
-                        <th width="8%">
-                            Position
-                        </th>
-                        <th width="8%">
-                            Handedness
-                        </th>
-                        <th>
-                            Age
-                        </th>
-                        <th>
-                            Acquired
-                        </th>
-                        <th class="unsortable">
-                            Birthplace
-                        </th>
-                        <th> d
-                        </th>
+                        <th>Number</th><th>Nationality</th><th>Player</th><th>Position</th><th>Handedness</th><th>Age</th><th>Acquired</th><th>Birthplace</th><th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>
-                            27
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Adams, Craig
-                        </td>
-                        <td>
-                            RW
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            32
-                        </td>
-                        <td>
-                            2009
-                        </td>
-                        <td>
-                            Seria, Brunei
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>27</th><td>Canada</td><td>Adams, Craig</td><td>RW</td><td>R</td><td>32</td><td>2009</td><td>Seria, Brunei</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            43
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Boucher, Philippe
-                        </td>
-                        <td>
-                            D
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            36
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Saint-Apollinaire, Quebec
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>43</th><td>Canada</td><td>Boucher, Philippe</td><td>D</td><td>R</td><td>36</td><td>2008</td><td>Saint-Apollinaire, Quebec</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            24
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Cooke, Matt
-                        </td>
-                        <td>
-                            LW
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            30
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Belleville, Ontario
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>24</th><td>Canada</td><td>Cooke, Matt</td><td>LW</td><td>L</td><td>30</td><td>2008</td><td>Belleville, Ontario</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            87
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Crosby, Sidney (C)
-                        </td>
-                        <td>
-                            C
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            21
-                        </td>
-                        <td>
-                            2005
-                        </td>
-                        <td>
-                            Cole Harbour, Nova Scotia
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>87</th><td>Canada</td><td>Crosby, Sidney (C)</td><td>C</td><td>L</td><td>21</td><td>2005</td><td>Cole Harbour, Nova Scotia</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            1
-                        </th>
-                        <td>
-                            United States
-                        </td>
-                        <td>
-                            Curry, John
-                        </td>
-                        <td>
-                            G
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            25
-                        </td>
-                        <td>
-                            2007
-                        </td>
-                        <td>
-                            Shorewood, Minnesota
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>1</th><td>United States</td><td>Curry, John</td><td>G</td><td>L</td><td>25</td><td>2007</td><td>Shorewood, Minnesota</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            9
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Dupuis, Pascal
-                        </td>
-                        <td>
-                            W
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            30
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Laval, Quebec
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>9</th><td>Canada</td><td>Dupuis, Pascal</td><td>W</td><td>L</td><td>30</td><td>2008</td><td>Laval, Quebec</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            7
-                        </th>
-                        <td>
-                            United States
-                        </td>
-                        <td>
-                            Eaton, Mark
-                        </td>
-                        <td>
-                            D
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            32
-                        </td>
-                        <td>
-                            2006
-                        </td>
-                        <td>
-                            Wilmington, Delaware
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>7</th><td>United States</td><td>Eaton, Mark</td><td>D</td><td>L</td><td>32</td><td>2006</td><td>Wilmington, Delaware</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            26
-                        </th>
-                        <td>
-                            Ukraine
-                        </td>
-                        <td>
-                            Fedotenko, Ruslan
-                        </td>
-                        <td>
-                            LW
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            30
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Kiev, U.S.S.R.
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>26</th><td>Ukraine</td><td>Fedotenko, Ruslan</td><td>LW</td><td>L</td><td>30</td><td>2008</td><td>Kiev, U.S.S.R.</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            29
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Fleury, Marc-Andre
-                        </td>
-                        <td>
-                            G
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            24
-                        </td>
-                        <td>
-                            2003
-                        </td>
-                        <td>
-                            Sorel, Quebec
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>29</th><td>Canada</td><td>Fleury, Marc-Andre</td><td>G</td><td>L</td><td>24</td><td>2003</td><td>Sorel, Quebec</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            32
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Garon, Mathieu
-                        </td>
-                        <td>
-                            G
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            31
-                        </td>
-                        <td>
-                            2009
-                        </td>
-                        <td>
-                            Chandler, Quebec
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>32</th><td>Canada</td><td>Garon, Mathieu</td><td>G</td><td>R</td><td>31</td><td>2009</td><td>Chandler, Quebec</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            2
-                        </th>
-                        <td>
-                            United States
-                        </td>
-                        <td>
-                            Gill, Hal
-                        </td>
-                        <td>
-                            D
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            34
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Concord, Massachusetts
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>2</th><td>United States</td><td>Gill, Hal</td><td>D</td><td>L</td><td>34</td><td>2008</td><td>Concord, Massachusetts</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            28
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Godard, Eric
-                        </td>
-                        <td>
-                            RW
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            29
-                        </td>
-                        <td>
-                            2008
-                        </td>
-                        <td>
-                            Vernon, British Columbia
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>28</th><td>Canada</td><td>Godard, Eric</td><td>RW</td><td>R</td><td>29</td><td>2008</td><td>Vernon, British Columbia</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            3
-                        </th>
-                        <td>
-                            United States
-                        </td>
-                        <td>
-                            Goligoski, Alex
-                        </td>
-                        <td>
-                            D
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            23
-                        </td>
-                        <td>
-                            2004
-                        </td>
-                        <td>
-                            Grand Rapids, Minnesota
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>3</th><td>United States</td><td>Goligoski, Alex</td><td>D</td><td>L</td><td>23</td><td>2004</td><td>Grand Rapids, Minnesota</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            55
-                        </th>
-                        <td>
-                            Russia
-                        </td>
-                        <td>
-                            Gonchar, Sergei (A)
-                        </td>
-                        <td>
-                            D
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            35
-                        </td>
-                        <td>
-                            2005
-                        </td>
-                        <td>
-                            Chelyabinsk, U.S.S.R.
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>55</th><td>Russia</td><td>Gonchar, Sergei (A)</td><td>D</td><td>L</td><td>35</td><td>2005</td><td>Chelyabinsk, U.S.S.R.</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            13
-                        </th>
-                        <td>
-                            United States
-                        </td>
-                        <td>
-                            Guerin, Bill
-                        </td>
-                        <td>
-                            RW
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            38
-                        </td>
-                        <td>
-                            2009
-                        </td>
-                        <td>
-                            Worcester, Massachusetts
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>13</th><td>United States</td><td>Guerin, Bill</td><td>RW</td><td>R</td><td>38</td><td>2009</td><td>Worcester, Massachusetts</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            42
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Jeffrey, Dustin
-                        </td>
-                        <td>
-                            C
-                        </td>
-                        <td>
-                            L
-                        </td>
-                        <td>
-                            21
-                        </td>
-                        <td>
-                            2007
-                        </td>
-                        <td>
-                            Sarnia, Ontario
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>42</th><td>Canada</td><td>Jeffrey, Dustin</td><td>C</td><td>L</td><td>21</td><td>2007</td><td>Sarnia, Ontario</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
                     <tr>
-                        <th>
-                            48
-                        </th>
-                        <td>
-                            Canada
-                        </td>
-                        <td>
-                            Kennedy, Tyler
-                        </td>
-                        <td>
-                            C
-                        </td>
-                        <td>
-                            R
-                        </td>
-                        <td>
-                            22
-                        </td>
-                        <td>
-                            2004
-                        </td>
-                        <td>
-                            Sault Ste. Marie, Ontario
-                        </td>
-                        <td>
-                            <a href="#" class="btn">Select</a>
-                        </td>
+                       <th>48</th><td>Canada</td><td>Kennedy, Tyler</td><td>C</td><td>R</td><td>22</td><td>2004</td><td>Sault Ste. Marie, Ontario</td><td><a href="#" class="btn">Select</a></td>
                     </tr>
-                   
                 </tbody>
             </table>
             <!-- End demo markup -->

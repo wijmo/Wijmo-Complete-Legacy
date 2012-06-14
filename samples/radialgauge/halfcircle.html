@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijradialgauge.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        
+        function sector(cx, cy, r, startAngle, endAngle, params) {
+            var x1 = cx + r * Math.cos(-startAngle * rad),
+                x2 = cx + r * Math.cos(-endAngle * rad),
+                y1 = cy + r * Math.sin(-startAngle * rad),
+                y2 = cy + r * Math.sin(-endAngle * rad);
+            return paper.path(["M", cx, cy, "L", x1, y1, "A", r, r, 0, +(endAngle - startAngle > 180), 0, x2, y2, "z"]).attr(params);
+        }
+
+        $(document).ready(function() {
+            $("#gauge").wijradialgauge({
+                value: 100,
+                max: 100,
+                min: 0,
+                startAngle: 10,
+                sweepAngle: 160,
+                radius: 190,
+                islogarithmic: false,
+                origin: {
+                    x: 0.5, y: 0.5
+                },
+                labels: {
+                    offset: 27, //4F6B82
+                    style: {
+                        fill: "#1E395B",
+                        "font-size": 12,
+                        "font-weight": "800"
+                    }
+                },
+                tickMinor: {
+                    position: "inside",
+                    offset: 30,
+                    style: {
+                        "height": 3,
+                        "width": 10,
+                        fill: "#1E395B",
+                        stroke: "#E7EFF8"
+                    },
+                    interval: 5,
+                    visible: true
+                },
+                tickMajor: {
+                    position: "inside",
+                    offset: 27,
+                    style: {
+                        fill: "#1E395B",
+                        "height": 4,
+                        "width": 20,
+                        stroke: "#E7EFF8",
+                        "stroke-width": 1.5
+                    },
+                    interval: 25,
+                    visible: true
+                },
+                ranges: [
+                {
+                    startWidth: 2,
+                    endWidth: 5,
+                    startValue: 0,
+                    endValue: 10,
+                    startDistance: 0.6,
+                    endDistance: 0.58,
+                    style: {
+                        fill: "#7BA0CC",
+                        stroke: "#7BA0CC",
+                        "stroke-width": 0
+                    }
+                },
+                {
+                    startWidth: 5,
+                    endWidth: 20,
+                    startValue: 10,
+                    endValue: 125,
+                    startDistance: 0.58,
+                    endDistance: 0.54,
+                    style: {
+                        fill: "0-#B4D5F0-#B4D5F0",
+                        stroke: "#FFFFFF",
+                        "stroke-width": 0
+                    }
+                },
+                {
+                    startWidth: 20,
+                    endWidth: 25,
+                    startValue: 125,
+                    endValue: 150,
+                    startDistance: 0.54,
+                    endDistance: 0.5,
+                    style: {
+                        fill: "#7BA0CC",
+                        stroke: "#7BA0CC",
+                        "stroke-width": 0
+                    }
+                }
+                ],
+                face: {
+                    template: function(ui) {
+                        var a = ui.canvas.path($.wijraphael.sector(ui.origin.x, ui.origin.y, ui.r, 0, 180)),
+                        b = ui.canvas.path($.wijraphael.sector(ui.origin.x, ui.origin.y, ui.r / 6, 180, 0)),
+                        style = {
+                            fill: "#E0E8EF",
+                            stroke: "#E0E8EF"
+                        };
+                        a.attr(style);
+                        b.attr(style);
+                        //return ui.canvas.image(url, ui.origin.x - ui.r, ui.origin.y - ui.r, ui.r * 2, ui.r * 2);
+                    }
+                },
+                pointer: {
+                    length: 0.8,
+                    offset: 0,
+                    width: 6,
+                    style: {
+                        fill: "#1E395B",
+                        stroke: "#1E395B"
+                    }
+                },
+                cap: {
+                    radius: 10,
+                    style: {
+                        fill: "#1E395B",
+                        stroke: "#1E395B"
+                    }
+                }
+            });
+
+        });
+    
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Half Circle</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="gauge">
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>This sample shows a half circle, which is set by the face and ranges options.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijlineargauge.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#gauge").wijlineargauge({
+                height: 400,
+                width: 37,
+                value: 25,
+                max: 100,
+                min: 0,
+                xAxisLocation: 0.01,
+                xAxisLength: 1.0,
+                orientation: "vertical",
+                animation: {
+                    enabled: true,
+                    duration: 400,
+                    easing: ">"
+                },
+                labels: {
+                    visible: false
+                },
+                tickMajor: {
+                    visible: false
+                },
+                tickMinor: {
+                    visible: false
+                },
+                pointer: {
+                    shape: "tri",
+                    length: 1.2,
+                    style: {
+                        fill: "#444",
+                        stroke: "#000"
+                    }
+                },
+                face: {
+                    style: {
+                        fill: "none",
+                        stroke: "none"
+                    }
+                },
+                ranges: [{
+                    startWidth: 0.05,
+                    endWidth: 0.1,
+                    startValue: 0,
+                    endValue: 10,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(214,224,230)-rgb(210,220,226)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.10,
+                    endWidth: 0.2,
+                    startValue: 10,
+                    endValue: 20,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(206,216,222)-rgb(202,212,218)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.2,
+                    endWidth: 0.3,
+                    startValue: 20,
+                    endValue: 30,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(198,208,214)-rgb(194,204,210)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.3,
+                    endWidth: 0.4,
+                    startValue: 30,
+                    endValue: 40,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(190,200,206)-rgb(186,196,202)",
+                        stroke: "#f1f1f1",
+                        "stroke-width" : 0.5
+                    }
+                }, {
+                    startWidth: 0.4,
+                    endWidth: 0.5,
+                    startValue: 40,
+                    endValue: 50,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(182,192,198)-rgb(178,188,194)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.5,
+                    endWidth: 0.6,
+                    startValue: 50,
+                    endValue: 60,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(174,184,190)-rgb(170,180,186)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.6,
+                    endWidth: 0.7,
+                    startValue: 60,
+                    endValue: 70,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(166,176,182)-rgb(162,172,178)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.7,
+                    endWidth: 0.8,
+                    startValue: 70,
+                    endValue: 80,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(158,168,174)-rgb(154,164,170)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.8,
+                    endWidth: 0.9,
+                    startValue: 80,
+                    endValue:90,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(9,165,216)-rgb(25,163,208)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }, {
+                    startWidth: 0.9,
+                    endWidth: 1,
+                    startValue: 90,
+                    endValue: 100,
+                    startDistance: 0.8,
+                    endDistance: 0.8,
+                    style: {
+                        fill: "90-rgb(24,145,201)-rgb(23,137,190)",
+                        stroke: "#f1f1f1",
+                        "stroke-width": 0.5
+                    }
+                }]
+            });
+
+            $("#slider").slider({
+                orientation: "vertical",
+                value: $("#gauge").wijlineargauge("option", "value"),
+                change: function (event, ui) {
+                    $("#gauge").wijlineargauge("option", "value", ui.value);
+                }
+            });
+        });
+    
+
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Volume Control UI</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div class="ui-widget ui-widget-content ui-corner-all ui-helper-clearfix" style="width:55px; padding: 8px">
+                <div id="gauge" class="ui-corner-all" style="float: left">
+                </div>
+                <div id="slider" style="height: 390px; float: right">
+                </div>
+            </div>
+            <p>
+                Drag and release the slider to change the gauge's value</p>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+              This sample uses a jQuery UI slider and wijlineargauge widget to show the interaction between them to adjust volume.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

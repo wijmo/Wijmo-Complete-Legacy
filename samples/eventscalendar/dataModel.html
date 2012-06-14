@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Events calendar - data model</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <!-- *include -->
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../external/cultures/globalize.cultures.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.plugin.wijtextselection.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijinputcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijinputdate.js" type="text/javascript"></script>
+    <script src="../explore/js/amplify.core.min.js" type="text/javascript"></script>
+    <script src="../explore/js/amplify.request.min.js" type="text/javascript"></script>
+    <script src="../explore/js/amplify.store.min.js" type="text/javascript"></script>
+    <link href="../../themes/aristo/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijinput.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.wijmo.wijdatepager.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijevcal.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo.wijevcal.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijdatepager.css" rel="stylesheet" type="text/css" />
+    <!-- * -->
+    <script type="text/javascript">
+    	$(document).ready(function () {
+    		$("#eventscalendar").wijevcal({
+    			headerBarVisible: false,
+    			// initialized event is called 
+    			// when events calendar initialized and 
+    			// information about events is loaded
+    			initialized: function (e) {
+    				// load available calendars when widget is initialized
+    				loadCalendarsList();
+    			},
+    			// calendarsChanged event called when calendars option has been changed
+    			// (Note, this option is read-only).
+    			calendarsChanged: function (e, args) {
+    				// load available calendars when calendars option has been changed
+    				loadCalendarsList();
+    			}
+    		});
+
+    		$(".eventactions .addnewevent")/*.button()*/
+					.click($.proxy(onAddNewEventClick, this));
+    		$(".eventactions .addneweventwithoutdialog")/*.button()*/
+					.click($.proxy(onAddNewEventWithoutDialogClick, this));
+    		$(".eventactions .deleteEventsForActiveDay")/*.button()*/
+					.click($.proxy(onDeleteEventsForActiveDayClick, this));
+    		//
+
+    		$(".calendaractions .addnewcalendar").button()
+							.click($.proxy(onAddNewCalendarClick, this));
+    		$(".calendaractions .calendarsettings").button({ disabled: true })
+							.click($.proxy(onEditCalendarClick, this));
+    		$(".calendaractions .deletecalendar").button({ disabled: true })
+							.click($.proxy(onDeleteCalendarClick, this));
+
+
+    		function onAddNewEventClick() {
+    			$("#eventscalendar").wijevcal("showEditEventDialog");
+    		}
+    		function onAddNewEventWithoutDialogClick() {
+    			var o = {};
+    			o.subject = "New event";
+    			o.start = new Date();
+    			o.end = new Date(o.start.getTime() + 1000 * 60 * 60 * 2); // duration 2 hours
+    			$("#eventscalendar").wijevcal("addEvent", o);
+    		}
+    		function onDeleteEventsForActiveDayClick() {    			
+    			var now = new Date(),
+					selectedDate = $("#eventscalendar").wijevcal("option", "selectedDate"),
+    				start = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()),
+					end = new Date(start.getTime() + 1000 * 60 * 60 * 24),
+					events, i;
+    			events = $("#eventscalendar").wijevcal("getOccurrences", start, end);
+    			for (i = 0; i < events.length; i++) {
+    				$("#eventscalendar").wijevcal("deleteEvent", events[i]);
+    			}
+
+    		}
+
+    		function onAddNewCalendarClick() {
+    			$("#eventscalendar").wijevcal("showEditCalendarDialog");
+    		}
+    		function onEditCalendarClick() {
+    			if ($(".calendarslist").find(".ui-selected").length > 0) {
+    				var checkbox = $(".calendarslist").find(".ui-selected").find("input")[0];
+    				$("#eventscalendar").wijevcal("showEditCalendarDialog", checkbox.value);
+    			} 
+    		}
+    		function onDeleteCalendarClick() {
+    			if ($(".calendarslist").find(".ui-selected").length > 0) {
+    				var checkbox = $(".calendarslist").find(".ui-selected").find("input")[0];
+    				$("#eventscalendar").wijevcal("deleteCalendar", checkbox.value);
+    			}
+    		}
+    		function loadCalendarsList() {
+    			var calendars = $("#eventscalendar").wijevcal("option", "calendars"),
+					i, c, calendarslist = $(".calendarslist");
+    			calendarslist.html("");
+    			for (i = 0, c = calendars.length; i < c; i += 1) {
+    				calendarslist.append("<li class=\"ui-widget-content\"><label><input type=\"checkbox\" value=\"" + calendars[i].name + "\" />" + calendars[i].name + "</label></li>");
+    			}
+    			$(".calendaractions .calendarsettings").button("option", "disabled", true);
+    			$(".calendaractions .deletecalendar").button("option", "disabled", true);
+    		}
+
+    		$(".calendarslist").selectable({
+    			selected: function (event, ui) {
+    				if ($(".calendarslist").find(".ui-selected").length > 0) {
+    					$(".calendaractions .deletecalendar").button("option", "disabled", false);
+    					if ($(".calendarslist").find(".ui-selected").length === 1) {
+    						$(".calendaractions .calendarsettings").button("option", "disabled", false);
+    					} else {
+    						$(".calendaractions .calendarsettings").button("option", "disabled", true);
+    					}
+    				}
+    			},
+    			unselected: function (event, ui) {
+    				if ($(".calendarslist").find(".ui-selected").length === 1) {
+    					$(".calendaractions .calendarsettings").button("option", "disabled", false);
+    				} else if ($(".calendarslist").find(".ui-selected").length < 1) {
+    					$(".calendaractions .calendarsettings").button("option", "disabled", true);
+    					$(".calendaractions .deletecalendar").button("option", "disabled", true);
+    				}
+    			}
+    		});
+
+    		$(".calendarslist").find("input").live("change", function () {
+    			var checkboxes = $(".calendarslist").find("input"), i,
+					visibleCalendars = [];
+    			for (i = 0; i < checkboxes.length; i++) {
+    				if (checkboxes[i].checked) {
+    					visibleCalendars.push(checkboxes[i].value);
+    				}
+    			}
+    			$("#eventscalendar").wijevcal("option", "visibleCalendars", visibleCalendars);
+    		});
+
+    	});
+    </script>
+    <style type="text/css">
+        .top-pane
+        {
+            margin: 1em 0;
+            padding: 1em;
+        }
+        .calendaractions p, 
+        .addnewevent, .events-title
+        {
+            margin-bottom: 1em;
+        }
+        #eventscalendar
+        {
+            width: 750px;
+        }
+    </style>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Data model</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div>
+                <div class="top-pane ui-helper-clearfix ui-widget-content ui-corner-all">
+                    <div class="calendaractions">
+                        <h3 class="events-title">
+                            Events</h3>
+                        <div class="eventactions">
+                            <a class="addnewevent" href="#">Add event using dialog</a>&nbsp;&nbsp;
+							<a class="addneweventwithoutdialog" href="#">Add event without dialog</a>&nbsp;&nbsp;
+							<a class="deleteEventsForActiveDay" href="#">Delete all events for the active day (without confirmation)</a>
+                        </div>
+                        <h3>
+                            Calendars</h3>
+                        <div class="calendarslist-container">
+                            <ul class="calendarslist">
+                                <li>Loading...</li>
+                            </ul>
+                        </div>
+                        <p>
+                            <a class="calendarsettings">Edit</a> <a class="deletecalendar">Delete</a>
+                        </p>
+                        <p>
+                            <a class="addnewcalendar">Add calendar</a>
+                        </p>
+                    </div>
+                </div>
+                <div id="eventscalendar">
+                </div>
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+            <div class="footer demo-description">
+                <p>
+                    The sample demonstrates how to edit events using client side script.
+                </p>
+			<p>Options used in the sample:</p>
+			<ul>
+				<li><strong>calendars</strong> - available calendar objects array. This option is read-only.</li>
+				<li><strong>selectedDate</strong> - the selected date.</li>
+				<li><strong>visibleCalendars</strong> - array of the calendar names which need to be shown..</li>			
+			</ul>
+			<p>Client side methods used in the sample:</p>
+			<ul>
+				<li><strong>getOccurrences</strong> - Retrieves the array which contains the full list of Event objects in the specified time interval. Note, this method will create instances of the Event object for recurring events.</li>
+				<li><strong>addEvent</strong> - add new event to a data source.</li>
+				<li><strong>deleteEvent</strong> - delete event from the data source.</li>			
+				<li><strong>deleteCalendar</strong> - delete existent calendar from the data source.</li>			
+				<li><strong>showEditEventDialog</strong> - call this method in order to display built-in "edit event" dialog.</li>
+				<li><strong>showEditCalendarDialog</strong> - call this method in order to display built-in "edit calendar" dialog.</li>								
+			</ul>
+			<p>
+	
+			</p>
+            </div>
+        </div>
+</body>
+</html>

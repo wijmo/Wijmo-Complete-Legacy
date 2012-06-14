@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -184,8 +184,10 @@
 
 		 _init: function () {
 			 var o = this.options;
-			 if (o.disabled){
+			 if (o.disabledState){
+				var dis = o.disabled;
 				this.disable();
+				o.disabled = dis;
 			 }else{
 				 if (o.autoPlay) {
 					 this.play();
@@ -698,7 +700,7 @@
 		 },
 
 		 show: function (index) {
-			 /// <summary>Selects a panel Active and display the panel at specified position.</summary>
+			 /// <summary>Active and display the panel at specified position.</summary>
 			 /// <param name="index" type="Number">The zero-based index of the panel to be actived.</param>
 			 if (index < 0 || index >= this.panels.length) { return this; }
 

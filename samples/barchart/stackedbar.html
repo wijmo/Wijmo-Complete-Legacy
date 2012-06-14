@@ -10,10 +10,11 @@
     
     <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
     
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
     <script src="../../external/globalize.min.js" type="text/javascript"></script>
-    <script src="../../external/raphael.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijbarchart.js" type="text/javascript"></script>
     <script id="scriptInit" type="text/javascript">
@@ -57,11 +58,11 @@
                     fill: "#466a85", stroke: "#3e5f77", opacity: 0.8
                 }],
                 seriesHoverStyles: [{
-                    "stroke-width": "1.5", opacity: 1
+                    "stroke-width": 1.5, opacity: 1
                 }, {
-                    "stroke-width": "1.5", opacity: 1
+                    "stroke-width": 1.5, opacity: 1
                 }, {
-                    "stroke-width": "1.5", opacity: 1
+                    "stroke-width": 1.5, opacity: 1
                 }]
             });
         });
@@ -85,7 +86,7 @@
         </div>
         <div class="footer demo-description">
             <p>
-                You can set stacked option to true to create a stacked bar chart.</p>
+                This sample illustrates how to create a stacked chart by setting the stacked option to true.</p>
         </div>
     </div>
 </body>

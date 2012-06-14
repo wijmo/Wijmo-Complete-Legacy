@@ -2,7 +2,7 @@
 /*jslint white: false */
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -173,9 +173,10 @@
 		},
 
 		destroy: function () {
-			///	<summary>
-			///	Destroy wijpager widget and reset the DOM element.
-			///	</summary>
+			/// <summary>
+			/// Destroys the wijpager widget and reset the DOM element.
+			/// Code example: $("#element").wijpager("destroy");
+			/// </summary>
 			this.element.removeClass("ui-widget wijmo-wijpager ui-helper-clearfix");
 			this.$ul.remove();
 			$.Widget.prototype.destroy.apply(this, arguments);
@@ -305,6 +306,7 @@
 
 		_createPagerItem: function (active, title, pageIndex, btnClass) {
 			var btnContent,
+				 self = this,
 				 $li = $("<li />")
 					.addClass("ui-page ui-corner-all")
 					.attr({ "role": "tab", "aria-label": title, "title": title });
@@ -318,10 +320,14 @@
 					.addClass("ui-state-default")
 					.hover(
 						function () {
-							$(this).removeClass("ui-state-default").addClass("ui-state-hover");
+							if (!self.options.disabled) {
+								$(this).removeClass("ui-state-default").addClass("ui-state-hover");
+							}
 						},
 						function () {
-							$(this).removeClass("ui-state-hover").addClass("ui-state-default");
+							if (!self.options.disabled) {
+								$(this).removeClass("ui-state-hover").addClass("ui-state-default");
+							}
 					})
 					.bind("click." + this.widgetName, { newPageIndex: pageIndex - 1 }, $.proxy(this._onClick, this)); // pageIndex is 1-based.
 			}

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Combo Box</title>
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo-open.2.0.0b1.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo.wijcombobox.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery.wijmo-open.2.0.0b1.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijcombobox.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.labelText = ko.observable(null);
+			self.showTrigger = ko.observable(true);
+			self.triggerPosition = ko.observable('right');
+			self.autoFilter = ko.observable(true);
+			self.autoComplete = ko.observable(true);
+			self.highlightMatching = ko.observable(true);
+			self.selectionMode = ko.observable('single');
+			self.isEditable = ko.observable(true);
+			self.selectedIndex = ko.observable(-1);
+			self.data = ko.observable(createList());
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+			$("#resetItem").click(function () {
+				vm.data(createList());
+			});
+		});
+
+		var i = 0;
+		function createList() {
+			var list = [];
+			for (var idx = 0; idx < 10; idx++) {
+				list.push({
+					label: "label" + i,
+					value: "value" + i
+				});
+				i++;
+			}
+			return list;
+		}
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Combo Box</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<input id="combo" data-bind="wijcombobox: { disabled: disabled, labelText: labelText, showTrigger: showTrigger, 
+				triggerPosition: triggerPosition, isEditable: isEditable, autoComplete: autoComplete, autoFilter: autoFilter, 
+				highlightMatching: highlightMatching, selectedIndex: selectedIndex, data: data,selectionMode:selectionMode}"/>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					labelText:<input type="text" data-bind="value: labelText" />
+				</div>
+				<div>
+					showTrigger:<input type="checkbox" data-bind="checked: showTrigger" />
+				</div>
+				<div>
+					triggerPosition:<select data-bind="value: triggerPosition">
+						<option value="right">right</option>
+						<option value="left">left</option>
+					</select>
+				</div>
+				<div>
+					selectionMode:<select data-bind="value: selectionMode">
+						<option value="single">single</option>
+						<option value="multiple">multiple</option>
+					</select>
+				</div>
+				<div>
+					isEditable:<input type="checkbox" data-bind="checked: isEditable" />
+				</div>
+				<div>
+					autoComplete:<input type="checkbox" data-bind="checked: autoComplete" />
+				</div>
+				<div>
+					autoFilter:<input type="checkbox" data-bind="checked: autoFilter" />
+				</div>
+				<div>
+					highlightMatching:<input type="checkbox" data-bind="checked: highlightMatching" />
+				</div>
+				<div>
+					selectedIndex:<input type="text" data-bind="value: selectedIndex" />
+				</div>
+				<div>
+					<input id="resetItem" value="reset items" type="button" />
+					<table>
+						<thead>
+							<tr><th>listItems</th></tr>
+						</thead>
+						<tbody data-bind="foreach: data">
+							<tr>
+								<td data-bind="text: label"></td>
+								<td data-bind="text: value"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>
+<body>
+	<div>
+	</div>
+</body>
+</html>

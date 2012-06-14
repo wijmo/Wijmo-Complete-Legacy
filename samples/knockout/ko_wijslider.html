@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Slider</title>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijslider.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijutil.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijslider.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.val = ko.observable(50);
+			self.min = ko.observable(0);
+			self.max = ko.observable(100);
+			self.disabled = ko.observable(false);
+			self.animate = ko.observable(false);
+			self.range = ko.observable(false);
+			self.step = ko.observable(1);
+			self.dragFill = ko.observable(true);
+			self.minRange = ko.observable(0);
+			self.vals = ko.observableArray([10, 50]);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Slider</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div data-bind="wijslider: {value: val, min: min, max: max, disabled: disabled, animate: animate, 
+				range: range, step: step, dragFill: dragFill, minRange: minRange}">
+			</div>
+			<p></p>
+			<div data-bind="wijslider: {min: min, max: max, disabled: disabled, animate: animate, 
+				range: range, step: step, dragFill: dragFill, minRange: minRange, values: vals}">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					min:<input type="text" data-bind="value: min" />
+				</div>
+				<div>
+					max:<input type="text" data-bind="value: max" />
+				</div>
+				<div>
+					animate:<input type="checkbox" data-bind="checked: animate" />
+				</div>
+				<div>
+					range:<input type="checkbox" data-bind="checked: range" />
+				</div>
+				<div>
+					minRange:<input type="text" data-bind="value: minRange" />
+				</div>
+				<div>
+					step:<input type="text" data-bind="value: step" />
+				</div>
+				<div>
+					dragFill:<input type="checkbox" data-bind="checked: dragFill" />
+				</div>
+				<div>
+					value:<input type="text" data-bind="value: val" />
+				</div>
+				<div>
+					<table>
+						<thead>
+							<tr><th>values</th></tr>
+						</thead>
+						<tbody data-bind="foreach: vals">
+							<tr>
+								<td data-bind="text: $data"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

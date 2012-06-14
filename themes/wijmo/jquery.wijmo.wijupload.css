@@ -1,5 +1,7 @@
-﻿.wijmo-wijupload
+.wijmo-wijupload
 {
+    overflow:hidden;
+    position:relative;
 }
 
 .wijmo-wijupload ul
@@ -32,6 +34,13 @@
 }
 
 .wijmo-wijupload .wijmo-wijupload-file
+{
+	display: block;
+	padding: 0.4em;
+	line-height: 1.4
+}
+
+.wijmo-wijupload .wijmo-wijupload-uploadedFile
 {
 	display: block;
 	padding: 0.4em;

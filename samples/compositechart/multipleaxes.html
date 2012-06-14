@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>CompositeChart - Multiple Axes</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijbarchart.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijcompositechart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+			$("#wijcompositechart").wijcompositechart({
+				axis: {
+					y: [{// main y axis
+						text: "Temperature",
+						compass: "east",
+						autoMin: false,
+						autoMax: false,
+						min: 5,
+						max: 35,
+						textStyle: {
+							fill: "#89A54E"
+						},
+						labels: {
+							style:{
+								fill: "#89A54E"
+							}
+						}
+					},
+					{// y1 axis
+						text: "Rainfall",
+						autoMax: false,
+						autoMin: false,
+						min: 0,
+						max: 300
+					},
+					{// y2 axis
+						text: "",
+						compass: "east"
+					}],
+					x: {
+						text: ""
+					}
+				},
+				stacked: false,
+				hint: {
+					content: function () {
+						return this.label + '\n ' + this.y + '';
+					}
+				},
+				header: {
+					text: "Hardware Distribution"
+				},
+				seriesList: [{
+					type: "column",
+					label: "West",
+					legendEntry: true,
+					data: { x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+						'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+						y: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+					},
+					yAxis: 1
+				}, {
+					type: "spline",
+					label: "East",
+					legendEntry: true,
+					data: { x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], y: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7]
+					},
+					yAxis: 2
+				}, {
+					type: "line",
+					label: "South",
+					legendEntry: true,
+					data: {
+						x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+						y: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+					},
+					markers: {
+						visible: true,
+						type: "circle"
+					}
+				}]
+			});
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Multiple Axes</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijcompositechart" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+The Wijmo Composite Chart widget (wijcompositechart) allows you to draw multiple types of chart in one canvas simultaneously.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

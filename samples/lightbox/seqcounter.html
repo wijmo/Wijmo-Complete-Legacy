@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Lightbox - Overview</title>
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+	<link href="../../themes/wijmo/jquery.wijmo.wijlightbox.css" rel="stylesheet" type="text/css"/>	
+	<script src="../../wijmo/jquery.wijmo.wijlightbox.js" type="text/javascript"></script>
+	
+	
+	<script type="text/javascript">
+		$(function () {
+			$("#lightbox").wijlightbox({
+			    textPosition: 'titleOverlay',
+				counterType: 'sequence'
+			});
+		});
+	</script>
+</head>
+
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>Sequence Counter</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+				<div id="lightbox">
+                <a href="http://lorempixum.com/600/400/sports/1" rel="wijlightbox[stock];player=img">
+                    <img src="http://lorempixum.com/150/125/sports/1"  title="Sports 1" alt="Sports 1" /></a>
+                <a href="http://lorempixum.com/600/400/sports/2" rel="wijlightbox[stock];player=img">
+                    <img src="http://lorempixum.com/150/125/sports/2"  title="Sports 2" alt="Sports 2" /></a>
+                <a href="http://lorempixum.com/600/400/sports/3"  rel="wijlightbox[stock];player=img">
+                    <img src="http://lorempixum.com/150/125/sports/3" title="Sports 3" alt="Sports 3" /></a>
+                <a href="http://lorempixum.com/600/400/sports/4" rel="wijlightbox[stock];player=img">
+                    <img src="http://lorempixum.com/150/125/sports/4"  title="Sports 4" alt="Sports 4" /></a>
+				</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+			<!-- Begin options markup -->
+				
+			<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>This sample demonstrates how to add a counter to the wijlightbox widget by setting the counterType option.</p>
+		</div>
+	</div>
+</body>
+
+</html>

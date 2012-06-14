@@ -7,52 +7,46 @@
     <meta name="description" content="Overview" />
     <meta name="keywords" content="" />
     <meta name="author" content="ComponentOne" />
-    
+
     <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
-    
-    <link href="../../themes/wijmo/jquery.wijmo-open.1.5.0.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijpager.css" rel="stylesheet" type="text/css" />
     <link href="../../themes/wijmo/jquery.wijmo.wijgrid.css" rel="stylesheet" type="text/css" />
 
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
     <script src="../../external/globalize.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery.tmpl.min.js" type="text/javascript"></script>
+    <script src="../explore/js/jquery.tmpl.min.js" type="text/javascript"></script>
     <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
 
-    <script src="../../external/jquery.wijmo-open.1.5.0.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijpager.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijdatasource.js" type="text/javascript"></script>
     <script src="../../wijmo/jquery.wijmo.wijgrid.js" type="text/javascript"></script>
+
     <script type="text/javascript">
-        var genre = "Sci-Fi & Fantasy", pageIndex = 1, pageSize = 20, pageCount = 0,
-        cart = { bookings: {}, count: 0, sortBy: 0 }, bookingTmplItems = {}, selectedBooking;
-
-        function getMovies(index) {
-            var query = "http://odata.netflix.com/Catalog/Genres('" + genre + "')/Titles" +
-            "?$format=json" + 
-            "&$inlinecount=allpages" + 
-            "&$skip=" + (index - 1) * pageSize + 
-            "&$top=" + pageSize;
-
-            pageIndex = index;
+        function getMovies(pageIndex) {
+            var pageSize = 20;
 
             $("#demo tbody")
-            .fadeOut("medium", function () {
-                $.ajax({
-                    dataType: "jsonp",
-                    url: query,
-                    jsonp: "$callback",
-                    success: showMovies
-                });
-            });
+              .fadeOut("medium", function () {
+                  $.ajax({
+                      url: "http://odata.netflix.com/Catalog/Genres('Sci-Fi & Fantasy')/Titles",
+                      data: {
+                          $format: "json",
+                          $inlinecount: "allpages",
+                          $skip: pageIndex * pageSize,
+                          $top: pageSize
+                      },
+                      dataType: "jsonp",
+                      jsonp: "$callback",
+                      success: showMovies
+                  });
+              });
         }
 
         function showMovies(data) {
-            pageCount = Math.ceil(data.d.__count / pageSize),
-            movies = data.d.results;
-
-            $("#movieTmpl").tmpl(movies).appendTo("#demo tbody");
+            $("#movieTmpl").tmpl(data.d.results).appendTo("#demo tbody");
 
             $("#demo").wijgrid({
                 allowSorting: true,
@@ -65,12 +59,12 @@
                     {},
                     { dataType: "number" }
                 ]
-        });
+            });
         }
     </script>
     <script id="scriptInit" type="text/javascript">
         $(document).ready(function () {
-            getMovies(pageIndex);
+            getMovies(0);
         });
     </script>
     <script id="movieTmpl" type="text/x-jquery-tmpl">
@@ -122,7 +116,7 @@
         </div>
         <div class="footer demo-description">
             <p>
-               This sample demonstrates how to create a template for the wijgrid widget.
+                This sample demonstrates how to create a template for the wijgrid widget.
             </p>
         </div>
     </div>

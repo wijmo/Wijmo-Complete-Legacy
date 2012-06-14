@@ -1,0 +1,311 @@
+﻿.wijmo-wijgallery
+{
+    position: relative;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs
+{
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs .wijmo-wijgallery-selected
+{
+}
+
+ .wijmo-wijgallery-iframe
+{
+    width: 100%;
+    height: 100%;
+}
+.wijmo-wijgallery .wijmo-wijgallery-button-next
+{
+    position: absolute;
+    left: auto;
+    width: 16px;
+    right: 0;
+    cursor: pointer;
+    padding: 10px 0;
+}
+.wijmo-wijgallery .wijmo-wijgallery-button-previous
+{
+    position: absolute;
+    left: 0;
+    right: auto;
+    cursor: pointer;
+    width: 16px;
+    padding: 10px 0;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-counter
+{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 3px;
+    cursor: default;
+    border-bottom: none;
+    border-right: none;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-caption
+{
+    background: #555;
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+    cursor: default;
+    overflow: hidden;
+    position: absolute;
+    border: none;
+    bottom: 0;
+    left: 0;
+    padding: 7px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-text
+{
+    background: none;
+    overflow: hidden;
+    position: absolute;
+    cursor: default;
+    border: none;
+    bottom: 0;
+    left: 0;
+    color: #F1F1F1;
+    font-style: italic;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.50);
+    padding: 7px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-flashwrapper
+{
+	position: relative;
+	z-index: 0;
+	width:100%;
+	height: 100%;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-frame
+{
+    position: relative; /*padding: 2px 3px 0 3px;*/
+    overflow: hidden;
+}
+
+
+.wijmo-wijgallery .wijmo-wijgallery-framewrapper-vertical, .wijmo-wijgallery .wijmo-wijgallery-thumbswrapper-vertical
+{
+    float: left;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-frame-next
+{
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-frame-previous
+{
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 50%;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-frame-link
+{
+    display: block;
+    height: 100%;
+    outline: medium none;
+    width: 100%;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-last, .wijmo-wijgallery .wijmo-wijgallery-current
+{
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    position:static;
+    opacity: 1;
+    filter: alpha(opacity = 100);
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-content .wijmo-wijgallery-small-image
+{
+
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-content img
+{
+	vertical-align: middle;
+    margin-top: -2px;
+/*     box-shadow: 0 0 50px rgba(0,0,0,0.50);
+    -moz-box-shadow: 0 0 50px rgba(0,0,0,0.50);
+    -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.50);
+*/   
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-content
+{
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    vertical-align: middle;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-bottom, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-top, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-left, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-right
+{
+    position: absolute;
+    height: 0px;
+    background: none repeat scroll 0 0 transparent;
+}
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-bottom, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-top
+{
+    border-left: 20px dashed transparent;
+    border-right: 20px dashed transparent;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-left, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-right
+{
+    border-top: 20px dashed transparent;
+    border-bottom: 20px dashed transparent;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-top
+{
+    border-bottom: 0 none;
+    border-top-width: 10px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-bottom
+{
+    border-top: 0 none;
+    border-bottom-width: 10px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-right
+{
+    border-left: 0 none;
+    border-right-width: 10px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-left
+{
+    border-right: 0 none;
+    border-left-width: 10px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbswrapper
+{
+    position: relative;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-button
+{
+    cursor: pointer;
+    float: left;
+    left: auto;
+    position: absolute;
+    right: -28px;
+    top: -5px;
+    width: 16px;
+}
+
+
+.wijmo-wijgallery .wijmo-wijgallery-timerbar
+{
+    bottom: 0;
+    height: 5px;
+    opacity: 0.8px;
+    position: absolute;
+    background-color: #eee;
+    width: 93%;
+    left: 5px;
+    top: 12px;
+    margin: 2px 10px 0;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-timerbar-inner
+{
+    height: 5px;
+    background-color: #bbb;
+    float: left;
+}
+
+.wijmo-wijgallery-loading
+{
+    width: 37px;
+    height: 37px;
+    border: none;
+    display: block;
+    position: absolute;
+    background: transparent url('images/waiting.gif') no-repeat scroll;
+}
+
+.wijmo-wijgallery .wijmo-wijcarousel-item
+{
+    border-width: 5px;
+    display: block;
+    overflow: hidden;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-selected
+{
+}
+
+
+.wijmo-wijcarousel-image
+{
+    display: block;
+    margin: 0 auto;
+}
+
+.wijmo-wijgallery .wijmo-wijcarousel-horizontal-multi
+{
+    padding: 5px 15px;
+}
+.wijmo-wijgallery .wijmo-wijcarousel-vertical-multi
+{
+    padding: 15px 5px;
+}
+
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-bottom
+{
+    border-top: none;
+}
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-right
+{
+    border-left: none;
+}
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-top
+{
+    border-bottom: none;
+}
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-left
+{
+    border-right: none;
+}
+.wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-bottom, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-top, .wijmo-wijgallery .wijmo-wijgallery-thumbs-pointer-left
+{
+    z-index: 99;
+}
+.wijmo-wijgallery .wijmo-wijgallery-current
+{
+ 
+}
+.wijmo-wijgallery .wijmo-wijgallery-content .wijmo-wijgallery-small-image {
+/*    border-width: 5px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.50);
+    -moz-box-shadow: 0 0 50px rgba(0,0,0,0.50);
+    -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.50);
+*/
+    vertical-align: middle;
+}

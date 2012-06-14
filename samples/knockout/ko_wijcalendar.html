@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Knockout - WijCalendar</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="wijcalendar - knockout integration" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.cookie.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+
+    <script src="../../../../Wijmo-Open/development-bundle/external/knockout-2.0.0.js" type="text/javascript"></script>
+    <script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+
+
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.showTitle = ko.observable(true);
+			self.showWeekDays = ko.observable(true);
+			self.showWeekNumbers = ko.observable(false);
+			self.showOtherMonthDays = ko.observable(true);
+			self.showDayPadding = ko.observable(false);
+			self.allowPreview = ko.observable(false);
+			self.allowQuciPick = ko.observable(true);
+			self.popupMode = ko.observable(false);
+			self.selectedDates = ko.observableArray();
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+		
+			var today = new Date(),
+				daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(), 
+				i, allDates = [];
+			
+			for (i = 0; i < daysInMonth; i++){
+				allDates.push(new Date(today.getFullYear(), today.getMonth(), i));
+			}
+
+			var vm = new viewModel();
+			vm.allDates = allDates;
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Overview</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div data-bind="wijcalendar: {disabled: disabled, showTitle: showTitle, showWeekDays: showWeekDays, showWeekNumbers: showWeekNumbers, showOtherMonthDays: showOtherMonthDays, showDayPadding: showDayPadding, allowPreview: 	allowPreview, allowQuciPick: allowQuciPick, popupMode: popupMode, selectedDates: selectedDates }"></div>
+
+            <p>
+	        You've selected:
+	        <ul data-bind="foreach: selectedDates">    
+		        <li>        
+		        <span data-bind="text: $data.toDateString()"></span>
+		        </li>        
+	        </ul>
+            </p>
+
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <ul>
+                <li>disabled:<input type="checkbox" data-bind="checked: disabled"/></li>
+                <li>showTitle:<input type="checkbox" data-bind="checked: showTitle" /></li>
+                <li>showWeekDays:<input type="checkbox" data-bind="checked: showWeekDays" /></li>
+                <li>showWeekNumbers:<input type="checkbox" data-bind="checked: showWeekNumbers" /></li>
+                <li>showWeekNumbers:<input type="checkbox" data-bind="checked: showWeekNumbers" /></li>
+                <li>showOtherMonthDays:<input type="checkbox" data-bind="checked: showOtherMonthDays" /></li>
+                <li>showDayPadding:<input type="checkbox" data-bind="checked: showDayPadding" /></li>
+                <li>allowPreview:<input type="checkbox" data-bind="checked: allowPreview" /></li>
+                <li>allowQuciPick:<input type="checkbox" data-bind="checked: allowQuciPick" /></li>
+                <li>popupMode:<input type="checkbox" data-bind="checked: popupMode" /></li>
+                </ul>
+
+                Select via data model:
+	            <br/>
+	            <select multiple="multiple" style="height: 420px" data-bind="options:allDates, selectedOptions:selectedDates"> </select> 
+
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                Wijmo provides a Knockout integration library so that all jQuery UI and Wijmo widgets can be used with Knockout. 
+            </p>
+        </div>
+    </div>
+</body>
+</html>

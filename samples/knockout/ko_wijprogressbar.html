@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Progress Bar</title>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijprogressbar.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijutil.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijtooltip.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijprogressbar.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.percent = ko.observable(0);
+			self.val = ko.observable(0);
+			self.min = ko.observable(0);
+			self.max = ko.observable(100);
+			self.disabled = ko.observable(false);
+			self.labelAlign = ko.observable('center');
+			self.fillDirection = ko.observable('east');
+			self.lfs = ko.observable('{1}%');
+			self.tfs = ko.observable('{1}%');
+			self.increment = ko.observable(1);
+			self.img = ko.observable('');
+			self.delay = ko.observable(0);
+			self.aniDisabled = ko.observable(false);
+			self.easing = ko.observable(null);
+			self.duration = ko.numericObservable(500);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+			vm.percent(0.5);
+			vm.val(50);
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Progress Bar</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div data-bind="wijprogressbar: {value: val, minValue: min, maxValue: max, disabled: disabled, labelAlign: labelAlign, fillDirection: fillDirection,
+				labelFormatString: lfs, toolTipFormatString: tfs, indicatorIncrement: increment, indicatorImage: img, animationDelay: delay, animationOptions: {
+				disabled: aniDisabled, easing: easing, duration: duration}}">
+			</div>
+			<div style="height: 250px"></div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					value:<input type="text" data-bind="value: val" />
+				</div>
+				<div>
+					min:<input type="text" data-bind="value: min" />
+				</div>
+				<div>
+					max:<input type="text" data-bind="value: max" />
+				</div>
+				<div>
+					labelAlign::<select data-bind="value: labelAlign">
+						<option value="west">west</option>
+						<option value="east">east</option>
+						<option value="south">south</option>
+						<option value="north">north</option>
+						<option value="center">center</option>
+						<option value="running">running</option>
+					</select>
+				</div>
+				<div>
+					fillDirection:<select data-bind="value: fillDirection">
+						<option value="west">west</option>
+						<option value="east">east</option>
+						<option value="south">south</option>
+						<option value="north">north</option>
+					</select>
+				</div>
+				<div>
+					labelFormatString:<input type="text" data-bind="value: lfs" />
+				</div>
+				<div>
+					toolTipFormatString:<input type="text" data-bind="value: tfs" />
+				</div>
+				<div>
+					indicatorIncrement:<input type="text" data-bind="value: increment" />
+				</div>
+				<div>
+					indicatorImage:<input type="text" data-bind="value: img" />
+				</div>
+				<div>
+					animationDelay:<input type="text" data-bind="value: delay" />
+				</div>
+				<div>
+					animation.disabled:<input type="checkbox" data-bind="checked: aniDisabled" />
+				</div>
+				<div>
+					animation.easing:<input type="text" data-bind="value: easing" />
+				</div>
+				<div>
+					animation.duration:<input type="text" data-bind="value: duration" />
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,127 +1,129 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>LineChart - Streaming Data</title>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="description" content="%description%" />
-    <meta name="keywords" content="" />
-    <meta name="author" content="ComponentOne" />
-    
-    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
-    
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
-    <script src="../../external/globalize.min.js" type="text/javascript"></script>
-    <script src="../../external/raphael.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
-    <script id="scriptInit" type="text/javascript">
-        var xValues = [], yValues = [];
-        var randomDataValuesCount = 10;
-        var duration = 5000;
-        var idx = 0;
-        var intervalRadomData = null;
+	<title>LineChart - Streaming Data</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		var xValues = [], yValues = [];
+		var randomDataValuesCount = 10;
+		var duration = 5000;
+		var idx = 0;
+		var intervalRadomData = null;
 
-        $(document).ready(function () {
-            for (idx = 0; idx < randomDataValuesCount; idx++) {
-                xValues.push(idx);
-                yValues.push(createRandomValue());
-            }
+		$(document).ready(function () {
+			for (idx = 0; idx < randomDataValuesCount; idx++) {
+				xValues.push(idx);
+				yValues.push(createRandomValue());
+			}
 
-            $("#wijlinechart").wijlinechart({
-                showChartLabels: false,
-                width: 756,
-                height: 475,
-                shadow: false,
-                animation: {
-                    enabled: false
-                },
-                seriesTransition: {
-                    enabled: false
-                },
-                legend: { visible: false },
-                hint: { enable: false },
-                header: { text: "Wijmo Awesomeness" },
-                axis:
-                {
-                    y: { min: 0, max: 100, autoMin:false, autoMax: false }
-                },
-                seriesList: [
-                    {
-                        data: {
-                            x: xValues,
-                            y: yValues
-                        },
-                        markers: {
-                            visible: true,
-                            type: "circle"
-                        }
-                    }
-                ],
-                seriesStyles: [{ "stroke-width": "3", stroke: "#00a6dd"}],
-                seriesHoverStyles: [{ "stroke-width": "4"}]
+			$("#wijlinechart").wijlinechart({
+				showChartLabels: false,
+				width: 756,
+				height: 475,
+				shadow: false,
+				animation: {
+					enabled: false
+				},
+				seriesTransition: {
+					enabled: false
+				},
+				legend: { visible: false },
+				hint: { enable: false },
+				header: { text: "Wijmo Awesomeness" },
+				axis:
+				{
+					y: { min: 0, max: 100, autoMin:false, autoMax: false }
+				},
+				seriesList: [
+					{
+						data: {
+							x: xValues,
+							y: yValues
+						},
+						markers: {
+							visible: true,
+							type: "circle"
+						}
+					}
+				],
+				seriesStyles: [{ "stroke-width": 3, stroke: "#00a6dd"}],
+				seriesHoverStyles: [{ "stroke-width": 4}]
 
-            });
+			});
 
-            animateChart();
+			animateChart();
 
-            intervalRadomData = setInterval(function () {
-                $("#wijlinechart").wijlinechart("addSeriesPoint", 0, { x: idx++, y: createRandomValue() }, true);
-                animateChart();
-            }, duration);
-        });
+			intervalRadomData = setInterval(function () {
+				$("#wijlinechart").wijlinechart("addSeriesPoint", 0, { x: idx++, y: createRandomValue() }, true);
+				animateChart();
+			}, duration);
+		});
 
-        function animateChart() {
-            var path = $("#wijlinechart").wijlinechart("getLinePath", 0);
-            var markers = $("#wijlinechart").wijlinechart("getLineMarkers", 0);
-            var box = path.getBBox();
-            var width = $("#wijlinechart").wijlinechart("option", "width") / 10;
-            path.animate({ translation: -width + ", 0" }, duration);
-            if (path.shadow) {
-                var pathShadow = path.shadow;
-                pathShadow.animate({ translation: -width + ", 0" }, duration);
-            }
-            markers.animate({ translation: -width + ", 0" }, duration);
-            var rect = box.x + " " + (box.y - 5) + " " + box.width + " " + (box.height + 10);
-            path.wijAttr("clip-rect", rect);
-            markers.attr("clip-rect", rect);
-        }
+		function animateChart() {
+			var path = $("#wijlinechart").wijlinechart("getLinePath", 0),
+				markers = $("#wijlinechart").wijlinechart("getLineMarkers", 0),
+				box = path.getBBox(),
+				width = $("#wijlinechart").wijlinechart("option", "width") / 10,
+				anim = Raphael.animation({transform: Raphael.format("...t{0},0", -width)}, duration);
+			path.animate(anim);
+			if (path.shadow) {
+				var pathShadow = path.shadow;
+				pathShadow.animate(anim);
+			}
+			markers.animate(anim);
+			var rect = box.x + " " + (box.y - 5) + " " + box.width + " " + (box.height + 10);
+			path.wijAttr("clip-rect", rect);
+			markers.attr("clip-rect", rect);
+		}
 
-        function createRandomValue() {
-            var val = Math.round(Math.random() * 100);
-            return val;
-        }
+		function createRandomValue() {
+			var val = Math.round(Math.random() * 100);
+			return val;
+		}
 
-        function dispose() {
-            if (intervalRadomData) {
-                clearInterval(intervalRadomData);
-                intervalRadomData = null;
-            }
-        }
-    </script>
+		function dispose() {
+			if (intervalRadomData) {
+				clearInterval(intervalRadomData);
+				intervalRadomData = null;
+			}
+		}
+	</script>
 </head>
 <body class="demo-single">
-    <div class="container">
-        <div class="header">
-            <h2>
-                Streaming Data</h2>
-        </div>
-        <div class="main demo">
-            <!-- Begin demo markup -->
-            <div id="wijlinechart">
-            </div>
-            <!-- End demo markup -->
-            <div class="demo-options">
-                <!-- Begin options markup -->
-                <!-- End options markup -->
-            </div>
-        </div>
-        <div class="footer demo-description">
-            <p>
+	<div class="container">
+		<div class="header">
+			<h2>
+				Streaming Data</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijlinechart">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
 This sample simulates streaming data using the <b>getLinePath</b> and <b>getLineMarkers</b> methods.
-            </p>
-        </div>
-    </div>
+			</p>
+		</div>
+	</div>
 </body>
 </html>

@@ -1,0 +1,670 @@
+.wijmo-wijribbon
+{
+    font-size: 11px;
+    padding: 0;
+    border: none;
+}
+.wijmo-wijribbon-simple
+{
+    padding: 3px;
+}
+.wijmo-wijribbon .ui-button .ui-button-text
+{
+    font-size: 11px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-panel
+{
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 58%, rgba(249,249,249,1) 71%, rgba(237,237,237,1) 88%, rgba(232,232,232,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(58%,rgba(255,255,255,1)), color-stop(71%,rgba(249,249,249,1)), color-stop(88%,rgba(237,237,237,1)), color-stop(100%,rgba(232,232,232,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 58%,rgba(249,249,249,1) 71%,rgba(237,237,237,1) 88%,rgba(232,232,232,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 58%,rgba(249,249,249,1) 71%,rgba(237,237,237,1) 88%,rgba(232,232,232,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 58%,rgba(249,249,249,1) 71%,rgba(237,237,237,1) 88%,rgba(232,232,232,1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,1) 58%,rgba(249,249,249,1) 71%,rgba(237,237,237,1) 88%,rgba(232,232,232,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+    padding: 0;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-panel .wijmo-wijribbon-groups
+{
+    overflow: hidden;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-groups .wijmo-wijribbon-group
+{
+    float: left;
+    background: none;
+    border: none;
+    border-right: solid 1px #b2b7bd;
+    border-left: solid 1px #fafafa;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    padding: 0.2em;
+}
+
+.wijmo-wijribbon .ui-button .ui-button-text.ui-state-hover,.wijmo-wijribbon .ui-button .ui-button-text.ui-state-active
+{
+    border: none;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-decoration: none;
+}
+
+
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-group-content
+{
+    height: 5.5em;
+    overflow: hidden;
+    background: none;
+    border: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    border-width: 0;
+    padding: 0.2em 0.2em 0;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-group-label, .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-text
+{
+    text-align: center;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-top: -1px;
+    color: #333;
+    border-width: 1px 0 0;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-bigbutton
+{
+    background: none;
+    border: solid 1px transparent;
+    width: 3.5em;
+    height: 52px;
+    color: #000;
+    text-decoration: none;
+}
+
+.wijmo-wijribbon-bigbutton:visited
+{
+    text-decoration: none;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-dropdownbutton
+{
+    display: inline-block;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-bigbutton, .wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-list, .wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-dropdownbutton, .wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-splitbutton
+{
+    float: left;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .ui-icon
+{
+    height: 32px;
+    left: 50%;
+    margin-left: -17px;
+    margin-top: -24px;
+    width: 32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .ui-button-text
+{
+    padding: 3em 0 0;
+    letter-spacing: -1px;
+    font-size: 10px;    
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-splitbutton
+{
+    width: 54px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-splitbutton .ui-button-icon-only
+{
+    width: 1em;
+    height: 52px;
+    margin-left: 2px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-splitbutton .ui-button-icon-only .ui-icon-triangle-1-s
+{
+    height: 16px;
+    margin-left: -7px;
+    margin-top: -11px;
+    width: 16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-group-content li .ui-button
+{
+    width: 100%;
+    margin: 0 0 1px 1px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .wijmo-wijribbon-save
+{
+    background-position: -32px -112px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-undo
+{
+    background-position: 0px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-redo
+{
+    background-position: -16px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-preview
+{
+    background-position: -128px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-cleanup
+{
+    background-position: -208px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-cut
+{
+    background-position: -32px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-copy
+{
+    background-position: -48px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-paste
+{
+    background-position: -64px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-selectall
+{
+    background-position: -48px -80px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bgcolor
+{
+    background-position: -192px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-color
+{
+    background-position: -176px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bold
+{
+    background-position: 0px -32px;
+}
+
+
+.wijmo-wijribbon .wijmo-wijribbon-italic
+{
+    background-position: -16px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-underline
+{
+    background-position: -32px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-strike
+{
+    background-position: -48px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-sup
+{
+    background-position: -64px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-sub
+{
+    background-position: -80px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-removeformat
+{
+    background-position: -208px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .wijmo-wijribbon-spelling
+{
+    background-position: -128px -112px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-justifycenter
+{
+    background-position: -16px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-justifyright
+{
+    background-position: -32px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-justifyfull
+{
+    background-position: -48px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-borders
+{
+    background-position: -160px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-orderlist
+{
+    background-position: -64px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-unorderlist
+{
+    background-position: -80px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-outdent
+{
+    background-position: -96px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-indent
+{
+    background-position: -112px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-inspect
+{
+    background-position: -64px -80px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-bigbutton
+{
+    margin-right: 3px;
+}
+.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-splitbutton .wijmo-wijribbon-bigbutton
+{
+    margin-right: -3px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .wijmo-wijribbon-table
+{
+    background-position: 0px -112px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-inserttable
+{
+    background-position: -144px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-edittable
+{
+    background-position: -128px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertcol
+{
+    background-position: -16px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertrow
+{
+    background-position: -48px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertcell
+{
+    background-position: -80px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-splitcell
+{
+    background-position: -144px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-mergecell
+{
+    background-position: -96px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-deleterow
+{
+    background-position: -32px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-deletecol
+{
+    background-position: 0px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-deletecell
+{
+    background-position: -64px 0px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertparagraph
+{
+    background-position: -96px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertprintpagebreak
+{
+    background-position: -112px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-inserthr
+{
+    background-position: -128px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-textarea
+{
+    background-position: -160px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-textbox
+{
+    background-position: -96px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-password
+{
+    background-position: -112px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-hiddenfield
+{
+    background-position: -128px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-imagebutton
+{
+    background-position: -208px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-button
+{
+    background-position: -48px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-listbox
+{
+    background-position: -176px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-dropdownlist
+{
+    background-position: -144px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-radio
+{
+    background-position: -80px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-checkbox
+{
+    background-position: -64px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-bigbutton .wijmo-wijribbon-link
+{
+    background-position: -96px -112px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-imagebrowser
+{
+    background-position: -208px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-media
+{
+    background-position: -224px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-datetime
+{
+    background-position: 0px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-designview
+{
+    background-position: -32px -96px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-sourceview
+{
+    background-position: 0px -96px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-splitview
+{
+    background-position: -16px -96px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-wordwrap
+{
+    background-position: -144px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-fullscreen
+{
+    background-position: 0px -80px;
+}
+
+.wijmo-wijribbon .ui-tabs .ui-tabs-nav
+{
+    border: none;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+
+
+.wijmo-wijribbon .wijmo-wijribbon-panel
+{
+    border-left: solid 1px #b2b7bd;
+    border-right: solid 1px #b2b7bd;
+}
+
+.wijmo-wijribbon, .wijmo-wijribbon .wijmo-wijribbon-panel .wijmo-wijribbon-groups
+{
+    border-bottom: none;
+    border-top: none;
+    background: none;
+}
+
+.wijmo-wijribbon-groups
+{
+    border-left: 0;
+    border-right: 0;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-separator
+{
+    width: 2px;
+    border: 1px dotted #000;
+}
+
+.wijmo-wijribbon .ui-button
+{
+    border: none;
+    background: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    color: #333;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-list .ui-button
+{
+    margin: 1px 0;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-breaks .ui-button, .wijmo-wijribbon .wijmo-wijribbon-review .ui-button, .wijmo-wijribbon .wijmo-wijribbon-special .ui-button
+{
+    color: #000;
+    border: none;
+    background: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    margin-top: 2px;
+}
+
+.wijmo-wijribbon .ui-buttonset
+{
+    margin: 0;
+}
+
+.wijmo-wijribbon-group-content .ui-helper-reset, .wijmo-wijribbon .wijmo-wijribbon-dropdown, .wijmo-wijribbon-groups .wijmo-wijribbon-group .wijmo-wijribbon-dropdowngroup
+{
+    background: #fafafa;
+    border: solid 1px #a7abb0;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+    -moz-box-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+    padding: 3px 5px 3px 2px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-dropdown .ui-button-text
+{
+    text-align: left;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-dropdowngroup
+{
+    position: absolute;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-icon
+{
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup
+{
+    position: relative;
+    border: solid 1px transparent;
+    margin-right: 3px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-dropdown li .ui-button
+{
+    background: none;
+    border: none;
+    color: #000;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-text
+{
+    display: block;
+    padding: 2.8em 0.5em;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .ui-icon
+{
+    bottom: 12px;
+    background-position: -48px -96px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevicon
+{
+    width: 16px;
+    height: 16px;
+    margin-left: -8px;
+    margin-top: 8px;
+}
+
+.wijmo-wijribbon .ui-icon, .wijmo-wijribbon-abbrevicon
+{
+    background-image: url(images/wijeditor/wijmo-ui-icons_000000_240x112.png);
+}
+
+.wijmo-wijribbon .ui-icon, .wijmo-wijribbon .ui-tabs-panel, .wijmo-wijribbon .wijmo-wijribbon-panel .wijmo-wijribbon-groups, .wijmo-wijribbon
+{
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+}
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevactions
+{
+    background-position: -32px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-template
+{
+    background-position: center -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevfont
+{
+    background-position: 0 -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-justifyleft, .wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevparagraph
+{
+    background-position: 0px -16px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevreview
+{
+    background-position: -64px -80px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-find
+{
+    background-position: -128px -48px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-insertbreak, .wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevbreaks
+{
+    background-position: -160px -32px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-form, .wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevforms
+{
+    background-position: -192px -64px;
+}
+
+.wijmo-wijribbon .wijmo-wijribbon-specialchar, .wijmo-wijribbon .wijmo-wijribbon-abbrevgroup .wijmo-wijribbon-abbrevspecial
+{
+    background-position: -112px -32px;
+}
+
+.wijmo-wijribbon .ui-button .ui-icon-triangle-1-s
+{
+    background-position: -48px -96px;
+}
+
+
+.wijmo-wijribbon-simple .ui-button, .wijmo-wijribbon-simple .wijmo-wijribbon-dropdownbutton, .wijmo-wijribbon-simple .wijmo-wijribbon-splitbutton
+{
+    float: left;
+}
+
+.wijmo-wijribbon-simple .wijmo-wijribbon-dropdown .ui-button
+{
+    float: none;
+}
+
+.wijmo-wijribbon-simple .ui-button-text-icon-secondary .ui-button-text, .ui-button-text-icons .ui-button-text
+{
+    padding: 0.4em 2.1em 0.4em 0.4em;
+}
+.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a
+{
+    text-decoration: none;
+}

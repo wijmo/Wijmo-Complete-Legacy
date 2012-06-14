@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijradialgauge.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#gauge").wijradialgauge({
+                radius: 200,
+                height: 400,
+                width: 400,
+                value: 70,
+                max: 90,
+                min: 0,
+                startAngle: 300,
+                sweepAngle: 300,
+                labels: {
+                    visible: false
+                },
+                pointer: {
+                    length: 0.75,
+                    width: 12,
+                    shape: "rect",
+                    style: { fill: "90-#CFD0D0-#CECECE:50-#F0F0F0:51", stroke: "none" }
+                },
+                cap: {
+                    style: {
+                },
+                template: function (ui) {
+                    var set = ui.canvas.set();
+                    var circle = ui.canvas.circle(ui.origin.x, ui.origin.y, 24);
+                    circle.attr({
+                        fill: "90-#2A292D-#4F4D50",
+                        stroke: "#9899A0"
+                    });
+                    set.push(circle);
+
+                    var circle2 = ui.canvas.circle(ui.origin.x, ui.origin.y, 19);
+                    circle2.attr({
+                        fill: "90-#4F4D50:1-#2A292D-#2A292D-#4F4D50:99",
+                        stroke: "#9899A0"
+                    });
+                    set.push(circle2);
+
+                    return set;
+                }
+            },
+            tickMajor: {
+                factor: 10,
+                interval: 15,
+                offset: 60,
+                position: "inside",
+                style: { fill: "0-#008EFE-#00C0FF", stroke: "none", height: 8 }
+            },
+            tickMinor: {
+                visible: true,
+                factor: 6,
+                interval: 5,
+                offset: 70,
+                position: "inside",
+                style: { fill: "0-#008EFE-#00C0FF", stroke: "none", height: 4 }
+            },
+            face: {
+                style: {},
+                template: function (ui) {
+                    var set = ui.canvas.set();
+                    var circle = ui.canvas.circle(ui.origin.x, ui.origin.y, ui.r);
+                    circle.attr({ "stroke": "none", fill: "90-#8E8E8F-#FBFBFB" });
+                    set.push(circle);
+
+                    var circle2 = ui.canvas.circle(ui.origin.x, ui.origin.y, ui.r - 34);
+                    circle2.attr({ "stroke": "#C8C8C9", "stroke-width": 0, fill: "270-#32353F-#7C8491" });
+                    set.push(circle2);
+
+                    var circle3 = ui.canvas.circle(ui.origin.x, ui.origin.y, ui.r - 52);
+                    circle3.attr({ "stroke": "#000513", "stroke-width": 6, fill: "90-#010A44-#002369" });
+                    set.push(circle3);
+
+
+                    return set;
+                }
+            },
+            ranges: [{
+                startWidth: 80,
+                endWidth: 80,
+                startValue: 60,
+                endValue: 90,
+                startDistance: 0.3,
+                endDistance: 0.3,
+                style: {
+                    fill: "300-#065AFE-#00C0FF", stroke: "none"
+                }
+            }]
+        });
+    });
+    
+    </script>
+    <style type="text/css">
+        #gauge
+        {
+            background: rgb(91,46,124); /* Old browsers */
+            background: -moz-linear-gradient(top, rgba(91,46,124,1) 0%, rgba(66,32,91,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(91,46,124,1)), color-stop(100%, rgba(66,32,91,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, rgba(91,46,124,1) 0%, rgba(66,32,91,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, rgba(91,46,124,1) 0%, rgba(66,32,91,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, rgba(91,46,124,1) 0%, rgba(66,32,91,1) 100%); /* IE10+ */
+            background: linear-gradient(top, rgba(91,46,124,1) 0%, rgba(66,32,91,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5b2e7c', endColorstr='#42205b', GradientType=0 ); /* IE6-9 */
+        }
+    </style>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Clean Style</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="gauge" class="ui-corner-all ui-widget " style="padding: 20px;">
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                This sample uses styles and custom SVG to make a clean UI style</p>
+        </div>
+    </div>
+</body>
+</html>

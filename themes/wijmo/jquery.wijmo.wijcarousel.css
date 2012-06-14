@@ -1,0 +1,264 @@
+﻿.wijmo-wijcarousel
+{
+    position: relative;
+}
+
+.wijmo-wijcarousel-vertical,.wijmo-wijcarousel-vertical-multi
+{
+    display: inline-block;
+}
+.wijmo-wijcarousel .wijmo-wijcarousel-item
+{
+    float: left;
+    list-style: none;
+    position: relative;
+    margin: 0;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-clip
+{
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-list
+{
+    position: relative;
+    overflow: hidden;
+    float: left;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-button
+{
+    position: absolute;
+    width: 16px;
+    left: auto;
+    right: -30px;
+    top: -5px;
+    cursor: pointer;
+    float: left;
+}
+.wijmo-wijcarousel .wijmo-wijcarousel-slider-wrapper
+{
+	position:absolute;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-slider-wrapper .wijmo-wijslider-horizontal
+{
+	margin: 5px 0;
+}
+
+.wijmo-wijcarousel-vertical .wijmo-wijcarousel-button-next,.wijmo-wijcarousel-vertical-multi .wijmo-wijcarousel-button-next
+{
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    cursor: pointer;
+    height: 16px;
+    padding: 0 10px;
+}
+
+.wijmo-wijcarousel-horizontal .wijmo-wijcarousel-button-next,.wijmo-wijcarousel-horizontal-multi .wijmo-wijcarousel-button-next
+{
+    position: absolute;
+    left: auto;
+    width: 16px;
+    right: 0;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.wijmo-wijcarousel-vertical .wijmo-wijcarousel-button-previous,.wijmo-wijcarousel-vertical-multi .wijmo-wijcarousel-button-previous
+{
+    position: absolute;
+    top: 0;
+    bottom: auto;
+    cursor: pointer;
+    height: 16px;
+    padding: 0 10px;
+}
+
+.wijmo-wijcarousel-horizontal .wijmo-wijcarousel-button-previous,.wijmo-wijcarousel-horizontal-multi .wijmo-wijcarousel-button-previous
+{
+    position: absolute;
+    left: 0;
+    right: auto;
+    cursor: pointer;
+    width: 16px;
+    padding: 10px 0;
+}
+
+.wijmo-wijcarousel-horizontal-multi
+{
+    padding: 5px 18px;
+}
+.wijmo-wijcarousel-vertical-multi
+{
+    padding: 18px 5px;
+}
+.wijmo-wijcarousel-vertical-multi  .wijmo-wijcarousel-item
+{
+    overflow: hidden;
+    margin: 5px 0;
+}
+        
+.wijmo-wijcarousel-horizontal-multi .wijmo-wijcarousel-item
+{
+    overflow: hidden;
+    margin: 0 5px;
+}
+
+.wijmo-wijcarousel-preview  .wijmo-wijcarousel-item
+{
+    overflow: hidden;
+    border: none;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-page
+{
+    float: left;
+    cursor: pointer;
+    height: auto;
+    line-height: 16px;
+    list-style: none outside none;
+    width: auto;
+    margin: 0 1px;
+}
+
+
+.wijmo-wijcarousel .wijmo-wijcarousel-dot
+{
+    width: 12px;
+    height: 12px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-mask
+{
+	 height:100%;
+	 width:100%;
+	 position:absolute;
+	 top:0px;
+	 left:0px;
+     background: #555;
+     opacity: 0.5;    
+     filter: alpha(opacity = 50);
+	 cursor: pointer;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-current .wijmo-wijcarousel-mask
+{
+    display: none;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-current .wijmo-wijcarousel-mask
+{
+	opacity: 0;     
+	filter: alpha(opacity = 0);
+	cursor: default;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-timerbar
+{
+    bottom: 0;
+    height: 5px;
+    opacity: 0.8;
+    position: absolute;
+    background-color: #eee;
+    width: 93%;
+    left: 0;
+    top: 7px;
+    margin: 2px 10px 0;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-caption
+{
+    background: #555;
+    opacity: 0.5;    
+    filter: alpha(opacity = 50);
+    cursor: default;
+    overflow: hidden;
+    position: absolute;
+    border: none;
+    bottom: 0;
+    padding: 7px;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-text
+{
+    background: none;
+    overflow: hidden;
+    position: absolute;
+    cursor: default;
+    border: none;
+    bottom: 0;
+    color: #F1F1F1;
+    font-style: italic;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.50);
+    padding: 7px;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-text h1, .wijmo-wijcarousel .wijmo-wijcarousel-text h2, .wijmo-wijcarousel .wijmo-wijcarousel-text h3, .wijmo-wijcarousel .wijmo-wijcarousel-text h4, .wijmo-wijcarousel .wijmo-wijcarousel-text h5, .wijmo-wijcarousel .wijmo-wijcarousel-text h6
+{
+    margin: 0;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-timerbar-inner
+{
+    height: 5px;
+    background-color: #bbb;
+    float: left;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-thumbnails .ui-list .ui-page
+{
+	padding: 0;
+    border: none;
+    text-indent: -9999px;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-thumbnails .ui-state-default,
+.wijmo-wijcarousel .wijmo-wijcarousel-thumbnails .ui-state-hover,
+.wijmo-wijcarousel .wijmo-wijcarousel-thumbnails .ui-state-active
+{
+	padding:0px;
+	background: transparent;
+	border:0px;
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.wijmo-wijcarousel .wijmo-wijcarousel-thumbnails .ui-state-active
+{
+    margin-top:10px;
+}
+
+
+
+.wijmo-wijcarousel .wijmo-wijcarousel-pager
+{}
+
+
+.wijmo-wijcarousel .wijmo-wijcarousel-page span
+{
+    display: block;
+    margin: 0;
+    padding: 2px 5px;
+}
+
+.wijmo-wijcarousel-image
+{
+    border: 0 none;
+}
+

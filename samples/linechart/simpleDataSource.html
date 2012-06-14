@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>LineChart - Overview</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijlinechart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+			var data = [{
+				time: new Date('10/27/2010 11:48:00'),
+				users: 2665513
+			}, {
+				time: new Date('10/27/2010 13:47:00'),
+				users: 2300921
+			}, {
+				time: new Date('10/27/2010 15:46:00'),
+				users: 1663229
+			}, {
+				time: new Date('10/27/2010 17:45:00'),
+				users: 1622528
+			}, {
+				time: new Date('10/27/2010 19:44:00'),
+				users: 1472847
+			}, {
+				time: new Date('10/27/2010 21:43:00'),
+				users: 1354026
+			}, {
+				time: new Date('10/27/2010 23:41:00'),
+				users: 1348909, 
+			}, {
+				time: new Date('10/28/2010 1:40:00'),
+				users: 1514946
+			}, {
+				time: new Date('10/28/2010 3:39:00'),
+				users: 1746392
+			}, {
+				time: new Date('10/28/2010 5:38:00'),
+				users: 2020481
+			}, {
+				time: new Date('10/28/2010 7:37:00'),
+				users: 2312976
+			}, {
+				time: new Date('10/28/2010 9:36:00'),
+				users: 2539210
+			}, {
+				time: new Date('10/28/2010 11:35:00'),
+				users: 2657505
+			}, {
+				time: new Date('10/28/2010 13:34:00'),
+				users: 2369938
+			}, {
+				time: new Date('10/28/2010 15:33:00'),
+				users: 1869805
+			}, {
+				time: new Date('10/28/2010 17:32:00'),
+				users: 1648695
+			}, {
+				time: new Date('10/28/2010 19:31:00'),
+				users: 1529983
+			}, {
+				time: new Date('10/28/2010 21:30:00'),
+				users: 1398148
+			}, {
+				time: new Date('10/28/2010 23:38:00'),
+				users: 1389668
+			}, {
+				time: new Date('10/29/2010 1:27:00'),
+				users: 1568134
+			}, {
+				time: new Date('10/29/2010 3:26:00'),
+				users: 1787466
+			}, {
+				time: new Date('10/29/2010 5:25:00'),
+				users: 2101460
+			}, {
+				time: new Date('10/29/2010 7:24:00'),
+				users: 2090771
+			}, {
+				time: new Date('10/29/2010 9:23:00'),
+				users: 2351994
+			}, {
+				time: new Date('10/29/2010 11:22:00'),
+				users: 2537400
+			}];
+
+			$("#wijlinechartDefault").wijlinechart({
+				header: {
+					visible: true,
+					text: "Concurrent Steam Users (most recent 48 hours)",
+					textStyle: {
+						fill: "#fafafa"
+					}
+				},
+				axis: {
+					y: {
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": 11
+							}
+						},
+						gridMajor: {
+							style: { stroke: "#353539", "stroke-dasharray": "- " }
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} },
+						tickMinor: { position: "outside", style: { stroke: "#7f7f7f"} }
+					},
+					x: {
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": 11,
+								rotation: -45
+							}
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} }
+					}
+				},
+				showChartLabels: false,
+				hint: {
+					content: function () {
+						return this.data.lineSeries.label + '\n' +
+						this.x + '\n' + this.y + '';
+					},
+					contentStyle: {
+						"font-size": 10
+					},
+					offsetY: -10
+				},
+				legend: {
+					visible: false
+				},
+				dataSource: data,
+				seriesList: [
+					{
+						label: "Steam",
+						legendEntry: true,
+						fitType: "spline",
+						data: {
+							x: {bind: "time"},
+							y: {bind: "users"}
+						},
+						markers: {
+							visible: true,
+							type: "circle"
+						}
+					}
+				],
+				seriesStyles: [
+					{ stroke: "#ff9900", "stroke-width": 3 }
+				],
+				seriesHoverStyles: [
+					{ "stroke-width": 4 }
+				]
+			});
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Overview</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<h3>
+				Gamers Online</h3>
+			<div id="wijlinechartDefault" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px; background: #242529;">
+			</div>
+			<!-- End demo markup -->
+			
+		</div>
+		<div class="footer demo-description">
+		</div>
+	</div>
+</body>
+</html>

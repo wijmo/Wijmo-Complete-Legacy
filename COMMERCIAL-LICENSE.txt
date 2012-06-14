@@ -1,15 +1,15 @@
-﻿WIJMO COMMERCIAL LICENSE AGREEMENT
+WIJMO COMMERCIAL LICENSE AGREEMENT
 
-THIS COMMERCIAL LICENSE AGREEMENT (THIS CLA) CONTAINS THE TERMS AND
-CONDITIONS FOR YOUR USE OF WIJMO COMPLETE, A SUITE OF JQUERY UI
-WIDGETS (THE Software).  THIS CLA IS A BINDING AGREEMENT BETWEEN YOU
+THIS COMMERCIAL LICENSE AGREEMENT (THIS “CLA”) CONTAINS THE TERMS AND
+CONDITIONS FOR YOUR USE OF “WIJMO COMPLETE”, A SUITE OF JQUERY UI
+WIDGETS (THE “Software”).  THIS CLA IS A BINDING AGREEMENT BETWEEN YOU
 AND COMPONENTONE, LLC ("C1"); HOWEVER, IF YOU ARE ACTING AS AN AGENT
 FOR ANOTHER, SUCH AS ON BEHALF OF YOUR EMPLOYER, THEN "YOU" MEANS THE
 OTHER PERSON.  BY INSTALLING, COPYING, USING OR OTHERWISE ACCESSING
 THE SOFTWARE, YOU AGREE TO BE BOUND BY THESE TERMS AND CONDITIONS.  
 
 The term "Software" includes all source and object code, in whole
-and/or part; all printed materials; online or electronic
+and/or part; all printed materials; “online” or electronic
 documentation; data, data engines, images; updates and upgrades; and
 anything provided for use with or in conjunction with the Software. 
 
@@ -17,7 +17,7 @@ anything provided for use with or in conjunction with the Software.
 the term and conditions herein, you are hereby granted a limited,
 revocable, non-exclusive right to use the Software to design, develop,
 test and distribute software products that are developed through or by
-the use of the Software (Applications). 
+the use of the Software (“Applications”). 
 
 	a. You are hereby granted one (1) license for you as one (1)
 designated user to use the Software for the purpose of developing
@@ -59,8 +59,8 @@ copyright laws and international copyright treaties, as well as by
 other intellectual property laws and treaties.  You agree that C1 owns
 all right, title, and interest in and to the Software, including any
 copyrights, and all other intellectual property rights in and to the
-Software.  C1s copyright includes, but is not limited to,
-documentation and C1s significant online developer assistance
+Software.  C1Â’s copyright includes, but is not limited to,
+documentation and C1Â’s significant online developer assistance
 resources, source code, and any images, photographs, animations,
 video, audio, music, and text incorporated into the Software.  You may
 not rent, lease or sublicense the Software.  Without prejudice to any
@@ -82,7 +82,7 @@ of the Software.  You agree that you will comply all with such laws.
 3.  Warranties and Remedies.
 
 	C1 EXPRESSLY DISCLAIMS ANY WARRANTY.  THE SOFTWARE IS PROVIDED
-AS IS WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
+Â“AS ISÂ” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED,
 INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
 MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK
 ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE IS AND REMAINS WITH

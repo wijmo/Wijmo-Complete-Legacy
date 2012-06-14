@@ -1,3 +1,516 @@
+Wijmo-Complete v2.1.0
+=====================
+
+New Knockout Integration Library
+--------------------------------
+Added an optional integration library for wijmo to work with knockout. Knockout is a library for 
+adding MVVM support in JavaScript. We have added support to each widget so that they can be 
+initialized from declarative syntax in markup. Each widget can also be bound to observables in 
+Knockout which is live two-way binding to a Model. This is a powerful new feature for building 
+applications with Wijmo and Knockout.
+
+Lightbox
+--------
+Fixed an error which can't detect group mode correctly.
+
+Grid
+----
+Fixed Tab issue.
+
+Gauges
+--------
+Fixed a issue that the gauge's label didn't support fixed digits using globalize to format the label.
+	for eg: {0:n1}$, the value 0.22n will format as 0.2$. 
+
+
+Events calendar
+---------------
+Added localization option - use the localization option in order to localize
+  text that does not depend on culture option. For eg: Month, Day, List
+Added localization sample.
+
+Carousel, Combobox, Inputs, Wizard
+----------------------------------
+Now detecting the disabledState option to act same as the disabled option. This is a hidden option and is only used by controls.
+
+Charts
+------
+Fixed a issue that the hint's stroke is wrong for bubblechart, scatterchart, bubblechart and  piechart.
+Add data-binding support for bubblechart, scatterchart, linechart, piechart, compositechart.
+Fixed a bug that when the bound data contained 0, it couldn't get the 0 from the datasource.
+Added a rect as a hit target for clicking text in VML.
+Fixed a bug when axis's annoMethod is set to valueLabels.
+Plotting a linechart with no series throwing an error.
+Fixed the performance issue which is caused by $.extend(true, obj1, obj2)...
+
+LineChart
+---------
+Fixed an issue that point is a hole when yvalue is 0.
+Fixed an issue for handling NaN values.
+Fixed a performance issue that doesn't paint markers if markers.visible is false.
+
+editor
+------
+Fixed ribbon related issue, the destroyed tabs show in ribbon.
+Update setoption method- add showFooter and mode
+
+Combobox
+------
+Added an issue: when iseditable is false, click the all the combobox not only the trigger, the dropdown list will open
+Update setoption method
+
+List
+------
+Update setoption method
+
+Events calendar
+---------------
+Added knockout support.
+Added new option: eventsData, the event objects array.
+Added new event: eventsDataChanged, occurs when the eventsData option is changed.
+Fixed few UI interaction problems when events loaded using eventsData option (or using appointments option).
+Option appointments marked as deprecated (existent behavior is not changed), use eventsData option instead.
+
+Wijmo-Complete v2.0.8
+=====================
+
+CompositeChart
+--------------
+Fixed a bug that after changing the stack option, the legend toggle feature would throw javascript exception.
+Fixed bug in the is100Percent.
+
+LineChart
+---------
+Fixed a bug with the hole option being set to a datetime.
+
+Gauges
+-------
+Gauges now redraw when ranges are changed. This mimics the behavior of changing the value option.
+
+Charts
+------
+Fixed a bug so that the stroke of the hint element is not applied to the chart line.
+Fixed a bug in the chart's disabled option that threw a javascript exception.
+Fixed a bug in seriesStyles when the number of series is more than styles.
+
+BarChart
+Fixed a bug for the axis compass when horizontal option is set to true.
+Added support for bindind arrays to seriesList.
+	Add Options:
+		
+		/// <summary>
+		/// A array to bind data to chart seriesLists
+		/// Default: null
+		/// Type: Array
+		/// Code example:
+		/// $("#barchart").wijbarchart({
+		/// dataSource: array
+		/// })
+		/// </summary>
+		dataSource:null
+
+		/// <summary>
+		/// bind a field to each series's data x array
+		/// Type: object
+		/// Code example:
+		/// $("#barchart").wijbarchart({
+		///		x:{ bind: "fieldA"}
+		/// })
+		/// </summary>
+		data:null
+
+	update options:
+		add datasource option to each series. The settings is the same as the chart's datasource option. If this option is not set, use the chart's datasource option.
+		the data's x, y's type can be an object:
+		data: {x: {bind: "fieldB"}}
+		It will bind the datasource's field to data x. If the data's x is not set, use the chart data options's x settings.
+
+Combobox:
+Fixed a layout bug in height when the original element is a select
+
+
+Wijmo-Complete v2.0.7
+=====================
+
+LinearGauge
+-----------
+Fixed an issue that when the gauge is horizontal, if the tick marker is set to 'circle/ tri/ invertedTri/ box/ diamond' except 'rect', the size of the marker is too small.
+Fixed an issue that when tick's marker is set to cross, the tick was not visible.
+
+Upload
+-------
+In IE7/8, if the upload is created from an input element and the maximumFiles option is set to a value of more than 0 the browser will throw javascript exception. 
+
+Scatterchart
+--------------
+Fixed a bug that the chart can't support gradient color fill.
+
+BarChart
+---------
+Fixed a bug that when the seriesList's data.x array length is more than data.y's array length, the chart will draw incorrectly.
+Fixed a bug that if the axis's compass option is changed, the axis of the charts didn't change.
+
+Charts
+---------
+Fixed a memory issue when data is reloaded or mouse is hovered over the chart.
+Fixed a bug for setting the disabled option in IE9.
+Fixed a bug that when the seriesList's array length is more than the seriesStyle/seriesHoverStyles's length some chart elements's style/hoverStyle is wrong.
+
+Editor
+---------------
+Fixed a bug that "Permission denied" javacript error is observed after canceling the "Tag Inspector" dialog and clicking link toolbar button in "FullScreen" mode.
+Fixed a bug that the source view's appearance is ugly when the editor is in fullscreen mode.
+
+LightBox
+---------------
+Fixed an issue that content can still be open when the lightbox is disabled at client side.
+Fixed an issue that "OnClientShow" event is not fired when the first slide is shown in the Large Image Dialog.
+Added clickPause option for controlling click behavior.
+
+Grid
+----
+The appearance of the loading UI is refactored, and a loadingText option is added.
+Fixed bug to disable grouping hovering and filtering in disabled grid.
+When the column has a parent band, then the column widths are ignored.
+Fixed bug where the footerText option does not display in boolean type column.
+
+Pager
+-----
+Prevented hover style in disabled pager.
+
+
+Wijmo-Complete v2.0.6
+=====================
+
+
+* Enhancements: 
+
+EventsCalendar
+--------------
+	Added new client side method:
+		/// <summary>
+		/// Retrieves the array which contains 
+		/// the full list of Event objects in the specified time interval. 
+		///	Note, this method will create instances of the Event
+		/// object for recurring events.
+		/// </summary>
+		/// <param name="start">The Date value which specifies 
+		/// the start date and time of the interval.</param>
+		/// <param name="end">The Date value which specifies 
+		/// the end date and time of the interval.</param>
+		getOccurrences: function (start, end)
+	JS Lint verification.
+	[19594] [Enhancement] The appointment cannot be able to dragged and dropped into the 'all-day events' area
+	[20014] The event cannot be dragged and dropped to the other date with Month View
+	[19618] Request to provide sorting behavior in C1EventsCalendar with all view types
+
+
+* Fixes:
+
+DatePager
+--------------
+	[19717] The previous day is not selected through Left button if the current date is the first day of the month
+
+EventsCalendar
+--------------
+	(IE7) fixed problem with javascript exception which thrown by amplify.store under IE7.
+	[19595] All appointments (more than 4) are not displayed in C1EventsCalendar with 'Month' view type
+	[19959] [Sample] Some problems are observed in the Data Model page
+	[19611] The appointment window opens up with full browser size when browsing it on IE9 (CompatibilityView)
+	[19613] (IE7) The dates are not displayed in the navigation bar when browsing it on IE9 (CompatibilityView)
+	[19712] (IE7) Time text are not fully displayed in the time ruler with IE9 (compatibilty view)
+	[20008] The created event with Repeat value is not retained in C1EventsCalendar
+	[20011]  The all-day event with Repeat value cannot be deleted
+
+    
+Tooltip
+-------
+if window[content/title] is a function, then get the function value.
+
+Scatterchart
+--------------
+Fixed a bug that setting the animation's enabled to false, the chart still play animation.
+
+BubbleChart
+-----------
+Fixed a bug that SeriesHoverStyle is still applied in chart element after hovering mouse over chart element and mouse is moved to outside of chart element in IE9
+Fixed a bug that when the legend size changed, the bubble's legend icon size doesn't changed.
+Fixed a bug that when the first series's legendEntry set to false, the page will throw a javascript exception.
+
+BarChart
+---------
+Fixed a bug: This is probably a problem with the chart theming itself, and not the sample. 
+The black border for each bar is on top of everything, so it puts black lines through the tooltip. 
+This can impact readablilty when the number lands in between bars, but is otherwise an annoyance.
+Fixed a bug of fixed label width.
+Fixed a bug that the clusterRadius is wrong in column chart.
+Fixed a bug that when the x axis is not set, the chart will throw javascript exception.
+
+PieChart
+---------
+Fixed a bug: The Overview and Animagion chart samples display with a jagged black border around each slice, until you explode the slices. 
+The border will slowly dissappear as you explode slices.
+Add class "wijmo-wijpiechart-series-n" with n being the index to each series element.
+Fixed the animation issue: duration and easing are lose effect.
+Fixed a bug that shadow is moving to different direction while the pieChart series is animated
+Fixed a bug that js error occurs when data is dynamically set with IE9 Environment.
+
+LineChart
+---------
+Fixed a bug of symbol disappear after horizontal animation in IE8 only.
+
+Charts
+---------
+Fixed a bug when y data type is datetime.
+Fixed a bug that when tick of axis doesn't show if its position is 'inside'.
+Fixed a bug that callout triangle of chart tooltip is shown on setting showCallout = False when calloutFilled property is set to True.
+Add series visible to each chart.
+Add culture option to chart for annoFormat.
+Fixed a bug that when all series's legendEntry is false, legend is visible, and compass is south or north, the chart series draws wrong.
+Fixed a bug that when set an rotation and scale style to raphael object, it only effect on scale.
+Fixed a bug that when the axis labels's labelAlign changed, the chart axis's label haven't any change.
+Fixed a bug that when gridMinor's visible set to true, the grid line doesn't show.
+Fixed a bug that when the first series's legendEntry set to false, the legend click behavior is wrong.
+
+Editor
+---------------
+Add getText and setText method to editor.
+Buttons were being pushed to the next line, added widths to fix the issue.
+Added clearing CSS to bring the elements back into the container.
+Update the undelegate method(include "." or no "." before namespace)
+Fixed a bug that table is disappear and copied text is appear  after copying text inside table and paste using context menu in the editor
+Fixed a bug that 'Undo' removes complete word instead of the formatting applied on the text in the editor
+
+ComponsiteChart
+---------------
+Fixed a javascript error when hover on the scatter point.
+Fixed a bug that: The inner pie chart is mostly black, so that you can't see each individual slice. A section of the inner pie chart does show the slices properly. You can see the labels
+Fixed a bug when the chart has more than one pie chart series, the legend is wrong.
+Fixed a bug that the position of the Axis and the position of Origin is not identical when  ¡®Bar¡¯ Chart Type is set.
+
+LightBox
+______________
+Fixed an issue that size is incorrect when autoSize=false.
+Fixed an issue that popup can't calc the source position when there is no image inside the link.
+The first image is not centered horizontally when textPosition is set to outSide.
+WijLightbox iPhone Safari click outside modal dialog does not close dialog.
+Added support to wijvideo player.
+
+Grid
+----
+When the scrollMode and showRowHeader properties are set the grouped rows are unable to collapse or expand.
+Width of the columns inside bands is calculated incorrectly, the first one is too wide, the rest are too small.
+Scroll bar are still working and freezed rows are not dim although grid is disabled.
+The groupSingleRow options doesn't work.
+
+DateInput
+---------
+Putting two date inputs side by side, calendars can be dropped down at the same time.
+Calendar is not popped up when clicking on the trigger button in IE8.
+
+Inputs
+--------
+Allow adding AutoPostBack feature to ASP.NET Inputs Control.
+Changed the bahaviors of nullText, that a null textbox keeps null after lost focus, except user press the Enter key.
+Use $trim() instead of string.trim();
+
+
+Wijmo-Complete v2.0.0
+=====================
+
+* New Widgets:
+
+	Editor
+	--------
+	RadialGauge
+	-----------
+	LinearGauge
+	-------------
+	BubbleChart
+	-----------
+	ScatterChart
+	------------
+	CompositeChart
+	--------------
+	LightBox
+	------
+	Gallery
+	-------
+	Carousel
+	--------
+	Rating
+	------
+	EventsCalendar
+	--------------
+
+* Breaking Changes:
+
+    Charts
+    ------
+    Updated graphics library to Raphael version 2. Make sure to update all references from Raphael 1.5.2
+
+* Enhancements: 
+
+    * Updated to jQuery UI 1.8.17 and jQuery 1.7.2
+
+    Charts
+    ------
+    Updated to Raphael2
+    change the default time format.
+    update destroy method.
+    Add new feature that clicking series in the legend will show/hide series in the plot area.
+
+    LineChart
+    -----------
+    Added "hole" option to get or set the data hole value.
+    Provided support for handling null values in data series.
+    Added "stacked" option to support stacked chart.
+    Added "display" option in series. Options are: 
+		    // Show the chart series.
+		    show,
+		    // Hide the chart series.
+		    hide,
+		    // exclude the chart series.
+		    exclude,
+		    // The chart series exclude the hole.
+		    excludeHole
+    Added "type" option to support area chart. Options are:
+		    // Draws a line chart.
+		    line,
+		    // Draws an area chart.
+		    area
+
+    Grid
+    ----
+    Grid lost focus when updating the grid is completed at client side under IE9.
+    New methods were added to the $.wijmo.wijgrid.selection object: addColumns, addRows, removeRange, removeColumns, removeRows.
+    Behavior changes: current cell position is not highlighted by default now. See the highlightCurrentCell option's description for more info.
+    New option added: highlightCurrentCell (default value is false).
+    Row header enlarges if any other column width is explicitly defined.
+    Filter dropdown list containing less that eight operators had zero width when shown.
+    Enhancements: Now cell editing can be finished by pressing F2.
+    Behavior changes: Filters are case insensitive now.
+    destroy() method updated.
+
+    New option of column added: ensurePxWidth (default value is undefined)
+    It determines whether to use number type column width as the real width of the column.
+    It has the higher priority than "ensureColumnPxWidth" option.
+    That is,
+    If this option is set to true, wijgrid will use the width option of the column widget.
+    If this option is undefined, wijgrid will refer to the ensureColumnsPxWidth option.
+
+    New option added: "staticColumnIndex" and "staticRowIndex"
+    "staticColumnIndex" indicates the index  of columns that will always be shown on the left when the grid view scrolled horizontally.
+    All columns before the static column will be automatically marked as static, too.
+    It can only take effect when scrollMode is not "none".
+    It will be considered as -1 when grouping or row merging is enabled.
+    -1 means no data column but row header is static.
+    0 means one data column and row header are static.
+    "staticRowIndex" indicates the index of data rows that will always be shown on the top when the wijgrid is scrolled vertically.
+    All rows before the static row will be automatically marked as static, too.
+    It can only take effect when scrollMode is not "none".
+    It will be considered as -1 when grouping or row merging is enabled.
+    -1 means no data row but header row is static.
+    0 means one data row and header row are static.
+
+    UI splitters were added for "staticRowIndex" and "staticColumnIndex"
+    Dragging and dropping can make user easily adjust "staticRowIndex" and "staticColumnIndex"
+
+    Behavior changes: adjust the algorithm of calculating the width of columns
+    It is a bit different from previous design in assigning the remaining space when being expanded.
+    There always exist UI splitters when "scrollMode" is not "none".
+
+    New method added: "setSize"
+    It provides user an easy way to adjust the size of grid
+
+    filterValue and filterOperator options are extended to support multiple filters.
+
+    Input
+    ----
+    Added minDate/maxDate options to inputDate.
+    Extended the parameter of client side invalidInput event.
+    Fixed a issue: Javascript error is observe after pressing backspace key when inputdate is in Full datetime format.
+    Added getPostValue method.
+
+    Charts
+    ------
+    The default showDelay option for hints has been reduced to zero.
+
+* Fixes:
+
+	Editor
+	--------
+	Update editor sourceview with designview changing.
+	Fixed the issue that the page throw javascript exception when use jQuery.noConfict().
+
+	PieChart
+	--------
+	Fixed a bug on hovering over text.
+
+	RadialGauge
+	-----------
+	Fix the issue that marginLeft can't take effect on wijgauge.
+	Fixed the issue that the page throw javascript exception when use jQuery.noConflict().
+
+	LinearGauge
+	-------------
+	Fixed the issue that the page throw javascript exception when use jQuery.noConflict().
+
+	BarChart
+	--------
+	Fix the issue that setting clusterRadius to a number value and shadow to false, an exception will be thrown.
+	Fix the issue that sometimes animation for bar chart is very strange when origin isn't set.
+	Modify the bar chart arithmetic when the series data x is datetime value array.
+
+	Bubblechart
+	-----------
+	Fixed the issue that when the widget is seted disabled, the tooltip still trigger to show.
+	Fix the issue that an exception will be thrown when data is date time value.
+	Fixed the issue that data are not display and javascript error is observed when binding bubble chart with DateTime value in X-axis or Y-axis
+	Fixed an adjuest axis issue when the axis-x series data is string array.
+	Fixed the wrong bubble size arithmetic.
+	Modify the bubble chart animation and add seriesTransition functionality.
+	Modify the comments for options and events.
+	Add a "sizingMethod" option to decide how to calculate the size of the bubble.
+	Fixed an issue that when the y1 values are same, the web page will throw a javascript exception.
+
+	Editor
+	------
+	Fixed the issue that error will be thrown when initial markup is a textbox.
+	Add active class on ribbon buttons.
+
+	Rating
+	------
+	add aria support.
+	Fixed a bug when playing jquery animation in ie8.
+
+	CompositeChart
+	--------------
+	Fix the jslint conflict.
+	Fix the issue that setting date time value to series list will show an exception.
+	Fix the issue that composite chart can't be shown correctly when series type is bar.
+	Fix the issue that spline/bezier type can't be drawn correctly.
+	Fix the issue that scatter can't be shown when scatter series and bar series are set to date time value.
+	Fix the issue that series.pieSeriesList throws exception.
+	Fix the issue that animation wroks wrong when it contains two pie charts.
+	Modified the comments for options and events.
+
+	Ribbon
+	------
+	Fix the jslint confliction.
+
+	Combobox
+	-----
+	Fixed a selecteditem bug. When use filter, the selectedIndex will incorrect.
+	Unable to set “Width” property of ComboBox to  100% for C1Cpmbobox.
+	Add "selectedValue" option.
+
+    LightBox
+    ------
+    Fixed an issue: When Image dialog is in maximize state, “Restore” button and “Close” button are outside the window.
+    Fixed an issue: Navigate to subsequent images very quickly the image can get stuck.
+
+
 Wijmo-Complete v1.5.0
 =====================
 

@@ -1,7 +1,7 @@
 /*globals window jQuery */
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -14,7 +14,8 @@
  ** Wijmo Datasource widget.
 *
 * Depends:
-*	jquery-1.4.2.js
+*	jquery.js
+*	jquery.ui.js
 *
 */
 (function ($) {
@@ -87,8 +88,7 @@
 		/// <param name="data" type="Object">
 		/// data passed in by load method.
 		/// </param>
-		self.loaded = null;
-
+		self.loaded = null;		
 		self._constructor(options);
 	};
 	window.wijdatasource = wijdatasource;
@@ -147,7 +147,7 @@
 			var self = this,
 			d = self.data;
 			// reads using a reader object
-			if (d  && self.reader) {
+			if (d && self.reader) {
 				self.reader.read(self);
 			}
 			else {
@@ -165,6 +165,12 @@
 	/// </summary>
 	wijarrayreader = function (fields) {
 		// this.fields to store the fields info
+
+		// Add for parse objectValue options for jUICE. D.H
+		if ($.isFunction(window["wijmoASPNetParseOptions"])) {
+			wijmoASPNetParseOptions(fields);
+		}
+
 		if ($.isArray(fields)) {
 			this.fields = fields;
 		}
@@ -201,12 +207,18 @@
 					$.each(self.fields, function (index, field) {
 						// mapping property is a function,
 						// the return value will be used as value.
+
+						//handle the juice
+						if (field.mapping && typeof field.mapping && window[field.mapping]) {
+							field.mapping = window[field.mapping];
+						}
+
 						if ($.isFunction(field.mapping)) {
 							i[field.name] = field.mapping(value);
 							return true;
 						}
 						// use string field mapping or number index mapping.
-						var mapping = field.mapping !== undefined ? 
+						var mapping = field.mapping !== undefined ?
 											field.mapping : field.name,
 						v = value[mapping];
 						if (v === undefined) {
@@ -231,6 +243,11 @@
 	/// </summary>
 	wijhttpproxy = function (options) {
 		this.options = options;
+
+		// Add for parse objectValue options for jUICE. D.H
+		if ($.isFunction(window["wijmoASPNetParseOptions"])) {
+			wijmoASPNetParseOptions(options);
+		}
 	};
 	window.wijhttpproxy = wijhttpproxy;
 

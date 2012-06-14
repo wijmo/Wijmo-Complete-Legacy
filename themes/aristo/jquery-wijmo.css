@@ -13,11 +13,6 @@
  * 
 */
 
-a
-{
-    outline: none;
-}
-
 /* Layout helpers
 ----------------------------------*/
 .ui-helper-hidden
@@ -26,8 +21,9 @@ a
 }
 .ui-helper-hidden-accessible
 {
-    position: absolute;
-    left: -99999999px;
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px,1px,1px,1px);
 }
 .ui-helper-reset
 {
@@ -2761,4 +2757,8 @@ div.wijmo-wijcalendar table.wijmo-wijcalendar-mygrid
 .wijmo-wijcalendar .ui-datepicker-group .ui-datepicker-header
 {
     border-right: solid 1px #a8a8a8;
+}
+div.wijmo-wijribbon .ui-icon, .wijmo-wijribbon-abbrevicon, div.wijmo-wijribbon-simple span.ui-icon, .wijmo-wijribbon .wijmo-wijribbon-group .ui-button:hover .ui-icon, div.wijmo-wijribbon-modes span.ui-icon, .wijmo-wijribbon-group .wijmo-wijribbon-abbrevgroup:hover .ui-icon, .wijmo-wijribbon-group .wijmo-wijribbon-abbrevgroup:hover .wijmo-wijribbon-abbrevicon
+{
+    background-image: url("images/wijmo-ui-icons_000000_240x112.png");
 }

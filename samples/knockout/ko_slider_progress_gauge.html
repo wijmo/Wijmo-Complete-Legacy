@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Knockout - Multiple Widgets</title>
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../themes/wijmo/jquery.wijmo-open.2.0.0b1.css" rel="stylesheet" type="text/css" />
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery.wijmo-open.2.0.0b1.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijlineargauge.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijradialgauge.js" type="text/javascript"></script>
+	<script src="../../external/knockout-2.0.0.js" type="text/javascript"></script>
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/knockout.wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.val = ko.observable(50);
+			self.min = ko.observable(0);
+			self.max = ko.observable(100);
+			self.disabled = ko.observable(false);
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Multiple Widgets</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<p>Slider:</p>
+			<div data-bind="wijslider: {value: val, min: min, max: max, disabled: disabled}" style="width:200px;">
+			</div>
+			<p>Progress Bar:</p>
+			<div data-bind="wijprogressbar: {value: val, minValue: min, maxValue: max, disabled: disabled}">
+			</div>
+			<p>Linear Gauge</p>
+			<div data-bind="wijlineargauge: {value: val, min: min, max: max, disabled: disabled, ranges: [{startWidth: 0.2, endWidth: 0.2, startValue: 0, endValue: val, startDistance: 0.6, endDistance: 0.6, style: { fill: '#ccc', stroke: 'none'}}] }">
+			</div>
+			<p>Radial Gauge</p>
+			<div data-bind="wijradialgauge: {value: val, min: min, max: max, disabled: disabled, ranges: [{startWidth: 8, endWidth: 8, startValue: 0, endValue: val, startDistance: 0.5, endDistance: 0.5, style: { fill: '#ccc', stroke: 'none'}}] }">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<div>
+					disabled:<input type="checkbox" data-bind="checked: disabled" />
+				</div>
+				<div>
+					max:<input type="text" data-bind="value: max" />
+				</div>
+				<div>
+					min:<input type="text" data-bind="value: min" />
+				</div>
+				<div>
+					value:<input type="text" data-bind="value: val" />
+				</div>
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+				Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+			</p>
+		</div>
+	</div>
+</body>
+</html>

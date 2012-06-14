@@ -1,0 +1,1067 @@
+﻿.wijmo-wijev
+{
+    width: 900px;
+    height: 600px;
+    font-size: 100%;
+    border-radius: 6px;
+    position: relative !important;
+}
+
+.wijmo-wijev-headerbar
+{
+    float: left;
+    text-align: center;
+    padding: 4px 0;
+    background: none;
+    border: none;
+}
+
+.wijmo-wijev-headerbar .wijmo-wijev-tools
+{
+    margin-right: 0;
+}
+ 
+
+.wijmo-wijev-navigationbar .wijmo-wijev-title
+{
+    display: inline-block;
+    padding: 6px;
+}
+
+.wijmo-wijev-view .wijmo-wijev-header-title
+{
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    padding: 0 0 0 58px;
+}
+
+.wijmo-wijev .wijmo-wijev-view
+{
+    overflow: hidden;
+    width: 900px;
+    height: 600px;
+    clear: none;
+    float: left;
+    font-size: 12px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-timeruler
+{
+    display: block;
+    width: 60px;
+    float: left;
+    clear: none;
+    min-height: 10px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer
+{
+    min-height: 36px;
+    margin-top: 6px;
+}
+.wijmo-wijev-view-container
+{
+     box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    padding: 0;
+    margin: 2px 12px;
+	clear: none;
+	float: left;    	
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn
+{
+    border: none;
+    width: 200px;
+    height: 100%;
+    display: block;
+    float: left;
+    clear: none;
+    padding: 0;
+}
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn .wijmo-wijev-daylabel
+{
+    text-align: left;
+    font-size: 12px;
+    opacity: 0.7;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: normal;
+    padding: 0 6px;
+    cursor: default;
+}
+.wijmo-wijev .wijmo-wijev-weekview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn .wijmo-wijev-daylabel
+{
+    text-align: left;
+    font-size: 12px;
+    opacity: 0.7;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: normal;
+    padding: 0 6px;
+    cursor: pointer;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-weekview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn .wijmo-wijev-daylabel
+{
+	cursor: default;
+}
+
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn .wijmo-wijev-allday-cell
+{
+    margin-right: -1px;
+    position: relative;
+    *width: 100%;
+    *display: block;
+}
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-dayheadercolumn .wijmo-wijev-ay-cell .wijmo-wijev-allday-label
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 6px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-sizer
+{
+    float: left;
+    width: 60px;
+    text-align: right;
+    *width: 61px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-headercontainer .wijmo-wijev-sizer .wijmo-wijev-gmtlabel
+{
+    padding: 16px 6px;
+    font-weight: normal;
+    opacity: 0;
+    
+}
+
+.wijmo-wijev .wijmo-wijev-listview .wijmo-wijev-headercontainer .wijmo-wijev-sizer .wijmo-wijev-gmtlabel,
+.wijmo-wijev .wijmo-wijev-weekview .wijmo-wijev-headercontainer .wijmo-wijev-sizer .wijmo-wijev-gmtlabel
+{
+	display: block;
+	opacity: 0.7;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn
+{
+    width: 200px;
+    display: block;
+    float: left;
+    clear: none;
+    position: relative;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-timeinterval, 
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-content, 
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-content .wijmo-wijev-title,
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-timeruler .wijmo-wijev-timerulerinterval, 
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-timeinterval
+{
+    width: 100%;
+    height: 15px;
+    border-bottom: none;
+    border-right: none;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-appointment
+{
+	cursor: pointer;
+	clear:both;
+	height: 17px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin: 1px;
+    position:relative;
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    padding-left: 20px;    
+}
+
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-monthview .wijmo-wijev-appointment
+{
+	cursor: default;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-appointment .wijmo-wijev-colordot
+{
+    height: 12px;
+    width: 12px;
+    border: 1px solid;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin: 2px;
+    position: absolute;
+    left: 0px;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-appointment .wijmo-wijev-event-title
+{
+    float: left;
+    height: 17px;
+    line-height: 17px;
+    white-space: nowrap;
+    text-overflow: ellipsis;	
+    overflow: hidden;    
+    width: 100%;
+}
+/**/
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-allday-cell .wijmo-wijev-appointment
+{
+	cursor: pointer;
+	clear:both;
+	height: 17px;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-dayview .wijmo-wijev-allday-cell .wijmo-wijev-appointment
+{
+	cursor: default;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-allday-cell .wijmo-wijev-appointment .wijmo-wijev-colordot
+{
+    float: left;
+    height: 12px;
+    width: 12px;
+    border: 1px solid;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin: 2px;	
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-allday-cell .wijmo-wijev-appointment .wijmo-wijev-event-title
+{
+    
+    height: 17px;
+    line-height: 17px;
+    margin-left: 4px;
+    /* Note: all day event title should not be wrapped to the next line: 
+float:left removed.
+	*/
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment
+{
+    width: 100%;
+    height: 15px;
+    position: absolute;
+    top: 0;
+    left: 0;    
+    border-radius: 4px;
+    box-shadow: 2px 2px 3px rgba(0,0,0,0.10), inset 1px 1px 0 rgba(255,255,255,0.25);
+/*fix for:
+when a new appointment is created the resizer bar appears on top of the content
+*/
+    min-height: 5px;
+    overflow: hidden;
+/*
+fix for:
+Current time indicator is under certain colors of appointments
+*/    
+	z-index: 999;
+    -moz-opacity: .95;
+    filter: alpha(opacity=95);
+    opacity: .95;    
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-resizer
+{
+    position: absolute;
+    height: 7px;
+    line-height: 7px;
+    width: 100%;
+    bottom: 0;
+    cursor: ns-resize;
+    z-index: 1;
+    background-color: #fff;
+    -moz-opacity: .40;
+    filter: alpha(opacity=40);
+    opacity: .40;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-resizer
+{
+	cursor: default;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-resizer .ui-icon
+{
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    margin-left: -8px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment.wijmo-wijev-dragging
+{
+    -moz-opacity: .50;
+    filter: alpha(opacity=50);
+    opacity: .50;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-content
+{
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.25)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(255,255,255,0.25) 0%,rgba(255,255,255,0) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#40ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+    width: auto;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment .wijmo-wijev-content .wijmo-wijev-title
+{
+    color: #fff;
+    font-size: 11px;
+    text-shadow: none;
+    margin: 0;
+    padding: 4px;
+    overflow: hidden;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.25);
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-timeruler .wijmo-wijev-timerulerinterval
+{
+    display: block;
+    width: 100%;
+    height: 15px;
+    text-align: right;
+    border: solid 1px transparent;
+    padding: 0 4px;
+    font-weight: normal;
+    opacity: 0.7;
+    *width: 83%;
+}
+
+.wijmo-wijev-currenttime-indicator
+{
+    display: block;
+    overflow: hidden;
+    height: 8px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    margin-top: -3px;
+    z-index: 1;
+}
+
+.wijmo-wijev-currenttime-indicator-arrow
+{
+    width: 0;
+    height: 0;
+    background: none !important;
+    border-top: 4px solid transparent !important;
+    border-bottom: 4px solid transparent !important;
+    border-right: 0 !important;
+    border-left-width: 4px !important;
+    margin: 0;
+    padding: 0;
+}
+
+.wijmo-wijev-currenttime-indicator-line
+{
+    position: absolute;
+    top: 3px;
+    left: 60px;
+    height: 0;
+    width: 100%;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcolumn
+{
+    border: none;
+    width: 200px;
+    height: 100%;
+    display: block;
+    float: left;
+    clear: none;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer .wijmo-wijev-monthcellheader
+{
+    border: none;
+    padding: 0 6px;
+    text-align: right;
+    cursor: pointer;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer .wijmo-wijev-monthcellheader
+{
+	cursor: default;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer .wijmo-wijev-monthcellheader:hover
+{
+    text-decoration: underline;
+}
+
+.wijmo-wijev-monthcell
+{
+    overflow: hidden;
+    position: relative;
+}
+.wijmo-wijev-monthcell-showmore
+{
+	position: absolute;
+	right: 5px;
+	bottom: 0px;
+	cursor: pointer;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-monthcell-showmore
+{
+	cursor: default;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer .wijmo-wijev-monthcellheader .wijmo-wijev-todaylabel
+{
+	float:left;
+}
+
+.wijmo-wijev .wijmo-wijev-monthview .wijmo-wijev-monthcellcontainer.wijmo-wijev-today .wijmo-wijev-monthcell
+{
+    border: none;
+}
+
+
+.wijmo-wijev-addevent-dialog .wijmo-wijev-calendar, .wijmo-wijev-addevent-dialog .wijmo-wijev-color
+{
+    width: 200px;
+    height: 150px;
+}
+
+.wijmo-wijev .wijmo-wijev-event-dialog
+{
+    position: absolute;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 4px;
+    min-width: 289px;
+    *width: 300px;
+    font-size: 12px;
+}
+
+.wijmo-wijev-event-dialog ul li
+{
+    list-style: none;
+    clear: both;
+    padding: 4px;
+    position: relative;
+}
+
+.wijmo-wijev-event-dialog ul li:after
+{
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.wijmo-wijev-event-dialog label
+{
+    display: block;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    opacity: 0.7;
+    padding: 4px;
+    text-align: right;
+    width: 63px;
+    *width: 70px;
+    text-transform: lowercase;
+    overflow: hidden;
+    text-overflow: ellipsis;    
+}
+
+.wijmo-wijev-event-dialog a
+{
+    display: block;
+    color: #1F66D2;
+    text-decoration: none;
+    text-align: center;
+    clear: none;
+    float: left;
+    margin: 5px;
+    padding: 2px 7px;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-brief-content
+{
+    margin: 4px 0;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-color
+{
+    cursor: pointer;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-event-dialog .wijmo-wijev-color
+{
+	cursor: default;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-delete
+{
+    float: left;
+    color: Red;
+}
+
+.wijmo-wijev-event-dialog .footer .ui-button
+{
+    padding: 4px 6px;
+    font-size: 12px;
+}
+
+.wijmo-wijev-event-dialog .footer .ui-button-text
+{
+    padding: 0;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-angle
+{
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.wijmo-wijev-event-dialog.wijmo-wijev-topangle .wijmo-wijev-angle
+{
+    left: 50%;
+    top: -12px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid #fff;
+}
+
+.wijmo-wijev-event-dialog.wijmo-wijev-bottomangle .wijmo-wijev-angle
+{
+    left: 50%;
+    bottom: -12px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid #fff;
+}
+
+.wijmo-wijev-event-dialog.wijmo-wijev-leftangle .wijmo-wijev-angle
+{
+    left: -12px;
+    top: 50%;
+    margin-top: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid #fff;
+}
+
+.wijmo-wijev-event-dialog.wijmo-wijev-rightangle .wijmo-wijev-angle
+{
+    left: 100%;
+    top: 50%;
+    margin-top: -8px;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid #fff;
+}
+
+.wijmo-wijev-event-dialog .footer
+{
+    clear: both;
+}
+
+.wijmo-wijev-event-color-default
+{
+    color: #fff;
+    background-color: #668CD9;
+    border-color: #668CD9;
+}
+
+.wijmo-wijev-event-color-red
+{
+    color: #fff;
+    background-color: #FF4040;
+    border-color: red;
+}
+
+.wijmo-wijev-event-color-red .wijmo-wijev-title
+{
+    background-color: red;
+}
+
+.wijmo-wijev-event-color-green
+{
+    color: #fff;
+    background-color: #44B441;
+    border-color: #04B400;
+}
+
+.wijmo-wijev-event-color-green .wijmo-wijev-title
+{
+    background-color: #04B400;
+}
+
+.wijmo-wijev-event-color-blue
+{
+    color: #fff;
+    background-color: #668CD9;
+    border-color: #2952A3;
+}
+
+.wijmo-wijev-event-color-yellow
+{
+    background-color: #FF0;
+    border-color: #DADA00;
+}
+
+.wijmo-wijev-event-color-yellow .wijmo-wijev-title
+{
+    background-color: #DADA00;
+}
+
+.wijmo-wijev-event-color-bronze
+{
+    background-color: #CD7F32;
+    border-color: #CDA073;
+}
+
+.wijmo-wijev-event-color-bronze .wijmo-wijev-title
+{
+    background-color: #CDA073;
+}
+
+.wijmo-wijev-event-color-cornflowerblue
+{
+    background-color: #91B2ED;
+    border-color: #6495ED;
+}
+
+.wijmo-wijev-event-color-cornflowerblue .wijmo-wijev-title
+{
+    background-color: #6495ED;
+}
+
+.wijmo-wijev-event-color-darkorchid
+{
+    background-color: #9932CC;
+    border-color: #A658CC;
+}
+
+.wijmo-wijev-event-color-darkorchid .wijmo-wijev-title
+{
+    background-color: #A658CC;
+}
+
+.wijmo-wijev-event-color-default .wijmo-wijev-title, .wijmo-wijev-event-color-blue .wijmo-wijev-title
+{
+    background-color: #2952A3;
+}
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-today .wijmo-wijev-timeinterval
+{
+    background: #fff8c2;
+    border-color: #f8eb7e;
+}
+
+div.wijmo-wijev .ui-state-highlight
+{
+    background: #fff8c2;
+    color: #af9b00;
+    text-shadow: 1px 1px 0 #fff;
+    border-color: #f8eb7e;
+}
+
+.wijmo-wijev-listcolor
+{
+    display: block;
+    width: 16px;
+    height: 16px;
+    float: left;
+    cursor: pointer;
+    border: solid 1px transparent;
+    margin: 4px;
+}
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-listcolor
+{
+	cursor: default;
+}
+
+.wijmo-wijev-listcolor:hover
+{
+    border: solid 1px rgba(0,0,0,0.25);
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.5);
+}
+
+.wijmo-wijev-color-menu
+{
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+    -moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+    padding: 6px;
+}
+
+.wijmo-wijev-color
+{
+    padding: 0 8px;
+}
+
+
+.wijmo-wijev .wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-oddrow
+{
+    border-top-style: dotted;
+}
+
+.wijmo-wijev-rightpane
+{
+    width: 150px;
+    float: right;
+    clear: none;
+}
+
+.wijmo-wijev-leftpane
+{
+    float: left;
+    border-right: none;
+}
+
+.wijmo-wijev-leftpane-inner
+{
+    padding: 6px 12px;
+}
+.wijmo-wijev-viewdetails .wijmo-wijev-leftpane-inner
+{
+    padding: 0;
+}
+
+
+.wijmo-wijev-viewdetails
+{
+    display: none;
+    height: 100%;    
+    position: relative;
+}
+.wijmo-wijev-list-details
+{
+    width: 30%;
+}
+.wijmo-wijev-agenda-container
+{
+    min-height: 36px;
+    border: none;
+}
+
+.wijmo-wijev-viewdetails .wijmo-wijev-agenda-container .wijmo-wijev-agenda-header
+{
+    background: none;
+    height: 20px;
+    line-height: 20px;
+    padding: 4px;
+    border: none;
+    font-size: 11px;
+    color: inherit;
+}
+
+.wijmo-wijev-viewdetails .wijmo-wijev-agenda-container li.wijmo-wijev-agenda-event
+{
+    padding: 6px;
+    list-style: none;
+    border-left: none;
+    border-right: none;
+    margin-bottom: -1px;
+    cursor: pointer;
+}
+
+.wijmo-wijev.ui-state-disabled .wijmo-wijev-viewdetails .wijmo-wijev-agenda-container li.wijmo-wijev-agenda-event
+{
+	cursor: default;
+}
+
+.wijmo-wijev-viewdetails .wijmo-wijev-agenda-event-color
+{
+    float: left;
+    height: 12px;
+    width: 12px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    margin: 4px;
+}
+
+.wijmo-wijev-viewdetails .wijmo-wijev-agenda-event-title
+{
+    float: left;
+}
+
+.wijmo-wijev-viewdetails .wijmo-wijev-agenda-event-time
+{
+    float: right;
+    font-weight: normal;
+    opacity: 0.7;
+    font-size: 12px;
+    line-height: 19px;
+}
+
+.wijmo-wijev-agenda-details
+{
+    position: relative;
+    width: 30%;
+}
+
+.wijmo-wijev-day-details
+{
+    width: 50%;
+    position: relative;
+}
+
+.wijmo-wijev-day-details .wijmo-wijev-monthday-container
+{
+    float: left;
+    width: 35%;/*qq: take into account vertical scrollbar*/
+    margin: 12px;
+}
+
+.wijmo-wijev-day-details .wijmo-wijev-monthday-label, .wijmo-wijev-day-details .wijmo-wijev-fulldate-label, .wijmo-wijev-day-details .wijmo-wijev-year-label
+{
+}
+.wijmo-wijev-day-details .wijmo-wijev-monthday-label
+{
+    font-size: 124px;
+    margin: -26px 0;
+}
+
+.wijmo-wijev-day-details .wijmo-wijev-fulldate-label, .wijmo-wijev-day-details .wijmo-wijev-year-label
+{
+    font-size: 16px;
+    font-weight: normal;
+    opacity: 0.7;
+}
+
+.wijmo-wijev-day-details .wijmo-wijev-year-label
+{
+}
+
+.wijmo-wijev-day-details .wijmo-wijev-daycalendar
+{
+    background: none;
+    float: right;
+    width: 50%;
+    border: none;
+    padding: 12px;
+}
+
+.wijmo-wijev-daycalendar .wijmo-wijcalendar-table
+{
+    margin: 0;
+}
+
+.wijmo-wijev-daycalendar .wijmo-wijcalendar-table td, .wijmo-wijev-daycalendar .wijmo-wijcalendar-table tbody, .wijmo-wijev-daycalendar .wijmo-wijcalendar-table thead
+{
+    border: none;
+}
+
+.wijmo-wijev-viewdetails.wijmo-wijev-day-details .wijmo-wijev-agenda-container
+{
+    min-height: 33px;
+    margin-top: 12px;
+    float: left;
+    width: 100%;
+}
+.wijmo-wijev-monthcellcontainer
+{
+    margin-bottom: -1px;
+    margin-right: -1px;
+}
+.wijmo-wijev-navigationbar
+{
+	display: block;
+    float: left;
+    clear:both;
+    text-align: center;
+    padding:0;
+    padding: 5px;
+    background: none;
+    border: none;   
+}
+
+.wijmo-wijev-navigationbar .wijmo-wijev-next, .wijmo-wijev-event-dialog .wijmo-wijev-cancel,
+.wijmo-wijev-event-dialog .wijmo-wijev-save, .wijmo-wijev-viewdetails .wijmo-wijev-agenda-container .wijmo-wijev-agenda-header .wijmo-wijev-date
+{
+    float: right;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-brief-content, 
+.wijmo-wijev-event-dialog .wijmo-wijev-detailed-content, 
+.wijmo-wijevcal .wijmo-wijev-scrollpanel, 
+.wijmo-wijev-today
+{
+    border: none;
+}
+
+.wijmo-wijev-navigationbar .wijmo-wijev-today, .wijmo-wijev-navigationbar .wijmo-wijev-previous, .wijmo-wijev-viewdetails .wijmo-wijev-agenda-container .wijmo-wijev-agenda-header .wijmo-wijev-weekday
+{
+    float: left;
+}
+
+.wijmo-wijev-event-dialog ul, .wijmo-wijev-viewdetails .wijmo-wijev-agenda-container ul.wijmo-wijev-agenda-list
+{
+    margin: -1px 0 0 0;
+    padding: 0;
+}
+.wijmo-wijev-day-details .wijmo-wijev-agenda-container ul.wijmo-wijev-agenda-list
+{
+    margin: 0;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijtextbox
+{
+    width: 192px;
+}
+.wijmo-wijev-event-dialog .wijmo-wijtextbox.wijmo-wijev-subject
+{
+    width: 145px;
+    padding-right: 44px;
+}
+.wijmo-wijev-event-dialog .wijmo-wijev-color-button
+{
+    position: absolute;
+    right: 16px;
+	border: none;
+	background: none;
+}
+.wijmo-wijev-event-dialog .wijmo-wijev-color-button .ui-button-text
+{
+    padding: 6px 19px 6px 6px;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijev-color-button .ui-icon
+{
+    right: 4px;
+    left: auto;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijdropdown
+{
+	display: inline-block;	
+}
+.wijmo-wijev-event-dialog .wijmo-wijev-calendar,
+.wijmo-wijev-event-dialog .wijmo-wijev-repeat
+{
+	width: 190px;
+}
+
+.wijmo-wijev-event-dialog .wijmo-wijinput
+{
+	float: left;
+	clear: none;
+	margin-right: 5px;
+}
+.wijmo-wijev-agenda-day-container
+{
+    clear: both;
+}
+
+.wijmo-wijev-monthview-inner
+{
+    /*padding: 12px;*/
+    padding: 0;
+    margin: 12px;
+}
+
+
+.wijmo-wijev-event-dialog .wijmo-checkbox label {
+    display: block;
+    float: left;
+    font-size: 12px;
+    font-weight: normal;
+    opacity: 0.7;
+    padding: 0 4px;
+    text-align: right;
+    width: 63px;
+    margin-left: 0;    
+}
+
+.wijmo-wijev-event-dialog .wijmo-checkbox .wijmo-checkbox-box {
+    border-radius: 2px 2px 2px 2px;
+    top: 0;
+    height: 16px;
+    left: 71px;
+    margin-right: 3px;
+    position: absolute;
+    right: 0;
+    width: 16px;
+}
+.wijmo-wijev .wijmo-wijev-datepager
+{
+    float: right;
+    margin: 6px 0;
+    max-width: 85%;
+}
+.wijmo-wijev-statusbar
+{
+	height: 20px;
+}
+.wijmo-wijev-loading-modal-frame
+{
+	background-color: #ffffff;
+    width: 100%;
+    height: 100%;	
+    position: absolute;   
+    z-index: 1001;
+	-moz-opacity: .35;
+    filter: alpha(opacity=35);
+    opacity: .35;      
+    display: none;
+}
+.wijmo-wijev-loading
+{
+	background: transparent url('images/waiting.gif') no-repeat scroll;
+	background-position: center center;	
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;        
+    border: none;
+    position: absolute;   
+    z-index: 1002;
+    display: none;
+}
+.wijmo-wijev-loading-text
+{
+	position: absolute;
+	color: #000000;
+	left: 50%;
+	bottom: 30%;
+	width: 200px;
+	margin-left: -100px;	
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;	
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title></title>
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijutil.css" rel="stylesheet" type="text/css" />
+	<link href="../../../../Main/Widgets/Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijexpander.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Main/Widgets/Wijmo-Complete/development-bundle/external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Complete/development-bundle/external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijutil.js" type="text/javascript"></script>
+	<script src="../../../../Main/Widgets/Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijexpander.js" type="text/javascript"></script>
+	<script src="Refs/knockout-2.0.0.debug.js" type="text/javascript"></script>
+	<script src="knockout-wijmo.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		//Create ViewModel
+		var viewModel = function () {
+			var self = this;
+			self.disabled = ko.observable(false);
+			self.allowExpand = ko.observable(true);
+			self.expanded = ko.observable(true);
+			self.expandDirection = ko.observable('bottom');
+		};
+
+		//Bind ViewModel
+		$(document).ready(function () {
+			var vm = new viewModel();
+			ko.applyBindings(vm);
+		});
+	</script>
+</head>
+<body>
+	<div>
+		disabled:<input type="checkbox" data-bind="checked: disabled" />
+		allowExpand:<input type="checkbox" data-bind="checked: allowExpand" />
+		expanded:<input type="checkbox" data-bind="checked: expanded" />
+		expandDirection:<select data-bind="value: expandDirection">
+			<option value="bottom">bottom</option>
+			<option value="top">top</option>
+			<option value="left">left</option>
+			<option value="right">right</option>
+		</select>
+	</div>
+	<div data-bind="wijexpander: { disabled: disabled, allowExpand: allowExpand, expanded: expanded, expandDirection: expandDirection }">
+		<h3>
+			Header</h3>
+		<div>
+			Vestibulum ut eros non enim commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit, pretium et, rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in.
+		</div>
+	</div>
+</body>
+</html>

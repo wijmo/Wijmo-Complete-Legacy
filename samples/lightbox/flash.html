@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lightbox - Flash Content</title>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.0.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery.wijmo-open.all.2.1.0.min.js" type="text/javascript"></script>
+    <script src="../explore/js/swfobject.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo.wijlightbox.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.wijmo.wijlightbox.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#lightbox").wijlightbox({
+                controlsPosition: 'outside',
+                textPosition: 'outside',
+                showCounter: false
+            });
+        });
+    </script>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Flash Content</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="lightbox">
+                <a href="http://cdn.wijmo.com/movies/skip.swf" rel="wijlightbox[stock];width=400;height=300">
+                    <img src="http://cdn.wijmo.com/images/happygirl.png" title="Happy Girl" alt="Happy Girl" /></a>
+                <a href="http://cdn.wijmo.com/movies/caveman.swf" rel="wijlightbox[stock];width=520;height=390">
+                    <img src="http://cdn.wijmo.com/images/caveman.png" title="Cave Man" alt="Cave Man" /></a>
+                <a href="http://cdn.wijmo.com/movies/old_man.swf" rel="wijlightbox[stock];width=600;height=450">
+                    <img src="http://cdn.wijmo.com/images/oldman.png" title="Old Man" alt="Old Man" /></a>
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>This sample demonstrates how to display Flash content in a wijlightbox widget.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

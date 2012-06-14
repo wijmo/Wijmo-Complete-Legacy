@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>ScatterChart - Overview</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijscatterchart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+
+			var data1 = [{
+				height: 161.4,
+				weight: 63.4
+			}, {
+				height: 169.0,
+				weight: 58.2
+			}, {
+				height: 166.2,
+				weight: 58.6
+			}, {
+				height: 159.4,
+				weight: 45.7
+			}, {
+				height: 162.5,
+				weight: 52.2
+			}, {
+				height: 159.0,
+				weight: 48.6
+			}, {
+				height: 162.8,
+				weight: 57.8
+			}, {
+				height: 159.0,
+				weight: 55.6
+			}, {
+				height: 179.8,
+				weight: 66.8
+			}, {
+				height: 162.9,
+				weight: 59.4
+			}, {
+				height: 161.0,
+				weight: 53.6
+			}, {
+				height: 151.1,
+				weight: 73.2
+			}, {
+				height: 168.2,
+				weight: 53.4
+			}, {
+				height: 168.9,
+				weight: 69.0
+			}, {
+				height: 173.2,
+				weight: 58.4
+			}, {
+				height: 174.0,
+				weight: 73.6
+			}, {
+				height: 162.6,
+				weight: 61.4
+			}, {
+				height: 174.0,
+				weight: 55.5
+			}, {
+				height: 162.6,
+				weight: 63.6
+			}, {
+				height: 161.3,
+				weight: 60.9
+			}, {
+				height: 156.2,
+				weight: 60.0
+			}, {
+				height: 149.9,
+				weight: 46.8
+			}, {
+				height: 169.5,
+				weight: 57.3
+			}, {
+				height: 160.0,
+				weight: 64.1
+			}, {
+				height: 175.3,
+				weight: 63.6
+			}, {
+				height: 169.5,
+				weight: 67.3
+			}, {
+				height: 160.0,
+				weight: 75.5
+			}, {
+				height: 172.7,
+				weight: 68.2
+			}, {
+				height: 162.6,
+				weight: 61.4
+			}, {
+				height: 157.5,
+				weight: 76.8
+			}, {
+				height: 176.5,
+				weight: 71.8
+			}, {
+				height: 164.4,
+				weight: 55.5
+			}, {
+				height: 160.7,
+				weight: 48.6
+			}, {
+				height: 174.0,
+				weight: 66.4
+			}, {
+				height: 163.8,
+				weight: 67.3
+			}]
+			$("#wijscatterchartDefault").wijscatterchart({
+				//disabled: true,
+				header: {
+					text: "Height Versus Weight of 72 Individuals by Gender"
+				},
+				axis: {
+					y: {
+						text: "Weight (kg)",
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": 11
+							}
+						},
+						gridMajor: {
+							style: { stroke: "#353539", "stroke-dasharray": "- " }
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} },
+						tickMinor: { position: "outside", style: { stroke: "#7f7f7f"} }
+					},
+					x: {
+						text: "Height (cm)",
+						labels: {
+							style: {
+								fill: "#7f7f7f",
+								"font-size": 11,
+								rotation: -45
+							}
+						},
+						tickMajor: { position: "outside", style: { stroke: "#7f7f7f"} }
+					}
+				},
+				animation:
+				{
+					enabled: true
+				},
+				showChartLabels: false,
+				hint: {
+					content: function () {
+						return this.x + ' cm, ' + this.y + ' kg'
+					},
+					offsetY: -10
+				},
+				legend: {
+					visible: true
+				},
+				seriesList: [
+					{
+						dataSource: data1,
+						label: "Female",
+						legendEntry: true,
+						data: {
+							x: { bind: "height" },
+							y: { bind: "weight" }
+						},
+						visible: true,
+						markerType: "circle"
+					}, {
+						label: "Male",
+						legendEntry: true,
+						data: {
+							x: [175.0, 174.0, 165.1, 177.0, 192.0, 176.5, 169.4, 182.1, 179.8, 175.3, 184.9, 177.3, 167.4, 178.1, 168.9,
+								174.0, 167.6, 170.2, 167.6, 188.0, 174.0, 176.5, 180.3, 167.6, 188.0, 180.3, 167.6, 183.0, 183.0, 179.1,
+								170.2, 177.8, 179.1, 190.5, 177.8, 180.3, 180.3
+							],
+							y: [70.2, 73.4, 70.5, 68.9, 102.3, 68.4, 65.9, 75.7, 84.5, 87.7, 86.4, 73.2, 53.9, 72.0, 55.5,
+								70.9, 64.5, 77.3, 72.3, 87.3, 80.0, 82.3, 73.6, 74.1, 85.9, 73.2, 76.3, 65.9, 90.9, 89.1,
+								62.3, 82.7, 79.1, 98.2, 84.1, 83.2, 83.2
+							]
+						},
+						markerType: "diamond"
+					}
+				],
+				seriesStyles: [
+				{
+					fill: "r(0.25, 0.75)#fff-#0c0:30-#000",
+					stroke: "#afe500"
+				}, {
+					fill: "90-#cc0000-#0c0-#0000cc",
+					stroke: "#ff9900"
+				}
+				],
+				seriesHoverStyles: [{ fill: "90-#00cc00-#0c0-#cc0000" }, { fill: "#0000cc"}]
+			});
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				Overview</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijscatterchartDefault" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px;">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijbubblechart.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function getRoundData(n) {
+            var a = Math.random();
+            if (a > 0.9 || a < 0.1) {
+                return getRoundData(n);
+            }
+            else {
+                a *= Math.pow(10, n);
+                return Globalize.parseFloat(Globalize.format(a, "n2"));
+            }
+        }
+
+        function makeSeries() {
+            var series = [],
+                markers = ["circle", "tri", "box", "cross", "diamond"];
+            for (i = 0; i < 5; i++) {
+                series.push({
+                    label: "series" + i.toString(),
+                    legendEntry: true,
+                    data: {
+                        x: [].concat(getRoundData(2)),
+                        y: [].concat(getRoundData(3)),
+                        y1: [].concat(getRoundData(2)) 
+                    },
+                    markers: {
+                        type: markers[i]
+                    }
+                });
+            }
+            return series;
+        }
+
+        $(document).ready(function () {
+            $("#wijbubblechart").wijbubblechart({
+                minimumSize:5,
+                //showChartLabels: false,
+                axis: {
+                    y: {
+                        autoMin: false,
+                        autoMax: false,
+                        min: 0,
+                        max: 1000
+                    },
+                    x: {
+                        autoMin: false,
+                        autoMax: false,
+                        min: 0,
+                        max: 100
+                    }
+                },
+                hint: {
+                    content: function () {
+                        return "" + this.data.label + " \ny: " + this.y + " \nx: " + Globalize.format(this.x, "n") + " \ny1: " + this.data.y1 ;
+                    }
+                },
+                seriesList: makeSeries()
+            });
+
+            $("#BtnChange").click(function () {
+                $("#wijbubblechart").wijbubblechart("option", "seriesList", makeSeries());
+            });
+
+        });
+
+        function changeProperties() {
+            var seriesTransition = {};
+            enabled = $("#chkEnabled").is(":checked"),
+                duration = $("#inpDuration").val(),
+                easing = $("#selEasing").val();
+            seriesTransition.enabled = enabled;
+            if (duration && duration.length) {
+                seriesTransition.duration = parseFloat(duration);
+            }
+            seriesTransition.easing = easing;
+            $("#wijbubblechart").wijbubblechart("option", "seriesTransition", seriesTransition);
+        }
+    </script>
+</head>
+<body>
+ <div class="container">
+        <div class="header">
+            <h2>
+                Overview</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div class="togbuttons">
+                <button id="BtnChange">
+                    Change data</button>
+            </div>
+            <div id="wijbubblechart" class="ui-widget ui-widget-content ui-corner-all" style="width: 756px; height: 475px;">
+            </div>
+            
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <div>
+                    <label for="chkEnabled">
+                        Series Transition Settings: Enabled
+                    </label>
+                    <input id="chkEnabled" type="checkbox" checked="checked" />
+                    <label for="inpDuration">
+                        Duration
+                    </label>
+                    <input id="inpDuration" type="text" value="1000" />
+                    <label for="selEasing">
+                        Easing
+                    </label>
+                    <select id="selEasing">
+                        <option value=">">></option>
+                        <option value="<"><</option>
+                        <option value="<>"><></option>
+                        <option value="backIn">backIn</option>
+                        <option value="backOut">backOut</option>
+                        <option value="bounce">bounce</option>
+                        <option value="elastic">elastic</option>
+                    </select>
+                    <input type="button" value="Apply" onclick="changeProperties()" />
+                </div>
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                This sample shows the <b>seriesTransition</b> animation when the seriesList option is changed.</p>
+        </div>
+    </div>
+</body>
+</html>

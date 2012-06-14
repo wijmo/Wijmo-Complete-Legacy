@@ -19,9 +19,9 @@
     float: right;
     outline: none;
     margin: 0;
-    line-height: 16px;
-    height: 16px;
-    padding: 5px;
+    line-height: normal;
+    height: auto;
+    padding: 0;
 }
 
 .wijmo-wijinput .wijmo-wijinput-trigger
@@ -140,6 +140,11 @@
     text-align: right;
 }
 
+.wijmo-wijinput-date
+{
+    padding: 5px;
+}
+
 .wijmo-wijinput-date, .wijmo-wijinput-mask
 {
     float: left;
@@ -179,4 +184,8 @@
 {
     border-top: none;
     border-left: none;
+}
+.wijmo-wijinput-mask
+{
+    padding: 5px;
 }

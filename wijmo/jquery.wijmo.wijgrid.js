@@ -3,7 +3,7 @@
 
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -48,6 +48,14 @@
 	$.widget("wijmo.wijgrid", {
 		options: {
 			/// <summary>
+			/// A value indicating whether columns can be moved.
+			/// Default: false.
+			/// Type: Boolean.
+			/// Code example: $("#element").wijgrid({ allowColMoving: false });
+			/// </summary>
+			allowColMoving: false,
+
+			/// <summary>
 			/// A value indicating whether columns can be sized.
 			/// Default: false.
 			/// Type: Boolean.
@@ -56,12 +64,12 @@
 			allowColSizing: false,
 
 			/// <summary>
-			/// A value indicating whether columns can be moved.
+			/// A value indicating whether editing is enabled.
 			/// Default: false.
 			/// Type: Boolean.
-			/// Code example: $("#element").wijgrid({ allowColMoving: false });
+			/// Code example: $("#element").wijgrid({ allowEditing: false });
 			/// </summary>
-			allowColMoving: false,
+			allowEditing: false,
 
 			/// <summary>
 			/// A value indicating whether keyboard navigation is allowed.
@@ -88,15 +96,7 @@
 			allowSorting: false,
 
 			/// <summary>
-			/// A value indicating whether editing is enabled.
-			/// Default: false.
-			/// Type: Boolean.
-			/// Code example: $("#element").wijgrid({ allowEditing: false });
-			/// </summary>
-			allowEditing: false,
-
-			/// <summary>
-			/// Determines whether wijgrid should parse underlying data at each operation requiring data re-fetching, like calling the ensureControl(true) method, paging, sorting, etc.
+			/// Determines whether wijgrid should parse underlying data at each operation requiring data re-fetching, like calling the ensureControl(true) method, paging, sorting, and so on.
 			/// If the option is disabled, wijgrid parses data only at the first fetch.
 			/// The option is ignored if dynamic data load feature is used, in this case data are always parsed.
 			///
@@ -110,27 +110,6 @@
 			/// that changes match column datatype.
 			/// </remarks>
 			alwaysParseData: true,
-
-			/// <summary>
-			/// Determines behavior for column autogeneration.
-			///
-			/// Possible values are: "none", "append", "merge".
-			///
-			/// "none": column auto-generation is turned off.
-			/// "append": a column will be generated for each data field and added to the end of the columns collection.
-			/// "merge": each column having dataKey option not specified will be automatically bound to the first unreserved data field.
-			/// For each data field not bound to any column a new column will be generated and added to the end of the columns collection.
-			/// To prevent automatic binding of a column to a data field set its dataKey option to null.
-			///
-			/// Default: "merge".
-			/// Type: String.
-			/// Code example: $("#element").wijgrid({ columnsAutogenerationMode: "merge" });
-			/// </summary>
-			///
-			/// <remarks>
-			/// Note: columns autogeneration process affects the options of columns and the columns option itself.
-			/// </remarks>
-			columnsAutogenerationMode: "merge",
 
 			/// <summary>
 			/// Function used for styling the cells in wijgrid.
@@ -161,6 +140,27 @@
 			columns: [],
 
 			/// <summary>
+			/// Determines behavior for column autogeneration.
+			///
+			/// Possible values are: "none", "append", "merge".
+			///
+			/// "none": column auto-generation is turned off.
+			/// "append": a column will be generated for each data field and added to the end of the columns collection.
+			/// "merge": each column having dataKey option not specified will be automatically bound to the first unreserved data field.
+			/// For each data field not bound to any column a new column will be generated and added to the end of the columns collection.
+			/// To prevent automatic binding of a column to a data field set its dataKey option to null.
+			///
+			/// Default: "merge".
+			/// Type: String.
+			/// Code example: $("#element").wijgrid({ columnsAutogenerationMode: "merge" });
+			/// </summary>
+			///
+			/// <remarks>
+			/// Note: columns autogeneration process affects the options of columns and the columns option itself.
+			/// </remarks>
+			columnsAutogenerationMode: "merge",
+
+			/// <summary>
 			/// Determines the culture ID.
 			/// Default: "".
 			/// Type: String.
@@ -174,7 +174,6 @@
 			/// Custom user filter is an object which contains the following properties:
 			///   name - operator name.
 			///   arity - the number of filter operands. Can be either 1 or 2.
-			///   css - the name of the CSS-class determining filter icon. If no value is set, then "filter-<name.toLowerCase()>" class is used.
 			///   applicableTo - an array of datatypes to which the filter can be applied. Possible values for elements of the array are "string", "number", "datetime", "currency" and "boolean".
 			///   operator - comparison operator, the number of accepted parameters depends upon the arity. The first parameter is a data value, the second parameter is a filter value.
 			///
@@ -198,10 +197,10 @@
 			/// Possible datasources include:
 			///
 			///   1. A DOM table. This is the default datasource, used if the data option is null.
-			///     Table must be contained in a DOM element to which wijgrid is attached, must have no cells with rowSpan and colSpan attributes.
-			///   2. A two-dimensional array, such as [[0, "a"], [1, "b"]]
-			///   3. An array of hashes, such as [{field0: 0, field1: "a"}, {field0: 1, field1: "b'}]
-			///   4. A wijdatasource
+			///     Table must have no cells with rowSpan and colSpan attributes.
+			///   2. A two-dimensional array, such as [[0, "a"], [1, "b"]].
+			///   3. An array of objects, such as [{field0: 0, field1: "a"}, {field0: 1, field1: "b'}].
+			///   4. A wijdatasource.
 			///
 			/// Type: Object.
 			/// Default: null
@@ -218,7 +217,7 @@
 			/// Determines whether to use number type column width as the real width of the column.
 			/// Default: false.
 			/// Type: Boolean.
-			/// Code example: $("#element").wijgrid({ ensurePxWidth: true });
+			/// Code example: $("#element").wijgrid({ ensureColumnsPxWidth: true });
 			/// </summary>
 			/// <remarks>
 			/// If this option is set to true, wijgrid will not expand itself to expand the available space.
@@ -258,6 +257,21 @@
 			/// Code example: $("#element").wijgrid({ groupIndent: 10 });
 			/// </summary>
 			groupIndent: 10,
+
+			/// <summary>
+			/// Determines whether position of the current cell is highlighted or not.
+			/// Default: false.
+			/// Type: Boolean.
+			/// Code example: $("#element").wijgrid({ highlightCurrentCell: false });
+			/// </summary>
+			highlightCurrentCell: false,
+
+			///<summary>
+			/// Determines the text to be displayed when the grid is loading.
+			/// Default: "Loading...".
+			/// Code example: $("#element").wijgrid({ loadingText: "Loading..."});
+			///</summary>
+			loadingText: "Loading...",
 
 			/// <summary>
 			/// Cell values equal to this property value are considered as null value.
@@ -351,7 +365,7 @@
 			/// Determines the scrolling mode.
 			///
 			/// Possible values are:
-			/// "none": scrolling is not used, staticRowIndex value is ignored.
+			/// "none": scrolling is not used, staticRowIndex and staticColumnIndex are ignored.
 			/// "auto": scrollbars appear automatically depending upon content size.
 			/// "horizontal": horizontal scrollbar is active.
 			/// "vertical": vertical scrollbar is active.
@@ -437,25 +451,31 @@
 			/// Type: Number.
 			/// Code example: $("#element").wijgrid({ splitDistanceY: 50 });
 			/// </summary>
-			splitDistanceY: 50,
+			splitDistanceY: 50,*/
 
 			/// <summary>
-			/// Indicates the zero-based  index  of  the column that will be shown on the
-			/// left when the grid view scrolled horizontally. Note, that all columns
-			/// before the static column will be automatically marked as static, too. Set
-			/// this option to false or to any negative value if you want to turn
-			/// off the static columns feature.
+			/// Indicates the index of columns that will always be shown on the left when the grid view scrolled horizontally. 
+			/// Note, that all columns before the static column will be automatically marked as static, too.
+			/// It can only take effect when scrollMode is not "none".
+			/// It will be considered as -1 when grouping or row merging is enabled.
+			/// -1 means no data column but row header is static.
+			/// 0 means one data column and row header are static.
 			///
 			/// Default: -1.
 			/// Type: Number.
 			/// Code example: $("#element").wijgrid({ staticColumnIndex: -1 });
 			/// </summary>
-			staticColumnIndex: -1,*/
+			staticColumnIndex: -1,
 
 			/// <summary>
-			/// Indicates whether header is static or not. Static header is always
-			/// shown on the top when the wijgrid is scrolled vertically.
-			/// Set this option to 0 to turn on the static header feature or to -1 to turn it off.
+			/// Indicates the index of data rows that will always be shown on the
+			/// top when the wijgrid is scrolled vertically.
+			/// Note, that all rows before the static row
+			/// will be automatically marked as static, too.
+			/// It can only take effect when scrollMode is not "none".
+			/// It will be considered as -1 when grouping or row merging is enabled.
+			/// -1 means no data row but header row is static.
+			/// 0 means one data row and header row are static.
 			///
 			/// Default: -1.
 			/// Type: Number.
@@ -590,7 +610,7 @@
 			columnDragged: null,
 
 			/// <summary>
-			/// The columnDropping event handler. A function called when column is dropped, but before wijgrid handles the operation. Cancellable.
+			/// The columnDropping event handler. A function called when column is dropped into the columns area, but before wijgrid handles the operation. Cancellable.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -604,13 +624,13 @@
 			/// <param name="args" type="Object">
 			/// The data with this event.
 			/// args.drag: drag source, column being dragged.
-			/// args.drop: drop target, column on which drag source is dropped(be null if dropping a column into empty group area).
-			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target(be "left" if dropping a column into empty group area).
+			/// args.drop: drop target, column on which drag source is dropped.
+			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target.
 			/// </param>
 			columnDropping: null,
 
 			/// <summary>
-			/// The columnDropped event handler. A function called when column has been dropped.
+			/// The columnDropped event handler. A function called when column has been dropped into the columns area.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -624,8 +644,8 @@
 			/// <param name="args" type="Object">
 			/// The data with this event.
 			/// args.drag: drag source, column being dragged.
-			/// args.drop: drop target, column on which drag source is dropped(be null if dropping a column into empty group area).
-			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target(be "left" if dropping a column into empty group area).
+			/// args.drop: drop target, column on which drag source is dropped.
+			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target.
 			/// </param>
 			columnDropped: null,
 
@@ -647,7 +667,7 @@
 			/// args.drop: drop target, column on which drag source is dropped (be null if dropping a column into empty group area).
 			/// args.dragSource: the place where the dragged column widget is located, possible value: "groupArea", "columns".
 			/// args.dropSource: the place where the dropped column widget is located, possible value: "groupArea", "columns".
-			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target(be "left" if dropping a column into empty group area).
+			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target ("left" if dropping a column into empty group area).
 			/// </param>
 			columnGrouping: null,
 
@@ -666,10 +686,10 @@
 			/// <param name="args" type="Object">
 			/// The data with this event.
 			/// args.drag: drag source, column being dragged.
-			/// args.drop: drop target, column on which drag source is dropped (be null if dropping a column into empty group area).
-			/// args.dragSource: the place where the dragged column widget is located, possible value: "groupArea", "columns".
-			/// args.dropSource: the place where the dropped column widget is located, possible value: "groupArea", "columns".
-			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target(be "left" if dropping a column into empty group area).
+			/// args.drop: drop target, column on which drag source is dropped (null if dropping a column into empty group area).
+			/// args.dragSource: the place where the dragged column is located, possible values: "groupArea", "columns".
+			/// args.dropSource: the place where the dropped column is located, possible values: "groupArea", "columns".
+			/// args.at: position to drop (one of the "left", "right" and "center" values) relative to drop target ("left" if dropping a column into empty group area).
 			/// </param>
 			columnGrouped: null,
 
@@ -822,7 +842,7 @@
 			filtering: null,
 
 			/// <summary>
-			/// The filtered event handler. A function called after the widget is filtered.
+			/// The filtered event handler. A function called after the wijgrid is filtered.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -1105,11 +1125,12 @@
 		},
 
 		// private fields **
-		_staticColumnIndex: -1,
+		//_staticColumnIndex: -1,
 		_data$prefix: "wijgrid",
 		_customSortOrder: 1000,
 		_reverseKey: false,
 		_pageSizeKey: 10,
+		_mergeWidgetsWithOptions: true,
 		// ** private fields
 
 		_ajaxError: function (xhttpr, textStatus, error) {
@@ -1119,18 +1140,28 @@
 				errorThrown: error
 			});
 
-			this.outerDiv.removeClass("wijmo-wijgrid-loading");
+			this._deactivateSpinner();
 		},
 
 		_dataLoading: function (userData) {
 			this._trigger("dataLoading");
-			this.outerDiv.addClass("wijmo-wijgrid-loading");
 		},
 
 		_dataLoaded: function (userData) {
 			this._trigger("dataLoaded");
-			this.outerDiv.removeClass("wijmo-wijgrid-loading");
+
 			this.doRefresh(userData);
+
+			this._loaded();
+		},
+
+		_loading: function () {
+			this._activateSpinner();
+			this._trigger("loading");
+		},
+
+		_loaded: function () {
+			this._deactivateSpinner();
 			this._trigger("loaded");
 		},
 
@@ -1140,7 +1171,7 @@
 			/// Code example: $("#element").wijgrid("ensureControl", true);
 			/// </summary>
 			/// <param name="loadData" type="Boolean">Determines if wijgrid must load data from linked data source before rendering.</param>
-			this._trigger("loading");
+			this._loading();
 
 			if (!$.isPlainObject(userData)) {
 				userData = {
@@ -1151,8 +1182,10 @@
 			}
 
 			if (this._initialized) {
-				this._ownerise(false);
-				this._widgetsToOptions();
+				if (this._mergeWidgetsWithOptions) {
+					this._ownerise(false);
+					this._widgetsToOptions();
+				}
 			} else {
 				this._prepareColumnOptions(false); // prepare static columns only
 			}
@@ -1163,7 +1196,7 @@
 				this._dataStore.load(userData);
 			} else {
 				this.doRefresh(userData);
-				this._trigger("loaded");
+				this._loaded();
 			}
 		},
 
@@ -1274,9 +1307,69 @@
 			}
 		},
 
+		getFilterOperatorsByDataType: function (dataType) {
+			/// <summary>
+			/// Returns a one-dimensional array of filter operators which are applicable to the specified data type.
+			/// Code example: var operators = $("#element").wijgrid("getFilterOperatorsByDataType", "string");
+			/// <param name="dataType" type="String">Data type. Possible values are: "string", "number", "datetime", "currency" and "boolean".</param>
+			/// </summary>
+			/// <returns type="Array">A one-dimensional array of filter operators.</returns>
+
+			var applicableFilters = this.filterOperatorsCache.getByDataType(dataType || "string");
+
+			this.filterOperatorsCache.sort(applicableFilters, this.options.filterOperatorsSortMode);
+
+			return applicableFilters;
+		},
+
+		setSize: function (width, height) {
+			/// <summary>
+			/// Set the size of grid.
+			/// Code example: $("#element").wijgrid("setSize", 200, 200);
+			/// <param name="width" type="Object" optional="true">Determines the width of the grid.</param>
+			/// <param name="height" type="Object" optional="true">Determines the height of the grid.</param>
+			/// </summary>
+			var view = this._view(),
+				scrollValue = { type: "", hScrollValue: null, vScrollValue: null },
+				outerDiv = this.outerDiv,
+				frozener = this._field("frozener"),
+				visibleLeaves = this._field("visibleLeaves");
+
+			if (view && view.getScrollValue) {
+				scrollValue = view.getScrollValue();
+			}
+
+			if (width || (width === 0)) {
+				this._autoWidth = false;
+				outerDiv.width(width);
+			}
+			if (height || (height === 0)) {
+				this._autoHeight = false;
+				outerDiv.height(height);
+			}
+
+			$.each(visibleLeaves, function (index, leaf) {
+				var th = view.getHeaderCell(index),
+					cols = view.getJoinedCols(index);
+				$(th).css("width", "");
+				$.each(cols, function (index, col) {
+					$(col).css("width", "");
+				});
+			});
+
+			this._updateSplits(scrollValue);
+
+			if (frozener) {
+				frozener.refresh();
+			}
+		},
+
 		_prepareColumnOptions: function (dataLoaded) {
 			$.wijmo.wijgrid.traverse(this.options.columns, function (column) {
 				column.isBand = ($.isArray(column.columns) || (column.clientType === "c1band"));
+
+				column._originalDataKey = column.dataKey;
+				column._originalHeaderText = column.headerText;
 			});
 
 			// set .isLeaf
@@ -1358,7 +1451,7 @@
 
 			if (this.options.showRowHeader) { // append rowHeader
 				tmp = $.wijmo.wijgrid.createDynamicField({ clientType: "c1basefield", dataIndex: -1, travIdx: -1, parentVis: true,
-					allowMoving: false, allowSizing: false, allowSort: false
+					allowMoving: false, allowSizing: false, allowSort: false, isRowHeader: true
 				});
 				tmp.owner = this;
 				tmpColumns.push(tmp);
@@ -1369,7 +1462,7 @@
 			});
 
 			// generate span table and build leaves
-			this._field("spanTable", new $.wijmo.wijgrid.bandProcessor().generateSpanTable(tmpColumns, leaves));
+			this._field("columnHeadersTable", new $.wijmo.wijgrid.bandProcessor().generateSpanTable(tmpColumns, leaves));
 			this._field("leaves", leaves);
 
 			this._onLeavesCreated();
@@ -1415,15 +1508,21 @@
 				throw "invalid markup";
 			}
 
+			// handle juice objectValue serialize
+			if ($.isFunction(window["wijmoASPNetParseOptions"])) {
+				wijmoASPNetParseOptions(this.options);
+			}
+
+			this.destroyed = false;
+
 			var styleHeight = this.element[0].style.height,
 				styleWidth = this.element[0].style.width;
-
-			this.rendered = false;
 
 			// initialize data
 			this._dataStore = new $.wijmo.wijgrid.dataStore(this);
 
-			//this.element.addClass("ui-widget wijmo-wijgrid ui-widget-content ui-corner-all");
+			this._originalHtml = this.element.html(); // store original html. Will be restored in the destroy() method.
+
 			this.element.addClass("wijmo-wijgrid-root");
 			this.element.wrap("<div class=\"ui-widget wijmo-wijgrid ui-widget-content ui-corner-all\"></div>");
 			this.outerDiv = this.element.parent();
@@ -1479,7 +1578,9 @@
 			// processing custom filtering operators
 			this.filterOperatorsCache.removeCustom();
 			$.each(this.options.customFilterOperators, function (index, value) {
-				value.custom = true;
+				if (value) {
+					value.custom = true;
+				}
 			});
 			this._registerFilterOperator(this.options.customFilterOperators);
 
@@ -1532,36 +1633,47 @@
 			var tmp,
 				self = this;
 
-			this._view().dispose();
+			try {
+				this._view().dispose();
 
-			this._detachEvents(true);
+				this._detachEvents(true);
 
-			if (tmp = this._field("resizer")) {
-				tmp.dispose();
-			}
-
-			$.wijmo.wijgrid.iterateChildrenWidgets(this.outerDiv, function (index, widget) {
-				if (widget !== self) {
-					widget.destroy();
+				if (tmp = this._field("resizer")) {
+					tmp.dispose();
 				}
-			});
 
-			// YK: destroy outer div after restoring element.
-			this.element.insertBefore(this.outerDiv);
-			this.outerDiv.remove();
+				if (tmp = this._field("frozener")) {
+					tmp.dispose();
+				}
 
-			if (tmp = this._field("selectionui")) {
-				tmp.dispose();
+				$.wijmo.wijgrid.iterateChildrenWidgets(this.outerDiv, function (index, widget) {
+					if (widget !== self) {
+						widget.destroy();
+					}
+				});
+
+				if (tmp = this._field("selectionui")) {
+					tmp.dispose();
+				}
+
+				if (tmp = this._field("dragndrop")) {
+					tmp.dispose();
+				}
+
+				// cleanup $data
+				$.wijmo.wijgrid.remove$dataByPrefix(this.element, this._data$prefix);
+
+				// restore original content
+				this.element.removeClass("wijmo-wijgrid-root");
+				this.element.html(this._originalHtml);
+				this.element.insertBefore(this.outerDiv);
+				this.outerDiv.remove();
+
+				$.Widget.prototype.destroy.apply(this, arguments);
 			}
-
-			if (tmp = this._field("dragndrop")) {
-				tmp.dispose();
+			finally {
+				this.destroyed = true;
 			}
-
-			// cleanup $data
-			$.wijmo.wijgrid.remove$dataByPrefix(this.element, this._data$prefix);
-
-			$.Widget.prototype.destroy.apply(this, arguments);
 		},
 
 		// * public
@@ -1672,7 +1784,7 @@
 			/// Code example:
 			/// var pageCount = $("#element").wijgrid("pageCount");
 			/// </summary>
-			/// <returns type="Number" integer="true">True if the cell is successfully put in edit mode, otherwise false.</returns>
+			/// <returns type="Number" integer="true"></returns>
 			return this.options.allowPaging
 				? this._field("pageCount") || 1
 				: 1;
@@ -1711,6 +1823,18 @@
 			return null;
 		},
 
+		_localizeFilterOperators: function (locArray) {
+			var self = this;
+			$.each(locArray, function (i, o) {
+				if (o.name) {
+					var fop = self.filterOperatorsCache.getByName(o.name);
+					if (fop) {
+						fop.displayName = o.displayName;
+					}
+				}
+			});
+		},
+
 		_rows: function () {
 			var accessor = this._field("rowsAccessor");
 
@@ -1736,18 +1860,14 @@
 		},
 
 		_registerFilterOperator: function (value) {
-			var i, len;
+			var self = this,
+				sourceList = value && ($.isArray(value) || ($.isPlainObject(value) && !value.operator))
+					? value // operators array or operators hash
+					: arguments; // single or multiple operators passed as parameters.
 
-			if (value && $.isArray(value)) {
-				for (i = 0, len = value.length; i < len; i++) {
-					this.filterOperatorsCache.add(value[i]);
-				}
-			}
-			else {
-				for (i = 0, len = arguments.length; i < len; i++) {
-					this.filterOperatorsCache.add(arguments[i]);
-				}
-			}
+			$.each(sourceList, function (key, fop) {
+				self.filterOperatorsCache.add(fop);
+			});
 		},
 
 		//
@@ -1799,18 +1919,43 @@
 		},
 
 		_postset_data: function (value, oldValue) {
-			throw "read-only";
+			this._ownerise(false);
+
+			$.wijmo.wijgrid.traverse(this.options.columns, function (column, columns) {
+				if (column.dynamic) {
+					// remove autogenerated columns
+					var idx = $.inArray(column, columns);
+					if (idx >= 0) {
+						columns.splice(idx, 1);
+					}
+				} else {
+					// restore original values
+					column.dataKey = column._originalDataKey;
+					column.headerText = column._originalHeaderText;
+				}
+			});
+
+			this._initialized = false;
+			this.options.pageIndex = 0;
+			this._dataStore = new $.wijmo.wijgrid.dataStore(this);
+
+			this.ensureControl(true);
 		},
 
 		_postset_disabled: function (value, oldValue) {
 			// update children widgets
-			var self = this;
+			var self = this,
+				view = this._view();
 
 			$.wijmo.wijgrid.iterateChildrenWidgets(this.outerDiv, function (index, widget) {
 				if (widget !== self) {
 					widget.option("disabled", value);
 				}
 			});
+
+			if (view) {
+				view.ensureDisabledState();
+			}
 		},
 
 		_postset_groupIndent: function (value, oldValue) {
@@ -1822,6 +1967,14 @@
 
 			if (this.$groupArea && (!groupedColumns || !groupedColumns.length)) { // update html when the group area is empty only.
 				this.$groupArea.html(value || "&nbsp;");
+			}
+		},
+
+		_postset_highlightCurrentCell: function (value, oldValue) {
+			var currentCell = this.currentCell();
+
+			if (currentCell && currentCell._isValid()) {
+				this._highlightCellPosition(currentCell, value);
 			}
 		},
 
@@ -1924,14 +2077,41 @@
 				this.ensureControl(false);
 			}
 		},
-		/*_postset_staticColumnIndex: function() {
-		//this._refresh(0);
-		this._ensureControl(0);
-		},*/
+
+		_postset_staticColumnIndex: function () {
+			if (this.options.scrollMode !== "none") {
+				this.ensureControl(false);
+			}
+		},
 
 		// * propeties (pre-\ post-)
 
 		// * private
+
+		_activateSpinner: function () {
+			var loadingText = this.outerDiv.append(
+					"<div class=\"wijmo-wijgrid-overlay ui-widget-overlay\"></div>" +
+					"<span class=\"wijmo-wijgrid-loadingtext ui-widget-content ui-corner-all\">" +
+						"<span class=\"ui-icon ui-icon-clock\"></span>" +
+						this.options.loadingText +
+					"</span>")
+					.find("> .wijmo-wijgrid-loadingtext");
+
+			loadingText
+				.position({
+					my: "center",
+					at: "center center",
+					of: this.outerDiv,
+					collision: "none"
+				});
+		},
+
+		_deactivateSpinner: function () {
+			this.outerDiv
+				.find("> .wijmo-wijgrid-overlay, > .wijmo-wijgrid-loadingtext")
+				.remove();
+		},
+
 		_columnWidgetsFactory: function ($node, columnOpt) {
 			var columnWidget,
 				clientType = columnOpt.clientType;
@@ -1995,22 +2175,14 @@
 
 			result = $.map(leaves, $.proxy(function (element, index) {
 				if (!element.isBand && ($.wijmo.wijgrid.validDataKey(element.dataKey)/*element.dataIndex >= 0*/) && element.filterOperator) {
-					var opName = element.filterOperator.toLowerCase(),
-						operator;
+					var fvToVerify = $.extend(true, {}, { foo: element.filterValue }).foo, // to avoid string values reconstruction ("abc" -> ["a", "b", "c"])
+						fopToVerify = $.extend(true, {}, { foo: element.filterOperator }).foo,
+						verifiedFop = $.wijmo.wijgrid.filterHelper.verify(fopToVerify, fvToVerify, element.dataType, this.filterOperatorsCache);
 
-					// check operator name
-					if (opName !== "nofilter" && (operator = this.filterOperatorsCache.getByName(opName))) {
-
-						// check dataType
-						if ($.inArray(element.dataType || "string", operator.applicableTo) >= 0) {
-
-							// check arity + filterValue
-							if (operator.arity === 1 || (operator.arity > 1 && element.filterValue !== undefined)) {
-								return (isLocal)
-									? [{ column: element, operator: operator}]
-									: [{ dataKey: element.dataKey, filterOperator: element.filterOperator, filterValue: element.filterValue}];
-							}
-						}
+					if (verifiedFop) {
+						return (isLocal)
+							? [{ column: element, filterOperator: verifiedFop.filterOperator, filterValue: verifiedFop.filterValue}]
+							: [{ dataKey: element.dataKey, filterOperator: verifiedFop.filterOperator, filterValue: verifiedFop.filterValue}];
 					}
 				}
 
@@ -2099,6 +2271,9 @@
 				delete colWidget.options.columns; // only options of the column itself will be merged at the next step.
 				var congruentColOption = colOptionsList[colWidget.options.travIdx];
 				$.extend(true, congruentColOption, colWidget.options);
+
+				congruentColOption.filterValue = colWidget.options.filterValue;
+				congruentColOption.filterOperator = colWidget.options.filterOperator;
 			});
 		},
 
@@ -2179,14 +2354,14 @@
 		},
 
 		_refresh: function () {
-			var view, currentCell, resizer,
+			var view = this._view(), currentCell, resizer, frozener,
 				scrollValue = { type: "", hScrollValue: null, vScrollValue: null },
 				filterEditorsInfo = [];
 
 			//$.wijmo.wijgrid.timerOn("refresh");
 
-			if (this._view()) {
-				scrollValue = this._view().getScrollValue();
+			if (view && view.getScrollValue) {
+				scrollValue = view.getScrollValue();
 			}
 
 			this._detachEvents(false);
@@ -2213,6 +2388,10 @@
 				this._field("resizer").dispose();
 			}
 
+			if (this._field("frozener")) {
+				this._field("frozener").dispose();
+			}
+
 			// apply grouping
 			new $.wijmo.wijgrid.grouper().group(this, this.dataTable, this._field("leaves"));
 
@@ -2222,7 +2401,8 @@
 			// view
 			//if (!this.options.splits && (this.options.staticRowIndex >= 0 || this.options.staticColumnIndex >= 0)) {
 			// only support fixing row feature in this version.
-			if (this.options.scrollMode !== "none" && (this._staticColumnIndex >= 0 || this.options.staticRowIndex >= 0)) {
+			//if (this.options.scrollMode !== "none" && (this.options.staticColumnIndex >= 0 || this.options.staticRowIndex >= 0)) {
+			if (this.options.scrollMode !== "none") {
 				this._field("view", view = new $.wijmo.wijgrid.fixedView(this));
 			} else {
 				this._field("view", view = new $.wijmo.wijgrid.flatView(this));
@@ -2239,12 +2419,12 @@
 			if (this.options.allowPaging) {
 				// top pager
 				if (this.$topPagerDiv) {
-					this.$topPagerDiv.wijpager(this._pagerSettings2PagerWidgetSettings());
+					this.$topPagerDiv.wijpager(this._pagerSettings2PagerWidgetSettings()).css("zIndex", 5);
 				}
 
 				// bottom pager
 				if (this.$bottomPagerDiv) {
-					this.$bottomPagerDiv.wijpager(this._pagerSettings2PagerWidgetSettings());
+					this.$bottomPagerDiv.wijpager(this._pagerSettings2PagerWidgetSettings()).css("zIndex", 5);
 				}
 			}
 
@@ -2291,9 +2471,16 @@
 			});
 			this._field("resizer", resizer);
 
-			this.rendered = true;
-
 			this._updateSplits(scrollValue); /*dma*/
+
+			//frozener
+			if (this.options.scrollMode !== "none") {
+				frozener = new $.wijmo.wijgrid.frozener(this);
+				frozener.addVElement(this._getStaticIndex(false));
+				frozener.addHElement(this._getStaticIndex(true));
+				frozener.attachDivEvent();
+				this._field("frozener", frozener);
+			}
 
 			// update filter editors widths
 			$.each(this.columns(), function (index, colWidget) {
@@ -2316,27 +2503,27 @@
 			//window.defaultStatus = $.wijmo.wijgrid.timerOff("refresh");
 		},
 
+		_needToCreatePagerItem: function () {
+			return this.options.allowPaging;
+		},
+
 		_render: function () {
 			var view = this._view(),
+				o = this.options,
 				content;
 
 			view.render();
 
 			// YK: for fixing pager is not align to top and bottom when header is fixed.
 			content = this.outerDiv;
-			if (this.options.scrollMode !== "none") {
+			if (o.scrollMode !== "none") {
 				// fixed header content
-				if (this.options.staticRowIndex >= 0) { // interpreted as bool, use getRealStaticRowIndex() to get the actual value.
-					content = this.outerDiv.find("div.wijmo-wijgrid-scroller:first");
-				}
-				else {
-					content = this.outerDiv.find(".wijmo-wijgrid-content-area");
-				}
+				content = this.outerDiv.find("div.wijmo-wijgrid-scroller:first");
 			}
 
 			this.$superPanelHeader = null;
 
-			// top pager (top div)
+			// ** top pager (top div)
 			if (this.$topPagerDiv) {
 				if (this.$topPagerDiv.data("wijpager")) {
 					this.$topPagerDiv.wijpager("destroy");
@@ -2347,20 +2534,21 @@
 
 			this.$topPagerDiv = null;
 
-			if (this.options.allowPaging && ((this.options.pagerSettings.position === "top") || (this.options.pagerSettings.position === "topAndBottom"))) {
+			if (this._needToCreatePagerItem() && ((o.pagerSettings.position === "top") || (o.pagerSettings.position === "topAndBottom"))) {
 				if (!this.$topPagerDiv) {
 					content.prepend(this.$superPanelHeader = $("<div class=\"wijmo-wijsuperpanel-header\"></div>"));
 					this.$superPanelHeader.prepend(this.$topPagerDiv = $("<div class=\"wijmo-wijgrid-header ui-widget-header ui-corner-top\"></div>"));
 				}
 			}
+			// top pager **
 
-			if (this.options.showGroupArea) {
+			if (o.showGroupArea) {
 				this._processGroupArea(content);
 			} else {
 				this.$groupArea = null;
 			}
 
-			// bottom pager (bottom div)
+			// ** bottom pager (bottom div)
 			if (this.$bottomPagerDiv) {
 				if (this.$bottomPagerDiv.data("wijpager")) {
 					this.$bottomPagerDiv.wijpager("destroy");
@@ -2371,11 +2559,12 @@
 
 			this.$bottomPagerDiv = null;
 
-			if (this.options.allowPaging && ((this.options.pagerSettings.position === "bottom") || (this.options.pagerSettings.position === "topAndBottom"))) {
+			if (this._needToCreatePagerItem() && ((o.pagerSettings.position === "bottom") || (o.pagerSettings.position === "topAndBottom"))) {
 				if (!this.$bottomPagerDiv) {
 					content.append(this.$bottomPagerDiv = $("<div class=\"wijmo-wijgrid-footer wijmo-wijsuperpanel-footer ui-state-default ui-corner-bottom\"></div>"));
 				}
 			}
+			// bottom pager **
 		},
 
 		_processGroupArea: function (content) {
@@ -2461,20 +2650,12 @@
 							.bind("click." + this.widgetName, $.proxy(this._onClick, this))
 							.bind("dblclick." + this.widgetName, $.proxy(this._onDblClick, this))
 							.bind("mousemove." + this.widgetName, $.proxy(this._onMouseMove, this))
-							.bind("mouseout." + this.widgetName, $.proxy(this._onMouseOut, this));
+							.bind("mouseout." + this.widgetName, $.proxy(this._onMouseOut, this))
+
+						// attach "onGroupExpandCollapseIconClick" event
+							.find("> tr.wijmo-wijgrid-groupheaderrow > td .wijmo-wijgrid-grouptogglebtn")
+								.bind("click." + this.widgetName, $.proxy(this._onGroupBtnClick, this));
 					}
-				}
-			}, this));
-
-			// attach "onGroupExpandCollapseIconClick" event
-			$.each(view.getJoinedTables(true, 0), $.proxy(function (index, item) {
-				if (item && typeof (item) !== "number") {
-					var domTable = item.element(); // item is a htmlTableAccessor instance
-
-					$(domTable)
-						.find("> tbody")
-						.find("> tr.wijmo-wijgrid-groupheaderrow > td .wijmo-wijgrid-grouptogglebtn")
-						.bind("click." + this.widgetName, $.proxy(this._onGroupBtnClick, this));
 				}
 			}, this));
 		},
@@ -2658,7 +2839,7 @@
 
 		_handleFilter: function (column, rawOperator, rawValue) {
 			var operator = this.filterOperatorsCache.getByName(rawOperator),
-				value, ok;
+				value, ok, args;
 
 			if (operator) {
 				if (operator.arity > 1) {
@@ -2670,7 +2851,8 @@
 				}
 
 				if (ok) {
-					var args = { column: column.options, operator: operator.name, value: value };
+					args = { column: column.options, operator: operator.name, value: value };
+
 					if (this._onColumnFiltering(args)) {
 						column.options.filterValue = args.value;
 						column.options.filterOperator = args.operator;
@@ -2700,7 +2882,7 @@
 								groupInfo: {
 									position: "none"
 								}
-							});							
+							});
 						},
 
 						afterRefresh: function () {
@@ -2754,10 +2936,13 @@
 		},
 
 		_onCurrentCellChanged: function () {
-			if (this.options.allowKeyboardNavigation) {
-				var currentCell = this._field("currentCell");
+			var o = this.options,
+				currentCell;
 
-				if (currentCell && !currentCell.isEqual(currentCell.outsideValue)) {
+			if (o.allowKeyboardNavigation) {
+				currentCell = this._field("currentCell");
+
+				if (o.scrollMode !== "none" && currentCell && !currentCell.isEqual(currentCell.outsideValue)) {
 					this._view().scrollTo(currentCell);
 				}
 			}
@@ -2807,7 +2992,7 @@
 					return;
 				}
 
-				clickedCellInfo = view.getAbsoluteCellInfo(clickedCell)._dataToAbs(this._getDataToAbsOffset());
+				clickedCellInfo = view.getAbsoluteCellInfo(clickedCell)._absToData(this._getDataToAbsOffset());
 
 				if (clickedCellInfo.cellIndex() < 0 || clickedCellInfo.rowIndex() < 0) { // header cell, rowheader cell or filter cell
 
@@ -2848,6 +3033,10 @@
 		},
 
 		_onGroupBtnClick: function (args) {
+			if (!this._canInteract()) {
+				return;
+			}
+
 			var $row = $(args.target).closest("tr"),
 				gh = new $.wijmo.wijgrid.groupHelper(),
 				groupInfo = gh.getGroupInfo($row[0]),
@@ -2863,13 +3052,13 @@
 					} else {
 						group.expand(args.shiftKey);
 					}
-					this._view().ensureWidth(); /*dma*/
+					this._view().ensureHeight(); /*dma*/
 				}
 			}
 		},
 
 		_onKeyDown: function (args) {
-			if (!this._canInteract) {
+			if (!this._canInteract()) {
 				return true;
 			}
 
@@ -2883,18 +3072,19 @@
 			}
 
 			if (this.options.allowEditing) {
-				if (args.which === 113) { // F2: start editing
-					this._beginEditInternal(args);
+				// ESC: cancel editing, F2: finish editing
+				if ((args.which === $.ui.keyCode.ESCAPE || args.which === 113) && (this.currentCell()._isValid() && this.currentCell()._isEdit())) {
+					this._endEditInternal(args);
 					return false;
-				} else
-				// ESC: cancel editing
-					if ((args.which === $.ui.keyCode.ESCAPE) && (this.currentCell()._isValid() && this.currentCell()._isEdit())) {
-						this._endEditInternal(args);
+				} else {
+					if (args.which === 113) { // F2: start editing
+						this._beginEditInternal(args);
 						return false;
 					}
+				}
 			}
 
-			if (!this.options.allowKeyboardNavigation) {
+			if (!this.options.allowKeyboardNavigation || (args.which === $.ui.keyCode.TAB)) {
 				return true;
 			}
 
@@ -2917,9 +3107,10 @@
 			}
 
 			if (canChangePos) {
-				cell = this._changeCurrentCell(new $.wijmo.wijgrid.cellInfo(curPos.cellIndex, curPos.rowIndex));
+				this._changeCurrentCell(new $.wijmo.wijgrid.cellInfo(curPos.cellIndex, curPos.rowIndex));
 
 				currentCell = this.currentCell();
+				cell = this._getDOMDataCell(currentCell);
 				selection = this.selection();
 
 				if (!args.shiftKey || (!selection._multipleRangesAllowed() && this.options.selectionMode.toLowerCase() !== "singlerange")) {
@@ -2987,7 +3178,7 @@
 					return;
 				}
 
-				hoveredCellInfo = view.getAbsoluteCellInfo(hoveredCell)._dataToAbs(this._getDataToAbsOffset());
+				hoveredCellInfo = view.getAbsoluteCellInfo(hoveredCell)._absToData(this._getDataToAbsOffset());
 
 				rowIndex = this._field("hoveredRow"); // previous row index
 				if (rowIndex !== undefined && hoveredCellInfo.rowIndex() !== rowIndex) {
@@ -3030,7 +3221,6 @@
 		},
 		// * event handlers
 
-
 		// * resizing
 		_fieldResized: function (fieldWidget, oldWidth, newWidth) {
 			if (oldWidth < 0) {
@@ -3053,10 +3243,10 @@
 
 		// * currentCell
 		_changeCurrentCell: function (cellInfo) {
-			var result = null,
-				currentCell = this.currentCell(),
+			var currentCell = this.currentCell(),
 				dataRange = this._getDataCellsRange(),
-				args, cellEditCompleted;
+				args, cellEditCompleted,
+				highlight = this.options.highlightCurrentCell;
 
 			// if cellInfo has a valid value
 			if ((dataRange._isValid() && dataRange._containsCellInfo(cellInfo)) || (cellInfo.isEqual(cellInfo.outsideValue))) {
@@ -3074,78 +3264,80 @@
 
 						cellEditCompleted = false;
 						if (!this.options.allowEditing || !currentCell._isEdit() || (cellEditCompleted = this._endEditInternal(null))) {
-							if (dataRange._containsCellInfo(currentCell)) {
-								this._changeCurrentCellUI(currentCell, false); // remove the current one
+							if (highlight && dataRange._containsCellInfo(currentCell)) {
+								this._highlightCellPosition(currentCell, false); // remove the current one
 							}
 
 							currentCell = cellInfo._clone();
 							currentCell._setGridView(this);
 
-							result = this._changeCurrentCellUI(currentCell, true);
+							if (highlight) {
+								this._highlightCellPosition(currentCell, true);
+							}
 
 							this._field("currentCell", currentCell); // set currentCell
 
-							//this._trigger("currentCellChanged");
 							this._onCurrentCellChanged();
 						}
 					}
 				} else { // the same cell
-					result = this._changeCurrentCellUI(currentCell, true); // ensure
+					if (highlight) {
+						this._highlightCellPosition(currentCell, true); // ensure
+					}
 				}
 			} else { // cellInfo is invalid
 				// do nothing
 
-				// this._changeCurrentCellUI(currentCell, false);
+				// this._highlightCellPosition(currentCell, false);
 				// this._field("currentCell", currentCell.outsideValue); // set currentCell
 			}
-
-			return result;
 		},
 
-		_changeCurrentCellUI: function (cellInfo, add) {
-			if (cellInfo && !cellInfo.isEqual(cellInfo.outsideValue)) {
-				var view = this._view(),
-					leaves = this._field("visibleLeaves"),
-					dataOffset = this._getDataToAbsOffset(),
-					x = cellInfo.cellIndex() + dataOffset.x,
-					y = cellInfo.rowIndex() + dataOffset.y,
-					cell, $cell, dataRowObj, dataRowInfo, headerRowInfo,
+		_highlightCellPosition: function (cellInfo, add) {
+			if (cellInfo && cellInfo._isValid()) {
+
+				var absCellInfo = cellInfo._clone()._dataToAbs(this._getDataToAbsOffset()),
+					x = absCellInfo.cellIndex(),
+					y = absCellInfo.rowIndex(),
 					$rs = $.wijmo.wijgrid.renderState,
-					state;
+					view = this._view(),
+					obj, rowInfo, state;
 
-				if (y >= 0) {
-					dataRowObj = view.getJoinedRows(y, 0);
+				// * column header cell *
+				obj = view.getHeaderCell(x);
+				if (obj) {
+					rowInfo = this._createRowInfo(this._headerRows().item(cellInfo.column().thY));
 
-					if (dataRowObj) {
-						dataRowInfo = this._createRowInfo(dataRowObj);
-						dataRowInfo.state = this._changeRenderState(dataRowInfo.$rows, $rs.current, add);
-						this.rowStyleFormatter.format(dataRowInfo);
-					}
+					obj = $(obj);
+					state = this._changeRenderState(obj, $rs.current, add);
 
-					if (x >= 0 && x < leaves.length) {
-						cell = view.getHeaderCell(x);
-						if (cell) { // activate header cell
-							headerRowInfo = this._createRowInfo(this._headerRows().item(cellInfo.column().thY));
+					// highlight column header cell
+					this.cellStyleFormatter.format(obj, x, cellInfo.column(), rowInfo, state);
+				}
 
-							$cell = $(cell);
-							state = this._changeRenderState($cell, $rs.current, add);
-							this.cellStyleFormatter.format($cell, x, cellInfo.column(), headerRowInfo, state);
-						}
+				// * row header cell *
+				obj = view.getJoinedRows(y, 0);
+				if (obj) {
+					// change row state
+					rowInfo = this._createRowInfo(obj);
+					rowInfo.state = this._changeRenderState(rowInfo.$rows, $rs.current, add);
 
-						cell = view.getCell(x, y);
-						if (cell) { // activate data cell
-							$cell = $(cell);
-							state = this._changeRenderState($cell, $rs.current, add);
-							this.cellStyleFormatter.format($cell, x, cellInfo.column(), dataRowInfo, state);
-						}
-					}
+					// highlight row header cell
+					this.rowStyleFormatter.format(rowInfo);
+				}
 
-					return view.getCell(x, y);
-				} // if y >= 0
+				// * data cell *
+				obj = view.getCell(x, y);
+				if (obj) {
+					obj = $(obj);
+					state = this._changeRenderState(obj, $rs.current, add);
+
+					// highlight data cell
+					this.cellStyleFormatter.format(obj, x, cellInfo.column(), rowInfo, state);  // rowInfo is taken from the previous step
+				}
 			}
-
-			return null;
 		},
+
 		// * currentCell
 
 
@@ -3173,7 +3365,7 @@
 				var res = new $.wijmo.wijgrid.cellEditorHelper().currentCellEditEnd(this, e);
 
 				if (res) {
-					// this._view().ensureWidth(undefined, column.visLeavesIdx);
+					this._view().ensureHeight(this.currentCell().rowIndex());
 				}
 				return res;
 			}
@@ -3188,10 +3380,10 @@
 			return tableSection.insertRow(-1);
 		},
 
-		_createCell: function (rowType, rowIndex, rowCell) {
+		_createCell: function (rowInfo, dataCellIndex, column) {
 			var rt = $.wijmo.wijgrid.rowType;
 
-			switch (rowType) {
+			switch (rowInfo.type) {
 				case rt.header:
 					return "<th><div class=\"wijmo-wijgrid-innercell\"></div></th>";
 
@@ -3204,17 +3396,17 @@
 			}
 		},
 
-		_cellCreated: function ($cell, cellIndex, column, rowInfo, state, attr, style) {
+		_cellRendered: function ($cell, column, rowInfo, state, attr, style) {
 			$.wijmo.wijgrid.dataPrefix($cell, this._data$prefix, "renderState", state);
 
-			this.cellStyleFormatter.format($cell, cellIndex, column, rowInfo, state, attr, style);
+			this.cellStyleFormatter.format($cell, column, rowInfo, state, attr, style);
 
 			this._changeRenderState($cell, $.wijmo.wijgrid.renderState.rendering, false);
 		},
 
-		_rowCreated: function (rowInfo, rowAttr, rowStyle) {
+		_rowRendered: function (rowInfo, rowAttr, rowStyle) {
 			$.wijmo.wijgrid.dataPrefix(true, rowInfo.$rows, this._data$prefix, {
-				dataTableRowIndex: rowInfo._dataTableRowIndex,
+				sectionRowIndex: rowInfo.sectionRowIndex,
 				dataRowIndex: rowInfo.dataRowIndex,
 				rowType: rowInfo.type,
 				dataItemIndex: rowInfo.dataItemIndex,
@@ -3227,7 +3419,7 @@
 			this._changeRenderState(rowInfo.$rows, $.wijmo.wijgrid.renderState.rendering, false);
 		},
 
-		_createRowInfo: function (rowObj, rowType /*opt*/, renderState /*opt*/, dataTableRowIndex /*opt*/, dataRowIndex /*opt*/, dataItemIndex/*opt*/, virtualDataItemIndex/*opt*/) {
+		_createRowInfo: function (rowObj, rowType /*opt*/, renderState /*opt*/, sectionRowIndex /*opt*/, dataRowIndex /*opt*/, dataItemIndex/*opt*/, virtualDataItemIndex/*opt*/) {
 			var dataTable = this.dataTable,
 				sourceDataRow = null,
 				$rows = (rowObj[1] ? $(rowObj) : $(rowObj[0])),
@@ -3242,8 +3434,8 @@
 				renderState = $getData($rows, this._data$prefix, "renderState");
 			}
 
-			if (isNaN(dataTableRowIndex)) {
-				dataTableRowIndex = $getData($rows, this._data$prefix, "dataTableRowIndex");
+			if (isNaN(sectionRowIndex)) {
+				sectionRowIndex = $getData($rows, this._data$prefix, "sectionRowIndex");
 			}
 
 			if (isNaN(dataRowIndex)) {
@@ -3258,8 +3450,8 @@
 				virtualDataItemIndex = $getData($rows, this._data$prefix, "virtualDataItemIndex");
 			}
 
-			if (dataTableRowIndex >= 0) {
-				tmp = dataTable[dataTableRowIndex].originalRowIndex;
+			if ((sectionRowIndex >= 0) && (rowType & $.wijmo.wijgrid.rowType.data)) {
+				tmp = dataTable[sectionRowIndex].originalRowIndex;
 				if (tmp >= 0) {
 					sourceDataRow = this.data()[tmp];
 				}
@@ -3273,7 +3465,7 @@
 				dataRowIndex: dataRowIndex,
 				dataItemIndex: dataItemIndex,
 				virtualDataItemIndex: virtualDataItemIndex,
-				_dataTableRowIndex: dataTableRowIndex
+				sectionRowIndex: sectionRowIndex
 			};
 		},
 
@@ -3443,6 +3635,17 @@
 				new $.wijmo.wijgrid.cellInfo(maxCol, maxRow));
 		},
 
+		_getDOMDataCell: function (cellInfo) {
+			if (cellInfo) {
+				cellInfo = cellInfo._clone()._dataToAbs(this._getDataToAbsOffset());
+				if (cellInfo._isValid()) {
+					return this._view().getCell(cellInfo.cellIndex(), cellInfo.rowIndex());
+				}
+			}
+
+			return null;
+		},
+
 		_getFirstDataRowCell: function (absCellIndex) {
 			var rowIndex, dataRow,
 				$rt = $.wijmo.wijgrid.rowType;
@@ -3608,42 +3811,96 @@
 				: null;
 		},
 
-		//  index of the fixed leaf inside the visibleLeaves collection.
-		_getRealStaticColumnIndex: function () {
-			if (this._staticColumnIndex >= 0) {
-				var leaves = this._field("visibleLeaves"),
-					len = leaves.length,
-					i = this._staticColumnIndex;
-
-				if (this.options.showRowHeader === true) {
-					i++;
+		_getStaticIndex: function (bRow) {
+			var limitation = false,
+				o = this.options,
+				staticIndex, maxStaticIndex;
+			$.each(this._field("leaves"), function (index, field) {
+				if (field.rowMerge !== "none" || (field.groupInfo && field.groupInfo.position !== "none")) {
+					limitation = true;
+					return false;
 				}
+			});
+			if (limitation) {
+				return -1;
+			}
+			if (bRow) {
+				staticIndex = o.staticRowIndex;
+				maxStaticIndex = this.dataTable.length - 1;
+			} else {
+				staticIndex = o.staticColumnIndex;
+				maxStaticIndex = this._field("visibleLeaves").length - (o.showRowHeader ? 1 : 0) - 1;
+			}
+			if (staticIndex < -1) {
+				staticIndex = -1;
+			} else if (staticIndex > maxStaticIndex) {
+				staticIndex = maxStaticIndex;
+			}
+			return staticIndex;
+		},
+
+		// index of the fixed leaf inside the visibleLeaves collection.
+		// return the length of Header when bHeader is true
+		_getRealStaticColumnIndex: function (bHeader) {
+			var leaves, len,
+				headerLen = 0,
+				staticColumnIndex = this._getStaticIndex(false),
+				resultIndex;
+
+			if (this.options.showRowHeader === true) {
+				headerLen++;
+			}
+
+			if (bHeader) {
+				return headerLen;
+			}
+
+			resultIndex = staticColumnIndex + headerLen;
+			if (staticColumnIndex >= 0) {
+				leaves = this._field("visibleLeaves");
+				len = leaves.length;
 
 				// If child column of some band is fixed then the top and right-most column of the root band contained current column will be fixed.
-				for (; i < len; i++) {
-					if (leaves[i].parentIdx === -1) {
-						return i; // index of the first leaf which is not contained inside a band.
+				for (; resultIndex < len; resultIndex++) {
+					if (leaves[resultIndex].parentIdx === -1) {
+						break; // index of the first leaf which is not contained inside a band.
 					}
 				}
 
-				return len - 1;
+				if (resultIndex >= len) {
+					resultIndex = len - 1;
+				}
 			}
 
-			return this._staticColumnIndex;
+			return resultIndex;
 		},
 
-		_getRealStaticRowIndex: function () {
+		// return the length of Header when bHeader is true
+		_getRealStaticRowIndex: function (bHeader) {
+			/*
 			if (this.options.staticRowIndex >= 0) {
-				var index = this._field("spanTable").length - 1; //the whole header is fixed in case of staticRowIndex >= 0.
+			var index = this._field("columnHeadersTable").length - 1; //the whole header is fixed in case of staticRowIndex >= 0.
 
-				if (this.options.showFilter) {
-					index++; // filter row is placed inside the header, so it is fixed too.
-				}
-
-				return index;
-			} else {
-				return this.options.staticRowIndex;
+			if (this.options.showFilter) {
+			index++; // filter row is placed inside the header, so it is fixed too.
 			}
+
+			return index;
+			} else {
+			return this.options.staticRowIndex;
+			}
+			*/
+			var index = this._field("columnHeadersTable").length; //the whole header is fixed in case of staticRowIndex >= 0.
+
+			if (this.options.showFilter) {
+				index++; // filter row is placed inside the header, so it is fixed too.
+			}
+
+			if (bHeader) {
+				return index;
+			}
+
+			return this._getStaticIndex(true) + index;
 		},
 
 		_view: function () {
@@ -3695,16 +3952,6 @@
 			allowSizing: true,
 
 			/// <summary>
-			/// A value indicating the key of the data field associated with a column.
-			/// If an array of hashes is used as a datasource for wijgrid, this should be string value,
-			/// otherwise this should be an integer determining an index of the field in the datasource.
-			/// Default: undefined
-			/// Type: String or Number.
-			/// Code example: $("#element").wijgrid({ columns: [ { dataKey: "ProductID" } ] });
-			/// </summary>
-			dataKey: undefined,
-
-			/// <summary>
 			/// Function used for changing content, style and attributes of the column cells.
 			/// Default: undefined.
 			/// Type: Function.
@@ -3728,6 +3975,28 @@
 			/// </param>
 			/// <returns type="Boolean">True if container content has been changed and wijgrid should not apply the default formatting to the cell.</returns>
 			cellFormatter: undefined,
+
+			/// <summary>
+			/// A value indicating the key of the data field associated with a column.
+			/// If an array of hashes is used as a datasource for wijgrid, this should be string value,
+			/// otherwise this should be an integer determining an index of the field in the datasource.
+			/// Default: undefined
+			/// Type: String or Number.
+			/// Code example: $("#element").wijgrid({ columns: [ { dataKey: "ProductID" } ] });
+			/// </summary>
+			dataKey: undefined,
+
+			/// <summary>
+			/// Determines whether to use number type column width as the real width of the column.
+			/// Default: undefined.
+			/// Type: Boolean.
+			/// Code example: $("#element").wijgrid({ columns: [ { ensurePxWidth: true } ] });
+			/// </summary>
+			/// <remarks>
+			/// If this option is set to true, wijgrid will use the width option of the column widget.
+			/// If this option is undefined, wijgrid will refer to the ensureColumnsPxWidth option.
+			/// </remarks>
+			ensurePxWidth: undefined,
 
 			/// <summary>
 			/// Gets or sets the footer text.
@@ -3813,6 +4082,10 @@
 			}
 
 			$.wijmo.wijgrid.remove$dataByPrefix(this.element, this._data$prefix);
+
+			this.element
+				.removeClass("ui-widget wijmo-c1basefield ui-state-default")
+				.html(this.element.find(".wijmo-wijgrid-headertext").contents()); // restore initial cell content
 		},
 
 		_field: function (name, value) {
@@ -3853,11 +4126,11 @@
 			//no need to detach because there is allowMoving judgment in draganddrop
 			/*
 			if (value) {
-				if (this._owner().options.allowColMoving) {
-					this._owner()._dragndrop().attach(this);
-				}
+			if (this._owner().options.allowColMoving) {
+			this._owner()._dragndrop().attach(this);
+			}
 			} else {
-				this._owner()._dragndrop().detach(this);
+			this._owner()._dragndrop().detach(this);
 			}
 			*/
 			this._invokeGroupedColumn("allowMoving", value, isInvokedOutside);
@@ -3878,7 +4151,10 @@
 
 		_postset_width: function (value, oldValue) {
 			// change width of column.
-			this._owner()._view().ensureWidth(value, this.options.visLeavesIdx);
+			var view = this._owner()._view(),
+			index = this.options.visLeavesIdx,
+			oldRealValue = $(view.getHeaderCell(index)).outerWidth();
+			view.ensureWidth(index, value, oldRealValue);
 		},
 
 		_invokeGroupedColumn: function (key, value, isInvokedOutside) {
@@ -3980,9 +4256,9 @@
 			/// Data converter that is able to translate values from a string representation to column data type and back.
 			/// 
 			/// The dataParser is an object which must contains the following methods:
-			///   parseDOM(value, culture, format): converts given DOM element into the typed value.
-			///   parse(value, culture, format): converts the value into typed value.
-			///   toStr(value, culture, format): converts the value into its string representation.
+			///   parseDOM(value, culture, format, nullString): converts given DOM element into the typed value.
+			///   parse(value, culture, format, nullString): converts the value into typed value.
+			///   toStr(value, culture, format, nullString): converts the value into its string representation.
 			///
 			/// Default: undefined (widget built-in parser for supported datatypes will be used).
 			/// Type: Object.
@@ -4028,10 +4304,10 @@
 			dataFormatString: undefined,
 
 			/// <summary>
-			/// An operation set for filtering. Must be either one of the embedded operators or custom filter operator.
-			/// Case insensitive.
+			/// An operations set for filtering. Must be either one of the embedded operators or custom filter operator.
+			/// Operator names are case insensitive. 
 			///
-			// Embedded filter operators include:
+			/// Embedded filter operators include:
 			///   "NoFilter": no filter.
 			///   "Contains": applicable to "string" data type.
 			///   "NotContain": applicable to "string" data type.
@@ -4048,14 +4324,62 @@
 			///   "IsNull": applicable to "string", "number", "datetime", "currency" and "boolean" data types.
 			///   "NotIsNull": applicable to "string", "number", "datetime", "currency" and "boolean" data types.
 			///
+			/// Full option value is:
+			///   [filterOperartor1, ..., filterOperatorN]
+			/// 
+			/// where each filter item is an object of the following kind:
+			///   { name: <operatorName>, condition: "or"|"and" }
+			///
+			/// where:
+			///   name: filter operator name.
+			///   condition: logical condition to other operators, "or" is by default.
+			///
+			/// Example:
+			///   filterOperator: [ { name: "Equals" }, { name: "NotEqual", condition: "and" } ]
+			///
+			/// It is possible to use shorthand notation, the following statements are equivalent:
+			///   filterOperator: [ { name: "Equals" }, { name: "BeginsWith" } ]
+			///   filterOperator: [ "Equals", "BeginsWith" ]
+			///
+			/// In the case of a single operator option name may contain only filter operator name, the following statements are equivalent:
+			///   filterOperator: [ { name: "Equals" } ]
+			///   filterOperator: [ "Equals" ]
+			///   filterOperator: "Equals"
+			///
+			/// Note: wijgrid built-in filter editors do not support multiple filter operators.
+			///
 			/// Default: "nofilter".
-			/// Type: String.
+			/// Type: Object.
 			/// Code example: $("#element").wijgrid({ columns: [ { filterOperator: "nofilter" } ] });
 			/// </summary>
 			filterOperator: "nofilter",
 
 			/// <summary>
 			/// A value set for filtering.
+			///
+			/// Full option value is:
+			///   [filterValue1, ..., filterValueN]
+			///
+			/// where each item is a filter value for the corresponding filter operator.
+			///
+			/// Example:
+			///  filterValue: [0, "a", "b"]
+			///
+			/// Built-in filter operators support array of values as an argument.
+			///
+			/// Example:
+			///   filterOperator: ["Equals", "BeginsWith"]
+			///   filterValue: [[0, 1, 2], "a"]
+			///
+			///   As a result of filtering all the records having 0, 1, 2, or starting with "a" will be fetched.
+			///
+			/// Shorthand notation allows omitting square brackets, the following statements are equivalent:
+			///    filterValue: ["a"]
+			///    filterValue: [["a"]]
+			///    filterValue: "a"
+			///
+			/// Note: wijgrid built-in filter editors do not support multiple filter values.
+			///
 			/// Default: undefined.
 			/// Type: Depends on column data type.
 			/// Code example: $("#element").wijgrid({ columns: [ { filterValue: "abc" } ] });
@@ -4230,22 +4554,32 @@
 
 				switch (this._getInputEditorType(this.options)) {
 					case "date":
-						this.$filterEditor.wijinputdate("destroy");
+						if (this.$filterEditor.data("wijinputdate")) {
+							this.$filterEditor.wijinputdate("destroy");
+						}
 						break;
 
 					case "mask":
-						this.$filterEditor.wijinputmask("destroy");
+						if (this.$filterEditor.data("wijinputmask")) {
+							this.$filterEditor.wijinputmask("destroy");
+						}
 						break;
 
 					case "numberCurrency":
 					case "numberNumber":
 					case "numberPercent":
-						this.$filterEditor.wijinputnumber("destroy");
+						if (this.$filterEditor.data("wijinputnumber")) {
+							this.$filterEditor.wijinputnumber("destroy");
+						}
 						break;
 				}
 
 				this.$filterEditor = null;
 			}
+
+			this.element
+				.removeClass("ui-widget wijmo-c1field")
+				.find(".wijmo-wijgrid-headertext > span.ui-icon").remove(); // remove ascending/ descending icon
 
 			this._removeDropDownFilterList();
 
@@ -4319,7 +4653,7 @@
 			this._setFilterEditorWidth(this._getFilterEditorWidth());
 		},
 
-		_canDropTo: function(wijField) {
+		_canDropTo: function (wijField) {
 			if ($.wijmo.c1basefield.prototype._canDropTo.apply(this, arguments)) {
 				//the grouped column can't be dropped into group area
 				if (this.options.groupedIndex !== undefined && (wijField instanceof $.wijmo.c1groupedfield)) {
@@ -4328,7 +4662,7 @@
 
 				return true;
 			}
- 
+
 			return false;
 		},
 
@@ -4367,6 +4701,7 @@
 				gridView = null,
 				filterCell = null,
 				dataValue, editorOptions,
+				self = this,
 				editorType;
 
 			if (filterCellIndex >= 0) {
@@ -4378,17 +4713,16 @@
 					throw "exception";
 				}
 
-				filterCell.find(".wijmo-wijgrid-filtericon").attr("class", this._getFilterOpIconCss(gridView, this.options.filterOperator));
 				this.$filterEditor = filterCell.find("input");
 				//the problem of inputing in the filter textbox
-				filterCell.bind(($.support.selectstart ? "selectstart" : "mousedown"), function(event){
+				filterCell.bind(($.support.selectstart ? "selectstart" : "mousedown"), function (event) {
 					event.stopPropagation();
 				});
 
 				//var editorWidth = this._getFilterEditorWidth();
 				//this.$filterEditor.setOutWidth(editorWidth);
 
-				dataValue = gridView._parse(this.options, this.options.filterValue);
+				dataValue = gridView._parse(this.options, $.wijmo.wijgrid.filterHelper.getSingleValue(this.options.filterValue));
 
 				// set default value
 				if (dataValue === null) {
@@ -4431,7 +4765,7 @@
 						break;
 
 					case "mask":
-						this.$filterEditor.wijinputmask({ text: dataValue });
+						this.$filterEditor.wijinputmask({ text: dataValue + "" });
 						break;
 
 					case "numberCurrency":
@@ -4455,11 +4789,17 @@
 				filterCell.find(".wijmo-wijgrid-filter-trigger") // filter button
 					.attr({ "role": "button", "aria-haspopup": "true" })
 					.bind("mouseenter." + this.widgetName, function (e) {
-						$(this).addClass("ui-state-hover");
+						if (!self.options.disabled) {
+							$(this).addClass("ui-state-hover");
+						}
 					}).bind("mouseleave." + this.widgetName, function (e) {
-						$(this).removeClass("ui-state-hover ui-state-active");
+						if (!self.options.disabled) {
+							$(this).removeClass("ui-state-hover ui-state-active");
+						}
 					}).bind("mouseup." + this.widgetName, this, function (e) {
-						$(this).removeClass("ui-state-active");
+						if (!self.options.disabled) {
+							$(this).removeClass("ui-state-active");
+						}
 					}).bind("mousedown." + this.widgetName, { column: this }, this._onFilterBtnClick)
 					.bind("click." + this.widgetName, function (e) { e.preventDefault(); }); // prevent # being added to url.
 			}
@@ -4467,7 +4807,8 @@
 
 		_onFilterBtnClick: function (e) {
 			var column = e.data.column,
-				wijgrid, filterOpLC, applicableFilters, args, items, key, operator, eventGuid;
+				maxItemsCount = 8,
+				wijgrid, filterOpLC, applicableFilters, args, items, key, operator, width, eventGuid;
 
 			if (column.options.disabled) {
 				return false;
@@ -4479,7 +4820,7 @@
 			}
 
 			wijgrid = column._owner();
-			filterOpLC = column.options.filterOperator.toLowerCase();
+			filterOpLC = $.wijmo.wijgrid.filterHelper.getSingleOperatorName(column.options.filterOperator).toLowerCase();
 			applicableFilters = wijgrid.filterOperatorsCache.getByDataType(column.options.dataType);
 
 			wijgrid.filterOperatorsCache.sort(applicableFilters, wijgrid.options.filterOperatorsSortMode);
@@ -4492,7 +4833,12 @@
 				for (key in args.operators) {
 					if (args.operators.hasOwnProperty(key)) {
 						operator = args.operators[key];
-						items.push({ label: operator.name, value: operator.name, selected: operator.name.toLowerCase() === filterOpLC });
+
+						items.push({
+							label: operator.displayName || operator.name,
+							value: operator.name,
+							selected: operator.name.toLowerCase() === filterOpLC
+						});
 					}
 				}
 			}
@@ -4500,7 +4846,7 @@
 			column.$dropDownFilterList = $("<div class=\"wijmo-wijgrid-filterlist\"></div").appendTo(document.body).wijlist(
 			{
 				autoSize: true,
-				maxItemsCount: 8,
+				maxItemsCount: maxItemsCount,
 				selected: function (data, arg) {
 					var filterValue,
 						editorType;
@@ -4536,13 +4882,10 @@
 				.wijlist("setItems", items)
 				.wijlist("renderList");
 
-			if (items.length > 8) {
-				column.$dropDownFilterList.width(column.$dropDownFilterList.width() + 20);
-			}
-
-			column.$dropDownFilterList.$button = $(this);
+			width = column.$dropDownFilterList.width() | 150;
 
 			column.$dropDownFilterList
+				.width(items.length > maxItemsCount ? width + 20 : width)
 				.wijlist("refreshSuperPanel")
 				.position({
 					of: $(this),
@@ -4550,23 +4893,10 @@
 					at: "left bottom"
 				});
 
+			column.$dropDownFilterList.$button = $(this);
+
 			eventGuid = column.$dropDownFilterList.eventGuid = new Date().getTime();
 			$(document).bind("mousedown." + column.widgetName + "." + eventGuid, { column: column }, column._onDocMouseDown);
-		},
-
-		_getFilterOpIconCss: function (gridView, filterOpName) {
-			var css = "filter-nofilter",
-				filterOp = gridView.filterOperatorsCache.getByName(filterOpName.toLowerCase());
-
-			if (filterOp) {
-				if (filterOp.css) {
-					css = filterOp.css;
-				} else {
-					css = "filter-" + filterOp.name.toLowerCase();
-				}
-			}
-
-			return "wijmo-wijgrid-filtericon " + css;
 		},
 
 		_onDocMouseDown: function (e) {
@@ -4611,7 +4941,7 @@
 		_getFilterEditorWidth: function () {
 			if (this.$filterEditor) {
 				var $fd = this.$filterEditor.closest(".wijmo-wijgrid-filter"),
-					value = $fd.width() - $fd.find(".wijmo-wijgrid-filtericon").outerWidth();
+					value = $fd.width() - $fd.find(".wijmo-wijgrid-filter-trigger").width();
 
 				if (!value || value < 0) {
 					value = 0;
@@ -4853,7 +5183,11 @@
 		},
 
 		_onCloseClick: function (args) {
-			args.data._owner()._handleUngroup(args.data.options.travIdx);
+			var options = args.data.options;
+
+			if (!options.disabled) {
+				args.data._owner()._handleUngroup(args.data.options.travIdx);
+			}
 
 			return false;
 		},
@@ -4903,7 +5237,7 @@
 		_canDropTo: function(wijField) {
 			if ($.wijmo.c1basefield.prototype._canDropTo.apply(this, arguments)) {
 				//band can't be dropped into group area
-				return (wijField instanceof $.wijmo.c1groupedfield);
+				return !(wijField instanceof $.wijmo.c1groupedfield);
 			}
  
 			return false;
@@ -5243,14 +5577,21 @@
 			var i, len, column;
 
 			if (columns && ($.isFunction(callback))) {
-				for (i = 0, len = columns.length; i < len; i++) {
+				for (i = 0; i < columns.length; i++) {
 					column = columns[i];
 
 					if (column.options) { // widget
 						column = column.options;
 					}
 
-					callback(column);
+					len = columns.length;
+
+					callback(column, columns);
+
+					if (columns.length !== len) { // backoff
+						i--;
+						continue;
+					}
 
 					if (column.columns) { // go deeper
 						this.traverse(column.columns, callback);
@@ -5347,7 +5688,7 @@
 				prevent = function (attrName) {
 					attrName = attrName.toLowerCase();
 					return attrName === "rowspan" || attrName === "colspan";
-				}
+				};
 
 			if (table && !table.nodeType) {
 				table = table[0]; // jQuery
@@ -5413,7 +5754,7 @@
 				}
 
 				var result = [],
-					key, fooKey, firstItem;
+					key, firstItem;
 
 				if (_dataSource.items && _dataSource.items.length) {
 					firstItem = _dataSource.items[0];
@@ -5578,7 +5919,7 @@
 					readAttributes = (!_attributes && wijgrid.options.readAttributesFromData);
 
 				if (!_attributes) { // first time?
-					_attributes = []; 
+					_attributes = [];
 				}
 
 				_clonedItems = [];
@@ -5627,7 +5968,7 @@
 			}
 
 			function _dataMode() {
-				if (!_dataSource.data) { // dataSource.data == domTable
+				if (!_dataSource.data || _dataSource.data.jquery) { // dataSource.data == domTable
 					return $.wijmo.wijgrid.dataMode.dom;
 				}
 
@@ -5764,7 +6105,7 @@
 				$.proxy(_applySort, this)(dataCache, sortRequest);
 
 				var totalRows = dataCache.length, // number of rows in the data source (before paging will be applied)
-					start, end, pagedData, i, j, len,
+					start, end, pagedData, i, j, len, pageCount,
 					totals = {};
 
 				// calculate totals
@@ -5772,6 +6113,12 @@
 
 				// apply paging
 				if (pageRequest) {
+					pageCount = Math.ceil(totalRows / pageRequest.pageSize) || 1;
+
+					if (pageRequest.pageIndex >= pageCount) {
+						pageRequest.pageIndex = pageCount - 1; // index of the last page
+					}
+
 					start = Math.min(dataCache.length - 1, pageRequest.pageIndex * pageRequest.pageSize);
 
 					if (start < 0) {
@@ -5822,38 +6169,74 @@
 
 			// filterRequest: [ {column, filterOperator} ]
 			function _applyFiltering(data, filterRequest, gridView) {
-				var dataLength, filterLength,
-					filterValues = {},
-					i, fi, operator, column,
-					dataRes = [],
-					dataRow, flag, j, dataVal;
-
-				if (!data || (dataLength = data.length) === 0 ||
-					!filterRequest || (filterLength = filterRequest.length) === 0) {
-
+				if (!data || !data.length || !filterRequest || !filterRequest.length) {
 					return data;
 				}
 
-				// preformat filterValues
-				for (i = 0; i < filterLength; i++) {
-					fi = filterRequest[i];
-					operator = fi.operator;
-					column = fi.column;
-
-					if (operator.arity > 1) {
-						filterValues[i] = gridView._parse(column, column.filterValue);
+				// preparation
+				$.each(filterRequest, function (i, item) {
+					if (!$.isArray(item.filterOperator)) {
+						item.filterOperator = [item.filterOperator];
 					}
-				}
 
-				for (i = 0; i < dataLength; i++) {
+					if (!$.isArray(item.filterValue)) {
+						item.filterValue = [item.filterValue];
+					}
+
+					$.each(item.filterOperator, function (i, fop) {
+						if (typeof (fop) === "string") {
+							item.filterOperator[i] = fop = {
+								name: fop,
+								condition: "or"
+							};
+						}
+
+						item.filterOperator[i].name = gridView.filterOperatorsCache.getByName(fop.name);
+					});
+
+					// parse filter values
+					$.each(item.filterValue, function (i, value) {
+						if (!$.isArray(value)) {
+							item.filterValue[i] = gridView._parse(item.column, value);
+						} else {
+							$.each(value, function (j, subValue) {
+								value[j] = gridView._parse(item.column, subValue);
+							});
+						}
+					});
+				});
+
+				// data filtering
+				var i, j, k,
+				    dataLen, dataRow, dataValue,
+					dataRes = [],
+					flag, subFlag,
+					filterReqLen = filterRequest.length,
+					currentReq, filterOp, filterVal;
+
+				for (i = 0, dataLen = data.length; i < dataLen; i++) {
 					dataRow = data[i];
+
 					flag = true;
 
-					for (j = 0; j < filterLength && flag; j++) {
-						fi = filterRequest[j];
-						dataVal = dataRow.values[fi.column.dataKey];
+					for (j = 0; j < filterReqLen; j++) {
+						currentReq = filterRequest[j];
+						dataValue = dataRow.values[currentReq.column.dataKey];
 
-						flag &= fi.operator.operator(dataVal, filterValues[j]);
+						subFlag = false;
+
+						for (k = 0; k < currentReq.filterOperator.length; k++) {
+							filterOp = currentReq.filterOperator[k];
+							filterVal = currentReq.filterValue[k];
+
+							if ((k > 0) && (filterOp.condition === "and")) {
+								subFlag &= filterOp.name.operator(dataValue, filterVal);
+							} else {
+								subFlag |= filterOp.name.operator(dataValue, filterVal);
+							}
+						}
+
+						flag &= subFlag;
 					}
 
 					if (flag) {
@@ -5990,29 +6373,33 @@
 })(jQuery);(function ($) {
 	"use strict";
 	$.extend($.wijmo.wijgrid, {
-		groupRange: function (expanded, range, sum, position) {
+		groupRange: function (expanded, range, sum, position, hasHeaderOrFooter) {
 			this.value = -1;
 
-			switch (arguments.length) {
-				case 4:
-					this.isExpanded = expanded;
-					this.cr = range;
-					this.sum = sum;
-					this.position = position;
-					break;
+			this.isExpanded = false;
+			this.cr = new $.wijmo.wijgrid.cellRange(-1, -1);
+			this.sum = -1;
+			this.position = "none";
+			this.hasHeaderOrFooter = true;
 
-				case 1:
-					this.isExpanded = expanded;
-					this.cr = new $.wijmo.wijgrid.cellRange(-1, -1);
-					this.sum = -1;
-					this.position = "none";
-					break;
+			if (expanded !== undefined) {
+				this.isExpanded = expanded;
+			}
 
-				default:
-					this.isExpanded = false;
-					this.cr = new $.wijmo.wijgrid.cellRange(-1, -1);
-					this.sum = -1;
-					this.position = "none";
+			if (range !== undefined) {
+				this.cr = range;
+			}
+
+			if (sum !== undefined) {
+				this.sum = sum;
+			}
+
+			if (position !== undefined) {
+				this.position = position;
+			}
+
+			if (hasHeaderOrFooter !== undefined) {
+				this.hasHeaderOrFooter = hasHeaderOrFooter;
 			}
 
 			this.isSubRange = function (groupRange) {
@@ -6073,23 +6460,13 @@
 				var groupInfo = groupRange.owner,
 					dataStart = groupRange.cr.r1,
 					dataEnd = groupRange.cr.r2,
-					rowObj, i, len,
+					i, len,
 					childRanges, childRange, j;
 
 				switch (groupInfo.position) {
 					case "header":
 					case "headerAndFooter":
-						rowObj = rowAccessor.item(groupRange.cr.r1);
-
-						if (rowObj) {
-							if (rowObj[0]) {
-								rowObj[0]["aria-expanded"] = "false";
-							}
-
-							if (rowObj[1]) {
-								rowObj[1]["aria-expanded"] = "false";
-							}
-						}
+						_toggleRowVisibility(rowAccessor.item(groupRange.cr.r1), undefined, false);
 
 						dataStart++;
 						break;
@@ -6097,20 +6474,7 @@
 
 				// hide child rows
 				for (i = dataStart; i <= dataEnd; i++) {
-					rowObj = rowAccessor.item(i);
-					if (rowObj) {
-						if (rowObj[0]) {
-							rowObj[0].style.display = "none";
-							rowObj[0]["aria-hidden"] = "true";
-						}
-
-						if (rowObj[1]) {
-							rowObj[1].style.display = "none";
-							rowObj[1]["aria-hidden"] = "true";
-						}
-					}
-
-					//tbody.rows[i].style.display = "none";
+					_toggleRowVisibility(rowAccessor.item(i), false);
 				}
 
 				// update isExpanded property
@@ -6118,7 +6482,7 @@
 				_updateHeaderIcon(rowAccessor, groupRange);
 
 				for (i = groupInfo.level + 1; i <= groupedColumnsCnt; i++) {
-					childRanges = groupHelper.getChildGroupRanges(leaves, groupRange.cr, /*groupRange.owner.level*/ i - 1);
+					childRanges = groupHelper.getChildGroupRanges(leaves, groupRange.cr, /*groupRange.owner.level*/i - 1);
 					for (j = 0, len = childRanges.length; j < len; j++) {
 						childRange = childRanges[j];
 						childRange.isExpanded = false;
@@ -6126,18 +6490,7 @@
 						switch (childRange.owner.position) {
 							case "header":
 							case "headerAndFooter":
-								rowObj = rowAccessor.item(childRange.cr.r1);
-
-								if (rowObj) {
-									if (rowObj[0]) {
-										rowObj[0]["aria-expanded"] = "false";
-									}
-
-									if (rowObj[1]) {
-										rowObj[1]["aria-expanded"] = "false";
-									}
-								}
-
+								_toggleRowVisibility(rowAccessor.item(childRange.cr.r1), undefined, false);
 								break;
 						}
 
@@ -6150,82 +6503,23 @@
 				var groupInfo = groupRange.owner,
 					dataStart = groupRange.cr.r1,
 					dataEnd = groupRange.cr.r2,
-					rowObj, i, len,
+					i, len,
 					childRanges, childRange, childIsRoot;
 
 				switch (groupInfo.position) {
 					case "header":
-						rowObj = rowAccessor.item(dataStart);
-						if (rowObj) {
-							if (rowObj[0]) {
-								rowObj[0].style.display = "";
-								rowObj[0]["aria-hidden"] = "false";
-
-								if (isRoot || expandChildren) {
-									rowObj[0]["aria-expanded"] = "true";
-								}
-							}
-
-							if (rowObj[1]) {
-								rowObj[1].style.display = "";
-								rowObj[1]["aria-hidden"] = "false";
-
-								if (isRoot || expandChildren) {
-									rowObj[1]["aria-expanded"] = "true";
-								}
-							}
-						}
+						_toggleRowVisibility(rowAccessor.item(dataStart), true, isRoot || expandChildren);
 						dataStart++;
 						break;
 					case "footer":
-						rowObj = rowAccessor.item(dataEnd);
-						if (rowObj) {
-							if (rowObj[0]) {
-								rowObj[0].style.display = "";
-								rowObj[0]["aria-hidden"] = "false";
-							}
-
-							if (rowObj[1]) {
-								rowObj[1].style.display = "";
-								rowObj[1]["aria-hidden"] = "false";
-							}
-						}
+						_toggleRowVisibility(rowAccessor.item(dataEnd), true);
 						dataEnd--;
 						break;
 					case "headerAndFooter":
-						rowObj = rowAccessor.item(dataStart);
-						if (rowObj) {
-							if (rowObj[0]) {
-								rowObj[0].style.display = "";
-								rowObj[0]["aria-hidden"] = "false";
+						_toggleRowVisibility(rowAccessor.item(dataStart), true, isRoot || expandChildren);
 
-								if (isRoot || expandChildren) {
-									rowObj[0]["aria-expanded"] = "true";
-								}
-							}
-
-							if (rowObj[1]) {
-								rowObj[1].style.display = "";
-								rowObj[1]["aria-hidden"] = "false";
-
-								if (isRoot || expandChildren) {
-									rowObj[1]["aria-expanded"] = "true";
-								}
-							}
-						}
 						if (isRoot) {
-							rowObj = rowAccessor.item(dataEnd);
-							if (rowObj) {
-								if (rowObj[0]) {
-									rowObj[0].style.display = "";
-									rowObj[0]["aria-hidden"] = "false";
-								}
-
-								if (rowObj[1]) {
-									rowObj[1].style.display = "";
-									rowObj[1]["aria-hidden"] = "false";
-								}
-							}
+							_toggleRowVisibility(rowAccessor.item(dataEnd), true);
 						}
 						dataStart++;
 						dataEnd--;
@@ -6241,22 +6535,17 @@
 
 				if (groupRange.owner.level === groupedColumnsCnt) { // show data rows
 					for (i = dataStart; i <= dataEnd; i++) {
-						rowObj = rowAccessor.item(i);
-						if (rowObj) {
-							if (rowObj[0]) {
-								rowObj[0].style.display = "";
-								rowObj[0]["aria-hidden"] = "false";
-							}
-
-							if (rowObj[1]) {
-								rowObj[1].style.display = "";
-								rowObj[1]["aria-hidden"] = "false";
-							}
-						}
-
+						_toggleRowVisibility(rowAccessor.item(i), true);
 					}
 				} else {
 					childRanges = groupHelper.getChildGroupRanges(leaves, groupRange.cr, groupRange.owner.level);
+
+					if (childRanges.length && (dataStart !== childRanges[0].cr.r1)) { // 
+						// a space between parent groupHeader and first child range - show single rows (groupSingleRow = false)
+						for (i = dataStart; i < childRanges[0].cr.r1; i++) {
+							_toggleRowVisibility(rowAccessor.item(i), true);
+						}
+					}
 
 					if (expandChildren) { // throw action deeper
 						for (i = 0, len = childRanges.length; i < len; i++) {
@@ -6272,6 +6561,32 @@
 								: false;
 
 							_expand(groupHelper, rowAccessor, leaves, childRange, groupedColumnsCnt, false, childIsRoot);
+						}
+					}
+				}
+			}
+
+			function _toggleRowVisibility(rowObj, visible, expanded) {
+				if (rowObj) {
+					if (rowObj[0]) {
+						if (visible !== undefined) {
+							rowObj[0].style.display = visible ? "" : "none";
+							rowObj[0]["aria-hidden"] = visible ? "false" : "true";
+						}
+
+						if (expanded !== undefined) {
+							rowObj[0]["aria-expanded"] = expanded ? "true" : false;
+						}
+					}
+
+					if (rowObj[1]) {
+						if (visible !== undefined) {
+							rowObj[1].style.display = visible ? "" : "none";
+							rowObj[1]["aria-hidden"] = visible ? "false" : "true";
+						}
+
+						if (expanded !== undefined) {
+							rowObj[1]["aria-expanded"] = expanded ? "true" : false;
 						}
 					}
 				}
@@ -6368,15 +6683,15 @@
 				}
 				/*
 				for (i = 0, len = leaves.length; i < len; i++) {
-					leaf = leaves[i];
-					this._groupRowIdx = 0;
+				leaf = leaves[i];
+				this._groupRowIdx = 0;
 
-					if ((leaf.dynamic !== true) && leaf.groupInfo && (leaf.groupInfo.position && (leaf.groupInfo.position !== "none")) &&
-						(leaf.dataIndex >= 0) && !leaf.groupInfo.expandInfo) {
-						leaf.groupInfo.level = level;
-						leaf.groupInfo.expandInfo = [];
-						this._processRowGroup(leaf, level++);
-					}
+				if ((leaf.dynamic !== true) && leaf.groupInfo && (leaf.groupInfo.position && (leaf.groupInfo.position !== "none")) &&
+				(leaf.dataIndex >= 0) && !leaf.groupInfo.expandInfo) {
+				leaf.groupInfo.level = level;
+				leaf.groupInfo.expandInfo = [];
+				this._processRowGroup(leaf, level++);
+				}
 				}
 				*/
 				delete this._grid;
@@ -6386,7 +6701,17 @@
 
 			this._processRowGroup = function (leaf, level) {
 				var row, cellRange, isExpanded, startCollapsed, indentRow,
-					groupRange, isParentCollapsed, header, footer, i;
+					groupRange, isParentCollapsed, header, footer, i,
+					firstVisibleLeafIdx = 0,
+					hasHeaderOrFooter = true;
+
+
+				$.each(this._leaves, function (i, leaf) {
+					if (leaf.parentVis) {
+						firstVisibleLeafIdx = i;
+						return false;
+					}
+				});
 
 				for (row = 0; row < this._data.length; row++) {
 					// if (this._data[row].rowType !== "data") {
@@ -6408,18 +6733,16 @@
 					// indent
 					if (level && this._grid.options.groupIndent) {
 						for (indentRow = cellRange.r1; indentRow <= cellRange.r2; indentRow++) {
-							this._addIndent(this._data[indentRow][0], level);
+							this._addIndent(this._data[indentRow][firstVisibleLeafIdx], level);
 						}
 					}
+
+					hasHeaderOrFooter = !(leaf.groupInfo.groupSingleRow === false && (cellRange.r1 === cellRange.r2));
 
 					// insert group header/ group footer
 					switch (leaf.groupInfo.position) {
 						case "header":
-							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, isExpanded);
-							this._updateByGroupRange(groupRange, level);
-
-							isParentCollapsed = this._groupHelper.isParentCollapsed(this._leaves, groupRange.cr, level);
-							header = this._buildGroupRow(groupRange, cellRange, true, isParentCollapsed);
+							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, isExpanded, hasHeaderOrFooter);
 
 							for (i = cellRange.r1; i <= cellRange.r2; i++) {
 								this._data[i].__attr["aria-level"] = level + 1;
@@ -6429,6 +6752,15 @@
 
 								}
 							}
+
+							if (!hasHeaderOrFooter) {
+								break;
+							}
+
+							this._updateByGroupRange(groupRange, level);
+
+							isParentCollapsed = this._groupHelper.isParentCollapsed(this._leaves, groupRange.cr, level);
+							header = this._buildGroupRow(groupRange, cellRange, true, isParentCollapsed);
 
 							this._data.splice(cellRange.r1, 0, header); // insert group header
 
@@ -6443,7 +6775,12 @@
 							break;
 
 						case "footer":
-							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, true);
+							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, true, hasHeaderOrFooter);
+
+							if (!hasHeaderOrFooter) {
+								break;
+							}
+
 							this._updateByGroupRange(groupRange, level);
 
 							footer = this._buildGroupRow(groupRange, cellRange, false, false);
@@ -6461,12 +6798,7 @@
 							break;
 
 						case "headerAndFooter":
-							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, isExpanded);
-							this._updateByGroupRange(groupRange, level);
-
-							isParentCollapsed = this._groupHelper.isParentCollapsed(this._leaves, groupRange.cr, level);
-							header = this._buildGroupRow(groupRange, cellRange, true, isParentCollapsed);
-							footer = this._buildGroupRow(groupRange, cellRange, false, false);
+							groupRange = this._addGroupRange(leaf.groupInfo, cellRange, isExpanded, hasHeaderOrFooter);
 
 							for (i = cellRange.r1; i <= cellRange.r2; i++) {
 								this._data[i].__attr["aria-level"] = level + 1;
@@ -6475,6 +6807,16 @@
 									this._data[i].__attr["aria-hidden"] = true;
 								}
 							}
+
+							if (!hasHeaderOrFooter) {
+								break;
+							}
+
+							this._updateByGroupRange(groupRange, level);
+
+							isParentCollapsed = this._groupHelper.isParentCollapsed(this._leaves, groupRange.cr, level);
+							header = this._buildGroupRow(groupRange, cellRange, true, isParentCollapsed);
+							footer = this._buildGroupRow(groupRange, cellRange, false, false);
 
 							this._data.splice(cellRange.r2 + 1, 0, footer);
 							footer.__attr["aria-level"] = level;
@@ -6509,7 +6851,7 @@
 					gridView = leaf.owner,
 					row = [],
 					groupByText = "",
-					//headerOffset = 0,
+				//headerOffset = 0,
 					aggregate = "",
 					tmp, cell, caption, args, span, col, bFirst, agg;
 
@@ -6648,7 +6990,7 @@
 
 						row.push({
 							html: agg.toString(),
-							__attr: { groupInfo: { leafIndex: tmp.leavesIdx, purpose: $.wijmo.wijgrid.groupRowCellPurpose.aggregateCell} } // will be passed into the cellStyleFormatter
+							__attr: { groupInfo: { leafIndex: tmp.leavesIdx, purpose: $.wijmo.wijgrid.groupRowCellPurpose.aggregateCell}} // will be passed into the cellStyleFormatter
 						});
 					}
 				}
@@ -6700,11 +7042,15 @@
 				var idx = leaf.leavesIdx, // $.inArray(leaf, this._leaves);
 					range = new $.wijmo.wijgrid.cellRange(row, idx),
 					parentRange = this._groupHelper.getParentGroupRange(this._leaves, range, level),
-					str, count;
+					value, nextValue, count;
 
 				//if (this._data[row].rowType === "data") {
 				if (this._data[row].rowType & $.wijmo.wijgrid.rowType.data) {
-					str = this._data[row][leaf.dataIndex].value;
+					value = this._data[row][leaf.dataIndex].value;
+
+					if (value instanceof Date) {
+						value = value.getTime();
+					}
 
 					for (range.r2 = row, count = this._data.length - 1; range.r2 < count; range.r2++) {
 						//if ((this._data[range.r2 + 1].rowType !== "data") || (parentRange && (range.r2 + 1 > parentRange.r2))) {
@@ -6712,7 +7058,13 @@
 							break;
 						}
 
-						if (this._data[range.r2 + 1][leaf.dataIndex].value !== str) {
+						nextValue = this._data[range.r2 + 1][leaf.dataIndex].value;
+
+						if (nextValue instanceof Date) {
+							nextValue = nextValue.getTime();
+						}
+
+						if (value !== nextValue) {
 							break;
 						}
 					}
@@ -6721,7 +7073,7 @@
 				return range;
 			};
 
-			this._addGroupRange = function (groupInfo, cellRange, isExpanded) {
+			this._addGroupRange = function (groupInfo, cellRange, isExpanded, hasHeaderOrFooter) {
 				var result = null,
 					idx = this._groupHelper.getChildGroupIndex(cellRange, groupInfo.expandInfo),
 					range, expandState, r1, r2;
@@ -6730,18 +7082,18 @@
 					result = groupInfo.expandInfo[idx];
 				} else {
 					range = new $.wijmo.wijgrid.cellRange(cellRange.r1, cellRange.r1, cellRange.r2, cellRange.r2); // clone
-					expandState = (groupInfo.position === "footer")
+					expandState = (groupInfo.position === "footer" || !hasHeaderOrFooter)
 						? true
 						: isExpanded && (groupInfo.outlineMode !== "startCollapsed");
 
-					result = new $.wijmo.wijgrid.groupRange(expandState, range, -1, groupInfo.position);
+					result = new $.wijmo.wijgrid.groupRange(expandState, range, -1, groupInfo.position, hasHeaderOrFooter);
 
 					result.owner = groupInfo;
 
 					groupInfo.expandInfo.push(result);
 				}
 
-				if (result) {
+				if (result && hasHeaderOrFooter) {
 					r1 = cellRange.r1;
 					r2 = cellRange.r2;
 
@@ -6765,10 +7117,6 @@
 				for (i = 0, len = this._leaves.length; i < len; i++) {
 					groupInfo = this._leaves[i].groupInfo;
 
-					//
-					// if (groupInfo) {
-					//
-
 					if (groupInfo && (groupInfo.level < level)) {
 
 						len2 = (groupInfo.expandInfo)
@@ -6777,9 +7125,6 @@
 
 						for (j = 0; j < len2; j++) {
 							cur = groupInfo.expandInfo[j];
-							//
-							//if (cur.cr.r1 !== groupRange.cr.r1) {
-							//
 							delta = (groupRange.position === "headerAndFooter") ? 2 : 1;
 
 							if (cur.cr.r1 >= groupRange.cr.r1 && !((cur.cr.r1 === groupRange.cr.r1) && (cur.position === "footer"))) {
@@ -6789,9 +7134,6 @@
 							if (cur.cr.r2 >= groupRange.cr.r1) {
 								cur.cr.r2 += delta;
 							}
-							//
-							//}
-							//
 						}
 					}
 				}
@@ -7324,7 +7666,7 @@
 				depth = 0;
 			}
 
-			if (domElement && (!controlDepth || (controlDepth && depth < 2))) {
+			if (domElement && (!controlDepth || (controlDepth && depth < 3))) {
 				if (domElement.nodeType === 3) { // text node
 					return domElement.nodeValue;
 				}
@@ -7354,16 +7696,6 @@
 			return "";
 		},
 
-		ensureTBody: function (domTable) {
-			if (domTable) {
-				return (domTable.tBodies && domTable.tBodies.length > 0)
-					? domTable.tBodies[0]
-					: domTable.appendChild(document.createElement("tbody"));
-			}
-
-			return null;
-		},
-
 		rowTypeFromCss: function ($rows) {
 			var test = /wijmo-wijgrid-(\S+)row/.exec($rows.attr("class"));
 
@@ -7387,7 +7719,7 @@
 					case "groupheader":
 						return $.wijmo.wijgrid.rowType.groupHeader;
 
-					case "groupheader":
+					case "groupfooter":
 						return $.wijmo.wijgrid.rowType.groupFooter;
 				}
 			}
@@ -7562,7 +7894,7 @@
 							}
 
 						case undefined:
-						case "&nbsp":
+						case "&nbsp;":
 							return "";
 
 						default:
@@ -7608,7 +7940,7 @@
 						return nullString;
 					}
 
-					return Globalize.format(value, format ? format : "n", culture.name);
+					return Globalize.format(value, format || "n", culture.name);
 				}
 			},
 
@@ -7645,7 +7977,7 @@
 						return nullString;
 					}
 
-					return Globalize.format(value, format ? format : "c", culture.name);
+					return Globalize.format(value, format || "c", culture.name);
 				}
 			},
 
@@ -7681,7 +8013,7 @@
 						return nullString;
 					}
 
-					return Globalize.format(value, format ? format : "d", culture.name);
+					return Globalize.format(value, format || "d", culture.name);
 				}
 			},
 
@@ -7893,215 +8225,325 @@
 		}
 	});
 
-	$.wijmo.wijgrid.embeddedFilters = [
-	{
-		name: "NoFilter",
-		arity: 1,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal) {
-			return true;
-		}
-	},
-	{
-		name: "Contains",
-		arity: 2,
-		applicableTo: ["string"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal === filterVal) { // handle null and undefined
-				return true;
+	$.wijmo.wijgrid.embeddedFiltersImpl = {
+		_anyCmp: function (dataVal, filterVal, cmp) {
+			var i, len, fv,
+				flag = false;
+
+			if (!$.isArray(filterVal)) {
+				filterVal = [filterVal];
 			}
 
-			return (dataVal)
-				? dataVal.indexOf(filterVal) >= 0
-				: false;
-		}
-	},
-	{
-		name: "NotContain",
-		arity: 2,
-		applicableTo: ["string"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal === filterVal) { // handle null and undefined
+			if (!(len = filterVal.length)) {
 				return false;
 			}
 
-			return (dataVal)
-				? dataVal.indexOf(filterVal) < 0
-				: true;
+			if (dataVal instanceof Date) {
+				dataVal = dataVal.getTime();
+			}
+
+			if (typeof (dataVal) === "string") {
+				dataVal = dataVal.toLowerCase();
+			}
+
+			for (i = 0; (i < len) && !flag; i++) { // "or" condition
+				fv = filterVal[i];
+
+				if (fv instanceof Date) {
+					fv = fv.getTime();
+				}
+
+				if (typeof (fv) === "string") {
+					fv = fv.toLowerCase();
+				}
+
+				flag = cmp(dataVal, fv);
+			}
+
+			return flag;
 		}
-	},
-	{
-		name: "BeginsWith",
-		arity: 2,
-		applicableTo: ["string"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal === filterVal) { // handle null and undefined
+	};
+
+	// note: optional displayName property can be specified in case of localization.
+	$.wijmo.wijgrid.embeddedFilters = {
+		nofilter: {
+			name: "NoFilter",
+			arity: 1,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal) {
 				return true;
 			}
+		},
 
-			return (dataVal)
-				? dataVal.indexOf(filterVal) === 0
-				: false;
+		contains:
+		{
+			name: "Contains",
+			arity: 2,
+			applicableTo: ["string"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal === filterVal) // handle null, undefined, etc
+						|| (dataVal ? dataVal.indexOf(filterVal) >= 0 : false);
+				});
+			}
+		},
+
+		notcontain: {
+			name: "NotContain",
+			arity: 2,
+			applicableTo: ["string"],
+			operator: function (dataVal, filterVal) {
+				return !$.wijmo.wijgrid.embeddedFilters.contains.operator(dataVal, filterVal);
+			}
+		},
+
+		beginswith: {
+			name: "BeginsWith",
+			arity: 2,
+			applicableTo: ["string"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal === filterVal) // handle null, undefined, etc
+						|| (dataVal ? dataVal.indexOf(filterVal) === 0 : false);
+				});
+			}
+		},
+
+		endswith: {
+			name: "EndsWith",
+			arity: 2,
+			applicableTo: ["string"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					var flag = (dataVal === filterVal), // handle null, undefined, etc
+						idx;
+
+					if (!flag && dataVal) {
+						idx = dataVal.lastIndexOf(filterVal);
+						if (idx >= 0) {
+							flag = (dataVal.length - idx === filterVal.length);
+						}
+					}
+
+					return flag;
+				});
+			}
+		},
+
+		equals: {
+			name: "Equals",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal === filterVal);
+				});
+			}
+		},
+
+		notequal: {
+			name: "NotEqual",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal !== filterVal);
+				});
+			}
+		},
+
+		greater: {
+			name: "Greater",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal > filterVal);
+				});
+			}
+		},
+
+		less: {
+			name: "Less",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal < filterVal);
+				});
+			}
+		},
+
+		greaterorequal: {
+			name: "GreaterOrEqual",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal >= filterVal);
+				});
+			}
+		},
+
+		lessorequal: {
+			name: "LessOrEqual",
+			arity: 2,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal, filterVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, filterVal, function (dataVal, filterVal) {
+					return (dataVal <= filterVal);
+				});
+			}
+		},
+
+		isempty: {
+			name: "IsEmpty",
+			arity: 1,
+			applicableTo: ["string"],
+			operator: function (dataVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, undefined, function (dataVal) {
+					return !dataVal && dataVal !== 0 && dataVal !== false; // null, undefined, or empty string
+				});
+			}
+		},
+
+		notisempty: {
+			name: "NotIsEmpty",
+			arity: 1,
+			applicableTo: ["string"],
+			operator: function (dataVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, undefined, function (dataVal) {
+					return !!dataVal || dataVal === 0 || dataVal === false; // ! (null, undefined, or empty string)
+				});
+			}
+		},
+
+		isnull: {
+			name: "IsNull",
+			arity: 1,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, undefined, function (dataVal) {
+					return dataVal === null;
+				});
+			}
+		},
+
+		notisnull: {
+			name: "NotIsNull",
+			arity: 1,
+			applicableTo: ["string", "number", "datetime", "currency", "boolean"],
+			operator: function (dataVal) {
+				return $.wijmo.wijgrid.embeddedFiltersImpl._anyCmp(dataVal, undefined, function (dataVal) {
+					return dataVal !== null;
+				});
+			}
 		}
-	},
-	{
-		name: "EndsWith",
-		arity: 2,
-		applicableTo: ["string"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal === filterVal) { // handle null and undefined
-				return true;
+	};
+})(jQuery);
+
+
+(function ($) {
+	"use strict";
+	$.extend($.wijmo.wijgrid, {
+		filterHelper: {
+			// filterValue
+			// [filterValue, ..., filterValue]
+			// [[filterValue, ..., filterValue], ..., [filterValue, ..., filterValue]]
+			getSingleValue: function(filterValue) {
+				if ($.isArray(filterValue)) {
+					filterValue = filterValue[0];
+
+					if ($.isArray(filterValue)) {
+						filterValue = filterValue[0];
+					}
+				}
+
+				return filterValue;
+			},
+
+			// filterOperator -> name | { name, condition }
+			// filterOperator -> filterOperator | [ filterOperator, ..., filterOperator]
+			getSingleOperatorName: function(filterOperator) {
+				if ($.isArray(filterOperator)) {
+					filterOperator = filterOperator[0];
+				}
+
+				return filterOperator.name || filterOperator || "";
+			},
+
+			// filterOperator: opName | [opName, ..., opName] | [ { name, condition }, ..., { name, condition } ]
+			// filterValue: filterValue | [filterValue, ... , filterValue] | [[], ..., []]
+			verify: function(filterOperator, filterValue, dataType, cache) {
+				if (filterOperator) {
+					if ($.isArray(filterOperator)) {
+						var i, len,
+							fop = [],
+							fval = [];
+
+						if (!$.isArray(filterValue)) {
+							filterValue = [filterValue];
+						}
+
+						for (i = 0, len = filterOperator.length; i < len; i++) {
+							if (this._verifySingleOp(filterOperator[i], filterValue[i], dataType, cache)) {
+								fop.push({
+									name: filterOperator[i].name || filterOperator[i],
+									condition: filterOperator[i].condition || "or" 
+								});
+								
+								fval.push(filterValue ? filterValue[i] : undefined);
+							}
+						}
+
+						if (fop.length) {
+							return {
+								filterOperator: fop,
+								filterValue: fval
+							};
+						}
+					} else {
+						if (this._verifySingleOp(filterOperator, filterValue, dataType, cache)) { 
+							return { // compatibility with old model
+								filterOperator: filterOperator,
+								filterValue: filterValue
+							};
+						}
+					}
+				}
+
+				return null;
+			},
+
+
+			// filterOpeator: name | { name, condition }
+			_verifySingleOp : function (filterOperator, filterValue, dataType, cache) {
+				if (filterOperator && (filterOperator = (filterOperator.name || filterOperator))) {
+					var fop;
+
+					filterOperator = (filterOperator || "").toLowerCase();
+
+					if (filterOperator !== "nofilter" && (fop = cache.getByName(filterOperator))) {
+					
+						if ($.inArray(dataType || "string", fop.applicableTo) >= 0) {
+							if (fop.arity === 1 || (fop.arity > 1 && this.getSingleValue(filterValue) !== undefined)) {
+								return true;
+							}
+						}
+					}
+				}
+
+				return false;
 			}
-
-			if (dataVal) {
-				var idx = dataVal.lastIndexOf(filterVal);
-
-				return (idx >= 0)
-					? (dataVal.length - idx) === filterVal.length
-					: false;
-			}
-
-			return false;
 		}
-	},
-	{
-		name: "Equals",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal === filterVal;
-		}
-	},
-	{
-		name: "NotEqual",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal !== filterVal;
-		}
-	},
-	{
-		name: "Greater",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal > filterVal;
-		}
-	},
-	{
-		name: "Less",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal < filterVal;
-		}
-	},
-	{
-		name: "GreaterOrEqual",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal >= filterVal;
-		}
-	},
-	{
-		name: "LessOrEqual",
-		arity: 2,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal, filterVal) {
-			if (dataVal instanceof Date) {
-				dataVal = dataVal.getTime();
-			}
-
-			if (filterVal instanceof Date) {
-				filterVal = filterVal.getTime();
-			}
-
-			return dataVal <= filterVal;
-		}
-	},
-	{
-		name: "IsEmpty",
-		arity: 1,
-		applicableTo: ["string"],
-		operator: function (dataVal) {
-			return !dataVal && dataVal !== 0 && dataVal !== false;
-		}
-	},
-	{
-		name: "NotIsEmpty",
-		arity: 1,
-		applicableTo: ["string"],
-		operator: function (dataVal) {
-			return !!dataVal || dataVal === 0 || dataVal === false;
-		}
-	},
-	{
-		name: "IsNull",
-		arity: 1,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal) {
-			return dataVal === null;
-		}
-	},
-	{
-		name: "NotIsNull",
-		arity: 1,
-		applicableTo: ["string", "number", "datetime", "currency", "boolean"],
-		operator: function (dataVal) {
-			return dataVal !== null;
-		}
-	}
-];
+	});
 })(jQuery);(function ($) {
 	"use strict";
 	$.extend($.wijmo.wijgrid, {
-		htmlTableAccessor: function (domTable) {
+		htmlTableAccessor: function (domTable, skipOffsets, ensureTBody, ensureColgroup) {
 			var offsets = [],
 				width = 0,
 				table = domTable;
-
-			_buildOffsets();
 
 			function _buildOffsets() {
 				var rowSpan = [],
@@ -8244,22 +8686,58 @@
 
 			this.colGroupTag = function () {
 				var cgs = table.getElementsByTagName("colgroup");
-
-				return (cgs !== null && cgs.length > 0) ? cgs[0] : null;
+				return (cgs && cgs[0]) || null;
 			};
 
 			this.colTags = function () {
 				var colGroup = this.colGroupTag();
-
-				return (colGroup !== null) ? colGroup.getElementsByTagName("col") : [];
+				return (colGroup && colGroup.getElementsByTagName("col")) || [];
 			};
+
+			this.ensureTBody = function () {
+				return (table.tBodies && table.tBodies[0]) || table.appendChild(document.createElement("tbody"));
+			};
+
+			this.ensureTHead = function () {
+				return (table.tHead && table.tHead[0]) || table.createTHead();
+			};
+
+			this.ensureTFoot = function () {
+				return (table.tFoot && table.tFoot[0]) || table.createTFoot();
+			};
+
+			this.ensureColGroup = function () {
+				var colGroup = table.getElementsByTagName("colgroup");
+				return (colGroup && colGroup[0]) || table.appendChild(document.createElement("colgroup"));
+			};
+
+			this.appendCol = function (domCol /*opt*/) {
+				var colGroup = this.ensureColGroup();
+				return (domCol && colGroup.appendChild(domCol)) || colGroup.appendChild(document.createElement("col"));
+			};
+
+			// ** initialization 
+
+			if (ensureColgroup) { // important: colGroup must preceed tBody in a table
+				this.ensureColGroup();
+			}
+
+			if (ensureTBody) {
+				this.ensureTBody();
+			}
+
+			if (!skipOffsets) {
+				_buildOffsets();
+			}
+
+			// initialization **
 		}
 	});
 })(jQuery);(function ($) {
 	"use strict";
 	$.wijmo.wijgrid.cellInfo = function (cellIndex, rowIndex) {
 		/// <summary>
-		/// Object that represents a single cell.
+		/// Creates an object that represents a single cell.
 		/// Code example: var cell = new $.wijmo.wijgrid.cellInfo(0, 0);
 		/// </summary>
 		/// <param name="cellIndex">Zero-based index of the required cell inside the corresponding row.</param>
@@ -8287,7 +8765,7 @@
 		this.column = function () {
 			/// <summary>
 			/// Gets the associated column object.
-			/// Code example: var index = cellInfoObj.column();
+			/// Code example: var column = cellInfoObj.column();
 			/// </summary>
 			/// <returns type="Object"></returns>
 
@@ -8295,46 +8773,6 @@
 				var offset = _gridView._getDataToAbsOffset();
 
 				return _gridView._field("visibleLeaves")[cellIndex + offset.x];
-			}
-
-			return null;
-		};
-
-
-		this.rowIndex = function (value) {
-			/// <summary>
-			/// Gets the zero-based index of the row containing the cell.
-			/// Code example: var index = cellInfoObj.rowIndex();
-			/// </summary>
-			/// <returns type="Number" integer="true"></returns>
-
-			if (arguments.length === 0) {
-				return rowIndex;
-			}
-
-			rowIndex = value;
-		};
-
-		this.isEqual = function (value) {
-			/// <summary>
-			/// Compares the current object with a specified one and indicates whether they are identical.
-			/// Code example: var isEqual = cellInfoObj1.isEqual(cellInfoObj2);
-			/// </summary>
-			/// <param name="value" type="$.wijmo.wijgrid.cellInfo">Object to compare</param>
-			/// <returns type="Boolean">True if the objects are identical, otherwise false.</returns>
-			return (value && (value.rowIndex() === rowIndex) && (value.cellIndex() === cellIndex));
-		};
-
-		this.tableCell = function () {
-			/// <summary>
-			/// Returns the table cell element corresponding to this object.
-			/// Code example: var domCell = cellInfoObj.tableCell();
-			/// </summary>
-			/// <returns type="Object" domElement="true" />
-			if (_gridView && this._isValid()) {
-				var offset = _gridView._getDataToAbsOffset();
-
-				return _gridView._view().getCell(cellIndex + offset.x, rowIndex + offset.y);
 			}
 
 			return null;
@@ -8354,6 +8792,72 @@
 				if ($innerDiv) {
 					return $innerDiv;
 				}
+			}
+
+			return null;
+		};
+
+		this.isEqual = function (value) {
+			/// <summary>
+			/// Compares the current object with a specified one and indicates whether they are identical.
+			/// Code example: var isEqual = cellInfoObj1.isEqual(cellInfoObj2);
+			/// </summary
+			/// <param name="value" type="$.wijmo.wijgrid.cellInfo">The object to compare</param>
+			/// <returns type="Boolean">True if the objects are identical, otherwise false.</returns>
+			return (value && (value.rowIndex() === rowIndex) && (value.cellIndex() === cellIndex));
+		};
+
+		this.row = function () {
+			/// <summary>
+			/// Gets the accociated row's information.
+			/// Code example: var row = cellInfoObj.row();
+			/// </summary>
+			/// <returns type="object">
+			/// Information about associated row.
+			/// 
+			/// The return value has the following properties:
+			/// $rows: jQuery object that represents associated rows.
+			/// data: associated data.
+			/// dataRowIndex: data row index.
+			/// dataItemIndex: data item index.
+			/// virtualDataItemIndex: virtual data item index.
+			/// type: type of the row, one of the $.wijmo.wijgrid.rowType values.
+			/// </returns>
+
+			var rowObj = this._row();
+
+			if (rowObj !== null) {
+				rowObj = _gridView._createRowInfo(rowObj);
+				return rowObj;
+			}
+
+			return null;
+		};
+
+		this.rowIndex = function (value) {
+			/// <summary>
+			/// Gets the zero-based index of the row containing the cell.
+			/// Code example: var index = cellInfoObj.rowIndex();
+			/// </summary>
+			/// <returns type="Number" integer="true"></returns>
+
+			if (arguments.length === 0) {
+				return rowIndex;
+			}
+
+			rowIndex = value;
+		};
+
+		this.tableCell = function () {
+			/// <summary>
+			/// Returns the table cell element corresponding to this object.
+			/// Code example: var domCell = cellInfoObj.tableCell();
+			/// </summary>
+			/// <returns type="Object" domElement="true" />
+			if (_gridView && this._isValid()) {
+				var offset = _gridView._getDataToAbsOffset();
+
+				return _gridView._view().getCell(cellIndex + offset.x, rowIndex + offset.y);
 			}
 
 			return null;
@@ -8398,32 +8902,6 @@
 			}
 		};
 
-		this.row = function () {
-			/// <summary>
-			/// Gets the accociated row's information.
-			/// </summary>
-			/// <returns type="object">
-			/// Information about associated row.
-			/// 
-			/// The return value has the following properties:
-			/// $rows: jQuery object that represents associated rows.
-			/// data: associated data.
-			/// dataRowIndex: data row index.
-			/// dataItemIndex: data item index.
-			/// virtualDataItemIndex: virtual data item index.
-			/// type: type of the row, one of the $.wijmo.wijgrid.rowType values.
-			/// </returns>
-
-			var rowObj = this._row();
-
-			if (rowObj !== null) {
-				rowObj = _gridView._createRowInfo(rowObj);
-				return rowObj;
-			}
-
-			return null;
-		};
-
 		this.toString = function () {
 			return cellIndex + ":" + rowIndex;
 		};
@@ -8432,7 +8910,7 @@
 
 		// internal
 
-		this._dataToAbs = function (offset) {
+		this._absToData = function (offset) {
 			cellIndex -= offset.x;
 			rowIndex -= offset.y;
 
@@ -8470,6 +8948,13 @@
 			return new $.wijmo.wijgrid.cellInfo(cellIndex, rowIndex);
 		};
 
+		this._dataToAbs = function (offset) {
+			cellIndex += offset.x;
+			rowIndex += offset.y;
+
+			return this;
+		};
+
 		this._row = function () {
 			if (_gridView && this._isValid()) {
 				return _gridView._rows().item(rowIndex);
@@ -8501,7 +8986,7 @@
 
 	$.wijmo.wijgrid.cellInfoRange = function (topLeft, bottomRight) {
 		/// <summary>
-		/// Specifies a range of cells determined by two cells.
+		/// Creates an object that specifies a range of cells determined by two cells.
 		/// Code example: var range = $.wijmo.wijgrid.cellInfoRange(new $.wijmo.wijgrid.cellInfo(0, 0), new $.wijmo.wijgrid.cellInfo(0, 0));
 		/// </summary>
 		/// <param name="topLeft" type="$.wijmo.wijgrid.cellInfo">Object that represents the top left cell of the range.</param>
@@ -8698,27 +9183,51 @@
 				throw "'wijgrid' must be specified";
 			}
 
-			this._verScrollBarSize = 18;
+			this._rowHeaderSize = 22;
 			this._wijgrid = wijgrid;
+
+			this._wijgrid.element.addClass("wijmo-wijgrid-table");
 		},
 
 		dispose: function () {
 			this.toggleDOMSelection(true);
+			this._wijgrid.element.removeClass("wijmo-wijgrid-table");
 		},
 
-		ensureWidth: function (delta, index) {
-			if (arguments.length > 0) {
-				this._setColumnWidth(index, delta);
-			}
+		ensureDisabledState: function () {
+			var disabledClass = this._wijgrid.widgetBaseClass + "-disabled ui-state-disabled",
+				disabled = this._wijgrid.options.disabled;
 
-			this.refreshPanel();
+			$.each(this.subTables(), function (key, table) {
+				if (table) {
+					var $table = $(table.element());
+
+					if (disabled) {
+						$table
+							.addClass(disabledClass)
+							.attr("aria-disabled", true);
+					}
+					else {
+						$table
+							.removeClass(disabledClass)
+							.attr("aria-disabled", false);
+					}
+				}
+			});
 		},
 
-		getScrollValue: function () {
-			throw "not implemented";
+		ensureWidth: function (index, value, oldValue) {
+			this._setColumnWidth(index, value);
+		},
+
+		ensureHeight: function (index) {
 		},
 
 		getVisibleAreaBounds: function () {
+			throw "not implemented";
+		},
+
+		getFixedAreaVisibleBounds: function () {
 			throw "not implemented";
 		},
 
@@ -8728,22 +9237,16 @@
 			this._postRender();
 		},
 
-		refreshPanel: function (scrollValue) {
-			throw "not implemented";
-		},
-
-		scrollTo: function (currentCell) {
-			throw "not implemented"
-		},
-
 		toggleDOMSelection: function (enable) {
 			$.each(this.subTables(), function (index, htmlTableAccessor) {
 				(new $.wijmo.wijgrid.domSelection(htmlTableAccessor.element())).toggleSelection(enable);
 			});
+
+			(new $.wijmo.wijgrid.domSelection(this._wijgrid.outerDiv)).toggleSelection(enable);
 		},
 
 		updateSplits: function (scrollValue) {
-			this.refreshPanel(scrollValue);
+			throw "not implemented";
 		},
 
 		// public **
@@ -8802,10 +9305,6 @@
 
 		// ** private abstract
 
-		_getGridWidth: function (mode) {
-			throw "not implemented";
-		},
-
 		_getMappedScrollMode: function () {
 			var scrollMode = this._wijgrid.options.scrollMode,
 				vScrollBarVisibility = "auto",
@@ -8831,13 +9330,9 @@
 			return { vScrollBarVisibility: vScrollBarVisibility, hScrollBarVisibility: hScrollBarVisibility };
 		},
 
-		_getSuperPanel: function () {
-			throw "not implemented";
-		},
-
+		// ** rendering
 		_postRender: function () {
-			// disable or enable DOM selection
-			this.toggleDOMSelection(this._wijgrid.options.selectionMode === "none");
+			this.ensureDisabledState();
 		},
 
 		_preRender: function () {
@@ -8845,12 +9340,387 @@
 		},
 
 		_renderContent: function () {
+			this._renderCOLS();
+			this._renderHeader();
+
+			if (this._wijgrid.options.showFilter) {
+				this._renderFilter();
+			}
+
+			this._renderBody();
+
+			if (this._wijgrid.options.showFooter) {
+				this._renderFooter();
+			}
+		},
+
+		_renderCOLS: function () {
+			var visibleLeaves = this._wijgrid._field("visibleLeaves"),
+				leaf, domCol,
+				i, len;
+
+			for (i = 0, len = visibleLeaves.length; i < len; i++) {
+				leaf = visibleLeaves[i];
+				domCol = this._createCol(leaf, i);
+
+				this._appendCol(domCol, leaf, i);
+			}
+		},
+
+		_renderHeader: function () {
+			var $rt = $.wijmo.wijgrid.rowType,
+				cht = this._wijgrid._field("columnHeadersTable"),
+				i, height,
+				rowInfo;
+
+			if (cht && (height = cht.length)) {
+				for (i = 0; i < height; i++) {
+					rowInfo = this._buildRowInfo($rt.header, i, -1, -1, -1);
+					this._renderRow(rowInfo, null, cht[i]);
+				}
+			}
+		},
+
+		_renderFilter: function () {
+			var rowInfo = this._buildRowInfo($.wijmo.wijgrid.rowType.filter, -1, -1, -1, -1);
+			this._renderRow(rowInfo, this._wijgrid._field("visibleLeaves"), null);
+		},
+
+		_renderBody: function () {
+			var $rt = $.wijmo.wijgrid.rowType,
+				visibleLeaves = this._wijgrid._field("visibleLeaves"),
+				data = this._wijgrid.dataTable,
+				dataRowIndex = -1,
+				virtualDataItemIndexBase = 0,
+				i, len,
+				rowInfo, dataRow, isDataRow;
+
+			if (this._wijgrid._dataStore.dataMode() === $.wijmo.wijgrid.dataMode.dynamical) {
+				virtualDataItemIndexBase = this._wijgrid.options.pageIndex * this._wijgrid.options.pageSize;
+			}
+
+			// render rows 
+			for (i = 0, len = data.length; i < len; i++) {
+				dataRow = data[i];
+				isDataRow = (dataRow.rowType & $rt.data) !== 0;
+
+				rowInfo = this._buildRowInfo(dataRow.rowType,
+					i,
+					isDataRow ? ++dataRowIndex : -1,
+					isDataRow ? dataRow.originalRowIndex : -1,
+					isDataRow ? virtualDataItemIndexBase + dataRow.originalRowIndex : -1);
+
+				this._renderRow(rowInfo, visibleLeaves, dataRow);
+			}
+		},
+
+		_renderFooter: function () {
+			var rowInfo = this._buildRowInfo($.wijmo.wijgrid.rowType.footer, -1, -1, -1, -1);
+			this._renderRow(rowInfo, this._wijgrid._field("visibleLeaves"), null);
+		},
+
+		// overridable:
+
+		_createRow: function (rowType, sectionRowIndex, originalDataRowIndex) {
 			throw "not implemented";
 		},
 
-		_setColumnWidth: function (index, px, widthArray) {
+		_appendCell: function (rowInfo, cellIndex, $cell) {
 			throw "not implemented";
+		},
+
+		_createCol: function (column, visibleIdx) {
+			throw "not implemented";
+		},
+
+		_appendCol: function (domCol, column, visibleIdx) {
+			throw "not implemented";
+		},
+
+
+		_buildRowInfo: function (type, sectionRowIndex, dataRowIndex, dataItemIndex, virtualDataItemIndex) {
+			var row = this._createRow(type, sectionRowIndex, dataItemIndex),
+				rowInfo = this._wijgrid._createRowInfo(row, type, $.wijmo.wijgrid.renderState.rendering, sectionRowIndex, dataRowIndex, dataItemIndex, virtualDataItemIndex);
+
+			return rowInfo;
+		},
+
+		_renderRow: function (rowInfo, visibleLeaves, item) {
+			var $rt = $.wijmo.wijgrid.rowType,
+				rowAttr, rowStyle;
+
+			switch (rowInfo.type) {
+				case $rt.filter:
+					this._renderFilterRow(rowInfo, visibleLeaves);
+					break;
+
+				case $rt.footer:
+					this._renderFooterRow(rowInfo, visibleLeaves);
+					break;
+
+				case $rt.header:
+					this._renderHeaderRow(rowInfo, item);
+					break;
+
+				case $rt.data:
+				case $rt.data | $rt.dataAlt:
+					this._renderDataRow(rowInfo, visibleLeaves, item);
+					rowAttr = item.__attr;
+					rowStyle = item.__style;
+					break;
+
+				case $rt.emptyDataRow:
+				case $rt.groupHeader:
+				case $rt.groupFooter:
+					this._renderSpannedRow(rowInfo, visibleLeaves, item);
+					rowAttr = item.__attr;
+					rowStyle = item.__style;
+					break;
+
+				default:
+					throw "unknown rowType";
+			}
+
+			this._rowRendered(rowInfo, rowAttr, rowStyle);
+		},
+
+		_renderCell: function (rowInfo, value, useHtml, leaf, attr, style) {
+			var $cell = $(this._wijgrid._createCell(rowInfo, leaf.dataIndex, leaf)),
+				$container = (rowInfo.type === $.wijmo.wijgrid.rowType.filter)
+					? $cell
+					: $cell.children("div");
+
+			this._appendCell(rowInfo, leaf.visLeavesIdx, $cell);
+
+			if (useHtml) {
+				$container.html(value);
+			} else {
+				this._wijgrid.cellFormatter.format($container, leaf, value, rowInfo);
+			}
+
+			this._wijgrid._cellRendered($cell, leaf, rowInfo, $.wijmo.wijgrid.renderState.rendering, attr, style);
+		},
+
+		_renderDataRow: function (rowInfo, visibleLeaves, dataRow) {
+			var i, len, leaf,
+				dataIndex, cellValue,
+				cellAttr, cellStyle, useHtml = false;
+
+			for (i = 0, len = visibleLeaves.length; i < len; i++) {
+				leaf = visibleLeaves[i];
+				dataIndex = leaf.dataIndex;
+				cellValue = null;
+
+				if (dataIndex >= 0 && (!dataRow[dataIndex] || (dataRow[dataIndex].visible === false))) {
+					continue; // spanned cell?
+				}
+
+				if (leaf.dataParser) { // TODO!!
+					cellValue = (dataIndex >= 0)
+						? this._wijgrid._toStr(leaf, dataRow[dataIndex].value)
+						: null; // unbounded column
+				} else {
+					if (dataIndex >= 0) {
+						cellValue = dataRow[dataIndex].html; // use original html
+						useHtml = true;
+					}
+				}
+
+				cellAttr = (dataIndex >= 0) ? dataRow[dataIndex].__attr : null;
+				cellStyle = (dataIndex >= 0) ? dataRow[dataIndex].__style : null;
+
+				this._renderCell(rowInfo, cellValue, useHtml, leaf, cellAttr, cellStyle);
+			}
+
+		},
+
+		_renderFilterRow: function (rowInfo, visibleLeaves) {
+			var i, len, leaf;
+
+			for (i = 0, len = visibleLeaves.length; i < len; i++) {
+				leaf = visibleLeaves[i];
+				this._renderCell(rowInfo, $.wijmo.wijgrid.filterHelper.getSingleValue(leaf.filterValue), false, leaf);
+			}
+
+		},
+
+		_renderFooterRow: function (rowInfo, visibleLeaves) {
+			var i, len;
+
+			for (i = 0, len = visibleLeaves.length; i < len; i++) {
+				this._renderCell(rowInfo, "", false, visibleLeaves[i]);
+			}
+		},
+
+		_renderHeaderRow: function (rowInfo, item) {
+			var i, len,
+				thX = 0,
+				span;
+
+			for (i = 0, len = item.length; i < len; i++) {
+				span = item[i];
+
+				if (span.column && span.column.parentVis) {
+					span.column.thX = thX++;
+					span.column.thY = rowInfo.sectionRowIndex;
+
+					this._renderCell(rowInfo, span.column.headerText, false, span.column, { colSpan: span.colSpan, rowSpan: span.rowSpan });
+				}
+			}
+		},
+
+		_renderSpannedRow: function (rowInfo, visibleLeaves, dataRow) {
+			var i, leaf,
+				len = Math.min(visibleLeaves.length, dataRow.length);
+
+			for (i = 0; i < len; i++) {
+				this._renderCell(rowInfo, dataRow[i].html, true, visibleLeaves[i], dataRow[i].__attr, dataRow[i].__style);
+			}
+		},
+
+		_rowRendered: function (rowInfo, rowAttr, rowStyle) {
+			this._wijgrid._rowRendered(rowInfo, rowAttr, rowStyle);
+		},
+
+		// rendering **
+
+		// ** sizing
+
+		_adjustWidthArray: function (maxWidthArray, minWidthArray, expectedWidth, ensureColumnsPxWidth, autoExpandColumnIndex) {
+			var maxWidth = this._sumWidthArray(maxWidthArray),
+				minWidth = this._sumWidthArray(minWidthArray),
+				widthArray = [],
+				adjustWidth,
+				expandCount = 0,
+				expandWidth, remainingWidth,
+				bFirst = true;
+
+			if (maxWidth <= expectedWidth) {
+				$.extend(true, widthArray, maxWidthArray);
+				if (maxWidth === expectedWidth || ensureColumnsPxWidth) {
+					return widthArray;
+				} else {
+					adjustWidth = expectedWidth - maxWidth;
+				}
+			} else {
+				$.extend(true, widthArray, minWidthArray);
+				if (minWidth >= expectedWidth) {
+					return widthArray;
+				} else {
+					adjustWidth = expectedWidth - minWidth;
+				}
+			}
+
+			$.each(widthArray, function (index, colWidth) {
+				if (!colWidth.real) {
+					expandCount++;
+				}
+			});
+
+			if (expandCount !== 0) {
+				if (autoExpandColumnIndex !== undefined
+					&& (autoExpandColumnIndex > -1 && autoExpandColumnIndex < widthArray.length)
+					&& !widthArray[autoExpandColumnIndex].real) {
+					widthArray[autoExpandColumnIndex].width += adjustWidth;
+					return widthArray;
+				}
+
+				expandWidth = Math.floor(adjustWidth / expandCount);
+				remainingWidth = adjustWidth - expandWidth * expandCount;
+				$.each(widthArray, function (index, colWidth) {
+					if (!colWidth.real) {
+						colWidth.width += expandWidth;
+						if (bFirst) {
+							colWidth.width += remainingWidth;
+							bFirst = false;
+						}
+					}
+				});
+			}
+
+			return widthArray;
+		},
+
+		_getColumnWidth: function (index, widthArray) {
+			var leaf, colWidth, maxW, joinedTables, relIdx, i, table, rows, cell, cellWidth;
+
+			if (widthArray) {
+				leaf = this._wijgrid._field("visibleLeaves")[index];
+
+				if (leaf._realWidth !== undefined) {
+					colWidth = { width: leaf._realWidth, real: true };
+				} else if (leaf.isRowHeader) {
+					colWidth = { width: this._rowHeaderSize, real: true };
+				} else {
+					maxW = 0;
+					joinedTables = this.getJoinedTables(true, index);
+					relIdx = joinedTables[2];
+
+					for (i = 0; i < 2; i++) {
+						table = joinedTables[i];
+
+						if (table !== null) {
+							rows = table.element().rows;
+
+							if (rows.length > 0) {
+								cell = rows[rows.length - 1].cells[relIdx]; // skip header rows if possible
+								cellWidth = $(cell).outerWidth();
+
+								if (cellWidth > maxW) {
+									maxW = cellWidth;
+								}
+							}
+						}
+					}
+
+					colWidth = { width: maxW, real: false };
+				}
+
+				widthArray.push(colWidth);
+			}
+		},
+
+		_setColumnWidth: function (index, px) {
+			var th = this.getHeaderCell(index),
+				cols = this.getJoinedCols(index);
+
+			if (px) {
+				$(th).setOutWidth(px);
+				$.each(cols, function (idx, col) {
+					$(col).setOutWidth(px);
+				});
+			}
+		},
+
+		_setTableWidth: function (tableArray, expectedWidth, expandColumnWidth, expandIndex) {
+			var after, diff;
+
+			$.each(tableArray, function (index, table) {
+				table.css("table-layout", "fixed").setOutWidth(expectedWidth);
+			});
+
+			after = tableArray[0].outerWidth();
+			diff = after - expectedWidth;
+			if (diff !== 0) {
+				this._setColumnWidth(expandIndex, expandColumnWidth - diff);
+			}
+		},
+
+		_sumWidthArray: function (widthArray, startIndex, endIndex) {
+			var minWidth = 0;
+
+			$.each(widthArray, function (index, colWidth) {
+				if (startIndex !== undefined && endIndex !== undefined
+					&& (index < startIndex || index > endIndex)) {
+					return true;
+				}
+				minWidth += colWidth.width;
+			});
+
+			return minWidth;
 		}
+
+		// sizing **
 
 		// private abstract **
 	});
@@ -8866,18 +9736,13 @@
 			this._contentArea = null;
 		},
 
-		getScrollValue: function () {
-			var superPanelObj = this._getSuperPanel();
+		ensureWidth: function (index, value, oldValue) {
+			var $table = $(this._dataTable.element()),
+				tableWidth = $table.width() + value - oldValue;
 
-			return (superPanelObj)
-				? { type: "flat",
-					hScrollValue: superPanelObj.options.hScroller.scrollValue,
-					vScrollValue: superPanelObj.options.vScroller.scrollValue
-				}
-				: { type: "flat",
-					hScrollValue: null,
-					vScrollValue: null
-				};
+			this._base(index, value, oldValue);
+
+			this._setTableWidth([$table], tableWidth, value, index);
 		},
 
 		getVisibleAreaBounds: function () {
@@ -8898,224 +9763,75 @@
 			}
 		},
 
-		refreshPanel: function (scrollValue) {
-			var wijgrid = this._wijgrid,
-				mode = wijgrid.options.scrollMode,
-				outerDiv = wijgrid.outerDiv,
-				splitSE, panelModes;
-
-			if (mode !== "none") {
-				splitSE = outerDiv.find(".wijmo-wijgrid-content-area");
-				panelModes = this._getMappedScrollMode();
-
-				splitSE.width(this._getGridWidth(mode));
-				splitSE.height(outerDiv.innerHeight());
-
-				if (!splitSE.data("wijsuperpanel")) {
-					splitSE.wijsuperpanel({
-						bubbleScrollingEvent: false,
-						vScroller: { scrollBarVisibility: panelModes.vScrollBarVisibility, scrollValue: scrollValue.type === "flat" ? scrollValue.vScrollValue : null },
-						hScroller: { scrollBarVisibility: panelModes.hScrollBarVisibility, scrollValue: scrollValue.type === "flat" ? scrollValue.hScrollValue : null },
-
-						//auto adjusting height with hscrollbar shown
-						hScrollerActivating: function (e, data) {
-							var diff;
-							if (wijgrid._autoHeight) {
-								diff = wijgrid.element.height() - data.contentLength;
-								if (diff > 0) {
-									splitSE.height(splitSE.height() + diff);
-									splitSE.wijsuperpanel("paintPanel");
-									return false;
-								}
-							}
-						}
-					});
-				}
-				else {
-					splitSE.wijsuperpanel("paintPanel");
-				}
-			}
-		},
-
-		scrollTo: function (currentCell) {
-			var superPanelObj = this._getSuperPanel(),
-				element = currentCell.tableCell(),
-				$dom = element.nodeType ? $(element) : element,
-				contentElement, wrapperElement,
-				visibleLeft, visibleTop, visibleWidth, visibleHeight,
-				elementPosition, elementLeft, elementTop, elementWidth, elementHeight,
-				resultLeft = null,
-				resultTop = null;
-
-			if (superPanelObj && $dom.is(":visible")) {
-				contentElement = superPanelObj.getContentElement();
-				wrapperElement = contentElement.parent();
-				visibleLeft = parseInt((contentElement.css("left") + "").replace("px", ""), 10) * -1;
-				visibleTop = parseInt((contentElement.css("top") + "").replace("px", ""), 10) * -1;
-				visibleWidth = wrapperElement.outerWidth();
-				visibleHeight = wrapperElement.outerHeight();
-				elementPosition = $dom.position();
-				elementLeft = Math.abs(elementPosition.left);
-				elementTop = Math.abs(elementPosition.top);
-				elementWidth = $dom.outerWidth();
-				elementHeight = $dom.outerHeight();
-
-				if (elementTop + elementHeight > visibleTop + visibleHeight) {
-					visibleTop = resultTop = elementTop + elementHeight - visibleHeight;
-				}
-
-				if (elementLeft + elementWidth > visibleLeft + visibleWidth) {
-					visibleLeft = resultLeft = elementLeft + elementWidth - visibleWidth;
-				}
-
-				if (elementTop < visibleTop) {
-					resultTop = elementTop;
-				}
-
-				if (elementLeft < visibleLeft) {
-					resultLeft = elementLeft;
-				}
-
-				if (currentCell.row()._dataTableRowIndex === 0 && visibleTop > 0) {
-					resultTop = 0;
-				}
-
-				if (resultLeft !== null) {
-					superPanelObj.hScrollTo(resultLeft);
-				}
-
-				if (resultTop !== null) {
-					superPanelObj.vScrollTo(resultTop);
-				}
-			}
-		},
-
 		updateSplits: function (scrollValue) {
 			var self = this,
 				wijgrid = this._wijgrid,
-				o = this._wijgrid.options,
-				hasWidth = false,
+				o = wijgrid.options,
 				gridElement = wijgrid.element,
-				widthArray = [],
+				maxWidthArray = [],
+				minWidthArray = [],
+				resultWidthArray = [],
 				visibleLeaves = wijgrid._field("visibleLeaves"),
-				mode = wijgrid.options.scrollMode,
 				outerDiv = wijgrid.outerDiv,
-				splitSE, beforeWidth, after, colIndex, diff, len,
-				needVbar, needExpand, expandToColumn,
-				thsWithWidth = [];
+				headerWidth,
+				expandIndex;
+
+			gridElement.css({
+				"table-layout": "",
+				"width": ""
+			});
 
 			$.each(visibleLeaves, function (index, leaf) {
-				var th, isPercentage,
+				var isPercentage,
 					w = leaf.width;
 
-				if (w) {
-					hasWidth = true;
-					th = self.getHeaderCell(index);
-					isPercentage = typeof w === "string";
+				if (w || (w === 0)) {
+					isPercentage = ((typeof (w) === "string") && (w.length > 1) && (w[w.length - 1] === "%"));
 
-					if (!isPercentage && o.ensureColumnsPxWidth) {
-						self._setColumnWidth(index, w);
-						leaf._realWidth = true;
-						thsWithWidth.push({ th: $(th), clientWidth: th.clientWidth, index: index, isPercentage: isPercentage, ensurePxWidth: true });
+					//convert percent to value
+					if (isPercentage) {
+						w = outerDiv.width() * parseFloat(w) / 100;
+					} else {
+						w = parseFloat(w);
 					}
-					else {
-						th.width = w;
-						thsWithWidth.push({ th: $(th), clientWidth: th.clientWidth, index: index, isPercentage: isPercentage });
+
+					if (leaf.ensurePxWidth || (leaf.ensurePxWidth === undefined && o.ensureColumnsPxWidth)) {
+						leaf._realWidth = w;
 					}
+					self._setColumnWidth(index, w);
 				}
 			});
 
-			// only set width on inner cell div when needed.
-			if (o.scrollMode !== "none" || hasWidth || o.allowColSizing ||
-			//prevent the width of th from being changed when changing the width of filterEditor
-			//o.allowEditing || o.autoExpandColumnIndex) {
-					o.showFilter || o.allowEditing || o.autoExpandColumnIndex) {
-				if (!o.ensureColumnsPxWidth) {
-					splitSE = (o.scrollMode === "none")
-						? outerDiv
-						: outerDiv.find(".wijmo-wijgrid-content-area");
+			// read column widths.
+			$.each(visibleLeaves, function (index, leaf) {
+				self._getColumnWidth(index, maxWidthArray);
+			});
 
-					needVbar = this._testNeedVBar(outerDiv, gridElement, mode, wijgrid._autoHeight);
-					if (needVbar) {
-						splitSE.width(splitSE.width() - this._verScrollBarSize);
-					}
+			gridElement.css("width", "1px");
 
-					needExpand = !o.ensureColumnsPxWidth && splitSE.innerWidth() > gridElement[0].offsetWidth;
+			$.each(visibleLeaves, function (index, leaf) {
+				self._getColumnWidth(index, minWidthArray);
+			});
 
-					// if table width is not enough to occupy the available space in outerDiv,
-					// grid will expand to take up the space
-					// if autoExpandColumnIndex is set, the addtional space 
-					// will be added to the specified column and keep width of other columns.
-					expandToColumn = o.autoExpandColumnIndex;
-					if (needExpand && !expandToColumn) {
-						// expand to full width by setting width 100%
-						gridElement.css("width", "100%");
-						beforeWidth = gridElement.width();
-					}
+			headerWidth = outerDiv.innerWidth();
+			resultWidthArray = this._adjustWidthArray(maxWidthArray, minWidthArray, headerWidth, o.ensureColumnsPxWidth, o.autoExpandColumnIndex);
+
+			$.each(resultWidthArray, function (index, colWidth) {
+				var leaf = visibleLeaves[index];
+				if (leaf._realWidth !== undefined) {
+					delete leaf._realWidth;
+					return;
 				}
+				self._setColumnWidth(index, colWidth.width);
+			});
 
-				// read column widths.
-				$.each(visibleLeaves, function (index, leaf) {
-					self._setColumnWidth(index, null, widthArray);
-				});
-
-				// remove th width
-				$.each(thsWithWidth, function (index, widthObject) {
-					if (widthObject.ensurePxWidth) {
-						return;
-					}
-					widthObject.th.removeAttr("width");
-					if (!widthObject.isPercentage) {
-						widthArray[widthObject.index] = widthObject.clientWidth;
-					}
-				});
-
-				// set column width on inner cell divs to expand table
-				$.each(widthArray, function (index, width) {
-					var leaf = visibleLeaves[index];
-					if (leaf._realWidth) {
-						delete leaf._realWidth;
-						return;
-					}
-					self._setColumnWidth(index, width);
-				});
-
-				if (needExpand) {
-					if (expandToColumn) {
-						beforeWidth = gridElement.width();
-					}
-					else {
-						gridElement.css("width", "auto");
-					}
-
-					after = o.autoExpandColumnIndex ? splitSE.width() : gridElement.width();
-					diff = after - beforeWidth;
-					if (!expandToColumn) {
-						// if we are expanding table with 100% width,
-						// there may be a 1px difference before 
-						// and after adding width on each inner cell div.
-						// we need to substract it from one of columns.
-						diff = -diff;
-					}
-				}
-
-				// fix width to account for difference.
-				if (diff && visibleLeaves.length > 0) {
-					len = widthArray.length - 1;
-					colIndex = o.autoExpandColumnIndex || len;
-					if (colIndex > len) {
-						colIndex = len;
-					}
-					this._setColumnWidth(colIndex, widthArray[colIndex] + diff);
-				}
+			expandIndex = resultWidthArray.length - 1;
+			if (expandIndex !== -1) {
+				this._setTableWidth([gridElement],
+									this._sumWidthArray(resultWidthArray, 0, expandIndex),
+									resultWidthArray[expandIndex].width,
+									expandIndex);
 			}
-			else {
-				if (outerDiv.innerWidth() > gridElement[0].offsetWidth) {
-					gridElement.css("width", "100%");
-				}
-			}
-
-			this._base(scrollValue); // refresh super panel after width is set.
 		},
 		// public **
 
@@ -9198,35 +9914,16 @@
 
 		// ** private abstract
 
-		_getGridWidth: function (mode) {
-			var tableWidth = this._wijgrid.element.width(),
-				outWidth = this._wijgrid.outerDiv.innerWidth();
-
-			if (this._testNeedVBar(this._wijgrid.outerDiv, this._wijgrid.element, mode, this._wijgrid._autoHeight)) {
-				tableWidth += this._verScrollBarSize;
-			}
-
-			if (tableWidth > outWidth) {
-				tableWidth = outWidth;
-			}
-
-			return tableWidth;
-		},
-
-		_getSuperPanel: function () {
-			var panelElement = this._wijgrid.outerDiv.find(".wijmo-wijgrid-content-area");
-
-			return panelElement
-				? panelElement.data("wijsuperpanel")
-				: null;
+		//  ** render
+		_preRender: function () {
+			this._dataTable = new $.wijmo.wijgrid.htmlTableAccessor(this._wijgrid.element[0], true, true, true); // skip offsets, ensure tbody + colgroup
 		},
 
 		_postRender: function () {
 			this._wijgrid.element
-				.addClass("wijmo-wijgrid-table")
 				.find("> tbody").addClass("ui-widget-content wijmo-wijgrid-data");
 
-			this._dataTable = new $.wijmo.wijgrid.htmlTableAccessor(this._wijgrid.element[0]);
+			this._dataTable = new $.wijmo.wijgrid.htmlTableAccessor(this._wijgrid.element[0]); // create with offsets
 
 			// set width on td inner div of each column after all styles are applied to grid.
 			this._wijgrid.element
@@ -9236,282 +9933,54 @@
 			this._base();
 		},
 
-		_preRender: function () {
-			if (this._wijgrid.options.scrollMode !== "none") {
-				this._wijgrid.outerDiv.wrapInner("<div class=\"wijmo-wijgrid-fixedview\"><div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-se wijmo-wijgrid-content-area\"></div></div>");
+		_createRow: function (rowType, sectionRowIndex, originalDataRowIndex) {
+			var $rt = $.wijmo.wijgrid.rowType,
+				row;
+
+			switch (rowType) {
+				case $rt.header:
+				case $rt.filter:
+					row = this._wijgrid._createRow(this._dataTable.ensureTHead(), rowType, sectionRowIndex);
+					break;
+
+				case $rt.footer:
+					row = this._wijgrid._createRow(this._dataTable.ensureTFoot(), rowType, sectionRowIndex);
+					break;
+
+				default: // tbody
+					row = this._wijgrid._createRow(this._dataTable.ensureTBody(), rowType, originalDataRowIndex);
+			}
+
+			return [row];
+		},
+
+		_rowRendered: function (rowInfo, rowAttr, rowStyle) {
+			var domRow = rowInfo.$rows[0];
+
+			if (!domRow.cells.length) {
+				domRow.parentNode.removeChild(domRow);
+			} else {
+				this._base(rowInfo, rowAttr, rowStyle);
 			}
 		},
 
-		_renderContent: function () {
-			var visibleLeaves = this._wijgrid._field("visibleLeaves"),
-				table = this._wijgrid.element[0],
-				tHead = null,
-				spanTable, span, width, ri, height, domRow, thX, ci,
-				$domCell, $container,
-				i, len, leaf,
-				colGroup, col,
-				data, tBody, rowLen,
-				dataRow, dataRowLen,
-				cellLen, dataIndex, cellIndex, doBreak,
-				cellValue, dataValue, rowInfo,
-				cellAttr, cellStyle,
-				dataRowIndex = -1,
-				virtualDataItemIndexBase = 0,
-				$rt = $.wijmo.wijgrid.rowType,
-				$rs = $.wijmo.wijgrid.renderState,
-				isDataRow;
-
-			// create header
-			spanTable = this._wijgrid._field("spanTable");
-			if (spanTable && spanTable.length) {
-				tHead = table.createTHead();
-				width = spanTable[0].length;
-
-				for (ri = 0, height = spanTable.length; ri < height; ri++) {
-					//domRow = tHead.insertRow(-1);
-					domRow = this._wijgrid._createRow(tHead, $rt.header, ri);
-
-					rowInfo = this._wijgrid._createRowInfo([domRow], $rt.header, $rs.rendering, -1, -1, -1, -1);
-					thX = 0;
-
-					for (ci = 0; ci < width; ci++) {
-						span = spanTable[ri][ci];
-
-						if (span.column && span.column.parentVis) {
-							span.column.thX = thX++;
-							span.column.thY = ri;
-
-							//$domCell = $("<th><div class=\"wijmo-wijgrid-innercell\"></div></th>");
-							$domCell = $(this._wijgrid._createCell($rt.header, ri, ci));
-
-							$container = $domCell.children("div");
-							domRow.appendChild($domCell[0]);
-							this._wijgrid.cellFormatter.format($container, span.column, span.column.headerText, rowInfo);
-							this._wijgrid._cellCreated($domCell, ci, span.column, rowInfo, $rs.rendering, { colSpan: span.colSpan, rowSpan: span.rowSpan });
-						} // end if
-					} // for ci
-
-					this._wijgrid._rowCreated(rowInfo);
-
-				} // for ri
-			} // end if
-			// create header end
-
-			// create filter
-			if (this._wijgrid.options.showFilter) {
-				if (!tHead) {
-					tHead = table.createTHead();
-				}
-
-				//domRow = tHead.insertRow(-1); // filterRow
-				domRow = this._wijgrid._createRow(tHead, $rt.filter, -1);
-				rowInfo = this._wijgrid._createRowInfo([domRow], $rt.filter, $rs.rendering, -1, -1, -1, -1);
-
-				for (i = 0, len = visibleLeaves.length; i < len; i++) {
-					leaf = visibleLeaves[i];
-					//$domCell = $(domRow.insertCell(-1));
-					$domCell = $(this._wijgrid._createCell($rt.filter, undefined, i));
-					domRow.appendChild($domCell[0]);
-					this._wijgrid.cellFormatter.format($domCell, leaf, leaf.filterValue, rowInfo);
-					this._wijgrid._cellCreated($domCell, i, leaf, rowInfo, $rs.rendering);
-				}
-
-				this._wijgrid._rowCreated(rowInfo);
-			}
-			// create filter end
-
-			// colgroup
-			colGroup = document.createElement("colgroup");
-			for (i = 0, len = visibleLeaves.length; i < len; i++) {
-				col = document.createElement("col");
-				colGroup.appendChild(col);
-			}
-			table.appendChild(colGroup);
-			// end colgroup
-
-			// create body **
-			data = this._wijgrid.dataTable;
-
-			tBody = $.wijmo.wijgrid.ensureTBody(table);
-
-			if (this._wijgrid._dataStore.dataMode() === $.wijmo.wijgrid.dataMode.dynamical) {
-				virtualDataItemIndexBase = this._wijgrid.options.pageIndex * this._wijgrid.options.pageSize;
-			}
-
-			// render rows 
-			for (ri = 0, rowLen = data.length; ri < rowLen; ri++) {
-				dataRow = data[ri];
-				dataRowLen = dataRow.length;
-				isDataRow = (dataRow.rowType & $rt.data) !== 0;
-
-				//domRow = tBody.insertRow(-1);
-				domRow = this._wijgrid._createRow(tBody, dataRow.rowType, dataRow.originalRowIndex);
-
-				rowInfo = this._wijgrid._createRowInfo([domRow], dataRow.rowType, $rs.rendering,
-					ri,
-					isDataRow ? ++dataRowIndex : -1,
-					isDataRow ? dataRow.originalRowIndex : -1,
-					isDataRow ? virtualDataItemIndexBase + dataRow.originalRowIndex : -1);
-
-				// render cells
-				for (ci = 0, cellLen = visibleLeaves.length; ci < cellLen; ci++) {
-					leaf = visibleLeaves[ci];
-					dataIndex = leaf.dataIndex;
-
-					cellIndex = 0;
-					doBreak = false;
-
-					switch (dataRow.rowType) {
-						case $rt.data:
-						case $rt.data | $rt.dataAlt:
-							cellIndex = dataIndex; // use [leaf -> data] mapping
-
-							if (cellIndex >= 0 && (!dataRow[cellIndex] || (dataRow[cellIndex].visible === false))) {
-								continue; // spanned cell ?
-							}
-							break;
-
-						case $rt.emptyDataRow:
-						case $rt.groupHeader:
-						case $rt.groupFooter:
-							cellIndex = ci; // just iterate through all dataRow cells.
-
-							if (cellIndex >= dataRowLen) {
-								doBreak = true; // don't extend group headers\ footers with additional cells
-							}
-							break;
-					}
-
-					if (doBreak) {
-						break;
-					}
-
-					//$domCell = $("<td><div class=\"wijmo-wijgrid-innercell\"></div></td>");
-					$domCell = $(this._wijgrid._createCell(dataRow.rowType, dataRow.originalRowIndex, cellIndex));
-					$container = $domCell.children("div");
-
-					domRow.appendChild($domCell[0]);
-
-					if ((dataRow.rowType & $rt.data) && leaf.dataParser) {
-						cellValue = null;
-
-						if (cellIndex >= 0) { // cellIndex is equal to leaf.dataIndex here
-							dataValue = dataRow[cellIndex].value;
-							cellValue = this._wijgrid._toStr(leaf, dataValue);
-						} else { // unbound column
-						}
-
-						this._wijgrid.cellFormatter.format($container, leaf, cellValue, rowInfo);
-					} else {
-						if (cellIndex >= 0) {
-							$container.html(dataRow[cellIndex].html); // use original html
-						}
-					}
-
-					cellAttr = (cellIndex >= 0) ? dataRow[cellIndex].__attr : null;
-					cellStyle = (cellIndex >= 0) ? dataRow[cellIndex].__style : null;
-
-					this._wijgrid._cellCreated($domCell, ci, leaf, rowInfo, $rs.rendering, cellAttr, cellStyle);
-				} // for ci
-
-				if (!domRow.cells.length) {
-					tBody.removeChild(domRow);
-				} else {
-					this._wijgrid._rowCreated(rowInfo, dataRow.__attr, dataRow.__style);
-				}
-			} // for ri
-			// ** create body
-
-			// footer **
-			if (this._wijgrid.options.showFooter) {
-				//domRow = table.createTFoot().insertRow(-1);
-				domRow = this._wijgrid._createRow(table.createTFoot(), $rt.footer, -1);
-				rowInfo = this._wijgrid._createRowInfo([domRow], $rt.footer, $rs.rendering, -1, -1, -1, -1);
-
-				for (ci = 0, cellLen = visibleLeaves.length; ci < cellLen; ci++) {
-					leaf = visibleLeaves[ci];
-
-					//$domCell = $("<td><div class=\"wijmo-wijgrid-innercell\"></div></td>");
-					$domCell = $(this._wijgrid._createCell($rt.footer, undefined, ci));
-
-					$container = $domCell.children("div");
-
-					domRow.appendChild($domCell[0]);
-
-					this._wijgrid.cellFormatter.format($container, leaf, "", rowInfo);
-					this._wijgrid._cellCreated($domCell, i, leaf, rowInfo, $rs.rendering);
-				}
-
-				this._wijgrid._rowCreated(rowInfo);
-			}
-			// ** footer
+		_appendCell: function (rowInfo, cellIndex, $cell) {
+			rowInfo.$rows.append($cell);
 		},
 
-		_setColumnWidth: function (index, px, widthArray) {
-			/// <summary>
-			/// Set column width.
-			/// </summary>
-			/// <param name="index" type="Number">
-			/// The index of the column. Start with 0.
-			/// </param>
-			/// <param name="px" type="Number">
-			/// The width of each column.
-			/// </param>
-
-			// var tableEle = $(_dataTable.element());
-			var th = this.getHeaderCell(index);
-			if (th) {
-				px = px ? px : th.clientWidth;
-
-				if (widthArray) {
-					widthArray.push(px);
-					return;
-				}
-
-				if (px) {
-					// set width on inner div of th and table td in each column.
-					$(th).children("div.wijmo-wijgrid-innercell").setOutWidth(px);
-
-					this.forEachColumnCell(index, function (cell, index) {
-						var $row = $(cell.parentNode);
-
-						if ($row.parent().is("tbody") && !$row.is(".wijmo-wijgrid-emptydatarow", ".wijmo-wijgrid-groupheaderrow", ".wijmo-wijgrid-groupfooterrow")) {
-							$(cell).children("div.wijmo-wijgrid-innercell").setOutWidth(px);
-						}
-
-						return true;
-					});
-				}
-			}
+		_createCol: function (column, visibleIdx) {
+			return document.createElement("col");
 		},
+
+		_appendCol: function (domCol, column, visibleIdx) {
+			this._dataTable.appendCol(domCol);
+		}
+
+		// render **
 
 		// private abstract **
 
 		// ** private specific
-
-		_testNeedVBar: function (outerDiv, gridElement, mode, autoHeight) {
-			var excludeVBarWidth = false,
-				gridWidth = gridElement.width(),
-				gridHeight = gridElement.height(),
-				outerWidth = outerDiv.width(),
-				outerHeight = outerDiv.height();
-
-			// remove auto width to make width 100%  take effect. 
-			if (gridElement[0].style.width === "auto") {
-				gridElement.css("width", "");
-			}
-
-			if (mode === "both" || mode === "vertical") {
-				excludeVBarWidth = true;
-			}
-			else {
-				excludeVBarWidth = (mode === "auto") && (
-					(gridHeight > outerHeight) ||
-					(!autoHeight && gridWidth > outerWidth && gridHeight > outerHeight - this._verScrollBarSize)); // When the height needs to be auto adjusted, the vertical scrollbar should not be shown
-			}
-
-			return excludeVBarWidth;
-		}
 
 		// private specific **
 	});
@@ -9522,14 +9991,119 @@
 
 		ctor: function (wijgrid) {
 			this._base(wijgrid);
-			this._rowsCount, // total rows count
-			this._viewTables = {}, // rendered DOM tables
-			this._table00,
-			this._table01,
-			this._table10,
-			this._table11,
-			this._scroller, // scrolling div
-			this.element = this._wijgrid.element; // table element
+
+			this._verScrollBarSize = 18;
+			this._mouseWheelHandler = $.proxy(this._onMouseWheel, this);
+			this._rowsCount = null; // total rows count
+
+			this._viewTables = {}; // rendered DOM tables
+			this._splitAreas = {}; // rendered split areas
+
+			this._scroller = null; // scrolling div
+			this.element = wijgrid.element; // table element
+
+			this._staticDataRowIndex = wijgrid._getStaticIndex(true);
+			this._staticColumnIndex = wijgrid._getRealStaticColumnIndex();
+			this._staticAllColumnIndex = (this._staticColumnIndex === -1)
+				? -1
+				: wijgrid._field("visibleLeaves")[this._staticColumnIndex].leavesIdx;
+		},
+
+		dispose: function () {
+			this._base();
+			this._wijgrid.outerDiv.unbind("mousewheel", this._mouseWheelHandler);
+		},
+
+		ensureWidth: function (index, value, oldValue) {
+			var wijgrid = this._wijgrid,
+				o = wijgrid.options,
+				staticColumnIndex = wijgrid._getRealStaticColumnIndex(),
+				bWest = index <= staticColumnIndex,
+				$tableNW = $(this._viewTables.nw.element()),
+				$tableNE = $(this._viewTables.ne.element()),
+				$tableSW = $(this._viewTables.sw.element()),
+				$tableSE = $(this._viewTables.se.element()),
+				tableArray = bWest ? [$tableNW, $tableSW] : [$tableNE, $tableSE],
+				tableWidth = (bWest ? $tableNW.width() : $tableNE.width()) + value - oldValue,
+				frozener = wijgrid._field("frozener"),
+				scrollValue = this.getScrollValue();
+
+			if (this._scroller.data("wijsuperpanel")) {
+				this._scroller.wijsuperpanel("destroy");
+			}
+
+			this._base(index, value);
+
+			this._setTableWidth(tableArray, tableWidth, value, index);
+
+			try {
+				if (staticColumnIndex >= 0) {
+					o.splitDistanceX = $tableNW[0].offsetWidth;
+				} else {
+					o.splitDistanceX = 0;
+				}
+			} catch (ex) { }
+
+			this._updateSplitAreaBounds(0);
+
+			$tableSE.css("height", "");
+
+			this._adjustRowHeight();
+
+			$tableSE.height(Math.max($tableSE.height(), $tableSW.height()));
+
+			try {
+				if (wijgrid._getRealStaticRowIndex() >= 0) {
+					o.splitDistanceY = Math.max($tableNW[0].offsetHeight, $tableNE[0].offsetHeight);
+				} else {
+					o.splitDistanceY = 0;
+				}
+			} catch (ex) { }
+
+			this._updateSplitAreaBounds(1);
+
+			this.refreshPanel(scrollValue);
+
+			frozener.refresh();
+		},
+
+		ensureHeight: function (index) {
+			var rowObjsArray,
+				wijgrid = this._wijgrid,
+				o = wijgrid.options,
+				$tableNW = $(this._viewTables.nw.element()),
+				$tableNE = $(this._viewTables.ne.element()),
+				$tableSW = $(this._viewTables.sw.element()),
+				$tableSE = $(this._viewTables.se.element()),
+				frozener = wijgrid._field("frozener"),
+				scrollValue = this.getScrollValue();
+
+			if (this._scroller.data("wijsuperpanel")) {
+				this._scroller.wijsuperpanel("destroy");
+			}
+
+			if (arguments.length > 0) {
+				rowObjsArray = this.getJoinedRows(index, 2);
+				this._setRowHeight(rowObjsArray, this._getRowHeight(rowObjsArray));
+			}
+
+			$tableSE.css("height", "");
+
+			$tableSE.height(Math.max($tableSE.height(), $tableSW.height()));
+
+			try {
+				if (wijgrid._getRealStaticRowIndex() >= 0) {
+					o.splitDistanceY = Math.max($tableNW[0].offsetHeight, $tableNE[0].offsetHeight);
+				} else {
+					o.splitDistanceY = 0;
+				}
+			} catch (ex) { }
+
+			this._updateSplitAreaBounds(1);
+
+			this.refreshPanel(scrollValue);
+
+			frozener.refresh();
 		},
 
 		getScrollValue: function () {
@@ -9550,31 +10124,66 @@
 			return $.wijmo.wijgrid.bounds(this._wijgrid.outerDiv.find(".wijmo-wijsuperpanel-contentwrapper:first"));
 		},
 
+		getFixedAreaVisibleBounds: function () {
+			var bounds = this.getVisibleAreaBounds(),
+				neBounds = $.wijmo.wijgrid.bounds(this._splitAreas.ne),
+				nwBounds = $.wijmo.wijgrid.bounds(this._splitAreas.nw),
+				horBounds = null,
+				verBounds = null;
+
+			if (neBounds.height || nwBounds.height) {
+				horBounds = {
+					left: bounds.left,
+					top: bounds.top,
+					width: bounds.width,
+					height: Math.min(neBounds.height || nwBounds.height, bounds.height)
+				};
+			}
+
+			if (nwBounds.width) {
+				verBounds = {
+					left: bounds.left,
+					top: bounds.top,
+					width: Math.min(nwBounds.width, bounds.width),
+					height: bounds.height
+				};
+			}
+
+			return [horBounds, verBounds];
+		},
+
 		refreshPanel: function (scrollValue) {
 			var self = this,
-				panelModes = this._getMappedScrollMode();
+				wijgrid = this._wijgrid,
+				options = wijgrid.options,
+				gridWidth = this._getGridWidth(options.scrollMode),
+				panelModes = this._getMappedScrollMode(),
+				needVBar = this._testNeedVBar(wijgrid.outerDiv, wijgrid.element, $(this._viewTables.ne.element()), options.scrollMode, wijgrid._autoHeight);
 
-			this._scroller.width(this._getGridWidth(this._wijgrid.options.scrollMode));
+			this._scroller.width(gridWidth);
+			this._splitAreas.ne.width(gridWidth - options.splitDistanceX - (needVBar ? this._verScrollBarSize : 0));
 
 			if (!this._scroller.data("wijsuperpanel")) {
 				this._scroller.wijsuperpanel({
-					scrolled: $.proxy(this._onScrolled, this),
-					bubbleScrollingEvent: false,
+					//scrolled: $.proxy(this._onScrolled, this),
+					disabled: wijgrid.options.disabled,
+					scroll: $.proxy(this._onScroll, this),
+					bubbleScrollingEvent: true,
 					vScroller: { scrollBarVisibility: panelModes.vScrollBarVisibility, scrollValue: scrollValue.type === "fixed" ? scrollValue.vScrollValue : null },
 					hScroller: { scrollBarVisibility: panelModes.hScrollBarVisibility, scrollValue: scrollValue.type === "fixed" ? scrollValue.hScrollValue : null },
 					//auto adjusting height with hscrollbar shown
 					hScrollerActivating: function (e, data) {
-						var diff, areaSW;
-						if (self._wijgrid._autoHeight) {
-							diff = self._wijgrid.element.height() + self._wijgrid.options.splitDistanceY - data.contentLength;
+						var diff;
+						if (wijgrid._autoHeight) {
+							diff = wijgrid.element.height() + options.splitDistanceY - data.contentLength;
 							if (diff > 0) {
-								areaSW = self._wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-sw");
-								areaSW.height(areaSW.height() + diff);
 								self._scroller.height(self._scroller.height() + diff);
 								self._scroller.wijsuperpanel("paintPanel");
 								return false;
 							}
 						}
+
+						self._splitAreas.sw.height(data.contentLength - options.splitDistanceY);
 					}
 				});
 			}
@@ -9582,16 +10191,15 @@
 				this._scroller.wijsuperpanel("paintPanel");
 			}
 
-			this._wijgrid.outerDiv
-				.find(".wijmo-wijgrid-split-area-ne") // area ne (01)
-				.width(this._scroller.wijsuperpanel("getContentElement").parent().width());
+			this._scroller.find(".wijmo-wijsuperpanel-hbarcontainer, .wijmo-wijsuperpanel-vbarcontainer").css("zIndex", 5);
 
 			// synchronize scroll left of top table with bottom table
-			this._onScrolled();
+			//this._onScrolled();
 		},
 
 		scrollTo: function (currentCell) {
-			var o = this._wijgrid.options,
+			var wijgrid = this._wijgrid,
+				o = wijgrid.options,
 				superPanelObj = this._getSuperPanel(),
 				element = currentCell.tableCell(),
 				$dom = element.nodeType ? $(element) : element,
@@ -9599,7 +10207,8 @@
 				visibleLeft, visibleTop, visibleWidth, visibleHeight,
 				elementPosition, elementLeft, elementTop, elementWidth, elementHeight,
 				resultLeft = null,
-				resultTop = null;
+				resultTop = null,
+				staticRowIndex, staticColumnIndex, currentRowIndex, currentCellIndex;
 
 			if (superPanelObj && $dom.is(":visible")) {
 				contentElement = superPanelObj.getContentElement();
@@ -9609,25 +10218,57 @@
 				visibleWidth = wrapperElement.outerWidth() - o.splitDistanceX;
 				visibleHeight = wrapperElement.outerHeight() - o.splitDistanceY;
 				elementPosition = $dom.position();
-				elementLeft = Math.abs(elementPosition.left);
-				elementTop = Math.abs(elementPosition.top);
+				elementLeft = elementPosition.left;
+				elementTop = elementPosition.top;
 				elementWidth = $dom.outerWidth();
 				elementHeight = $dom.outerHeight();
+				staticRowIndex = wijgrid._getStaticIndex(true);
+				staticColumnIndex = wijgrid._getStaticIndex(false);
+				currentRowIndex = currentCell.rowIndex();
+				currentCellIndex = currentCell.cellIndex();
 
-				if (elementTop + elementHeight > visibleTop + visibleHeight) {
-					visibleTop = resultTop = elementTop + elementHeight - visibleHeight;
-				}
+				if (currentRowIndex <= staticRowIndex) {
+					if (currentCellIndex <= staticColumnIndex) {
+						resultLeft = 0;
+						resultTop = 0;
+					} else {
+						elementLeft += visibleLeft;
+						if (elementLeft + elementWidth > visibleLeft + visibleWidth) {
+							visibleLeft = resultLeft = elementLeft + elementWidth - visibleWidth;
+						}
+						if (elementLeft < visibleLeft) {
+							resultLeft = elementLeft;
+						}
+						resultTop = 0;
+					}
+				} else {
+					if (currentCellIndex <= staticColumnIndex) {
+						elementTop += visibleTop;
+						if (elementTop + elementHeight > visibleTop + visibleHeight) {
+							visibleTop = resultTop = elementTop + elementHeight - visibleHeight;
+						}
+						if (elementTop < visibleTop) {
+							resultTop = elementTop;
+						}
+						resultLeft = 0;
+					} else {
+						elementLeft -= o.splitDistanceX;
+						if (elementTop + elementHeight > visibleTop + visibleHeight) {
+							visibleTop = resultTop = elementTop + elementHeight - visibleHeight;
+						}
 
-				if (elementLeft + elementWidth > visibleLeft + visibleWidth) {
-					visibleLeft = resultLeft = elementLeft + elementWidth - visibleWidth;
-				}
+						if (elementLeft + elementWidth > visibleLeft + visibleWidth) {
+							visibleLeft = resultLeft = elementLeft + elementWidth - visibleWidth;
+						}
 
-				if (elementTop < visibleTop) {
-					resultTop = elementTop;
-				}
+						if (elementTop < visibleTop) {
+							resultTop = elementTop;
+						}
 
-				if (elementLeft < visibleLeft) {
-					resultLeft = elementLeft;
+						if (elementLeft < visibleLeft) {
+							resultLeft = elementLeft;
+						}
+					}
 				}
 
 				if (resultLeft !== null) {
@@ -9643,49 +10284,32 @@
 		updateSplits: function (scrollValue) {
 			var wijgrid = this._wijgrid,
 				o = wijgrid.options,
-				thsWithWidth = [],
-				expandToColumn,
 				rowObj, fooRow,
-				beforeWidth, diff, after, len, colIndex, needExpand, headerWidth,
+				headerWidth,
 				self = this,
-				widthArray = [], // set width to top table th and bottom table td in first row.
+				resultWidthArray = [],
+				minWidthArray = [],
+				maxWidthArray = [], // set width to top table th and bottom table td in first row.
+				staticColumnIndex = wijgrid._getRealStaticColumnIndex(),
+				expandIndex,
 				mode = o.scrollMode,
 				visibleLeaves = wijgrid._field("visibleLeaves"),
-				$tableSE = $(this._table11.element()),
-				$tableNE = $(this._table01.element()),
+				$tableSE = $(this._viewTables.se.element()),
+				$tableNE = $(this._viewTables.ne.element()),
+				$tableSW = $(this._viewTables.sw.element()),
+				$tableNW = $(this._viewTables.nw.element()),
 				outerDiv = wijgrid.outerDiv;
 
-			try {
-				if (o.staticRowIndex >= 0) { // interpreted as bool, use _getRealStaticRowIndex() to get the actual value.
-					o.splitDistanceY = outerDiv.find(".wijmo-wijgrid-split-area-ne table")[0].offsetHeight;
-				} else {
-					o.splitDistanceY = 0;
-				}
-				if (wijgrid._staticColumnIndex >= 0) { // interpreted as bool, use _getRealStaticColumnIndex() to get the actual value.
-					o.splitDistanceX = outerDiv.find(".wijmo-wijgrid-split-area-nw table")[0].offsetWidth;
-				} else {
-					o.splitDistanceX = 0;
-				}
-			} catch (ex) { }
-
-			this._updateSplitAreaBounds();
-
-			// handle autosizing
-			/*
-			var fixedColIdx = wijgrid._staticColumnIndex; // interpreted as bool, use _getRealStaticColumnIndex() to get the actual value.
-			var fixedRowIdx = wijgrid.options.staticRowIndex; // // interpreted as bool, use _getRealStaticRowIndex() to get the actual value.
-			if (fixedColIdx >= 0 && fixedColIdx < wijgrid._field("leaves").length - 1 || fixedRowIdx >= 0) {
-			this.adjustColumnSizes(this._viewTables['nw'], this._viewTables['sw']);
-			this.adjustColumnSizes(this._viewTables['ne'], this._viewTables['se']);
+			if (this._scroller.data("wijsuperpanel")) {
+				this._scroller.wijsuperpanel("destroy");
 			}
-			*/
+			outerDiv.unbind("mousewheel", this._mouseWheelHandler);
 
 			// clone a row to expand table in grouping mode.
 			rowObj = $tableSE.find("tbody .wijmo-wijgrid-row:not(.wijmo-wijgrid-groupheaderrow):first");
 
 			this.fooRow = fooRow = rowObj
 				.clone()
-			//.removeClass() // remove all classes
 				.removeAttr("datarowindex")
 				.addClass("wijmo-wijgrid-foorow")
 				.appendTo(rowObj.parent()).show().height(0).css({ "font-size": "0" });
@@ -9693,11 +10317,9 @@
 			// fooRowCells belong to the bottom table
 			this.fooRowCells = fooRow
 				.find(">td")
-			//.removeClass() // remove all classes
 				.height(0)
 				.css({ "border-top": "0", "border-bottom": "0" })
 				.find(">div.wijmo-wijgrid-innercell")
-			//force the height of fooRow to 0
 				.css({ "padding-top": "0px", "padding-bottom": "0px" })
 					.empty();
 
@@ -9709,108 +10331,178 @@
 				wijgrid.element.css("width", "100%");
 			}
 
+			$.each([$tableSE, $tableNE, $tableSW, $tableNW], function (index, table) {
+				table.css({
+					"table-layout": "",
+					"width": ""
+				});
+			});
+
 			// if any column has width option, we will set the width for inner cells.
 			$.each(visibleLeaves, function (index, leaf) {
-				var th, isPercentage,
+				var isPercentage,
 					w = leaf.width;
 
-				if (w) {
-					isPercentage = typeof w === "string";
-					th = self.getHeaderCell(index);
-					if (!isPercentage && o.ensureColumnsPxWidth) {
-						self._setColumnWidth(index, w);
-						leaf._realWidth = true;
-						thsWithWidth.push({ th: $(th), clientWidth: th.clientWidth, index: index, isPercentage: isPercentage, ensurePxWidth: true });
+				if (w || (w === 0)) {
+					isPercentage = ((typeof (w) === "string") && (w.length > 1) && (w[w.length - 1] === "%"));
+
+					//convert percent to value
+					if (isPercentage) {
+						w = outerDiv.width() * parseFloat(w) / 100;
+					} else {
+						w = parseFloat(w);
 					}
-					else {
-						th.width = w;
-						thsWithWidth.push({ th: $(th), clientWidth: th.clientWidth, index: index, isPercentage: isPercentage });
+
+					if (leaf.ensurePxWidth || (leaf.ensurePxWidth === undefined && o.ensureColumnsPxWidth)) {
+						leaf._realWidth = w;
 					}
+					self._setColumnWidth(index, w);
 				}
 			});
-
-			if (!o.ensureColumnsPxWidth && this._testNeedVBar(wijgrid.outerDiv, $tableSE, $tableNE, mode, wijgrid._autoHeight)) {
-				headerWidth = this._scroller.width() - this._verScrollBarSize;
-			}
-			else {
-				headerWidth = this._scroller.width();
-			}
-
-			this._scroller.width(headerWidth);
-			$tableNE.parent().width(headerWidth);
-			if (!o.ensureColumnsPxWidth) {
-				needExpand = $tableNE.width() < outerDiv.innerWidth();
-				expandToColumn = o.autoExpandColumnIndex;
-				if (needExpand && !expandToColumn) {
-					$tableNE.css("width", "100%");
-					beforeWidth = $tableNE.width();
-				}
-			}
 
 			$.each(visibleLeaves, function (index, leaf) {
-				self._setColumnWidth(index, null, widthArray);
+				self._getColumnWidth(index, maxWidthArray);
 			});
 
-			// remove th width
-			$.each(thsWithWidth, function (index, widthObject) {
-				if (widthObject.ensurePxWidth) {
-					return;
-				}
-				widthObject.th.removeAttr("width");
+			$.each([$tableNW, $tableNE, $tableSW, $tableSE], function (index, table) {
+				table.css({
+					"width": "1px"
+				});
 			});
 
-			$.each(widthArray, function (index, width) {
+			$.each(visibleLeaves, function (index, leaf) {
+				self._getColumnWidth(index, minWidthArray);
+			});
+
+			headerWidth = outerDiv.innerWidth();
+			resultWidthArray = this._adjustWidthArray(maxWidthArray, minWidthArray, headerWidth, o.ensureColumnsPxWidth, o.autoExpandColumnIndex);
+
+			$.each(resultWidthArray, function (index, colWidth) {
 				var leaf = visibleLeaves[index];
-				if (leaf._realWidth) {
+				if (leaf._realWidth !== undefined) {
 					delete leaf._realWidth;
 					return;
 				}
-				self._setColumnWidth(index, width);
+				self._setColumnWidth(index, colWidth.width);
 			});
 
-			if (needExpand) {
-				if (expandToColumn) {
-					beforeWidth = $tableNE.width();
+			if (staticColumnIndex >= 0) {
+				expandIndex = staticColumnIndex;
+				this._setTableWidth([$tableNW, $tableSW],
+					this._sumWidthArray(resultWidthArray, 0, expandIndex),
+					resultWidthArray[expandIndex].width,
+					expandIndex);
+			}
+
+			//set the size of area after setting the width of column
+			try {
+				if (staticColumnIndex >= 0) {
+					o.splitDistanceX = $tableNW[0].offsetWidth;
+				} else {
+					o.splitDistanceX = 0;
 				}
-				else {
-					$tableNE.css("width", "auto");
+			} catch (ex) { }
+
+			this._updateSplitAreaBounds(0); //width
+
+			if (!o.ensureColumnsPxWidth) {
+				$tableNE.parent().width(headerWidth - o.splitDistanceX);
+			}
+
+			expandIndex = resultWidthArray.length - 1;
+			if (expandIndex !== -1) {
+				this._setTableWidth([$tableNE, $tableSE],
+					this._sumWidthArray(resultWidthArray, staticColumnIndex + 1, expandIndex),
+					resultWidthArray[expandIndex].width,
+					expandIndex);
+			}
+
+			$tableSE.css("height", "");
+
+			this._adjustRowHeight();
+
+			$tableSE.height(Math.max($tableSE.height(), $tableSW.height()));
+
+			//set the size of area after setting the width of column
+			try {
+				if (wijgrid._getRealStaticRowIndex() >= 0) {
+					o.splitDistanceY = Math.max($tableNW[0].offsetHeight, $tableNE[0].offsetHeight);
+				} else {
+					o.splitDistanceY = 0;
 				}
-				after = o.autoExpandColumnIndex ? this._scroller.width() : $tableNE.width();
-				diff = after - beforeWidth;
-				if (!expandToColumn) {
-					// if we are expanding table with 100% width,
-					// there may be a 1px difference before 
-					// and after adding width on each inner cell div.
-					// we need to substract it from one of columns.
-					diff = -diff;
+			} catch (ex) { }
+
+			this._updateSplitAreaBounds(1); //height
+
+			//adjust width if showing vertical scrollbar
+			if (!o.ensureColumnsPxWidth) {
+				if (this._testNeedVBar(wijgrid.outerDiv, $tableSE, $tableNE, mode, wijgrid._autoHeight)) {
+					headerWidth -= this._verScrollBarSize;
+					resultWidthArray = this._adjustWidthArray(maxWidthArray, minWidthArray, headerWidth, o.ensureColumnsPxWidth, o.autoExpandColumnIndex);
+
+					$.each(resultWidthArray, function (index, colWidth) {
+						if (!colWidth.real) {
+							self._setColumnWidth(index, colWidth.width);
+						}
+					});
+
+					if (staticColumnIndex >= 0) {
+						expandIndex = staticColumnIndex;
+						this._setTableWidth([$tableNW, $tableSW],
+											this._sumWidthArray(resultWidthArray, 0, expandIndex),
+											resultWidthArray[expandIndex].width,
+											expandIndex);
+					}
+
+					//set the size of area after setting the width of column
+					try {
+						if (staticColumnIndex >= 0) {
+							o.splitDistanceX = $tableNW[0].offsetWidth;
+						} else {
+							o.splitDistanceX = 0;
+						}
+					} catch (ex) { }
+
+					this._updateSplitAreaBounds(0); //width
+
+					$tableNE.parent().width(headerWidth - o.splitDistanceX);
+
+					expandIndex = resultWidthArray.length - 1;
+					if (expandIndex !== -1) {
+						this._setTableWidth([$tableNE, $tableSE],
+							this._sumWidthArray(resultWidthArray, staticColumnIndex + 1, expandIndex),
+							resultWidthArray[expandIndex].width,
+							expandIndex);
+					}
+
+					$tableSE.css("height", "");
+
+					this._adjustRowHeight();
+
+					$tableSE.height(Math.max($tableSE.height(), $tableSW.height()));
+
+					//set the size of area after setting the width of column
+					try {
+						if (wijgrid._getRealStaticRowIndex() >= 0) {
+							o.splitDistanceY = Math.max($tableNW[0].offsetHeight, $tableNE[0].offsetHeight);
+						} else {
+							o.splitDistanceY = 0;
+						}
+					} catch (ex) { }
+
+					this._updateSplitAreaBounds(1); //height
 				}
 			}
 
-			// fix width to account for difference.
-			if (diff && visibleLeaves.length > 0) {
-				len = widthArray.length - 1;
-				colIndex = o.autoExpandColumnIndex || len;
-				if (colIndex > len) {
-					colIndex = len;
-				}
+			this.refreshPanel(scrollValue); // refresh super panel after width is set.
 
-				this._setColumnWidth(colIndex, widthArray[colIndex] + diff);
-			}
-
-			//the height is set to a wrong value for the height of footer is not taken into account.
-			//because the height has already been set, there is no need setting it again.
-			//if (this._noHeight) {
-			//	this._scroller.height($tableSE.height() + o.splitDistanceY);
-			//}
-
-			this._base(scrollValue); // refresh super panel after width is set.
+			outerDiv.bind("mousewheel", this._mouseWheelHandler);
 		},
 		// public **
 
 		// ** DOMTable abstraction
 
 		focusableElement: function () {
-			//return this._table11.element();
 			return this._wijgrid.outerDiv;
 		},
 
@@ -9874,7 +10566,9 @@
 				table = table.parentNode;
 			}
 
-			return (table === this._table00.element() || table === this._table01.element()) ? index : index + this._wijgrid._getRealStaticRowIndex() + 1;
+			return (table === this._viewTables.nw.element() || table === this._viewTables.ne.element())
+				? index
+				: index + this._wijgrid._getRealStaticRowIndex() + 1;
 		},
 
 		getCell: function (absColIdx, absRowIdx) {
@@ -9915,21 +10609,21 @@
 			}
 
 			if (owner !== null) {
-				if (owner === this._table00.element()) {
-					htmlTable = this._table00;
+				if (owner === this._viewTables.nw.element()) {
+					htmlTable = this._viewTables.nw;
 				}
 				else {
-					if (owner === this._table01.element()) {
-						htmlTable = this._table01;
+					if (owner === this._viewTables.ne.element()) {
+						htmlTable = this._viewTables.ne;
 						flag = true;
 					}
 					else {
-						if (owner === this._table10.element()) {
-							htmlTable = this._table10;
+						if (owner === this._viewTables.sw.element()) {
+							htmlTable = this._viewTables.sw;
 						}
 						else {
-							if (owner === this._table11.element()) {
-								htmlTable = this._table11;
+							if (owner === this._viewTables.se.element()) {
+								htmlTable = this._viewTables.se;
 								flag = true;
 							}
 						}
@@ -9961,11 +10655,14 @@
 
 		getJoinedCols: function (columnIndex) {
 			var result = [],
-				joinedTables = this.getJoinedTables(true, columnIndex);
+				joinedTables = this.getJoinedTables(true, columnIndex),
+				relIndex = joinedTables[2];
 
 			joinedTables.splice(joinedTables.length - 1, 1);
 			$.each(joinedTables, function (index, table) {
-				result.push($(table.element()).find("col")[columnIndex]);
+				result.push(table
+					? $(table.element()).find("col")[relIndex]
+					: null);
 			});
 
 			return result;
@@ -9976,7 +10673,7 @@
 				table0 = null, table1 = null,
 				fixedRowIdx = this._wijgrid._getRealStaticRowIndex(),
 				fixedColIdx = this._wijgrid._getRealStaticColumnIndex(),
-				lastColIdx = this._wijgrid._field("leaves").length - 1,
+				lastColIdx = this._wijgrid._field("visibleLeaves").length - 1,
 				lastRowIdx = this._rowsCount - 1,
 				allRowsFixed = (fixedRowIdx === lastRowIdx),
 				allsRowUnfixed = (fixedRowIdx < 0),
@@ -9985,11 +10682,11 @@
 
 			if (allRowsFixed || rowsFixedSlice) {
 				if (fixedColIdx >= 0 && fixedColIdx < lastColIdx) {
-					table0 = this._table00;
-					table1 = this._table01;
+					table0 = this._viewTables.nw;
+					table1 = this._viewTables.ne;
 				}
 				else {
-					table0 = (fixedColIdx < 0) ? this._table01 : this._table00;
+					table0 = (fixedColIdx < 0) ? this._viewTables.ne : this._viewTables.nw;
 				}
 				sectionLength = table0.getSectionLength(rowScope);
 				if (rowIndex < sectionLength) {
@@ -10006,11 +10703,11 @@
 				}
 
 				if (fixedColIdx >= 0 && fixedColIdx < lastColIdx) {
-					table0 = this._table10;
-					table1 = this._table11;
+					table0 = this._viewTables.sw;
+					table1 = this._viewTables.se;
 				}
 				else {
-					table0 = (fixedColIdx < 0) ? this._table11 : this._table10;
+					table0 = (fixedColIdx < 0) ? this._viewTables.se : this._viewTables.sw;
 				}
 
 				row0 = table0.getSectionRow(rowIndex, rowScope);
@@ -10033,12 +10730,12 @@
 
 			if (byColumn) {
 				if (index <= fixedColIdx) {
-					t0 = this._table00;
-					t1 = this._table10;
+					t0 = this._viewTables.nw;
+					t1 = this._viewTables.sw;
 				}
 				else {
-					t0 = this._table01;
-					t1 = this._table11;
+					t0 = this._viewTables.ne;
+					t1 = this._viewTables.se;
 
 					idx = idx - (fixedColIdx + 1);
 				}
@@ -10054,12 +10751,12 @@
 			}
 			else {
 				if (index <= fixedRowIdx) {
-					t0 = this._table00;
-					t1 = this._table01;
+					t0 = this._viewTables.nw;
+					t1 = this._viewTables.ne;
 				}
 				else {
-					t0 = this._table10;
-					t1 = this._table11;
+					t0 = this._viewTables.sw;
+					t1 = this._viewTables.se;
 
 					idx = idx - (fixedRowIdx + 1);
 				}
@@ -10080,7 +10777,7 @@
 		},
 
 		subTables: function () {
-			return [this._table00, this._table01, this._table10, this._table11];
+			return [this._viewTables.nw, this._viewTables.ne, this._viewTables.sw, this._viewTables.se];
 		},
 
 		// DOMTable abstraction **
@@ -10089,10 +10786,10 @@
 
 		_getGridWidth: function (mode) {
 			var wijgrid = this._wijgrid,
-				tableWidth = wijgrid.element.outerWidth(true),
+				tableWidth = wijgrid.element.outerWidth(true) + wijgrid.options.splitDistanceX,
 				outWidth = wijgrid.outerDiv.innerWidth();
 
-			if (this._testNeedVBar(wijgrid.outerDiv, wijgrid.element, $(this._table01.element()), mode, wijgrid._autoHeight)) {
+			if (this._testNeedVBar(wijgrid.outerDiv, wijgrid.element, $(this._viewTables.ne.element()), mode, wijgrid._autoHeight)) {
 				tableWidth += this._verScrollBarSize;
 			}
 
@@ -10109,451 +10806,273 @@
 				: null;
 		},
 
+		// ** render
+
+		_preRender: function () {
+			var docFragment = document.createDocumentFragment(),
+				HTA = $.wijmo.wijgrid.htmlTableAccessor;
+
+			this._wijgrid.outerDiv.wrapInner("<div class=\"wijmo-wijgrid-fixedview\"><div class=\"wijmo-wijgrid-scroller\"><div class=\"wijmo-wijgrid-split-area-se wijmo-wijgrid-content-area\"></div></div></div>");
+			this._scroller = this._wijgrid.outerDiv.find(".wijmo-wijgrid-scroller");
+
+			this._scroller.after(this._splitAreas.nw = $("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-nw\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>"));
+			this._scroller.after(this._splitAreas.ne = $("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-ne\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>"));
+			this._scroller.after(this._splitAreas.sw = $("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-sw\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>"));
+			this._splitAreas.se = this._scroller.find(".wijmo-wijgrid-split-area-se:first");
+
+			this._viewTables = { // skip offsets, ensure tbody + colgroup
+				nw: new HTA(docFragment.appendChild(document.createElement("table")), true, true, true),
+				ne: new HTA(docFragment.appendChild(document.createElement("table")), true, true, true),
+				sw: new HTA(docFragment.appendChild(document.createElement("table")), true, true, true),
+				se: new HTA(docFragment.appendChild(this._wijgrid.element[0]), true, true, true)
+			};
+		},
+
 		_postRender: function () {
-			var key;
+			var t00, t01, t10, t11,
+				HTA = $.wijmo.wijgrid.htmlTableAccessor;
 
-			for (key in this._viewTables) {
-				if (this._viewTables.hasOwnProperty(key)) {
-					$(this._viewTables[key])
-						.addClass("wijmo-wijgrid-table")
-						.attr("role", "grid")
-						.find("> tbody")
-							.addClass("ui-widget-content wijmo-wijgrid-data");
-				}
-			}
+			this._viewTables = { // rebuild with offsets
+				nw: new HTA(t00 = this._viewTables.nw.element()),
+				ne: new HTA(t01 = this._viewTables.ne.element()),
+				sw: new HTA(t10 = this._viewTables.sw.element()),
+				se: new HTA(t11 = this._viewTables.se.element())
+			};
 
-			this._table00 = new $.wijmo.wijgrid.htmlTableAccessor(this._viewTables.nw);
-			this._table01 = new $.wijmo.wijgrid.htmlTableAccessor(this._viewTables.ne);
-			this._table10 = new $.wijmo.wijgrid.htmlTableAccessor(this._viewTables.sw);
-			this._table11 = new $.wijmo.wijgrid.htmlTableAccessor(this._viewTables.se);
+			this._splitAreas.nw.empty().append(t00);
+			this._splitAreas.ne.empty().append(t01);
+			this._splitAreas.sw.empty().append(t10);
+			this._splitAreas.se.empty().append(t11);
 
-			this._rowsCount = Math.max(this._viewTables.nw.rows.length, this._viewTables.ne.rows.length) +
-				Math.max(this._viewTables.sw.rows.length, this._viewTables.se.rows.length);
+			$.each(this._viewTables, function (idx, hta) {
+				$(hta.element())
+					.addClass("wijmo-wijgrid-table")
+					.attr({
+						role: "grid",
+						border: "0",
+						cellpadding: "0",
+						cellspacing: "0"
+					})
+					.css("border-collapse", "separate") // use separate instead of collapse to avoid a disalignment issue in chrome.
+					.find("> tbody")
+						.addClass("ui-widget-content wijmo-wijgrid-data");
+			});
 
-			// use separate instead of collapse to avoid a disalignment issue in chrome.
-			$(this._viewTables.ne)
-				.attr({ "cellpadding": "0", "border": "0", "cellspacing": "0" })
-				.css("border-collapse", "separate");
-
-			$(this._viewTables.se)
-				.attr({ "cellpadding": "0", "border": "0", "cellspacing": "0" })
-				.css("border-collapse", "separate");
+			this._rowsCount = Math.max(t00.rows.length, t01.rows.length) + Math.max(t10.rows.length, t11.rows.length);
 
 			this._base();
 		},
 
-		_preRender: function () {
-			this._wijgrid.outerDiv.wrapInner("<div class=\"wijmo-wijgrid-fixedview\"><div class=\"wijmo-wijgrid-scroller\"><div class=\"wijmo-wijgrid-split-area-se wijmo-wijgrid-content-area\"></div></div></div>");
-			this._scroller = this._wijgrid.outerDiv.find(".wijmo-wijgrid-scroller");
-
-			this._scroller.after("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-nw\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>");
-			this._scroller.after("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-ne\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>");
-			this._scroller.after("<div class=\"wijmo-wijgrid-split-area wijmo-wijgrid-split-area-sw\" style=\"overflow:hidden;position:absolute;z-index:4;top:0px;left:0px;\"></div>");
+		_createCol: function (column, visibleIdx) {
+			return [
+				document.createElement("col"),
+				document.createElement("col")
+			];
 		},
 
-		_renderContent: function () {
-			var wijgrid = this._wijgrid,
-				visibleLeaves = wijgrid._field("visibleLeaves"),
-				docFragment = document.createDocumentFragment(),
-				spanTable = wijgrid._field("spanTable"),
-				staticRowIndex = wijgrid._getRealStaticRowIndex(),
-				staticColumnIndex = wijgrid._getRealStaticColumnIndex(),
-				tHeads = {},
-				width, ri, height,
-				dataRow, dataRowLen,
-				leftDomRow, rightDomRow,
-				thX, ci, span, $domCell,
-				i, len, leaf,
-				correspondTables, key, colGroup, col, table,
-				data,
-				tBodies = {},
-				staticDataRowIndex, rowLen,
-				cellLen, dataIndex, cellIndex, doBreak, $container, cellValue, dataValue,
-				nwArea, neArea, swArea, seArea,
-				cellAttr, cellStyle, rowInfo,
-				dataRowIndex = -1,
-				virtualDataItemIndexBase = 0,
-				$rt = $.wijmo.wijgrid.rowType,
-				$rs = $.wijmo.wijgrid.renderState,
-				isDataRow;
-
-			this._viewTables = {
-				nw: docFragment.appendChild(document.createElement("table")),
-				ne: docFragment.appendChild(document.createElement("table")),
-				sw: docFragment.appendChild(document.createElement("table")),
-				se: docFragment.appendChild(wijgrid.element[0])
-			};
-
-			// create header
-			if (spanTable && spanTable.length) {
-				tHeads.nw = this._viewTables.nw.createTHead();
-				tHeads.ne = this._viewTables.ne.createTHead();
-				/*tHeads.sw = this._viewTables.sw.createTHead(); // <-- user can fix the whole header only, not a random row.
-				tHeads.sw = this._viewTables.se.createTHead();*/
-
-				width = spanTable[0].length;
-
-				for (ri = 0, height = spanTable.length; ri < height; ri++) {
-					leftDomRow = null;
-					rightDomRow = null;
-
-					//if (ri <= staticRowIndex) {
-					// now header rows are always fixed by design, so we can create header cells inside the fixed areas (nw + ne) only.
-					//leftDomRow = tHeads.nw.insertRow(-1);
-					//rightDomRow = tHeads.ne.insertRow(-1);
-					leftDomRow = wijgrid._createRow(tHeads.nw, $rt.header, ri);
-					rightDomRow = wijgrid._createRow(tHeads.ne, $rt.header, ri);
-					/*} else {
-					leftDomRow = this._viewTables["sw"].tHead.insertRow(-1);
-					rightDomRow = this._viewTables["se"].tHead.insertRow(-1);
-					}*/
-
-					rowInfo = wijgrid._createRowInfo([leftDomRow, rightDomRow], $rt.header, $rs.rendering, -1, -1, -1, -1);
-
-					thX = 0;
-
-					for (ci = 0; ci < width; ci++) {
-						span = spanTable[ri][ci];
-
-						if (span.column && span.column.parentVis) {
-							span.column.thX = thX++;
-							span.column.thY = ri;
-
-							//$domCell = $("<th><div class=\"wijmo-wijgrid-innercell\"></div></th>");
-							$domCell = $(wijgrid._createCell($rt.header, ri, ci));
-
-							$container = $domCell.children("div");
-
-							if (ci <= staticColumnIndex) {
-								leftDomRow.appendChild($domCell[0]);
-							} else {
-								rightDomRow.appendChild($domCell[0]);
-							}
-
-							wijgrid.cellFormatter.format($container, span.column, span.column.headerText, rowInfo);
-							wijgrid._cellCreated($domCell, ci, span.column, rowInfo, $rs.rendering, { colSpan: span.colSpan, rowSpan: span.rowSpan });
-						} // end if
-					} // for ci
-
-					wijgrid._rowCreated(rowInfo);
-				} // for ri
-
-			} // end if
-			// create header end
-
-			// create filter -- now only the whole header can be fixed by design, so the tHeads can contain only "nw" or (and) "ne" keys.
-			if (wijgrid.options.showFilter) {
-				if (tHeads.nw) { // fixed columns area
-					//leftDomRow = tHeads.nw.insertRow(-1);
-					leftDomRow = wijgrid._createRow(tHeads.nw, $rt.filter, -1);
-				}
-
-				if (tHeads.ne) { // unfixed columns area
-					//rightDomRow = tHeads.ne.insertRow(-1);
-					rightDomRow = wijgrid._createRow(tHeads.ne, $rt.filter, -1);
-				}
-
-				rowInfo = wijgrid._createRowInfo([leftDomRow, rightDomRow], $rt.filter, $rs.rendering, -1, -1, -1, -1);
-
-				for (i = 0, len = visibleLeaves.length; i < len; i++) {
-					leaf = visibleLeaves[i];
-
-					/*$domCell = (i <= staticColumnIndex)
-					? $(leftDomRow.insertCell(-1))
-					: $(rightDomRow.insertCell(-1));*/
-					$domCell = $(wijgrid._createCell($rt.filter, undefined, i));
-
-					if (i <= staticColumnIndex) {
-						leftDomRow.appendChild($domCell[0]);
-					} else {
-						rightDomRow.appendChild($domCell[0]);
-					}
-
-					wijgrid.cellFormatter.format($domCell, leaf, leaf.filterValue, rowInfo);
-					wijgrid._cellCreated($domCell, i, leaf, rowInfo, $rs.rendering);
-				}
-
-				wijgrid._rowCreated(rowInfo);
+		_appendCol: function (domColArr, column, visibleIdx) {
+			if (visibleIdx <= this._staticColumnIndex) {
+				this._viewTables.nw.appendCol(domColArr[0]);
+				this._viewTables.sw.appendCol(domColArr[1]);
+			} else {
+				this._viewTables.ne.appendCol(domColArr[0]);
+				this._viewTables.se.appendCol(domColArr[1]);
 			}
-			// create filter end
-
-			// colgroup
-
-			// nw - sw
-			correspondTables = { t0: this._viewTables.nw, t1: this._viewTables.sw };
-			for (key in correspondTables) {
-				if (correspondTables.hasOwnProperty(key)) {
-					colGroup = document.createElement("colgroup");
-					for (i = 0; i <= staticColumnIndex; i++) {
-						col = document.createElement("col");
-						colGroup.appendChild(col);
-					}
-					table = correspondTables[key];
-					table.appendChild(colGroup);
-				}
-			}
-
-			// ne - se
-			correspondTables = { t0: this._viewTables.ne, t1: this._viewTables.se };
-			for (key in correspondTables) {
-				if (correspondTables.hasOwnProperty(key)) {
-					colGroup = document.createElement("colgroup");
-					for (i = staticColumnIndex + 1; i < visibleLeaves.length; i++) {
-						col = document.createElement("col");
-						colGroup.appendChild(col);
-					}
-					table = correspondTables[key];
-					table.appendChild(colGroup);
-				}
-			}
-			// end colgroup
-
-			// create body **
-			data = wijgrid.dataTable;
-
-			tBodies = {
-				nw: $.wijmo.wijgrid.ensureTBody(this._viewTables.nw),
-				ne: $.wijmo.wijgrid.ensureTBody(this._viewTables.ne),
-				sw: $.wijmo.wijgrid.ensureTBody(this._viewTables.sw),
-				se: $.wijmo.wijgrid.ensureTBody(this._viewTables.se)
-			};
-
-			staticDataRowIndex = staticRowIndex - (spanTable.length + (wijgrid.options.showFilter ? 1 : 0));
-
-			if (wijgrid._dataStore.dataMode() === $.wijmo.wijgrid.dataMode.dynamical) {
-				virtualDataItemIndexBase = wijgrid.options.pageIndex * wijgrid.options.pageSize;
-			}
-
-			// render rows
-			for (ri = 0, rowLen = data.length; ri < rowLen; ri++) {
-				dataRow = data[ri];
-				dataRowLen = dataRow.length;
-				isDataRow = (dataRow.rowType & $rt.data) !== 0;
-
-				leftDomRow = null;
-				rightDomRow = null;
-
-				if (ri <= staticDataRowIndex) {
-					//leftDomRow = tBodies.nw.insertRow(-1);
-					//rightDomRow = tBodies.ne.insertRow(-1);
-					leftDomRow = wijgrid._createRow(tBodies.nw, dataRow.rowType, dataRow.originalRowIndex);
-					rightDomRow = wijgrid._createRow(tBodies.ne, dataRow.rowType, dataRow.originalRowIndex);
-				} else {
-					//leftDomRow = tBodies.sw.insertRow(-1);
-					//rightDomRow = tBodies.se.insertRow(-1);
-					leftDomRow = wijgrid._createRow(tBodies.sw, dataRow.rowType, dataRow.originalRowIndex);
-					rightDomRow = wijgrid._createRow(tBodies.se, dataRow.rowType, dataRow.originalRowIndex);
-				}
-
-				rowInfo = wijgrid._createRowInfo([leftDomRow, rightDomRow], dataRow.rowType, $rs.rendering,
-						ri,
-						isDataRow ? ++dataRowIndex : -1,
-						isDataRow ? dataRow.originalRowIndex : -1,
-						isDataRow ? virtualDataItemIndexBase + dataRow.originalRowIndex : -1);
-
-				// render cells
-				for (ci = 0, cellLen = visibleLeaves.length; ci < cellLen; ci++) {
-					leaf = visibleLeaves[ci];
-					dataIndex = leaf.dataIndex;
-
-					cellIndex = 0;
-					doBreak = false;
-
-					switch (dataRow.rowType) {
-						case $rt.data:
-						case $rt.data | $rt.dataAlt:
-							cellIndex = dataIndex; // use [leaf -> data] mapping
-
-							if (cellIndex >= 0 && (!dataRow[cellIndex] || (dataRow[cellIndex].visible === false))) {
-								continue; // spanned cell ?
-							}
-							break;
-
-						case $rt.emptyDataRow:
-						case $rt.groupHeader:
-						case $rt.groupFooter:
-							cellIndex = ci; // just iterate through all dataRow cells.
-
-							if (cellIndex >= dataRowLen) {
-								doBreak = true; // don't extend group headers\ footers with additional cells
-							}
-							break;
-					}
-
-					if (doBreak) {
-						break;
-					}
-
-					//$domCell = $("<td><div class=\"wijmo-wijgrid-innercell\"></div></td>");
-					$domCell = $(wijgrid._createCell(dataRow.rowType, dataRow.originalRowIndex, cellIndex));
-
-					$container = $domCell.children("div");
-
-					if (ci <= staticColumnIndex) {
-						leftDomRow.appendChild($domCell[0]);
-					} else {
-						rightDomRow.appendChild($domCell[0]);
-					}
-
-					if ((dataRow.rowType & $rt.data) && leaf.dataParser) {
-						cellValue = null;
-
-						if (cellIndex >= 0) { // cellIndex is equal to leaf.dataIndex here
-							dataValue = dataRow[cellIndex].value;
-							cellValue = wijgrid._toStr(leaf, dataValue);
-
-						} else { // unbound column
-						}
-
-						wijgrid.cellFormatter.format($container, leaf, cellValue, rowInfo);
-					} else {
-						if (cellIndex >= 0) {
-							$container.html(dataRow[cellIndex].html); // use original html
-						}
-					}
-
-					cellAttr = (cellIndex >= 0) ? dataRow[cellIndex].__attr : null;
-					cellStyle = (cellIndex >= 0) ? dataRow[cellIndex].__style : null;
-
-					wijgrid._cellCreated($domCell, ci, leaf, rowInfo, $rs.rendering, cellAttr, cellStyle);
-				} // for ci
-
-				if (ri <= staticDataRowIndex) {
-					if (!leftDomRow.cells.length) {
-						tBodies.nw.removeChild(leftDomRow);
-						leftDomRow = null;
-					}
-
-					if (!rightDomRow.cells.length) {
-						tBodies.ne.removeChild(rightDomRow);
-						rightDomRow = null;
-					}
-
-					if (leftDomRow || rightDomRow) {
-						wijgrid._rowCreated(rowInfo, dataRow.__attr, dataRow.__style);
-					}
-				} else {
-					if (!leftDomRow.cells.length) {
-						tBodies.sw.removeChild(leftDomRow);
-						leftDomRow = null;
-					}
-
-					if (!rightDomRow.cells.length) {
-						tBodies.se.removeChild(rightDomRow);
-						rightDomRow = null;
-					}
-
-					if (leftDomRow || rightDomRow) {
-						wijgrid._rowCreated(rowInfo, dataRow.__attr, dataRow.__style);
-					}
-				}
-			} // for ri
-			// ** create body
-
-			// create footer **
-			if (wijgrid.options.showFooter) {
-				//leftDomRow = this._viewTables.sw.createTFoot().insertRow(-1);
-				//rightDomRow = this._viewTables.se.createTFoot().insertRow(-1);
-				leftDomRow = wijgrid._createRow(this._viewTables.sw.createTFoot(), $rt.footer, -1);
-				rightDomRow = wijgrid._createRow(this._viewTables.se.createTFoot(), $rt.footer, -1);
-
-				rowInfo = wijgrid._createRowInfo([leftDomRow, rightDomRow], $rt.footer, $rs.rendering, -1, -1, -1, -1);
-
-				for (ci = 0, cellLen = visibleLeaves.length; ci < cellLen; ci++) {
-					leaf = visibleLeaves[ci];
-
-					//$domCell = $("<td><div class=\"wijmo-wijgrid-innercell\"></div></td>");
-					$domCell = $(wijgrid._createCell($rt.footer, undefined, ci));
-
-					$container = $domCell.children("div");
-
-					if (ci <= staticColumnIndex) {
-						leftDomRow.appendChild($domCell[0]);
-					} else {
-						rightDomRow.appendChild($domCell[0]);
-					}
-
-					wijgrid.cellFormatter.format($container, leaf, "", rowInfo);
-					wijgrid._cellCreated($domCell, i, leaf, rowInfo, $rs.rendering);
-				}
-
-				wijgrid._rowCreated(rowInfo);
-			}
-			// ** create footer
-
-			nwArea = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-nw");
-			neArea = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-ne");
-			swArea = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-sw");
-			seArea = wijgrid.outerDiv.find(".wijmo-wijgrid-content-area");
-
-			nwArea[0].innerHTML = "";
-			neArea[0].innerHTML = "";
-			swArea[0].innerHTML = "";
-			seArea[0].innerHTML = "";
-
-			/* Note, empty() throws exception */
-			$(this._viewTables.nw).appendTo(nwArea);
-			$(this._viewTables.ne).appendTo(neArea);
-			$(this._viewTables.sw).appendTo(swArea);
-			$(this._viewTables.se).appendTo(seArea);
 		},
 
-		_setColumnWidth: function (index, px, widthArray) {
+		_createRow: function (rowType, sectionRowIndex, originalDataRowIndex) {
+			var $rt = $.wijmo.wijgrid.rowType,
+				leftRow, rightRow,
+				vt = this._viewTables;
+
+			switch (rowType) {
+				case $rt.header:
+				case $rt.filter:
+					leftRow = this._wijgrid._createRow(vt.nw.ensureTHead(), rowType, sectionRowIndex);
+					rightRow = this._wijgrid._createRow(vt.ne.ensureTHead(), rowType, sectionRowIndex);
+					break;
+
+				case $rt.footer:
+					leftRow = this._wijgrid._createRow(vt.sw.ensureTFoot(), rowType, sectionRowIndex);
+					rightRow = this._wijgrid._createRow(vt.se.ensureTFoot(), rowType, sectionRowIndex);
+					break;
+
+				default: // tbody
+					if (sectionRowIndex <= this._staticDataRowIndex) {
+						leftRow = this._wijgrid._createRow(vt.nw.ensureTBody(), rowType, originalDataRowIndex);
+						rightRow = this._wijgrid._createRow(vt.ne.ensureTBody(), rowType, originalDataRowIndex);
+					} else {
+						leftRow = this._wijgrid._createRow(vt.sw.ensureTBody(), rowType, originalDataRowIndex);
+						rightRow = this._wijgrid._createRow(vt.se.ensureTBody(), rowType, originalDataRowIndex);
+					}
+			}
+
+			return [leftRow, rightRow];
+		},
+
+		_rowRendered: function (rowInfo, rowAttr, rowStyle) {
+			var leftRow = rowInfo.$rows[0],
+				rightRow = rowInfo.$rows[1];
+
+			if (!leftRow.cells.length) {
+				leftRow.parentNode.removeChild(leftRow);
+				leftRow = null;
+			}
+
+			if (!rightRow.cells.length) {
+				rightRow.parentNode.removeChild(rightRow);
+				rightRow = null;
+			}
+
+			if (leftRow || rightRow) {
+				this._base(rowInfo, rowAttr, rowStyle);
+			}
+		},
+
+		_appendCell: function (rowInfo, cellIndex, $cell) {
+			var staticColIndex = (rowInfo.type !== $.wijmo.wijgrid.rowType.header)
+				? this._staticColumnIndex
+				: this._staticAllColumnIndex;
+
+			if (cellIndex <= staticColIndex) {
+				rowInfo.$rows[0].appendChild($cell[0]);
+			} else {
+				rowInfo.$rows[1].appendChild($cell[0]);
+			}
+		},
+
+		// render **
+
+		_getRowHeight: function (rowObj) {
+			if (rowObj[0] && rowObj[1]) {
+				var $rowObj = [$(rowObj[0]), $(rowObj[1])],
+					row0h, row1h;
+
+				$.each($rowObj, function (index, $el) {
+					$el.css("height", "");
+				});
+
+				row0h = $rowObj[0].height();
+				row1h = $rowObj[1].height();
+
+				if (row0h > row1h) {
+					return row0h;
+				} else if (row0h < row1h) {
+					return row1h;
+				}
+			}
+			return null;
+		},
+
+		_setRowHeight: function (rowObj, maxHeight) {
+			if (rowObj[0] && rowObj[1]) {
+				var $rowObj = [$(rowObj[0]), $(rowObj[1])], dif;
+
+				if (maxHeight === null) {
+					return;
+				}
+
+				maxHeight += 1;
+				$.each($rowObj, function (index, $el) {
+					$el.height(maxHeight);
+					dif = maxHeight - $el.height();
+					if (dif) {
+						$el.height(maxHeight + dif);
+					}
+				});
+			}
+		},
+
+		_adjustRowHeight: function () {
 			/// <summary>
-			/// Set column width.
+			/// Set row height.
 			/// </summary>
 			/// <param name="index" type="Number">
 			/// The index of the column. Start with 0.
 			/// </param>
-			/// <param name="px" type="Number">
-			/// The width of the column.  If px value is undefined, the offset width will be used.
-			/// </param>
 
-			var th = this.getHeaderCell(index),
-				colWidth = th.clientWidth;
+			var wijgrid = this._wijgrid,
+				fixedColIdx = wijgrid._getRealStaticColumnIndex(),
+				lastColIdx = wijgrid._field("visibleLeaves").length - 1,
+				fixedRowIdx, lastRowIdx,
+				tables, tableNE, tableNEParent, tableNW, tableNWParent,
+				tableSE, tableSEParent, tableSW, tableSWParent,
+				rowCount, i, j, leftRows, rightRows,
+				heightArray = [];
 
-			if (px) {
-				if (!widthArray) {
-					$(th).children("div.wijmo-wijgrid-innercell").setOutWidth(px);
-					this.fooRowCells.eq(index).setOutWidth(px);
+			// setting row height only if grid is divided into leftern and rightern parts
+			if (fixedColIdx > -1 && fixedColIdx < lastColIdx) {
+
+				fixedRowIdx = wijgrid._getRealStaticRowIndex();
+				lastRowIdx = this._rowsCount - 1;
+				tables = this._viewTables;
+
+				// getting the height of northern tables
+				if (fixedRowIdx > -1 && fixedRowIdx <= lastRowIdx) {
+					tableNE = tables.ne.element();
+					tableNEParent = tableNE.parentNode;
+					tableNW = tables.nw.element();
+					tableNWParent = tableNW.parentNode;
+					leftRows = tableNW.rows;
+					rightRows = tableNE.rows;
+					rowCount = leftRows.length;
+
+					for (i = 0; i < rowCount; i++) {
+						heightArray.push(this._getRowHeight([leftRows[i], rightRows[i]]));
+					}
+				}
+				// getting the height of southern tables
+				if (fixedRowIdx >= -1 && fixedRowIdx < lastRowIdx) {
+					tableSE = tables.se.element();
+					tableSEParent = tableSE.parentNode;
+					tableSW = tables.sw.element();
+					tableSWParent = tableSW.parentNode;
+					leftRows = tableSW.rows;
+					rightRows = tableSE.rows;
+					rowCount = leftRows.length;
+
+					for (i = 0; i < rowCount; i++) {
+						heightArray.push(this._getRowHeight([leftRows[i], rightRows[i]]));
+					}
 				}
 
-				this.forEachColumnCell(index, function (cell, index) {
-					var $row = $(cell.parentNode);
-
-					if ($row.parent().is("tbody") && !$row.is(".wijmo-wijgrid-emptydatarow", ".wijmo-wijgrid-groupheaderrow", ".wijmo-wijgrid-groupfooterrow")) {
-						if (widthArray) {
-							widthArray.push(px);
-							return false;
-						}
-						else {
-							$(cell).children("div.wijmo-wijgrid-innercell").setOutWidth(px);
-						}
-					}
-
-					return true;
-				});
-			} else { // set column and outer width of td and th.
-				this.forEachColumnCell(index, function (cell, index) {
-					var $row = $(cell.parentNode);
-
-					if ($row.parent().is("tbody") && !$row.is(".wijmo-wijgrid-groupheaderrow", ".wijmo-wijgrid-groupfooterrow")) {
-						if (!widthArray) {
-							$(cell).children("div.wijmo-wijgrid-innercell").setOutWidth(colWidth);
-						}
-						else {
-							return false;
-						}
-					}
-
-					return true;
-				});
-
-				if (widthArray) {
-					widthArray.push(colWidth);
+				// removing elments from dom to improve performance
+				if (fixedRowIdx > -1 && fixedRowIdx <= lastRowIdx) {
+					tableNWParent.removeChild(tableNW);
+					tableNEParent.removeChild(tableNE);
 				}
-				else {
-					$(th).children("div.wijmo-wijgrid-innercell").setOutWidth(colWidth);
+				if (fixedRowIdx >= -1 && fixedRowIdx < lastRowIdx) {
+					tableSWParent.removeChild(tableSW);
+					tableSEParent.removeChild(tableSE);
+				}
+
+				// setting the height of northern tables
+				if (fixedRowIdx > -1 && fixedRowIdx <= lastRowIdx) {
+					leftRows = tableNW.rows;
+					rightRows = tableNE.rows;
+					rowCount = leftRows.length;
+					for (i = 0, j = 0; i < rowCount; i++) {
+						this._setRowHeight([leftRows[i], rightRows[i]], heightArray[j++]);
+					}
+				}
+				// setting the height of southern tables
+				if (fixedRowIdx >= -1 && fixedRowIdx < lastRowIdx) {
+					leftRows = tableSW.rows;
+					rightRows = tableSE.rows;
+					rowCount = leftRows.length;
+					for (i = 0; i < rowCount; i++) {
+						this._setRowHeight([leftRows[i], rightRows[i]], heightArray[j++]);
+					}
+				}
+
+				// adding elments back to dom to improve performance
+				if (fixedRowIdx > -1 && fixedRowIdx <= lastRowIdx) {
+					tableNWParent.appendChild(tableNW);
+					tableNEParent.appendChild(tableNE);
+				}
+				if (fixedRowIdx >= -1 && fixedRowIdx < lastRowIdx) {
+					tableSWParent.appendChild(tableSW);
+					tableSEParent.appendChild(tableSE);
 				}
 			}
 		},
@@ -10562,156 +11081,143 @@
 
 		// ** private specific
 
-		adjustCellsSizes: function () {
-			var accessor = new $.wijmo.wijgrid.rowAccessor(this, 9/*all*/, 0),
-				rowLen = accessor.length(),
-				heights = [], // int[rowLen];
-				i, j, rowObj,
-				row0, len0, row0Span, row0h,
-				row1, len1, row1Span, row1h,
-				row;
-
-			for (i = 0; i < rowLen; i++) {
-				rowObj = this.getJoinedRows(i, 9/*all*/); // = accessor[i];
-
-				row0 = rowObj[0];
-				len0 = (row0 !== null) ? row0.cells.length : 0;
-				row0Span = false;
-
-				for (j = 0; j < len0 && !row0Span; j++) {
-					row0Span = (row0.cells[j].rowSpan > 1);
-				}
-
-				row1 = rowObj[1];
-				len1 = (row1 !== null) ? row1.cells.length : 0;
-				row1Span = false;
-
-				if (!row0Span) {
-					for (j = 0; j < len1 && !row1Span; j++) {
-						row1Span = (row1.cells[j].rowSpan > 1);
-					}
-				}
-
-				row0h = (row0 !== null && len0 > 0) ? row0.offsetHeight : 0;
-				row1h = (row1 !== null && len1 > 0) ? row1.offsetHeight : 0;
-
-				heights[i] = (row0Span || row1Span) ? Math.min(row0h, row1h) : Math.max(row0h, row1h);
+		_onScroll: function (event, data) {
+			var element, key, property = {};
+			if (data.dir === "h") {
+				element = this._splitAreas.ne;
+				key = "scrollLeft";
+			} else {
+				element = this._splitAreas.sw;
+				key = "scrollTop";
 			}
-
-			for (i = 0; i < rowLen; i++) {
-				row = this.getJoinedRows(i, 9/*all*/); // = accessor[i];
-				accessor.iterateCells(row, this.setCellContentDivHeight, heights[i]);
+			if (data.animationOptions) {
+				property[key] = data.position;
+				element.animate(property, data.animationOptions);
+			} else {
+				element[0][key] = data.position;
 			}
 		},
-
-		/*
-		adjustColumnSizes: function(topTable, bottomTable) {
-		if (topTable.rows.length > 0 && bottomTable.rows.length > 0) {
-		var topRowCells = topTable.rows[0].cells;
-		var bottomRowCells = bottomTable.rows[0].cells;
-
-		if (topRowCells.length == bottomRowCells.length) {
-		for (var i = 0; i < topRowCells.length; i++) {
-		topRowCells[i].style.width = bottomRowCells[i].style.width = Math.max(topRowCells[i].offsetWidth, bottomRowCells[i].offsetWidth);
-		}
-		}
-		}
-
-		topTable.style.width = bottomTable.style.width = Math.max(topTable.offsetWidth, bottomTable.offsetWidth) + "px";
-		//alert(topTable.style.width + "?w=" + Math.max(topTable.offsetWidth, bottomTable.offsetWidth));
-
-		topTable.style.tableLayout = "fixed";
-		bottomTable.style.tableLayout = "fixed";
-		},
-		*/
 
 		_onScrolled: function () {
-			this._wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-ne")[0].scrollLeft = parseInt((this._wijgrid.outerDiv.find(".wijmo-wijsuperpanel-templateouterwrapper").css("left") + "").replace("px", ""), 10) * -1;
-			this._wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-sw")[0].scrollTop = parseInt((this._wijgrid.outerDiv.find(".wijmo-wijsuperpanel-templateouterwrapper").css("top") + "").replace("px", ""), 10) * -1;
+			this._splitAreas.ne[0].scrollLeft = parseInt((this._wijgrid.outerDiv.find(".wijmo-wijsuperpanel-templateouterwrapper:first").css("left") + "").replace("px", ""), 10) * -1;
+			this._splitAreas.sw[0].scrollTop = parseInt((this._wijgrid.outerDiv.find(".wijmo-wijsuperpanel-templateouterwrapper:first").css("top") + "").replace("px", ""), 10) * -1;
 		},
-		
-		setCellContentDivHeight: function (cell, param) {
-			cell.style.height = param + "px";
-			return true;
+
+		_onMouseWheel: function (e, delta) {
+			// force superpanel to do scrolling when cursor is placed over then non-scrollable (fixed) areas of the wijgrid.
+
+			var bounds,
+				dir = (delta > 0) ? "top" : "bottom",
+				isOverFixedArea = false,
+				vPos;
+
+			if (this._wijgrid._canInteract()) {
+				bounds = this.getFixedAreaVisibleBounds(); // an array
+
+				$.each(bounds, function (i, o) {
+					if (o && $.ui.isOver(e.pageY, e.pageX, o.top, o.left, o.height, o.width)) {
+						isOverFixedArea = true;
+						return false; // break
+					}
+				});
+
+				if (isOverFixedArea && this._scroller.data("wijsuperpanel")) {
+					vPos = this._scroller.wijsuperpanel("option", "vScroller").scrollValue;
+
+					this._scroller.wijsuperpanel("doScrolling", dir);
+
+					// simulate wijsuperpanel behaviour: prevent window scrolling until superpanel is not scrolled to the end.
+					if (vPos !== this._scroller.wijsuperpanel("option", "vScroller").scrollValue) {
+						e.stopPropagation();
+						e.preventDefault();
+					}
+				}
+			}
 		},
 
 		_testNeedVBar: function (outerDiv, gridElement, tableNE, mode, autoHeight) {
-			var excludeVBarWidth, gridWidth, gridHeight, outerWidth, outerHeight;
+			var excludeVBarWidth,
+				wijgrid = this._wijgrid,
+				gridWidth = tableNE.width() + wijgrid.options.splitDistanceX,
+				gridHeight = gridElement.height() + wijgrid.options.splitDistanceY,
+				outerWidth = outerDiv.width(),
+				outerHeight = outerDiv.height(),
+				contentHeight, topHeight = 0, bottomHeight = 0;
 
-			gridWidth = tableNE.width();
-			gridHeight = gridElement.height() + this._wijgrid.options.splitDistanceY;
-			outerWidth = outerDiv.width();
-			outerHeight = outerDiv.height();
+			if (wijgrid.$superPanelHeader !== null) {
+				topHeight = wijgrid.$superPanelHeader.outerHeight(true);
+			}
+			if (wijgrid.$bottomPagerDiv !== null) {
+				bottomHeight = wijgrid.$bottomPagerDiv.outerHeight(true);
+			}
+			contentHeight = outerHeight - topHeight - bottomHeight;
 
 			if (mode === "both" || mode === "vertical") {
 				excludeVBarWidth = true;
 			}
 			else {
 				excludeVBarWidth = (mode === "auto") && (
-					(gridHeight > outerHeight) ||
-					(!autoHeight && gridWidth > outerWidth && gridHeight > outerHeight - this._verScrollBarSize)); // When the height needs to be auto adjusted, the vertical scrollbar should not be shown
+					(gridHeight > contentHeight) ||
+					(!autoHeight && gridWidth > outerWidth && gridHeight > contentHeight - this._verScrollBarSize)); // When the height needs to be auto adjusted, the vertical scrollbar should not be shown
 			}
 
 			return excludeVBarWidth;
 		},
 
-		_updateSplitAreaBounds: function () {
+		//bSet: 0-width, 1-height, 2-all
+		_updateSplitAreaBounds: function (bSet) {
 			var wijgrid = this._wijgrid,
 				o = wijgrid.options,
-				controlWidth = o.width || wijgrid.outerDiv.width(),
-				controlHeight = o.height || wijgrid.outerDiv.height(),
-				areaNW = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-nw"),
-				areaNE = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-ne"),
-				areaSW = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-sw"),
-				areaSE = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-se");
+				controlHeight, contentHeight, topHeight = 0, bottomHeight = 0;
 
-			if (controlHeight <= 0) {
-				controlHeight = wijgrid.outerDiv.find(".wijmo-wijgrid-split-area-se > table")[0].offsetHeight;
+			if (bSet === 0 || bSet === 2) {
+				this._splitAreas.nw.width(o.splitDistanceX);
+				this._splitAreas.sw.width(o.splitDistanceX);
+				this._splitAreas.se.css("marginLeft", o.splitDistanceX);
+				this._splitAreas.ne.css("marginLeft", o.splitDistanceX);
 			}
 
-			//if (wijgrid.outerDiv[0].style.height !== "" && wijgrid.outerDiv[0].style.height !== "auto") {
-			if (!wijgrid._autoHeight) {
-				this._scroller.height(controlHeight);
+			if (bSet === 1 || bSet === 2) {
+				this._scroller.css("height", "");
+				this._splitAreas.se.css("marginTop", 0);
+
+				controlHeight = wijgrid.outerDiv.height();
+
+				if (!wijgrid._autoHeight) {
+					this._scroller.height(controlHeight);
+				}
+				else {
+					// no height is set for outer div, we need to expand the grid.
+					this._scroller.height(controlHeight + o.splitDistanceY);
+					//this._noHeight = true;
+				}
+
+				this._splitAreas.nw.height(o.splitDistanceY);
+				this._splitAreas.ne.height(o.splitDistanceY);
+
+				if (wijgrid.$superPanelHeader !== null) {
+					topHeight = wijgrid.$superPanelHeader.outerHeight(true);
+				}
+				if (wijgrid.$bottomPagerDiv !== null) {
+					bottomHeight = wijgrid.$bottomPagerDiv.outerHeight(true);
+				}
+				contentHeight = controlHeight - topHeight - bottomHeight;
+
+				if (wijgrid.$superPanelHeader !== null) {
+					this._splitAreas.nw.css("top", topHeight + "px");
+					this._splitAreas.ne.css("top", topHeight + "px");
+				}
+
+				if (!wijgrid._autoHeight) {
+					this._splitAreas.sw.height(contentHeight - o.splitDistanceY);
+				}
+				else {
+					this._splitAreas.sw.height(contentHeight);
+				}
+
+				this._splitAreas.sw.css("top", o.splitDistanceY + topHeight);
+				this._splitAreas.se.css("marginTop", o.splitDistanceY);
 			}
-			else {
-				// no height is set for outer div, we need to expand the grid.
-				this._scroller.height(controlHeight + o.splitDistanceY);
-				//this._noHeight = true;
-			}
-
-			this._scroller.width(controlWidth);
-
-			// update splits bounds:
-			areaNW.height(o.splitDistanceY);
-			areaNE.height(o.splitDistanceY);
-			//if (wijgrid.$topPagerDiv !== null) {
-			//	areaNE.css("top", wijgrid.$topPagerDiv.outerHeight(true) + "px");
-			if (wijgrid.$superPanelHeader !== null) {
-				areaNE.css("top", wijgrid.$superPanelHeader.outerHeight(true) + "px");
-			}
-
-			//this.element.find(".wijmo-wijgrid-split-area-sw").height(controlHeight - o.splitDistanceY - (!o.splits ? this.horScrollBarSize : 0)).css("top", o.splitDistanceY);
-
-			//the height of areaSW is supposed to match that of areaSE
-			//areaSW.height(controlHeight - o.splitDistanceY).css("top", o.splitDistanceY);
-			if (!wijgrid._autoHeight) {
-				areaSW.height(controlHeight - o.splitDistanceY);
-			}
-			else {
-				areaSW.height(controlHeight);
-			}
-			areaSW.css("top", o.splitDistanceY);
-			areaNW.width(o.splitDistanceX);
-			areaSW.width(o.splitDistanceX);
-
-			//areaNE.width(controlWidth - o.splitDistanceX - (!o.splits ? this._verScrollBarSize : 0)).css("left", o.splitDistanceX); //-17 is for scrollbars
-
-			//this.element.find(".wijmo-wijgrid-split-area-se").height(controlHeight - o.splitDistanceY).css("top", o.splitDistanceY);
-			//this.element.find(".wijmo-wijgrid-split-area-se").width(controlWidth - o.splitDistanceX).css("left", o.splitDistanceX);
-			areaSE.css("marginLeft", o.splitDistanceX);
-			areaSE.css("marginTop", o.splitDistanceY);
-
-			areaNE.css("marginLeft", o.splitDistanceX);
 		}
 
 		// private specific **
@@ -10732,7 +11238,29 @@
 			_selectedCells = new $.wijmo.wijgrid.cellInfoOrderedCollection(gridView),
 			_addedDuringCurTransactionCells = new $.wijmo.wijgrid.cellInfoOrderedCollection(gridView),
 			_selectedColumns = null, // ?
-			_selectedRows = null; // ?
+			_selectedRows = null, // ?
+
+			// n: none (0), c: extendToColumn (1), r: extendToRow (2)
+			//
+			//              extendMode
+			// selectionMode| n | c | r
+			// ------------------------
+			// singlecell   | n | n | n
+			// singlecolumn | c | c | c
+			// singlerow    | r | r | r
+			// singlerange  | n | c | r
+			// multicolumn  | c | c | c
+			// multirow     | r | r | r
+			// multirange   | n | c | r
+			_extend_rules = {
+				"singlecell": [0, 0, 0],
+				"singlecolumn": [1, 1, 1],
+				"singlerow": [2, 2, 2],
+				"singlerange": [0, 1, 2],
+				"multicolumn": [1, 1, 1],
+				"multirow": [2, 2, 2],
+				"multirange": [0, 1, 2]
+			};
 
 		this.selectedCells = function () {
 			/// <summary>
@@ -10741,6 +11269,29 @@
 			/// </summary>
 			/// <returns type="$.wijmo.wijgrid.cellInfoOrderedCollection"/>
 			return _selectedCells;
+		};
+
+		this.addColumns = function (start, end /* opt */) {
+			/// <summary>
+			/// Adds a column range to the current selection.
+			///
+			/// Usage:
+			/// 1. addColumns(0)
+			/// 2. addColumns(0, 2)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid. For example, if current selection mode
+			/// does not allow multiple selection the previous selection will be removed.
+			///
+			/// Code example: selectionObj.addColumns(0);
+			/// </summary>
+			/// <param name="start" type="Number" integer="true">The index of the first column to select.</param>
+			/// <param name="end" type="Number" integer="true">The index of the last column to select. Optional.</param>
+
+			if (!end && end !== 0) {
+				end = start;
+			}
+
+			this.addRange(start, 0, end, 0xFFFFFF);
 		};
 
 		this.addRange = function (cellRange /* x0 */, y0 /* opt */, x1 /* opt */, y1 /* opt */) {
@@ -10767,7 +11318,7 @@
 			}
 
 			var range = (arguments.length === 4)
-				? new $.wijmo.wijgrid.cellInfoRange(new $.wijmo.wijgrid.cellInfo(cellRange, y0), new $.wijmo.wijgrid.cellInfo(x1, y1))
+				? new $.wijmo.wijgrid.cellInfoRange(new $.wijmo.wijgrid.cellInfo(cellRange /* ie x0 */, y0), new $.wijmo.wijgrid.cellInfo(x1, y1))
 				: cellRange._clone();
 
 			range._normalize();
@@ -10782,6 +11333,137 @@
 			this._selectRange(range, false, true, 0 /* none*/, null);
 
 			this.endUpdate();
+		};
+
+		this.addRows = function (start, end /* opt */) {
+			/// <summary>
+			/// Adds a row range to the current selection.
+			///
+			/// Usage:
+			/// 1. addRows(0)
+			/// 2. addRows(0, 2)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid. For example, if current selection mode
+			/// does not allow multiple selection the previous selection will be removed.
+			///
+			/// Code example: selectionObj.addRows(0);
+			/// </summary>
+			/// <param name="start" type="Number" integer="true">The index of the first row to select.</param>
+			/// <param name="end" type="Number" integer="true">The index of the last row to select. Optional.</param>
+
+			if (!end && end !== 0) {
+				end = start;
+			}
+
+			this.addRange(0, start, 0xFFFFFF, end);
+		};
+
+		this.removeRange = function (cellRange /* x0 */, y0 /* opt */, x1 /* opt */, y1 /* opt */) {
+			/// <summary>
+			/// Removes a cell range from the current selection.
+			///
+			/// Usage:
+			/// 1. removeRange(cellRange)
+			/// 2. removeRange(x0, y0, x1, y1)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid.
+			///
+			/// Code example: selectionObj.removeRange(0, 0, 1, 1);
+			/// </summary>
+			/// <param name="cellRange" type="$.wijmo.wijgrid.cellInfoRange">Cell range to remove.</param>
+			/// <param name="x0" type="Number" integer="true">The x-coordinate that represents the top left cell of the range.</number>
+			/// <param name="y0" type="Number" integer="true">The y-coordinate that represents the top left cell of the range.</number>
+			/// <param name="x1" type="Number" integer="true">The x-coordinate that represents the bottom right cell of the range.</number>
+			/// <param name="y1" type="Number" integer="true">The y-coordinate that represents the bottom right cell of the range.</number>
+
+			if (!cellRange && (arguments.length === 1)) {
+				throw "invalid argument";
+			}
+
+			var range = (arguments.length === 4)
+				? new $.wijmo.wijgrid.cellInfoRange(new $.wijmo.wijgrid.cellInfo(cellRange, y0), new $.wijmo.wijgrid.cellInfo(x1, y1))
+				: cellRange._clone();
+
+			range._normalize();
+
+			if (!range._isValid()) {
+				throw "invalid argument";
+			}
+
+			this.beginUpdate();
+
+			this._startNewTransaction(gridView._field("currentCell"));
+			this._clearRange(range, 0 /* none */);
+
+			this.endUpdate();
+		};
+
+		this.removeColumns = function (start, end /* opt */) {
+			/// <summary>
+			/// Removes a column range from the current selection.
+			///
+			/// Usage:
+			/// 1. removeColumns(0)
+			/// 2. removeColumns(0, 2)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid.
+			///
+			/// Code example: selectionObj.removeColumns(0);
+			/// </summary>
+			/// <param name="start" type="Number" integer="true">The index of the first column to remove.</param>
+			/// <param name="end" type="Number" integer="true">The index of the last column to remove. Optional.</param>
+
+			if (!end && end !== 0) {
+				end = start;
+			}
+
+			this.removeRange(start, 0, end, 0xFFFFFF);
+		};
+
+		this.removeRows = function (start, end /* opt */) {
+			/// <summary>
+			/// Removes a row range from the current selection.
+			///
+			/// Usage:
+			/// 1. removeRows(0)
+			/// 2. removeRows(0, 2)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid.
+			///
+			/// Code example: selectionObj.removeRows(0);
+			/// </summary>
+			/// <param name="start" type="Number" integer="true">The index of the first row to remove.</param>
+			/// <param name="end" type="Number" integer="true">The index of the last row to remove. Optional.</param>
+
+			if (!end && end !== 0) {
+				end = start;
+			}
+
+			this.removeRange(0, start, 0xFFFFFF, end);
+		};
+
+
+		this.addRows = function (start, end /* opt */) {
+			/// <summary>
+			/// Adds a rows range to the current selection.
+			///
+			/// Usage:
+			/// 1. addRows(0)
+			/// 2. addRows(0, 2)
+			/// 
+			/// The result depends upon the chosen selection mode in the grid. For example, if current selection mode
+			/// does not allow multiple selection the previous selection will be removed.
+			///
+			/// Code example: selectionObj.addRows(0);
+			/// </summary>
+			/// <param name="start" type="Number" integer="true">The index of the first row to select.</param>
+			/// <param name="end" type="Number" integer="true">The index of the last row to select. Optional.</param>
+
+			if (!end && end !== 0) {
+				end = start;
+			}
+
+			this.addRange(0, start, 0xFFFF, end);
 		};
 
 		this.clear = function () {
@@ -10875,59 +11557,70 @@
 		this._clearRange = function (range, extendMode) {
 			var selectionMode = gridView.options.selectionMode.toLowerCase(),
 				rangeToClear, rowsLen, cellsLen, flag, row, cell,
-				i, len, cellInfo;
+				i, len, cellInfo,
+				dataRange = gridView._getDataCellsRange();
 
 			if (range._isValid() && (selectionMode !== "none") && (_selectedCells.length() > 0)) {
 				rangeToClear = range._clone();
 
 				rangeToClear._normalize();
-				rangeToClear._clip(gridView._getDataCellsRange());
+				rangeToClear._clip(dataRange);
 
 				if (!range._isValid()) {
 					return;
 				}
 
-				rangeToClear = extendRangeBySelectionMode(rangeToClear, selectionMode, extendMode, null);
+				// extend
+				rangeToClear._extend(_extend_rules[selectionMode][extendMode], dataRange);
 
 				this.beginUpdate();
 
-				switch (selectionMode) {
-					case "singlecell":
-						if (rangeToClear._containsCellInfo(_selectedCells.item(0))) {
-							this.clear();
-						}
-						break;
+				// remove selected cells only, do not use doRange(rangeToClear, false) here.
+				for (i = 0, len = _selectedCells.length(); i < len; i++) {
+					cellInfo = _selectedCells.item(i);
 
-					case "singlecolumn":
-					case "singlerow":
-					case "singlerange":
-						rowsLen = rangeToClear.bottomRight().rowIndex();
-						cellsLen = rangeToClear.bottomRight().cellIndex();
-
-						flag = false;
-						for (row = rangeToClear.topLeft().rowIndex(); !flag && row <= rowsLen; row++) {
-							for (cell = rangeToClear.topLeft().cellIndex(); !flag && cell <= cellsLen; cell++) {
-								flag = _selectedCells.indexOf(cell, row) >= 0;
-								if (flag) {
-									this.clear();
-								}
-							}
-						}
-						break;
-
-					case "multicolumn":
-					case "multirow":
-					case "multirange":
-						for (i = 0, len = _selectedCells.length(); i < len; i++) {
-							cellInfo = _selectedCells.item(i);
-
-							if (rangeToClear._containsCellInfo(cellInfo)) {
-								_removedCells._add(cellInfo);
-							}
-						}
-
-						break;
+					if (rangeToClear._containsCellInfo(cellInfo)) {
+						_removedCells._add(cellInfo);
+					}
 				}
+
+				/*switch (selectionMode) {
+				case "singlecell":
+				if (rangeToClear._containsCellInfo(_selectedCells.item(0))) {
+				this.clear();
+				}
+				break;
+
+				case "singlecolumn":
+				case "singlerow":
+				case "singlerange":
+				rowsLen = rangeToClear.bottomRight().rowIndex();
+				cellsLen = rangeToClear.bottomRight().cellIndex();
+
+				flag = false;
+				for (row = rangeToClear.topLeft().rowIndex(); !flag && row <= rowsLen; row++) {
+				for (cell = rangeToClear.topLeft().cellIndex(); !flag && cell <= cellsLen; cell++) {
+				flag = _selectedCells.indexOf(cell, row) >= 0;
+				if (flag) {
+				this.clear();
+				}
+				}
+				}
+				break;
+
+				case "multicolumn":
+				case "multirow":
+				case "multirange":
+				for (i = 0, len = _selectedCells.length(); i < len; i++) {
+				cellInfo = _selectedCells.item(i);
+
+				if (rangeToClear._containsCellInfo(cellInfo)) {
+				_removedCells._add(cellInfo);
+				}
+				}
+
+				break;
+				}*/
 
 				this.endUpdate();
 			}
@@ -10935,12 +11628,13 @@
 
 		this._selectRange = function (range, ctrlKey, shiftKey, extendMode, endPoint) {
 			var selectionMode = gridView.options.selectionMode.toLowerCase(),
-				rangeToSelect;
+				rangeToSelect,
+				dataRange = gridView._getDataCellsRange();
 
 			if ((selectionMode !== "none") && range._isValid()) {
 				rangeToSelect = range._clone();
 				rangeToSelect._normalize();
-				rangeToSelect._clip(gridView._getDataCellsRange());
+				rangeToSelect._clip(dataRange);
 
 				if (!rangeToSelect._isValid()) {
 					return;
@@ -10963,7 +11657,21 @@
 					}
 				}
 
-				rangeToSelect = extendRangeBySelectionMode(rangeToSelect, selectionMode, extendMode, endPoint);
+				// truncate range by selectionMode
+				switch (selectionMode) {
+					case "singlecell":
+					case "singlecolumn":
+					case "singlerow":
+						rangeToSelect = (endPoint === null)
+							? new $.wijmo.wijgrid.cellInfoRange(rangeToSelect.topLeft(), rangeToSelect.topLeft()) // top-left cell only is taken into consideration.
+							: new $.wijmo.wijgrid.cellInfoRange(endPoint, endPoint);
+						break;
+				}
+
+				// extend
+				rangeToSelect._extend(_extend_rules[selectionMode][extendMode], dataRange);
+
+				// do selection
 				doRange(rangeToSelect, true);
 
 				this.endUpdate();
@@ -10973,51 +11681,6 @@
 		// * internal
 
 		// * private
-		function extendRangeBySelectionMode(range, selectionMode, preferredExtendMode, endPoint) {
-			var dataRange = gridView._getDataCellsRange();
-
-			switch (selectionMode) {
-				case "singlecell":
-					range = (endPoint === null)
-						? new $.wijmo.wijgrid.cellInfoRange(range.topLeft(), range.topLeft())
-						: new $.wijmo.wijgrid.cellInfoRange(endPoint, endPoint);
-
-					break;
-
-				case "singlecolumn":
-					range = (endPoint === null)
-						? new $.wijmo.wijgrid.cellInfoRange(range.topLeft(), range.topLeft())
-						: new $.wijmo.wijgrid.cellInfoRange(endPoint, endPoint);
-					range._extend(1 /* extendToColumn */, dataRange);
-
-					break;
-
-				case "singlerow":
-					range = (endPoint === null)
-						? new $.wijmo.wijgrid.cellInfoRange(range.topLeft(), range.topLeft())
-						: new $.wijmo.wijgrid.cellInfoRange(endPoint, endPoint);
-					range._extend(2 /* extendToRow */, dataRange);
-					break;
-
-				case "singlerange":
-					range._extend(preferredExtendMode, dataRange);
-					break;
-
-				case "multicolumn":
-					range._extend(1 /* extendToColumn */, dataRange);
-					break;
-
-				case "multirow":
-					range._extend(2 /* extendToRow */, dataRange);
-					break;
-
-				case "multirange":
-					range._extend(preferredExtendMode, dataRange);
-					break;
-			}
-
-			return range;
-		}
 
 		function doSelection() {
 			var offsets = gridView._getDataToAbsOffset(),
@@ -11130,7 +11793,7 @@
 
 	$.wijmo.wijgrid.cellInfoOrderedCollection = function (gridView) {
 		/// <summary>
-		/// Ordered read-only collection of a $.wijmo.wijgrid.cellInfo objects.
+		/// Creates an ordered read-only collection of $.wijmo.wijgrid.cellInfo objects.
 		/// Code example: var collection = new $.wijmo.wijgrid.cellInfoOrderedCollection(gridView);
 		/// </summary>
 		/// <param name="gridView" type="$.wijmo.wijgrid" mayBeNull="false">gridView</param>
@@ -11550,6 +12213,8 @@
 			function _attachAdditionalEvents() {
 				if (!_additionalEventsAttached) {
 					try {
+						_view.toggleDOMSelection(false); // disable selection
+
 						$(document)
 							.bind(_eventKey("mousemove"), _onDocumentMouseMove)
 							.bind(_eventKey("mouseup"), _onDocumentMouseUp);
@@ -11563,6 +12228,8 @@
 			function _detachAdditionalEvents() {
 				if (_additionalEventsAttached) {
 					try {
+						_view.toggleDOMSelection(true); // enable selection
+
 						$(document)
 							.unbind(_eventKey("mousemove"), _onDocumentMouseMove)
 							.unbind(_eventKey("mouseup"), _onDocumentMouseUp);
@@ -11930,9 +12597,13 @@
 							$(rowObj[0].cells[0]).children("div.wijmo-wijgrid-innercell").html("&nbsp;"); // remove ui-icon-pencil
 						}
 
-						grid.element.focus();
-						$(grid._view().focusableElement()).focus();
-						currentCell.tableCell().focus();
+						window.setTimeout(function () {
+							if (!grid.destroyed) {
+								grid.element.focus();
+								$(grid._view().focusableElement()).focus();
+								currentCell.tableCell().focus();
+							}
+						}, 50);
 					}
 				}
 
@@ -11969,10 +12640,11 @@
 								.attr("type", "text")
 								.addClass("wijgridinput wijmo-wijinput ui-state-focus")
 								.bind("keydown", grid, checkBoxOrInputKeyDown);
-								//the problem of inputing
-								$input.bind(($.support.selectstart ? "selectstart" : "mousedown"), function(event){
-									event.stopPropagation();
-								});
+
+							//the problem of inputing
+							$input.bind(($.support.selectstart ? "selectstart" : "mousedown"), function (event) {
+								event.stopPropagation();
+							});
 
 							if (args.event && args.event.type === "keypress" && args.event.which) {
 								$input.val(String.fromCharCode(args.event.which));
@@ -12142,6 +12814,8 @@
 						hoveredField.element.css("cursor", "e-resize");
 						//hoveredField.element.find("> a").css("cursor", "e-resize");
 						_hoveredField = hoveredField;
+						// prevent frozener from taking effect
+						e.stopPropagation();
 					} else {
 						_onMouseOut(e);
 					}
@@ -12171,8 +12845,10 @@
 
 						_proxy = $("<div class=\"wijmo-wijgrid-resizehandle ui-state-highlight\">&nbsp;</div>");
 
+						var visibleAreaBounds = gridView._view().getVisibleAreaBounds();
+
 						_proxy.css({ "left": e.pageX, "top": _startLocation.top,
-							"height": gridView._view().getVisibleAreaBounds().height/* - _hoveredField.element[0].offsetTop*/
+							"height": visibleAreaBounds.height + visibleAreaBounds.top - _startLocation.top
 						});
 
 						$(document.body).append(_proxy);
@@ -12180,6 +12856,8 @@
 					finally {
 						attachDocEvents();
 						_inProgress = true;
+						// prevent frozener from taking effect
+						e.stopPropagation();
 					}
 				}
 			}
@@ -12268,10 +12946,379 @@
 })(jQuery);(function ($) {
 	"use strict";
 	$.extend($.wijmo.wijgrid, {
+
+		frozener: function (gridView) {
+			var _vHeaderLen, _hHeaderLen, _vIndex, _hIndex,
+				_evntFormat = "{0}." + gridView.widgetName + ".frozener",
+				_inProgress = false,
+				_docCursor,
+				_startVLocation = null,
+				_startHLocation = null,
+				_lastVLocation = null,
+				_lastHLocation = null,
+				_vBar = $("<div class=\"wijmo-wijgrid-frozener-v ui-widget-header\"></div>"),
+				_hBar = $("<div class=\"wijmo-wijgrid-frozener-h ui-widget-header\"></div>"),
+				_vProxy = null,
+				_hProxy = null,
+				_outerDiv = gridView.outerDiv.find(".wijmo-wijgrid-fixedview"),
+				_gap = 10;
+
+			this.refresh = function () {
+				this.dispose();
+				this.addVElement(gridView._getStaticIndex(false));
+				this.addHElement(gridView._getStaticIndex(true));
+				this.attachDivEvent();
+			};
+
+			this.attachDivEvent = function () {
+				_outerDiv
+					.bind("mousemove", _onGridMouseMove)
+					.bind("mouseout", _onGridMouseOut)
+					.bind("mousedown", _onGridMouseDown);
+			};
+
+			this.addVElement = function (columnIndex) {
+				var size = $.wijmo.wijgrid.bounds(_outerDiv.find(".wijmo-wijgrid-split-area-nw")),
+					containerSize = $.wijmo.wijgrid.bounds(_outerDiv),
+					visibleBounds = gridView._view().getVisibleAreaBounds(),
+					barLeft = size.left + size.width;
+
+				if (barLeft <= visibleBounds.left + visibleBounds.width) {
+					_vBar
+						.css({ "left": barLeft - containerSize.left - 1, "top": size.top - containerSize.top,
+								"width": "0px",
+								"height": visibleBounds.height + visibleBounds.top - size.top
+						})
+						.appendTo(_outerDiv);
+
+					_vHeaderLen = gridView._getRealStaticColumnIndex(true);
+					_vIndex = columnIndex;
+				}
+			};
+
+			this.addHElement = function (rowIndex) {
+				var size = $.wijmo.wijgrid.bounds(_outerDiv.find(".wijmo-wijgrid-split-area-nw")),
+					containerSize = $.wijmo.wijgrid.bounds(_outerDiv),
+					visibleBounds = gridView._view().getVisibleAreaBounds(),
+					barTop = size.top + size.height;
+
+				if (barTop <= visibleBounds.top + visibleBounds.height) {
+					_hBar
+						.css({ "left": size.left - containerSize.left, "top": barTop - containerSize.top - 1,
+								"width": visibleBounds.width + visibleBounds.left - size.left,
+								"height": "0px"
+						})
+						.appendTo(_outerDiv);
+
+					_hHeaderLen = gridView._getRealStaticRowIndex(true);
+					_hIndex = rowIndex;
+				}
+			};
+
+			this.dispose = function () {
+				_vBar.remove();
+
+				_hBar.remove();
+
+				_outerDiv
+					.unbind("mousemove", _onGridMouseMove)
+					.unbind("mouseout", _onGridMouseOut)
+					.unbind("mousedown", _onGridMouseDown);
+
+				detachDocEvents();
+			};
+
+			this.inProgress = function () {
+				return _inProgress;
+			};
+
+			function _onGridMouseMove (e) {
+				var size, center, visibleBounds = gridView._view().getVisibleAreaBounds();
+				if (!_inProgress) {
+					if (gridView._canInteract()
+						&& $.ui.isOver(
+										e.pageY, e.pageX,
+										visibleBounds.top, visibleBounds.left,
+										visibleBounds.height, visibleBounds.width)) {
+						size = $.wijmo.wijgrid.bounds(_vBar);
+						center = size.left + size.width / 2;
+						if (Math.abs(e.pageX - center) < _gap) {
+							_outerDiv.css("cursor", "pointer");
+							return;
+						}
+						size = $.wijmo.wijgrid.bounds(_hBar);
+						center = size.top + size.height / 2;
+						if (Math.abs(e.pageY - center) < _gap) {
+							_outerDiv.css("cursor", "pointer");
+							return;
+						}
+						_onGridMouseOut(e);
+					}
+				}
+			}
+
+			function _onGridMouseOut (e) {
+				if (!_inProgress) {
+					_outerDiv.css("cursor", "");
+				}
+			}
+
+			function _onGridMouseDown (e) {
+				var size, center, staticHeaderRowIndex, visibleBounds = gridView._view().getVisibleAreaBounds();
+				if (gridView._canInteract()
+					&& $.ui.isOver(
+									e.pageY, e.pageX,
+									visibleBounds.top, visibleBounds.left,
+									visibleBounds.height, visibleBounds.width)) {
+					size = $.wijmo.wijgrid.bounds(_vBar);
+					center = size.left + size.width / 2;
+					if (Math.abs(e.pageX - center) < _gap) {
+						if (_vIndex === -1) {
+							_startVLocation = _lastVLocation = -1;
+						} else {
+							_startVLocation = _lastVLocation = gridView._getRealStaticColumnIndex() - _vHeaderLen;
+						}
+
+						_vProxy = $("<div class=\"wijmo-wijgrid-resizehandle ui-widget-header\"></div>");
+
+						e.data = { bVertical: true };
+						//showArrow(e);
+
+						$(document.body).append(_vProxy);
+					} else {
+						size = $.wijmo.wijgrid.bounds(_hBar);
+						center = size.top + size.height / 2;
+						if (Math.abs(e.pageY - center) < _gap) {
+							if (_hIndex === -1) {
+								_startHLocation = _lastHLocation = -1;
+							} else {
+								_startHLocation = _lastHLocation = gridView._getRealStaticRowIndex() - _hHeaderLen;
+							}
+
+							_hProxy = $("<div class=\"wijmo-wijgrid-resizehandle ui-widget-header\"></div>");
+
+							e.data = { bVertical: false };
+							//showArrow(e);
+
+							$(document.body).append(_hProxy);
+						}
+					}
+
+					if (e.data) {
+						_outerDiv.css("cursor", "");
+						_docCursor = document.body.style.cursor;
+						document.body.style.cursor = "pointer";
+
+						attachDocEvents(e.data);
+						_inProgress = true;
+					}
+				}
+			}
+
+			function _onDocumentMouseMove(e) {
+				var superPanel = gridView._view()._getSuperPanel();
+				if (e.data.bVertical && superPanel.options.hScroller.scrollValue) {
+					superPanel.hScrollTo(0);
+				} else if (!e.data.bVertical && superPanel.options.vScroller.scrollValue) {
+					superPanel.vScrollTo(0);
+				}
+				showArrow(e);
+			}
+
+			function _onDocumentMouseUp(e) {
+				try {
+					document.body.style.cursor = _docCursor;
+
+					// destroy proxy object
+					if (e.data.bVertical) {
+						_vProxy.remove();
+
+						if (_startVLocation !== _lastVLocation) {
+							gridView.option("staticColumnIndex", _lastVLocation);
+						}
+					} else {
+						_hProxy.remove();
+
+						if (_startHLocation !== _lastHLocation) {
+							gridView.option("staticRowIndex", _lastHLocation);
+						}
+					}
+				}
+				finally {
+					if (e.data.bVertical) {
+						_vProxy = null;
+					} else {
+						_hProxy = null;
+					}
+					detachDocEvents();
+					_inProgress = false;
+				}
+			}
+
+			function _onSelectStart(e) {
+				e.preventDefault();
+			}
+
+			function attachDocEvents(data) {
+				if (!_inProgress) {
+					if (data.bVertical) {
+						$(document)
+							.bind(eventKey("mousemove"), { bVertical: true }, _onDocumentMouseMove)
+							.bind(eventKey("mouseup"), { bVertical: true }, _onDocumentMouseUp);
+					} else {
+						$(document)
+							.bind(eventKey("mousemove"), { bVertical: false }, _onDocumentMouseMove)
+							.bind(eventKey("mouseup"), { bVertical: false }, _onDocumentMouseUp);
+					}
+
+					$(document.body).disableSelection();
+
+					if ($.browser.msie) {
+						$(document.body).bind("selectstart", _onSelectStart);
+					}
+				}
+			}
+
+			function detachDocEvents() {
+				if (_inProgress) {
+					$(document)
+						.unbind(eventKey("mousemove"), _onDocumentMouseMove)
+						.unbind(eventKey("mouseup"), _onDocumentMouseUp);
+
+					$(document.body).enableSelection();
+					if ($.browser.msie) {
+						$(document.body).unbind("selectstart", _onSelectStart);
+					}
+				}
+			}
+
+			function showArrow(e) {
+				var currentElement,
+					currentSize,
+					centerXOrY,
+					bLeftOrTop,
+					currentIdx,
+					prevIdx,
+					leftPosition,
+					topPosition,
+					visibleBounds = gridView._view().getVisibleAreaBounds();
+				if (e.data.bVertical) {
+					currentSize = $.wijmo.wijgrid.bounds(_vBar);
+					centerXOrY = currentSize.left + currentSize.width / 2;
+					if (Math.abs(e.pageX - centerXOrY) < _gap) {
+						_lastVLocation = _startVLocation;
+						_vProxy.hide();
+						return;
+					}
+					currentElement = getFieldByPos({ x: e.pageX, y: e.pageY });
+					if (currentElement) {
+						currentSize = $.wijmo.wijgrid.bounds(currentElement.element);
+						centerXOrY = currentSize.left + currentSize.width / 2;
+						currentIdx = currentElement.options.visLeavesIdx - _vHeaderLen;
+						prevIdx = getPrevColumnIndex(currentIdx);
+						bLeftOrTop = e.pageX < centerXOrY ? (prevIdx !== _startVLocation) : (currentIdx === _startVLocation);
+						leftPosition = bLeftOrTop ? currentSize.left : currentSize.left + currentSize.width;
+						if (!$.ui.isOverAxis(leftPosition,
+											visibleBounds.left - 1,
+											visibleBounds.width + 2)) {
+							return;
+						}
+						_lastVLocation = bLeftOrTop ? prevIdx : currentIdx;
+						_vProxy.show().css({"left": leftPosition, "top": currentSize.top,
+									"width": 3,
+									"height": visibleBounds.height + visibleBounds.top - currentSize.top});
+					}
+				} else {
+					currentSize = $.wijmo.wijgrid.bounds(_hBar);
+					centerXOrY = currentSize.top + currentSize.height / 2;
+					if (Math.abs(e.pageY - centerXOrY) < _gap) {
+						_lastHLocation = _startHLocation;
+						_hProxy.hide();
+						return;
+					}
+					currentElement = getRowByPos({ x: e.pageX, y: e.pageY });
+					if (currentElement) {
+						currentSize = $.wijmo.wijgrid.bounds(currentElement);
+						centerXOrY = currentSize.top + currentSize.height / 2;
+						currentIdx = gridView._view().getAbsoluteRowIndex(currentElement) - _hHeaderLen;
+						prevIdx = getPrevRowIndex(currentIdx);
+						bLeftOrTop = e.pageY < centerXOrY ? (prevIdx !== _startHLocation) : (currentIdx === _startHLocation);
+						topPosition = bLeftOrTop ? currentSize.top : currentSize.top + currentSize.height;
+						if (!$.ui.isOverAxis(topPosition,
+											visibleBounds.top - 1,
+											visibleBounds.height + 2)) {
+							return;
+						}
+						_lastHLocation = bLeftOrTop ? prevIdx : currentIdx;
+						_hProxy.show().css({"left": currentSize.left, "top": topPosition,
+									"width": visibleBounds.width + visibleBounds.left - currentSize.left,
+									"height": 3});
+					}
+				}
+			}
+
+			function getPrevColumnIndex(index) {
+				return index > -1 ? index - 1 : -1;
+			}
+
+			function getPrevRowIndex(index) {
+				return index > -1 ? index - 1 : -1;
+			}
+
+			function getFieldByPos(mouse) {
+				var columns = gridView.columns(),
+				i = 0,
+				len = columns.length,
+				colWidget, o, bounds, res;
+
+				for (; i < len; i++) {
+					colWidget = columns[i];
+					o = colWidget.options;
+
+					if (o.visible && o.parentVis && o.isLeaf) {
+						bounds = $.wijmo.wijgrid.bounds(colWidget.element);
+
+						res = $.ui.isOverAxis(mouse.x, bounds.left, bounds.width);
+
+						if (res) {
+							return colWidget;
+						}
+					}
+				}
+				
+				return null;
+			}
+
+			function getRowByPos(mouse) {
+				var rows = gridView._rows(),
+					rowsLength = rows.length(),
+					index = 0,
+					row,
+					bounds,
+					res;
+				for (;index < rowsLength; index++) {
+					row = rows.item(index)[0];
+					bounds = $.wijmo.wijgrid.bounds($(row));
+					res = $.ui.isOverAxis(mouse.y, bounds.top, bounds.height);
+					if (res) {
+						return row;
+					}
+				}
+				return null;
+			}
+
+			function eventKey(eventType) {
+				return $.wijmo.wijgrid.stringFormat(_evntFormat, eventType);
+			}
+		}
+	});
+})(jQuery);(function ($) {
+	"use strict";
+	$.extend($.wijmo.wijgrid, {
 		cellFormatterHelper: function () {
 			this.format = function ($container, column, formattedValue, rowInfo) {
 				if (rowInfo.type & $.wijmo.wijgrid.rowType.footer) {
-					if (column.aggregate && (column.aggregate !== "none"))  {
+					if (column.aggregate && (column.aggregate !== "none")) {
 						formattedValue = $.wijmo.wijgrid.stringFormat(column.footerText || "{0}", column._totalsValue || "");
 					} else {
 						formattedValue = column.footerText || column._footerTextDOM || "";
@@ -12363,15 +13410,16 @@
 						}
 						break;
 
-					case $rt.filter:
-						defFormatFilterCell(args);
-						break;
+					default:
+						textFormatter(args);
 				}
 			}
 
 			function defFormatFilterCell(args) {
+				args.$container.addClass("ui-widget ui-state-default");
+
 				if ((args.column.dataIndex >= 0) && !args.column.isBand && args.column.showFilter) {
-					args.$container.html("<div class=\"wijmo-wijgrid-filter ui-widget ui-state-default ui-corner-all\"><span class=\"wijmo-wijgrid-filtericon\"></span><input type=\"text\" class=\"wijmo-wijgrid-filter-input\" style=\"width:1px\" /><a class=\"wijmo-wijgrid-filter-trigger ui-corner-right ui-state-default\" href=\"#\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span></a></div>");
+					args.$container.html("<div class=\"wijmo-wijgrid-filter ui-corner-all\"><input type=\"text\" class=\"wijmo-wijgrid-filter-input\" style=\"width:1px\" /><a class=\"wijmo-wijgrid-filter-trigger ui-corner-right ui-state-default\" href=\"#\"><span class=\"ui-icon ui-icon-triangle-1-s\"></span></a></div>");
 				} else {
 					args.$container.html("&nbsp;");
 				}
@@ -12759,10 +13807,11 @@
 				throw "invalid arguments";
 			}
 
-			this.format = function ($cell, cellIndex, column, rowInfo, state, cellAttr, cellStyle) {
+			this.format = function ($cell, column, rowInfo, state, cellAttr, cellStyle) {
 				var $rs = $.wijmo.wijgrid.renderState,
 					$rt = $.wijmo.wijgrid.rowType,
 					rowType = rowInfo.type,
+					cellIndex = column.visLeavesIdx,
 					args,
 					groupRowCellInfo = null;
 
@@ -12811,10 +13860,13 @@
 					leaf = args.column,
 					rowType = args.row.type;
 
-				if (rowType !== $rt.header && rowType !== $rt.filter) {
-					args.$cell.addClass("wijgridtd");
-				} else if (rowType === $rt.header) {
-					args.$cell.addClass("wijgridth");
+				switch (rowType) {
+					case $rt.header:
+						args.$cell.addClass("wijgridth");
+						break;
+
+					default:
+						args.$cell.addClass("wijgridtd");
 				}
 
 				// copy attributes
@@ -12852,8 +13904,7 @@
 				if (args._cellIndex === 0 && wijgrid.options.showRowHeader) {
 					args.$cell
 						.attr({ "role": "rowheader", "scope": "row" })
-						.addClass(rowType === $rt.header ? "ui-state-default" : "")
-						.addClass("wijmo-wijgrid-rowheader");
+						.addClass("ui-state-default ui-widget-content wijmo-wijgrid-rowheader");
 				} else {
 					switch (rowType) {
 						case ($rt.header):

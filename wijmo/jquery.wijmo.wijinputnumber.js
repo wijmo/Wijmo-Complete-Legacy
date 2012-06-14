@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 1.5.0
+ * Wijmo Library 2.1.0
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -181,13 +181,15 @@
 			 }
 		 },
 
-		 getValue: function () {
+        getValue: function () {
+            /// <summary>Gets the value.</summary>
 			 var val = this._textProvider.getValue();
 			 if (val === undefined || val === null) { val = this.getText(); }
 			 return val;
 		 },
 
-		 setValue: function (val, exact) {
+         setValue: function (val, exact) {
+            /// <summary>Sets the value.</summary>
 			 try {
 				 exact = !!exact;
 				 if (typeof val === 'boolean') {
@@ -220,7 +222,8 @@
 			 }
 		 },
 
-		 isValueNull: function () {
+        isValueNull: function () {
+            /// <summary>Determines whether the value is in null state.</summary>
 			 try {
 				 return (this._textProvider).isValueNull();
 			 }
@@ -228,9 +231,23 @@
 				 return true;
 			 }
 		 },
+		 
+ 		getPostValue: function(){
+			/// <summary>Gets the text value when the container form is posted back to server.</summary>
+			if (!this._isInitialized()) { return this.element.val(); }
+			if (this.options.showNullText && this.isValueNull()) { return "0"; }
+			
+			var val = this.options.value ? this.options.value : 0;
+			if (this.options.type === "percent"){
+				val = (val / 100).toFixed(10);
+			}
+			
+			return val.toString();
+		},
 
 		 _updateText: function () {
 			 if (!this._isInitialized()) { return; }
+
 			 this.options.value = this._textProvider.getValue();
 			 wijinputcore._updateText.apply(this, arguments);
 			 if (!this._textProvider.checkAndRepairBounds(false, false)) {

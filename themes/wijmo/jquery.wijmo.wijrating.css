@@ -1,0 +1,226 @@
+﻿.wijmo-wijrating
+{
+	cursor: default;
+	overflow: hidden;
+	display: inline-block;
+}
+
+.wijmo-wijrating .wijmo-wijrating-reset
+{
+	float: left;
+    width: 16px;
+    height:16px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+
+.wijmo-wijrating-vertical .wijmo-wijrating-reset
+{
+	clear: left;
+}
+
+
+.wijmo-wijrating .wijmo-wijrating-starcontainer
+{
+	display: inline;
+}
+
+.wijmo-wijrating .wijmo-wijrating-star
+{
+	cursor: pointer;
+	text-indent: -999em;
+	float: left;
+    overflow: hidden;
+}
+.wijmo-wijrating-vertical .wijmo-wijrating-star
+{
+	clear: left;
+}
+
+/* 16px */
+.wijmo-wijrating .wijmo-wijrating-normal
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat 0px 0px;
+	opacity: 0.50;
+}
+
+.wijmo-wijrating .wijmo-wijrating-rated
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat 0px -16px;
+	opacity: 1;
+}
+
+.wijmo-wijrating .wijmo-wijrating-hover
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat 0px -32px;
+	opacity: 1;
+}
+
+/* 24px */
+.wijmo-wijrating .wijmo-wijrating-normal-24
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -16px 0px;
+	opacity: 0.50;
+}
+
+.wijmo-wijrating .wijmo-wijrating-rated-24
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -16px -24px;
+	opacity: 1;
+}
+
+.wijmo-wijrating .wijmo-wijrating-hover-24
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -16px -48px;
+	opacity: 1;
+}
+
+/* 32px */
+.wijmo-wijrating .wijmo-wijrating-normal-32
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -40px 0px;
+	opacity: 0.50;
+}
+
+.wijmo-wijrating .wijmo-wijrating-rated-32
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -40px -32px;
+	opacity: 1;
+}
+
+.wijmo-wijrating .wijmo-wijrating-hover-32
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -40px -64px;
+	opacity: 1;
+}
+
+/* Thumb */
+.wijmo-wijrating .wijmo-wijrating-normal-thumbup
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -72px 0px;
+	opacity: 0.50;
+}
+
+.wijmo-wijrating .wijmo-wijrating-rated-thumbup
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -72px -16px;
+	opacity: 1;
+}
+
+.wijmo-wijrating .wijmo-wijrating-hover-thumbup
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -72px -32px;
+	opacity: 1;
+}
+
+/* Thumb Down */
+.wijmo-wijrating .wijmo-wijrating-normal-thumbdown
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -88px 0px;
+	opacity: 0.50;
+}
+
+.wijmo-wijrating .wijmo-wijrating-rated-thumbdown
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -88px -16px;
+	opacity: 1;
+}
+
+.wijmo-wijrating .wijmo-wijrating-hover-thumbdown
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -88px -32px;
+	opacity: 1;
+}
+
+/* Bars */
+.wijmo-wijrating .wijmo-wijrating-normal-bar-11
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -103px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-11
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -115px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-11
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -126px 0px;
+}
+
+
+.wijmo-wijrating .wijmo-wijrating-normal-bar-21
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -137px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-21
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -148px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-21
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -159px 0px;
+}
+
+
+
+.wijmo-wijrating .wijmo-wijrating-normal-bar-31
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -170px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-31
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -181px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-31
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -192px 0px;
+}
+
+
+
+.wijmo-wijrating .wijmo-wijrating-normal-bar-41
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -203px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-41
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -214px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-41
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -225px 0px;
+}
+
+
+
+.wijmo-wijrating .wijmo-wijrating-normal-bar-51
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -236px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-51
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -247px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-51
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -258px 0px;
+}
+
+
+.wijmo-wijrating .wijmo-wijrating-normal-bar-61
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -269px 0px;
+	opacity: 0.50;    
+}
+.wijmo-wijrating .wijmo-wijrating-rated-bar-61
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -280px 0px;
+}
+.wijmo-wijrating .wijmo-wijrating-hover-bar-61
+{
+	background: transparent url("images/wijrating/wijmo-ui-rating.png") no-repeat -291px 0px;
+}

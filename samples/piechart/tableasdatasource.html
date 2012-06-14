@@ -1,100 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>Wijmo Example Page</title>
-    
-    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
-    
-    <script src="../../external/jquery-1.6.2.min.js" type="text/javascript"></script>
-    <script src="../../external/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
-    <script src="../../external/raphael.js" type="text/javascript"></script>
-    <script src="../../external/globalize.min.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
-    <script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
-    <script id="scriptInit" type="text/javascript">
-        $(document).ready(function () {
-            $("#tb").wijpiechart().hide();
-        });
-    </script>
-    <style type="text/css">
-        #tb
-        {
+	<meta charset="utf-8" />
+	<title>Wijmo Example Page</title>
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+			$("#tb").wijpiechart().hide();
+		});
+	</script>
+	<style type="text/css">
+		#tb
+		{
 			width: 756px;
 			height: 475px;
-        }
-    </style>
+		}
+	</style>
 </head>
 <body class="demo-single">
-    <div class="container">
-        <div class="header">
-            <h2>
-                Use Table as DataSource</h2>
-        </div>
-        <div class="main demo">
-            <!-- Begin demo markup -->
-            <table id="tb">
-                <caption>
-                    Average Bytes per Page by Content Type</caption>
-                <thead>
-                    <tr>
-                        <td>
-                        </td>
-                        <th>
-                            kB
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            HTML
-                        </th>
-                        <td>
-                            34</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Images</th>
-                        <td>
-                            450</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Stylesheets</th>
-                        <td>
-                            27</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Scripts</th>
-                        <td>
-                            123</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Flash</th>
-                        <td>
-                            84</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Other</th>
-                        <td>
-                            25</td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- End demo markup -->
-            <div class="demo-options">
-                <!-- Begin options markup -->
-                <!-- End options markup -->
-            </div>
-        </div>
-        <div class="footer demo-description">
-            <p>
-            This sample shows how to create a pie chart using a table as the data source for the chart. It's as easy as creating a table with rows, headers, and tables and then setting the table's ID property to the ID of the wijpiechart widget. 
-            </p>
-        </div>
-    </body>
+	<div class="container">
+		<div class="header">
+			<h2>
+				Use Table as DataSource</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<table id="tb">
+				<caption>
+					Average Bytes per Page by Content Type</caption>
+				<thead>
+					<tr>
+						<td>
+						</td>
+						<th>
+							kB
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">
+							HTML
+						</th>
+						<td>
+							34</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							Images</th>
+						<td>
+							450</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							Stylesheets</th>
+						<td>
+							27</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							Scripts</th>
+						<td>
+							123</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							Flash</th>
+						<td>
+							84</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							Other</th>
+						<td>
+							25</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+			<p>
+			This sample shows how to create a pie chart using a table as the data source for the chart. It's as easy as creating a table with rows, headers, and tables and then setting the table's ID property to the ID of the wijpiechart widget. 
+			</p>
+		</div>
+	</body>
 </html>

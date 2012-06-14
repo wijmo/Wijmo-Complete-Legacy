@@ -1,0 +1,332 @@
+﻿@font-face
+{
+    font-family: 'Wijmo900';
+    src: url('images/museo/wijmo_900-webfont.eot');
+    src: url('images/museo/wijmo_900-webfont.eot?#iefix') format('eot'), url('images/museo/wijmo_900-webfont.woff') format('woff'), url('images/museo/wijmo_900-webfont.ttf') format('truetype'), url('images/museo/wijmo_900-webfont.svg#webfontddPJWh5k') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face
+{
+    font-family: 'Wijmo700Italic';
+    src: url('images/museo/wijmo_700italic-webfont.eot');
+    src: url('images/museo/wijmo_700italic-webfont.eot?#iefix') format('eot'), url('images/museo/wijmo_700italic-webfont.woff') format('woff'), url('images/museo/wijmo_700italic-webfont.ttf') format('truetype'), url('images/museo/wijmo_700italic-webfont.svg#webfontddPJWh5k') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body
+{
+    background: #3f3f3f url(images/texture.jpg) repeat top left;
+    margin: 0;
+    padding: 0;
+    color: #fafafa;
+    font-size: 12px;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    margin: 0;
+    padding: 0;
+}
+
+.theme-explorer
+{
+    background: url("images/wijmo_logo.png") no-repeat scroll left center transparent;
+    display: inline-block;
+    padding: 1em;
+    text-indent: -9999px;
+    width: 50%;
+}
+
+#content
+{
+}
+
+.content-inner
+{
+    width: 960px;
+    margin: 0 auto;
+    position: relative;
+}
+
+a, a:link
+{
+    color: #404040;
+}
+
+#theme-selector
+{
+    background: #f1f1f1;
+    margin-bottom: 2em;
+    padding: 1em 0;
+    border-top: solid 1px #f3f3f3;
+    border-bottom: solid 1px #f3f3f3;
+    box-shadow: 0 0 20px rgba(0,0,0,0.50);
+}
+
+#theme-selector:after
+{
+}
+
+
+.widgets .widget-list
+{
+    float: left;
+    position: relative;
+    width: 240px;
+    height: 180px;
+}
+
+.widgets .widget-list .widget-inner
+{
+    border-radius: 6px;
+    border: solid 1px #000;
+    padding: 1em;
+    width: 190px;
+    height: 130px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.50), inset 5px 5px 20px rgba(0,0,0,0.25);
+    position: absolute;
+    margin: 1em;
+    opacity: 1;
+}
+
+.widgets .widget-list .widget-inner-big
+{
+    width: auto;
+    height: auto;
+    z-index: 100;
+}
+
+
+#wijgrid
+{
+    width: 600px;
+}
+
+#wijaccordion
+{
+    width: 600px;
+}
+
+.wijmo-wijgrid
+{
+    overflow: visible;
+    border: none;
+}
+
+#wijtabs
+{
+    width: 600px;
+}
+
+#list
+{
+    width: 100%;
+    height: 300px;
+}
+
+.formdecorator label
+{
+    display: block;
+}
+
+.formdecorator
+{
+    list-style: none;
+    margin: 0;
+    padding: 1em;
+    width: 190px;
+}
+
+.formdecorator li
+{
+    clear: both;
+    margin-bottom: 1em;
+}
+.formdecorator .wijcheck-container, .formdecorator .wijradio-container, .formdecorator .wijbutton-container, .formdecorator .wijdropdown-container
+{
+    float: left;
+    clear: none;
+    width: 50%;
+}
+
+
+.formdecorator .wijbutton-container .ui-button-text-only .ui-button-text
+{
+    padding: 3px 12px;
+}
+
+#widget-container
+{
+}
+
+.premium-themes
+{
+    /*   background: url(images/premium_background.png) repeat-x center center;     border-radius: 5px;     border: solid 1px #c4c2c2;     box-shadow: 0 3px 3px rgba(0,0,0,0.15);*/
+}
+
+.premium-themes, .jqueryui-themes, .widgets
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.premium-themes li, .jqueryui-themes li
+{
+    float: left;
+    margin: 5px 10px;
+    list-style: none;
+    position: relative;
+}
+
+.premium-themes li a
+{
+    width: 136px;
+    height: 90px;
+    background: #fff;
+    display: block;
+    color: #404040;
+    border: solid 2px #c5c5c5;
+    box-shadow: 0 3px 2px rgba(0,0,0,0.05), inset 1px 1px 0 #fff;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.jqueryui-themes li a
+{
+    width: 56px;
+    height: 60px;
+    background: #fff;
+    display: block;
+    color: #404040;
+    border: solid 2px #c5c5c5;
+    box-shadow: 0 3px 2px rgba(0,0,0,0.05), inset 2px 2px 0 #fff;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.premium-themes li a:hover, .jqueryui-themes li a:hover
+{
+    border: solid 2px #65358a;
+}
+
+.widget-title
+{
+    top: -4px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.50);
+    font-family: "Wijmo900" ,Georgia, "Times New Roman" ,Times,serif;
+    font-size: 16px;
+    left: 5px;
+    padding: 5px;
+    position: absolute;
+    text-transform: uppercase;
+    z-index: 99;
+}
+
+.section-title
+{
+    color: #1b1a1a;
+    color: rgba(0,0,0,0.75);
+    font-size: 32px;
+    font-family: "Wijmo900" ,Georgia, "Times New Roman" ,Times,serif;
+    text-shadow: 1px 1px 0 #484747;
+    left: -172px;
+    position: absolute;
+    text-align: right;
+    text-transform: uppercase;
+    top: 41px;
+}
+
+#theme-selector .section-title
+{
+    color: rgba(0,0,0,0.15);
+    text-shadow: 1px 1px 0 #fff;
+    left: -155px;
+    top: 0px;
+}
+
+.clear
+{
+    clear: both;
+}
+
+.loading
+{
+    background: url("images/ajax-loader.gif") no-repeat scroll center center #F1F1F1;
+    display: block;
+    height: 155px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 216px;
+    z-index: 999;
+}
+
+
+.theme-name
+{
+    font-size: 2em;
+    display: inline-block;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.50);
+}
+
+.theme-header
+{
+    margin: 0.4em 1em;
+}
+
+.theme-header a
+{
+    color: #f1f1f1;
+    text-decoration: none;
+    background: #333;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 1px 1px 0px rgba(255,255,255,0.15);
+    float: right;
+    margin: 3px 0;
+}
+.theme-header a:hover
+{
+    color: #fff;
+    text-decoration: underline;
+}
+
+.theming-link
+{
+    padding: 0.4em;
+    width: 960px;
+    margin: 0 auto;
+}
+
+.theme-smalltitle
+{
+    background: transparent url(images/title_flag.png) no-repeat top right;
+    color: #F1F1F1;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    height: 12px;
+    line-height: 12px;
+    margin: 2px 0;
+    padding: 12px 12px 8px;
+    text-align: left;
+    text-decoration: none;
+    font-family: Arial,Helvetica,sans-serif;
+    position: absolute;
+    right: -5px;
+    top: 48px;
+}
+
+
+.jqueryui-link
+{
+    float: right;
+    padding: 8px 0;
+}

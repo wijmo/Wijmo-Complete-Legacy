@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/raphael-min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijgauge.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijradialgauge.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#gauge").wijradialgauge({
+                value: 100,
+                max: 150,
+                min: 0,
+                startAngle: -45,
+                sweepAngle: 270,
+                radius: 170,
+                islogarithmic: false,
+                origin: {
+                    x: 0.5, y: 0.5
+                },
+                labels: {
+                    offset: -30, //4F6B82
+                    style: {
+                        fill: "#556A7C",
+                        stroke: "none"
+                    }
+                },
+                tickMinor: {
+                    position: "inside",
+                    style: {
+                        fill: "#556A7C",
+                        stroke: "#556A7C"
+                    },
+                    interval: 2,
+                    visible: true,
+                    offset: 0
+                },
+                tickMajor: {
+                    position: "center",
+                    style: {
+                        fill: "#556A7C",
+                        stroke: "#556A7C"
+                    },
+                    interval: 10,
+                    visible: true
+                },
+                ranges: [{
+                    startWidth: 15,
+                    endWidth: 20,
+                    startValue: 20,
+                    endValue: 50,
+                    startDistance: 1,
+                    endDistance: 1,
+                    style: {
+                        fill: "#BC8A8E",
+                        stroke: "#BC8A8E"
+                    }
+                }
+                ],
+                face: {
+                    style: {
+                        fill: "#E0E8EF",
+                        stroke: "#E0E8EF"
+                    }
+                },
+                pointer: {
+                    length: 1,
+                    style: {
+                        fill: "#BF551C",
+                        stroke: "#BF551C"
+                    }
+                },
+                cap: {
+                    style: {
+                        fill: "#7F9CAD",
+                        stroke: "#7F9CAD"
+                    }
+                }
+            });
+
+            $("#applyOption").click(function() {
+                var option = {}, pointer = {}, label = {}, tick = {}, range1 = {};
+                pointer.length = getInputNum("p_length");
+                pointer.offset = getInputNum("p_offset");
+                label.offset = getInputNum("l_offset");
+                tick.offset = getInputNum("t_offset");
+                tick.position = $("#t_position").val();
+                range1 = $("#gauge").wijradialgauge("option", "ranges")[0];
+                range1.startDistance = getInputNum("rs_distance");
+                range1.endDistance = getInputNum("re_distance");
+
+                option.pointer = pointer;
+                option.labels = label;
+                option.tickMinor = tick;
+                option.tickMajor = tick;
+                option.ranges = [];
+                option.ranges[0] = range1;
+
+                $("#gauge").wijradialgauge("option", option);
+            });
+
+            var getInputNum = function(id) {
+                var val = $("#" + id).val();
+                return val ? parseFloat(val) : undefined;
+            }
+        });
+    
+    </script>
+
+</head>
+
+    <body class="demo-single">
+        <div class="container">
+            <div class="header">
+                <h2>
+                    Position</h2>
+            </div>
+            <div class="main demo">
+                <!-- Begin demo markup -->
+                <div id="gauge">
+                </div>
+                <!-- End demo markup -->
+                <div class="demo-options">
+                    <!-- Begin options markup -->
+                    <div>
+                        <p>
+                            pointer</p>
+                        Length:<input id="p_length" type="text" />
+                        Offset:<input id="p_offset" type="text" />
+                        <p>
+                            label</p>
+                        Offset:<input id="l_offset" type="text" />
+                        <p>
+                            tick</p>
+                        Offset:<input id="t_offset" type="text" />
+                        Position:<select id="t_position"><option value="inside">Inside</option>
+                            <option value="outside">Outside</option>
+                        </select>
+                        <p>
+                            range1</p>
+                        start Distance<input id="rs_distance" type="text" />
+                        end Distance<input id="re_distance" type="text" />
+                        <br />
+                        <input id="applyOption" type="button" value="Apply" />
+                    </div>
+                    <!-- End options markup -->
+                </div>
+            </div>
+            <div class="footer demo-description">
+                <p>This sample shows how to use the tickMajor and tickMinor options' child option, position, to set the marker's position.</p>
+                <p>The position option can be set to inside or outside.</p>
+            </div>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Wijmo Example Page</title>
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-208280-14']);
+            _gaq.push(['_trackPageview']);
+
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+
+    </script>
+    <link href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" rel="stylesheet" />
+    <!--jQuery References-->
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.8.17/jquery-ui.min.js" type="text/javascript"></script>
+    <!--Wijmo Widgets CSS-->
+    <link href="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.0.0.min.css" rel="stylesheet" type="text/css" />
+    <!--Wijmo Widgets JavaScript-->
+    <script src="http://cdn.wijmo.com/jquery.wijmo-open.all.2.0.0.min.js" type="text/javascript"></script>
+    <script src="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.0.0.min.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+    <meta name="viewport" content="width=device-width">
+    <script type="text/javascript">
+        //demo page script
+        var dashboard = {};
+
+        dashboard.currentCategory = "";
+        dashboard.currentStyle = "";
+
+        dashboard.init = function () {
+            $("#productchart").wijbarchart({
+                showChartLabels: true,
+                horizontal: true,
+                axis: {
+                    x: {
+                        labels: {
+                            width: 80,
+                            textAlign: "near"
+                        }
+                    }
+                },
+                seriesTransition: {
+                    enabled: false
+                },
+                legend: {
+                    visible: false
+                },
+                hint: {
+                    visible: false
+                },
+                seriesStyles: [{
+                    fill: "#0055cc"
+                }]
+            });
+
+            $.ajax({
+                url: "http://services.odata.org/Northwind/Northwind.svc/Category_Sales_for_1997?$format=json&$orderby=CategorySales%20desc&$top=10",
+                dataType: "jsonp",
+                jsonp: "$callback",
+                success: function (results) {
+                    data = results.d;
+                    var series = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var slice = {
+                            label: data[i].CategoryName,
+                            legendEntry: true,
+                            data: parseFloat(data[i].CategorySales)
+                        };
+                        series.push(slice);
+                    }
+                    $("#categorychart").wijpiechart({
+                        hint: {
+                            visible: false
+                        },
+                        legend: {
+                            visible: true
+                        },
+                        showChartLabels: false,
+                        seriesList: series,
+                        seriesStyles: [{
+                            fill: "180-rgb(255,15,3)-rgb(212,10,0)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(255,102,0)-rgb(255,117,25)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(255,158,1)-rgb(255,177,53)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(252,210,2)-rgb(255,215,29)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(248,255,1)-rgb(248,255,39)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(189,240,10)-rgb(176,222,9)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(4,210,21)-rgb(6,224,21)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(13,142,207)-rgb(17,157,229)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(13,82,209)-rgb(14,94,226)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }, {
+                            fill: "90-rgb(42,12,208)-rgb(50,15,225)", stroke: "#FFFFFF", "stroke-width": "2"
+                        }],
+                        click: function (e, data) {
+                            if (data.label) {
+                                dashboard.currentCategory = data.label;
+                                dashboard.currentStyle = $("#categorychart").wijpiechart("option", "seriesStyles")[data.index];
+                                dashboard.categoryChanged();
+                            }
+                        }
+                    });
+                    dashboard.currentCategory = data[0].CategoryName;
+                    dashboard.currentStyle = $("#categorychart").wijpiechart("option", "seriesStyles")[0];
+                    dashboard.categoryChanged();
+                }
+            });
+        };
+
+        dashboard.categoryChanged = function () {
+            $.ajax({
+                url: "http://services.odata.org/Northwind/Northwind.svc/Product_Sales_for_1997?$format=json&$orderby=ProductSales%20desc&$top=5&$filter=CategoryName%20eq%20'" + dashboard.currentCategory + "'",
+                dataType: "jsonp",
+                jsonp: "$callback",
+                success: function (results) {
+                    data = results.d;
+                    var xseries = [];
+                    var yseries = [];
+                    var series = [];
+                    for (var i = 0; i < data.length; i++) {
+                        xseries.push(data[i].ProductName);
+                        yseries.push(parseFloat(data[i].ProductSales));
+                    }
+                    series = [{
+                        label: "Sales",
+                        legendEntry: true,
+                        data: {
+                            x: xseries,
+                            y: yseries
+                        }
+                    }];
+                    $("#productchart").wijbarchart("option", "seriesList", series);
+                    var newStyle = [];
+                    newStyle.push(dashboard.currentStyle);
+                    $("#productchart").wijbarchart("option", "seriesStyles", newStyle);
+                }
+            });
+        };
+
+        $(document).ready(function () {
+            dashboard.init();
+            $(window).resize(function () {
+                $("#categorychart").wijpiechart("redraw");
+                $("#productchart").wijbarchart("redraw");
+            });
+        });
+       
+    </script>
+    <style type="text/css">
+        .flexy-chart
+        {
+            width: 100%;
+            height: 200px;
+        }
+        @media screen and (min-width: 480px)
+        {
+            .flexy-chart
+            {
+                height: 360px;
+            }
+        }
+        @media screen and (min-width: 720px)
+        {
+            .flexy-chart
+            {
+                height: 480px;
+            }
+        }
+        @media screen and (min-width: 1024px)
+        {
+            .flexy-chart
+            {
+                height: 700px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="listView" data-role="page">
+        <div data-role="header">
+            <h1>
+                Dashboard</h1>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true">
+                <li data-role="list-divider">Top Sales Categories</li>
+                <li>Click slice for details below</li>
+                <li>
+                    <div id="categorychart" class="flexy-chart">
+                    </div>
+                </li>
+                <li data-role="list-divider">Top Products in Category</li>
+                <li>
+                    <div id="productchart" class="flexy-chart">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
