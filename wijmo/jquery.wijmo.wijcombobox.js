@@ -1,7 +1,7 @@
 /*globals jQuery,window,document*/
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -384,6 +384,10 @@
 			t._initDropDownList();
 			t.repaint();
 			t._checkSelectIndex();
+			
+			if (t._usingRemoteData() && t.options.data){
+				t.originalDataSourceLoaded = t.options.data.loaded;
+			}
 		},
 
 		_checkSelectIndex: function () {
@@ -675,7 +679,7 @@
 				},
 				blur: function (e, item) {
 					var d = item.element;
-					if (o.columns.length > 0) {
+					if (o.columns.length > 0 && d) {
 						d.find(".wijmo-wijcombobox-row>.wijmo-wijcombobox-cell")
 						.removeClass("ui-state-hover");
 						d.prev().removeClass("wijmo-wijcombobox-active-prev");
@@ -720,6 +724,13 @@
 					$.each(item.cells, function (index, cell) {
 						var l = $("<li class='wijmo-wijcombobox-cell " +
 						"ui-state-default'></li>");
+						//Fix a bug that columns.width doesn't work.
+						if (o.columns && o.columns.length > index) {
+							if (typeof o.columns[index].width !== "undefined") {
+								l.width(o.columns[index].width);
+							}
+						}
+						//end comments.
 						l.append(cell);
 						l.attr("title", cell);
 						u.append(l);
@@ -1243,7 +1254,12 @@
 						return;
 					}
 					self._hideShowArrow(false);
-					datasource.loaded = self._onListLoaded;
+					//update for: datasource loaded event don't fired
+					// in combobox
+					datasource.loaded = function(e, data){
+						self._onListLoaded(e, data);
+						self.originalDataSourceLoaded(e, data);
+					};
 					datasource.load(d);
 				}
 			}
@@ -1557,7 +1573,11 @@
 					return origCloseOnClick(e);
 				};
 			}
-			$(document).bind("click", self, self.closeOnClick);
+			//update for issue 2012/6/14: place combobox in expander
+			//open the dropdown, then collapse the expander
+			//the dropdown is still open
+			//$(document).bind("click", self, self.closeOnClick);
+			$(document).bind("mouseup", self, self.closeOnClick);
 		},
 
 		closeOnClick: function (e) {

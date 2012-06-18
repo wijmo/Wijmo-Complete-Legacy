@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window, navigator*/
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -374,6 +374,8 @@
 							chartsSeriesStyle[chartsSeries.length - 1 - i] :
 							chartsSeriesStyle[i],
 						style = $.extend(true, {}, seriesStyle),
+						leg = o.legend.textWidth ? 
+							self.legends[idx][0] : self.legends[idx],
 						dot;
 					if (style.stroke && !style.fill) {
 						style.fill = style.stroke;
@@ -400,12 +402,12 @@
 						dot.attr(style);
 						self.legendDots.push(dot);
 						$(dot.node).data("legendIndex",
-							$(self.legends[idx].node).data("legendIndex"))
-							.data("index", $(self.legends[idx].node).data("index"));
+							$(leg.node).data("legendIndex"))
+							.data("index", $(leg.node).data("index"));
 						self.legendEles.push(dot);
 						if (chartSeries.visible === false) {
-							$(self.legends[i].node).data("dotOpacity",
-							dot.attr("opacity") || 1);
+							$(leg.node).data("dotOpacity",
+									dot.attr("opacity") || 1);
 							dot.attr("opacity", 0.3);
 						}
 						idx++;

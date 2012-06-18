@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -586,7 +586,7 @@
         _onKeyDown: function (e) {
             this.element.data('prevCursorPos', -1);
 
-            if (!this._isInitialized()) { return; }
+            if (!this._isInitialized() || (this._textProvider && !!this._textProvider.noMask)) { return; }
 
             var k = this._getKeyCode(e);
             if (k === 229) { // Double Bytes
@@ -665,7 +665,7 @@
         },
 
         _onKeyUp: function (e) {
-            if (this._isSimulating()) { return; }
+            if (this._isSimulating() || (this._textProvider && !!this._textProvider.noMask)) { return; }
             var k = this._getKeyCode(e);
 
             if (!this._isInitialized()) { return; }
@@ -694,7 +694,7 @@
         },
 
         _onKeyPress: function (e) {
-            if (this._isSimulating()) { return; }
+            if (this._isSimulating() || (this._textProvider && !!this._textProvider.noMask)) { return; }
             this.element.data('prevCursorPos', -1);
 
             if (this.options.disableUserInput) { return; }
@@ -728,7 +728,7 @@
             var selRange = this.element.wijtextselection();
             var ch = String.fromCharCode(key);
             if (selRange.start < selRange.end) {
-                this._textProvider.removeAt(selRange.start, selRange.end - 1, new wijInputResult());
+                this._textProvider.removeAt(selRange.start, selRange.end - 1, new wijInputResult(), true);
             }
             var rh = new wijInputResult();
             var opResult = this._textProvider.insertAt(ch, selRange.start, rh);
@@ -838,6 +838,7 @@
         },
 
         _onPaste: function (e) {
+			if (this._textProvider && !!this._textProvider.noMask) { return; };
             this._beforeSimulate();
             var self = this;
             window.setTimeout(function () {

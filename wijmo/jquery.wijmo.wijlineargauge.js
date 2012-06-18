@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -267,7 +267,7 @@
 				}
 				else {
 					markEle = $.wijgauge.paintMarker(self.canvas, marker,
-						point.x, point.y, length, width);					
+						point.x, point.y, length, width);
 				}
 			}
 			markEle.attr(style);
@@ -396,42 +396,48 @@
 
 		_setPointer: function () {
 			var self = this,
-				o = self.options,
-				orientation = o.orientation,
-				fromValue = orientation === "horizontal" ?
-					self._minScreenPoint(0).x : self._minScreenPoint(0).y,
-				endValue = orientation === "horizontal" ?
-					self._maxScreenPoint(0).x : self._maxScreenPoint(0).y;
+				o = self.options;
+			//				orientation = o.orientation,
+			//				fromValue = orientation === "horizontal" ?
+			//					self._minScreenPoint(0).x : self._minScreenPoint(0).y,
+			//				endValue = orientation === "horizontal" ?
+			//					self._maxScreenPoint(0).x : self._maxScreenPoint(0).y;
 
 			if (!self.pointer) {
 				return;
 			}
 			$.wijmo.wijgauge.prototype._setPointer.apply(this, arguments);
-			self._setLinearPointer(fromValue, endValue, o.value);
+			self._setLinearPointer(o.value);
 		},
 
-		_setLinearPointer: function (fromValue, endValue, value) {
+		_setLinearPointer: function (value) {
 			var self = this,
 				o = self.options,
+				startPoint = self._valueToPoint(0, 0),
 				endPoint = self._valueToPoint(value, 0),
-				fromBbox = self.pointer.wijGetBBox(),
+//				fromBbox = self.pointer.wijGetBBox(),
 				animation = o.animation,
 				translation = { x: 0, y: 0 };
+
+			// if use the transform("..."), the memeroy may leak. 
+			// Using the absolute path instead of it.
 			if (o.orientation === "horizontal") {
-				translation.x = endPoint.x - fromBbox.x - fromBbox.width / 2;
+				//translation.x = endPoint.x - fromBbox.x - fromBbox.width / 2;
+				translation.x = endPoint.x - startPoint.x;
 			}
 			else {
-				translation.y = endPoint.y - fromBbox.y - fromBbox.height / 2;
+				//translation.y = endPoint.y - fromBbox.y - fromBbox.height / 2;
+				translation.y = endPoint.y - startPoint.y;
 			}
 			if (animation.enabled) {
 				self.pointer.stop()
-					.wijAnimate({ transform: "...t" + translation.x +
+					.wijAnimate({ transform: "t" + translation.x +
 						"," + translation.y
 					},
 					animation.duration, animation.easing);
 			}
 			else {
-				self.pointer.attr("transform", "...t" +
+				self.pointer.attr("transform", "t" +
 					translation.x + "," + translation.y);
 			}
 		},

@@ -2,7 +2,7 @@
 
 /*
 * 
-* Wijmo Library 2.1.0
+* Wijmo Library 2.1.1
 * http://wijmo.com/
 * 
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -280,7 +280,7 @@
 
 			iframe.bind("load", function (e) {
 				if (!$.browser.safari) {
-					if (isFirstLoad) {
+					if (isFirstLoad && !self.autoSubmit) {
 						isFirstLoad = false;
 						return;
 					}
@@ -982,6 +982,7 @@
 					if (self.options.autoSubmit) {
 						//when autoSubmit set to "true", will trigger "totalUpload" immediately.
 						self.uploadAll = true;
+						uploader.autoSubmit = true;
 						if (self._trigger("totalUpload", e, null) === false) {
 							return false;
 						}

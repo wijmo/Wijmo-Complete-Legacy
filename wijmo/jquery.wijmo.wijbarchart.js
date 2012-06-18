@@ -1,7 +1,7 @@
 /*globals jQuery, Globalize*/
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -514,6 +514,7 @@
 				is100Percent: o.is100Percent,
 				clusterRadius: o.clusterRadius,
 				animation: o.animation,
+				culture: self._getCulture(),
 				isYTime: self.axisInfo.y[0].isTime,
 				isXTime: self.axisInfo.x.isTime,
 				mouseDown: $.proxy(self._mouseDown, self),
@@ -708,7 +709,8 @@
 			//chartLabels = chartElements.chartLabels,
 				clusterInfos,
 				isYTime = options.isYTime,
-				isXTime = options.isXTime;
+				isXTime = options.isXTime,
+				culture = options.culture;
 
 
 
@@ -869,7 +871,7 @@
 
 				if (chartLabelFormatString && chartLabelFormatString.length) {
 					//text = $.format(text, o.chartLabelFormatString);
-					text = Globalize.format(text, options.chartLabelFormatString);
+					text = Globalize.format(text, options.chartLabelFormatString, culture);
 				} else if (!isTime) {
 					text = $.round(text, 2);
 				}

@@ -1,7 +1,7 @@
 /*globals jQuery window */
 /*
 *
-* Wijmo Library 2.1.0
+* Wijmo Library 2.1.1
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -1602,6 +1602,10 @@
                 completeCallback,
                 css = {}, to;
 
+			if (!self.list.children().length) {
+				return;
+			}
+
 			if (action === "next") {
 				to = self.currentIdx + scrolled;
 			}
@@ -1664,6 +1668,7 @@
 			if (!o.loop) {
 				shouldPlay = (idx + o.display) < self.count;
 				if (self.isPlaying && shouldPlay) {
+					window.clearTimeout(self.timeout);
 					self.timeout = null;
 					self.isPlaying = false;
 					self.play();
@@ -1675,6 +1680,7 @@
 
 			}
 			else if (self.isPlaying) {
+				window.clearTimeout(self.timeout);
 				self.timeout = null;
 				self.isPlaying = false;
 				self.play();

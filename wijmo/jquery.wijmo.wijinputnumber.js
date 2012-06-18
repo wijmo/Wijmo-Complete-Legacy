@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -166,7 +166,7 @@
 		 },
 
 		 _validateData: function () {
-			 if (this._textProvider.checkAndRepairBounds(true, false)) {
+			 if (!this._textProvider.checkAndRepairBounds(true, false)) {
 				 this._updateText();
 			 }
 		 },
@@ -438,21 +438,21 @@
 			 if (slicePos > currentText.length) {
 				 slicePos = currentText.length - 1;
 			 }
-			 if (input.length === 1) {
-				 if (currentText.charAt(slicePos) === input) {
-					 rh.testPosition = slicePos;
-					 return true;
-				 }
-			 }
+			 // if (input.length === 1) {
+				 // if (currentText.charAt(slicePos) === input) {
+					 // rh.testPosition = slicePos;
+					 // return true;
+				 // }
+			 // }
 			 var beginText = currentText.substring(0, slicePos);
 			 var endText = currentText.substring(slicePos, currentText.length);
 			 if (this._stringFormat.isZero()) {
-				 endText = endText.replace(new RegExp('[0]'), '');
+				 //endText = endText.replace(new RegExp('[0]'), '');
 			 }
 
 			 rh.testPosition = beginText.length + input.length - 1;
 			 this._stringFormat.deFormatValue(beginText + input + endText);
-			 this.checkAndRepairBounds(true, false);
+			 //this.checkAndRepairBounds(true, false);
 			 try {
 				 if (input.length === 1) {
 					 if (this.inputWidget.options.showGroup) {
@@ -476,10 +476,11 @@
 			 return true;
 		 },
 
-		 removeAt: function (start, end, rh) {
+		 removeAt: function (start, end, rh, skipCheck) {
 			 var nf = this._getCulture().numberFormat;
 
 			 if (!rh) { rh = new wijInputResult(); }
+			 skipCheck = !!skipCheck;
 			 rh.testPosition = start;
 			 try {
 				 var curText = this._stringFormat._currentText;
@@ -502,12 +503,18 @@
 					 catch (e1) {
 					 }
 				 }
-				 this.checkAndRepairBounds(true, false);
+				 
+				 // if (!skipCheck){
+					// this.checkAndRepairBounds(true, false);
+				 // }
 				 return true;
 			 }
 			 catch (e2) {
 			 }
-			 this.checkAndRepairBounds(true, false);
+			 
+			 // if (!skipCheck){
+				// this.checkAndRepairBounds(true, false);
+			 // }
 			 return true;
 		 },
 

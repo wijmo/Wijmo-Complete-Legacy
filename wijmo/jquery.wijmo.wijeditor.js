@@ -1,6 +1,6 @@
 /*globals jQuery, alert, document, window, setTimeout, $, Components, netscape */
 /*
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -265,6 +265,11 @@
 		css_linkdlg_text = css_linkdlg + "-text",
 		css_linkdlg_target = css_linkdlg + "-target",
 		css_linkdlg_css = css_linkdlg + "-css",
+		css_linkdlg_url = css_linkdlg + "-src",
+		css_linkdlg_width = css_linkdlg + "-width",
+		css_linkdlg_height = css_linkdlg + "-height",
+		css_linkdlg_imagecontainer = css_linkdlg + "-imagecontainer",
+		css_linkdlg_linkicontype = css_linkdlg + "-linkicontype",
 
 		css_codedlg = css_editor + "-codedlg",
 		css_codedlg_source = css_codedlg + "-source",
@@ -750,7 +755,7 @@
 			/// "SubScript","SuperScript","Template","RemoveFormat","InsertBreak",
 			/// "InsertParagraph","InsertPrint","InsertHR","Undo","Redo","Preview","Cleanup",
 			/// "Cut","Copy","Paste","SelectAll","Media","InsertSpecialChar","InsertDate","Find",
-			/// "Inspect","Spelling","InsertImage","Link","FontName","FontSize","BlockQuote","InsertCode"
+			/// "Inspect","InsertImage","Link","FontName","FontSize","BlockQuote","InsertCode"
 			/// The default simple mode commands are:
 			/// ["Bold", "Italic", "Link", "BlockQuote",
 			/// "StrikeThrough", "InsertDate", "InsertImage",
@@ -3992,7 +3997,13 @@
 		},
 
 		imageUrlChanged: function (element) {
-			$('img', this.dialog).attr("src", $(element).val()).show();
+			var $dlg = self.dialog;
+			
+			$('img', this.dialog).attr("src", $(element).val()).show()
+			.bind("load", function(){
+				$("." + css_imgdlg_width + " input", $dlg).val($('img', $dlg).width());
+				$("." + css_imgdlg_height + " input", $dlg).val($('img', $dlg).height());
+			});
 		},
 
 		imageListOnChanged: function () {
@@ -4056,6 +4067,10 @@
 			var self = this,
 			$dlg = self.dialog,
 			address = self.getLinkHrefField(),
+			$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
+			iconTypeIsImg,
+			linkInnerHtml,
+			$img,
 			$address = $("." + css_linkdlg_address + " input", $dlg);
 
 			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
@@ -4073,16 +4088,52 @@
 			.delegate("." + css_linkdlg_linktype + ">div", "click." + self.widgetName,
 			function () {
 				self.radioListOnChanged();
+			}).delegate("." + css_linkdlg_linkicontype+ ">div", "click." + self.widgetName,
+			function () {
+				self.linkIconTypeOnChanged();
+			}).delegate("." + css_linkdlg_url + " input", "change." + self.widgetName,
+			function () {
+				self.tempImg = $('<img src="' + 
+						$("." + css_linkdlg_url + " input", $dlg).val() + 
+						'">').appendTo("body");
+				wijWindow.setTimeout(function () {
+					$("." + css_linkdlg_width + " input", $dlg).val(self.tempImg.width());
+					$("." + css_linkdlg_height + " input", $dlg).val(self.tempImg.height());
+					self.tempImg.remove();
+					self.tempImg = undefined;
+				}, 200);			
 			});
 
-			try {
+			try {				
 				$address.val(address);
-				$("." + css_linkdlg_text + " input", $dlg).val(self._getLinkInnerHTML());
-				$("." + css_linkdlg_css + " input", $dlg).val(self._getLinkCssField());
-				$("." + css_linkdlg_target + " select", $dlg).val(self._getLinkTarget());
+				linkInnerHtml = self._getLinkInnerHTML();
 			} catch (e) { }
+			
+			$img = $(linkInnerHtml);
+			if (linkInnerHtml&& linkInnerHtml.substring(0, 3) === '<img') {
+				iconTypeIsImg = true;
+			} else {
+				iconTypeIsImg = false;
+			}	
+				
+			if (!iconTypeIsImg) {
+				$("." + css_linkdlg_text + " input", $dlg).show();
+				$imageContainer.hide();
+				$("." + css_linkdlg_text + " input", $dlg).val(linkInnerHtml);
+			} else {
+				$imageContainer.show();
+				$("." + css_linkdlg_text + " input", $dlg).hide();
+				$("." + css_linkdlg_url + " input", $dlg).val($img.attr("src"));
+				$("." + css_linkdlg_width + " input", $dlg).val($img.attr("width"));
+				$("." + css_linkdlg_height + " input", $dlg).val($img.attr("heigth"));
+			}
+				
+			$("." + css_linkdlg_css + " input", $dlg).val(self._getLinkCssField());
+			$("." + css_linkdlg_target + " select", $dlg).val(self._getLinkTarget());
+			
 
 			$("#radAnchor", $dlg).attr("checked", "checked");
+			$("#radLinkTypeIsText", $dlg).attr("checked", "checked");
 			if (address.length > 6) {
 				if (address.substring(0, 4) === 'http') {
 					$("#radUrl", $dlg).attr("checked", "checked");
@@ -4096,7 +4147,7 @@
 	    			}
 				}
 			}
-
+			$img = undefined; 
 		},
 
 		_getLinkInnerHTML: function () {
@@ -4169,6 +4220,11 @@
 		address = $address.val(),
 		text = $text.val(),
 		target = $target.val(),
+		$radImage = $("#radLinkTypeIsImage", $dlg),
+		imageChecked = $radImage.attr("checked"),
+		imageUrl = $("." + css_linkdlg_url + " input", $dlg).val(),
+		imageWidth = $("." + css_linkdlg_width + " input", $dlg).val(),
+		imageHeight = $("." + css_linkdlg_height + " input", $dlg).val(),
 		css = $css.val();
 
 			if (address === '') {
@@ -4176,8 +4232,23 @@
 				return;
 			}
 
-			if (text === '') {
+			if (text === '' && !imageChecked) {
 				wijAlert('Please input display text!');
+				return;
+			}
+			
+			if (imageUrl === '' && imageChecked) {
+				wijAlert('Please input image url!');
+				return;
+			}
+			
+			if (!self._isNumeric(imageWidth) && imageChecked) {
+				wijAlert('Please input correct image width!');
+				return;
+			}
+			
+			if (!self._isNumeric(imageHeight) && imageChecked) {
+				wijAlert('Please input correct image height!');
 				return;
 			}
 
@@ -4187,6 +4258,12 @@
 				return;
 			}
 
+			if (imageChecked) {
+				text = '<img src="' + imageUrl + '" width="' +
+				imageWidth + '" height="' + imageHeight;
+				text += '"/>';
+			}
+			
 			self._editLink(text, address, css, target);
 			self._closeDialog();
 		},
@@ -4240,6 +4317,8 @@
 			var self = this,
 		$dlg = self.dialog,
 		$anchor = $("." + css_linkdlg_anchor, $dlg),
+		$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
+		$text = $("." + css_linkdlg_text, $dlg),
 		$address = $("." + css_linkdlg_address + " input", $dlg);
 
 			$address.val("");
@@ -4253,7 +4332,23 @@
 				$address.val('mailto:');
 			} else if ($("#radFile", $dlg).is(":checked")) {
 				$anchor.hide();
-			}
+			} 
+		},
+		
+		linkIconTypeOnChanged: function () {
+			var self = this,
+		$dlg = self.dialog,
+		$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
+		$anchor = $("." + css_linkdlg_anchor, $dlg),
+		$text = $("." + css_linkdlg_text, $dlg);
+
+			if ($("#radLinkTypeIsText", $dlg).is(":checked")) {
+				$text.show();
+				$imageContainer.hide();
+			} else if ($("#radLinkTypeIsImage", $dlg).is(":checked")) {
+				$text.hide();
+				$imageContainer.show();
+			} 
 		},
 		//end of link dialog.
 
@@ -6078,13 +6173,19 @@
 			var self = this,
 			dialog = self._createDiv(css_linkdlg),
 			address = self._createTextField("Address :", css_linkdlg_address),
-			linktype = self._createDiv(css_linkdlg_linktype),
+			linktype = self._createDiv(css_linkdlg_linktype + " ui-helper-clearfix"),
 			linktypecontainer = self._createElement("div"),
+			imageContainer = self._createDiv(css_linkdlg_imagecontainer),
+			linkIconTypeOuterContainer = self._createDiv(css_linkdlg_linkicontype),
+			linkIconTypeContainer = self._createElement("div"),
 			radioArr = [{ id: "radUrl", value: "url" },
 				{ id: "radAnchor", value: "anchor", checked: true },
 				{ id: "radMail", value: "email"}],
+			linkIconType = [{ id: "radLinkTypeIsText", value: "text", checked: true },
+							{ id: "radLinkTypeIsImage", value: "image"}],
 			linkTypeOptions = [],
 			text = self._createTextField("Text to display :", css_linkdlg_text),
+			inconTypeSpan = self._createSpan(css_dlg_text, "Icon type :"),
 			target = self._createDiv(css_linkdlg_target),
 			targetSpan = self._createSpan(css_dlg_text, "Target :"),
 			targetOption = [{ text: "_blank", selected: true },
@@ -6093,14 +6194,27 @@
 			css = self._createTextField("Css :", css_linkdlg_css),
 			idx;
 
+			imageContainer.add(self._createTextField("Image src:", css_linkdlg_url));
+			imageContainer.add(self._createTextField("Image width:", css_linkdlg_width, "px"));
+			imageContainer.add(self._createTextField("Image height:", css_linkdlg_height, "px"));
+			
 			dialog.add(address);
 			dialog.add(linktype);
 			linktype.add(linktypecontainer);
+			
+			linkIconTypeOuterContainer.add(linkIconTypeContainer);
+			linkIconTypeContainer.add(inconTypeSpan);
 
 			$.each(radioArr, function (idx, radio) {
 				linktypecontainer.add(self._createRadio(radio.id, "radioList",
 				radio.value));
 				linktypecontainer.add(self._createLabel(radio.value, radio.id));
+			});
+			
+			$.each(linkIconType, function (idx, radio) {
+				linkIconTypeContainer.add(self._createRadio(radio.id, "linkIconRadioList",
+				radio.value));
+				linkIconTypeContainer.add(self._createLabel(radio.value, radio.id));
 			});
 
 			for (idx = 1; idx < 8; idx++) {
@@ -6109,7 +6223,9 @@
 			linktype.add(self._createSelect(css_linkdlg_anchor, linkTypeOptions));
 
 			dialog.add(self._createSeparator());
+			dialog.add(linkIconTypeOuterContainer);
 			dialog.add(text);
+			dialog.add(imageContainer);
 			dialog.add(target);
 
 			target.add(targetSpan);

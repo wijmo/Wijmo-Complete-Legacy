@@ -10,7 +10,7 @@ amplify*/
 
 /*
 *
-* Wijmo Library 2.1.0
+* Wijmo Library 2.1.1
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -197,8 +197,9 @@ block comments:
 		///					the pattern is considered infinite and "noEndDate" is true.
 		///				exceptions - Array, holds the list of event object ids that 
 		///					define the exceptions to that series of events. 
+		///					This field is read-only.
 		///				removedOccurrences - Array, holds the list of event object's ids
-		///					removed from that series of events. 
+		///					removed from that series of events.
 
 
 
@@ -635,7 +636,7 @@ block comments:
 			eventTitleFormat: "{2}",
 
 			/// <summary>
-			/// The title text format that will be shown under header bar. /qq:remove
+			/// The title text format that will be shown under header bar.
 			/// {0} = start date. {1} = end date.
 			/// Default: { 
 			///			day: false,
@@ -1143,12 +1144,12 @@ block comments:
 			switch (key) {
 				case "eventsData":
 					o.eventsData = value;
-					o.appointments = value; //qq:remove deprecated appointments option?
+					o.appointments = value; //remove deprecated appointments option?
 					this._onEventsDataChanged();
 					break;
 				case "appointments":
 					o.eventsData = value;
-					o.appointments = value; //qq:remove deprecated appointments option?
+					o.appointments = value; //remove deprecated appointments option?
 					this._onEventsDataChanged();
 					break;
 				case "disabled":
@@ -1321,6 +1322,10 @@ block comments:
 			//("buttonToday", "today")
 		},
 		_create: function () {
+			// enable touch support:
+			if ($.isFunction(window.wijmoApplyWijTouchUtilEvents)) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 			// Add for parse date options for jUICE. D.H
 			if ($.isFunction(window.wijmoASPNetParseOptions)) {
 				wijmoASPNetParseOptions(this.options);
@@ -2184,50 +2189,35 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												appt.recurrenceState = "master";
 												appt.recurrencePattern = {
 													parentRecurrenceId: appt.id,
-													recurrenceType: "daily",
-													startTime: appt.start,
-													endTime: appt.end,
-													patternStartDate: appt.start
+													recurrenceType: "daily"
 												};
 												break;
 											case "workdays":
 												appt.recurrenceState = "master";
 												appt.recurrencePattern = {
 													parentRecurrenceId: appt.id,
-													recurrenceType: "workdays",
-													startTime: appt.start,
-													endTime: appt.end,
-													patternStartDate: appt.start
+													recurrenceType: "workdays"
 												};
 												break;
 											case "weekly":
 												appt.recurrenceState = "master";
 												appt.recurrencePattern = {
 													parentRecurrenceId: appt.id,
-													recurrenceType: "weekly",
-													startTime: appt.start,
-													endTime: appt.end,
-													patternStartDate: appt.start
+													recurrenceType: "weekly"
 												};
 												break;
 											case "monthly":
 												appt.recurrenceState = "master";
 												appt.recurrencePattern = {
 													parentRecurrenceId: appt.id,
-													recurrenceType: "monthly",
-													startTime: appt.start,
-													endTime: appt.end,
-													patternStartDate: appt.start
+													recurrenceType: "monthly"
 												};
 												break;
 											case "yearly":
 												appt.recurrenceState = "master";
 												appt.recurrencePattern = {
 													parentRecurrenceId: appt.id,
-													recurrenceType: "yearly",
-													startTime: appt.start,
-													endTime: appt.end,
-													patternStartDate: appt.start
+													recurrenceType: "yearly"
 												};
 												break;
 											case "custom":
@@ -2308,7 +2298,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		},
 
 		_validateAndReadApptDialogFields: function (dlg, appt) {
-			var startDate, endDate, startTime, endTime;
+			var startDate, endDate, startTime, endTime, recurrencePattern;
 			startDate = _toDayDate(dlg.find(".wijmo-wijev-start").wijinputdate("option", "date"));
 			endDate = _toDayDate(dlg.find(".wijmo-wijev-end").wijinputdate("option", "date"));
 			startTime = dlg.find(".wijmo-wijev-start-time")
@@ -2320,7 +2310,6 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 						&& startTime.getTime() > endTime.getTime()) {
 				throw "The end date you entered occurs before the start date.";
 			}
-
 			appt.subject = dlg.find(".wijmo-wijev-subject").val();
 			appt.location = dlg.find(".wijmo-wijev-location").val();
 			appt.start = startDate;
@@ -2340,6 +2329,14 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 								appt.end.getMonth(), appt.end.getDate(),
 							endTime.getHours(), endTime.getMinutes(),
 							endTime.getSeconds());
+			} else {
+				if (appt.start.getTime() >= appt.end.getTime()) {
+					// duration can not be 0.
+					// fix for [22972] Newly created allday events are not 
+					// visible for all views except list view until page refresh:
+					appt.end = this._addMinutes(appt.start, this.options.timeInterval);
+				}
+
 			}
 
 			appt.calendar = dlg.find(".wijmo-wijev-calendar").val();
@@ -2347,6 +2344,14 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 			appt.color = this._readColorFromClass(dlg.find(".wijmo-wijev-color"),
 																		appt.color);
 
+			// update recurrence pattern fields:			
+			recurrencePattern = appt.recurrencePattern;
+			if (recurrencePattern && appt.recurrenceState === "master") {
+				// fix for 22970:
+				recurrencePattern.startTime = appt.start;
+				recurrencePattern.endTime = appt.end;
+				recurrencePattern.patternStartDate = appt.start;
+			}
 		},
 
 		_bindApptToDialog: function (appt) {
@@ -2379,6 +2384,11 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 															appt.calendar);
 
 			this._loadRepeatValue(appt, dlg.find(".wijmo-wijev-repeat"));
+			if (appt.recurrenceState === "exception") {
+				dlg.find(".wijmo-wijev-repeat").wijdropdown("option", "disabled", true);
+			} else {
+				dlg.find(".wijmo-wijev-repeat").wijdropdown("option", "disabled", false);
+			}
 
 			dlg.find(".wijmo-wijev-description")
 							.val(appt.description || "");
@@ -2416,7 +2426,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		},
 		_loadRepeatValue: function (appt, repeatSelect) {
 			var repeatVal = "none";
-			if (appt.recurrenceState === "master" && appt.recurrencePattern) {
+			if (appt.recurrencePattern) {
 				switch (appt.recurrencePattern.recurrenceType) {
 					case "daily":
 						repeatVal = "daily";
@@ -2527,7 +2537,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 
 		_bindEvents: function () {
 			if (!this._eventsAttached) {
-				this.element.find(".wijmo-wijev-appointment")
+				$(this.element).find(".wijmo-wijev-appointment")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onAppointmentClick, this));
 
@@ -2535,30 +2545,30 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				.live("click." + this.wijevcalnamespacekey,
 				$.proxy(this._onAppointmentClick, this));*/
 
-				this.element.find(".wijmo-wijev-dayview .wijmo-wijev-appointment")
+				$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-appointment")
 					.live("mousedown." + this.wijevcalnamespacekey,
 								$.proxy(this._onDayViewAppointmentMouseDown, this));
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-appointment")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-appointment")
 					.live("mousedown." + this.wijevcalnamespacekey,
 								$.proxy(this._onMonthViewAppointmentMouseDown, this));
 
-				this.element.find(".wijmo-wijev-dayview .wijmo-wijev-timeinterval")
+				$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-timeinterval")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onDayViewTimeIntervalClick, this));
-				this.element.find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
+				$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onDayViewAllDayCellClick, this));
 
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcellheader")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcellheader")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onMonthViewDayLabelClick, this));
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcell-showmore")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcell-showmore")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onMonthViewDayLabelClick, this));
-				this.element.find(".wijmo-wijev-weekview .wijmo-wijev-daylabel")
+				$(this.element).find(".wijmo-wijev-weekview .wijmo-wijev-daylabel")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onMonthViewDayLabelClick, this));
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcell")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcell")
 					.live("click." + this.wijevcalnamespacekey,
 								$.proxy(this._onMonthViewCellClick, this));
 
@@ -2569,25 +2579,25 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		},
 		_unbindEvents: function () {
 			if (this._eventsAttached) {
-				this.element.find(".wijmo-wijev-appointment")
+				$(this.element).find(".wijmo-wijev-appointment")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(
+				$(this.element).find(
 				".wijmo-wijev-dayview .wijmo-wijev-daycolumn .wijmo-wijev-appointment")
 					.die("mousedown." + this.wijevcalnamespacekey);
-				this.element.find(
+				$(this.element).find(
 				".wijmo-wijev-dayview .wijmo-wijev-dayheadercolumn .wijmo-wijev-daylabel")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-dayview .wijmo-wijev-timeinterval")
+				$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-timeinterval")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
+				$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcellheader")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcellheader")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcell-showmore")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcell-showmore")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-weekview .wijmo-wijev-daylabel")
+				$(this.element).find(".wijmo-wijev-weekview .wijmo-wijev-daylabel")
 					.die("click." + this.wijevcalnamespacekey);
-				this.element.find(".wijmo-wijev-monthview .wijmo-wijev-monthcell")
+				$(this.element).find(".wijmo-wijev-monthview .wijmo-wijev-monthcell")
 					.die("click." + this.wijevcalnamespacekey);
 				this._eventsAttached = false;
 			}
@@ -3127,7 +3137,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		///	</param>
 		updateEvent: function (o, successCallback, errorCallback) {
 			var updateEventCallback, updateEventErrorCallback, k,
-				self = this;
+				self = this, storeEventFlag;
 			if (!this._trigger("beforeUpdateEvent", null,
 					{ data: o, prevData: o.prevData || {} })) {
 				if (o.prevData) {
@@ -3167,13 +3177,28 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				return;
 			}
 
+			if (o.recurrenceState === "exception" ||
+				o.recurrenceState === "occurrence") {
+				if (!this._eventsDataById[o.parentRecurrenceId]) {
+					updateEventErrorCallback(
+						"Unable to find master event for event with id:" + o.id);
+					return;
+				}
+				if (o.recurrenceState === "occurrence") {
+					this.log(this._formatString(
+	"[updateEvent] recurrenceState for event {0} changed to 'exception'.", o.id));
+					o.recurrenceState = "exception";
+					storeEventFlag = true;
+				}
+			}
+
 			updateEventCallback = function (result) {
 				if (self._handleServerError(result)) {
 					updateEventErrorCallback(result);
 					return;
 				}
 				self._readUpdatedServerDataIfAny(result, o);
-				if (!self._eventsDataById[o.id]) {
+				if (!self._eventsDataById[o.id] || storeEventFlag) {
 					self._storeEventWithSort(o);
 					self.status("Event '" + o.subject + "' added.");
 				} else {
@@ -3363,16 +3388,22 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		/// <param name="end">The Date value which specifies 
 		/// the end date and time of the interval.</param>
 		getOccurrences: function (start, end) {
-			var o = this.options, appts = o.eventsData, appt, occurrenceAppt, pattern,
+			var o = this.options, appts = o.eventsData, appt, occurrenceAppt,
+				exceptionAppt, pattern,
 				i, j, icnt, jcnt, maxOccurrenceCount = 100, patternStart,
-				patternStartTime, patternEndTime, eventsArr = [];
+				patternStartTime, patternEndTime, eventsArr = [],
+				exceptionsArr = [],
+				removedArr = [],
+				occurrenceHash = {};
 			for (i = 0, icnt = appts.length; i < icnt; i += 1) {
 				appt = appts[i];
-				this._eventsDataById[appt.id] = appt; //qq save recurring events as well
+				this._eventsDataById[appt.id] = appt;
 				if (appt.recurrenceState === "master") {
 					pattern = appt.recurrencePattern;
+					if (pattern.removedOccurrences) {
+						removedArr = removedArr.concat(pattern.removedOccurrences);
+					}
 					// populate pattern:
-
 					jcnt = pattern.occurrences || maxOccurrenceCount;
 					patternStart = pattern.patternStartDate || appt.start;
 					patternStartTime = pattern.startTime || appt.start;
@@ -3393,7 +3424,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												patternEndTime, patternStartTime);
 								occurrenceAppt.recurrencePattern = null;
 								if (this._testIsEventInTimeInterval(occurrenceAppt, start, end)) {
-									eventsArr.push(occurrenceAppt);
+									occurrenceAppt.id = this._formatString("{0}_OCCR_{1:yyyy_MM_dd}",
+											appt.id, occurrenceAppt.start);
+									occurrenceHash[occurrenceAppt.id] = occurrenceAppt;
 								}
 							}
 							break;
@@ -3415,7 +3448,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												patternEndTime, patternStartTime);
 								occurrenceAppt.recurrencePattern = null;
 								if (this._testIsEventInTimeInterval(occurrenceAppt, start, end)) {
-									eventsArr.push(occurrenceAppt);
+									occurrenceAppt.id = this._formatString("{0}_OCCR_{1:yyyy_MM_dd}",
+											appt.id, occurrenceAppt.start);
+									occurrenceHash[occurrenceAppt.id] = occurrenceAppt;
 								}
 							}
 							break;
@@ -3432,7 +3467,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												patternEndTime, patternStartTime);
 								occurrenceAppt.recurrencePattern = null;
 								if (this._testIsEventInTimeInterval(occurrenceAppt, start, end)) {
-									eventsArr.push(occurrenceAppt);
+									occurrenceAppt.id = this._formatString("{0}_OCCR_{1:yyyy_MM_dd}",
+											appt.id, occurrenceAppt.start);
+									occurrenceHash[occurrenceAppt.id] = occurrenceAppt;
 								}
 							}
 							break;
@@ -3452,7 +3489,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												patternEndTime, patternStartTime);
 								occurrenceAppt.recurrencePattern = null;
 								if (this._testIsEventInTimeInterval(occurrenceAppt, start, end)) {
-									eventsArr.push(occurrenceAppt);
+									occurrenceAppt.id = this._formatString("{0}_OCCR_{1:yyyy_MM_dd}",
+											appt.id, occurrenceAppt.start);
+									occurrenceHash[occurrenceAppt.id] = occurrenceAppt;
 								}
 							}
 							break;
@@ -3472,7 +3511,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 												patternEndTime, patternStartTime);
 								occurrenceAppt.recurrencePattern = null;
 								if (this._testIsEventInTimeInterval(occurrenceAppt, start, end)) {
-									eventsArr.push(occurrenceAppt);
+									occurrenceAppt.id = this._formatString("{0}_OCCR_{1:yyyy_MM_dd}",
+											appt.id, occurrenceAppt.start);
+									occurrenceHash[occurrenceAppt.id] = occurrenceAppt;
 								}
 							}
 							break;
@@ -3482,15 +3523,47 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 							break;
 					}
 
-					//
-					// qq: take into account exceptions and removed occurrences	
-
 				} else {
+
 					if (this._testIsEventInTimeInterval(appt, start, end)) {
-						eventsArr.push(appt);
+						if (appt.recurrenceState === "exception") {
+							exceptionsArr.push(appt);
+						} else {
+							if (appt.recurrenceState === "removed") {
+								removedArr.push(appt.id);
+								this.log("[warning] Seems we found removed event inside events storage, id:" +
+														appt.id);
+							} else {
+								eventsArr.push(appt);
+							}
+						}
 					}
 				}
 			}
+
+			for (i = 0, icnt = exceptionsArr.length; i < icnt; i += 1) {
+				exceptionAppt = exceptionsArr[i];
+				if (occurrenceHash[exceptionAppt.id]) {
+					delete occurrenceHash[exceptionAppt.id];
+				}
+				eventsArr.push(exceptionAppt);
+				this._eventsDataById[exceptionAppt.id] = exceptionAppt;
+			}
+			for (i = 0, icnt = removedArr.length; i < icnt; i += 1) {
+				if (occurrenceHash[removedArr[i]]) {
+					delete occurrenceHash[removedArr[i]];
+				}
+
+			}
+			for (i in occurrenceHash) {
+				occurrenceAppt = occurrenceHash[i];
+				eventsArr.push(occurrenceAppt);
+				this._eventsDataById[occurrenceAppt.id] = occurrenceAppt;
+
+			}
+
+			//eventsArr.push(occurrenceAppt);									
+			//this._eventsDataById[occurrenceAppt.id] = occurrenceAppt;
 			return eventsArr;
 
 
@@ -3677,7 +3750,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				id = id.id;
 			}
 			var o = this._eventsDataById[id], i, appts, deleteEventCallback,
-					deleteEventErrorCallback, self = this, k;
+					deleteEventErrorCallback, self = this, k, masterAppt;
 			if (!this._trigger("beforeDeleteEvent", null,
 					{ data: o })) {
 				return false;
@@ -3692,6 +3765,37 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				}
 			};
 
+			if (o.recurrenceState === "exception" ||
+				o.recurrenceState === "occurrence") {
+				masterAppt = this._eventsDataById[o.parentRecurrenceId];
+				if (masterAppt) {
+					this.log(this._formatString(
+	"[deleteEvent] removing {0} with id {1}. Updating master event with id {2}",
+									o.recurrenceState, o.id, masterAppt.id));
+
+					if (!masterAppt.recurrencePattern.removedOccurrences) {
+						masterAppt.recurrencePattern.removedOccurrences = [];
+					}
+					masterAppt.recurrencePattern.removedOccurrences.push(o.id);
+					this.updateEvent(masterAppt, successCallback, errorCallback);
+					if (o.recurrenceState === "occurrence") {
+						this.log("No need to delete occurrence from store. Master event should be updated.");
+						return;
+					}
+				} else {
+					if (o.recurrenceState === "exception") {
+						//allow delete exception from events storage.
+					} else {
+						deleteEventErrorCallback("Unable to find master event with id " +
+						o.parentRecurrenceId);
+						return false;
+					}
+
+				}
+			}
+			if (o.recurrenceState === "master") {
+				//qq: delete all exceptions from events storage, as well?
+			}
 			deleteEventCallback = function (result) {
 				if (self._handleServerError(result)) {
 					deleteEventErrorCallback(result);
@@ -4015,7 +4119,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		///	DOM element which will be used to calculate dialog position.
 		///	</param>
 		showEditEventDialog: function (appt, offsetElement, e) {
-			var o = this.options, parentColumn, startdt,
+			var o = this.options, masterAppt, parentColumn, startdt,
 					targetCell = offsetElement ?
 									$(offsetElement) : (e ? $(e.target) : null);
 
@@ -4066,14 +4170,22 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				}
 			} else {
 				this._editEventDialog._arrowTarget = targetCell;
-				/*this._editEventDialog.wijpopup("show",
-				{
-				of: target,
-				my: "left center",
-				at: "right center",
-				offset: "-10 0",
-				collision: "fit"
-				});*/
+				if (appt.recurrenceState === "occurrence") {
+					masterAppt = this._eventsDataById[appt.parentRecurrenceId];
+					if (window.confirm(appt.subject +
+						" is recurring event. " +
+						"Do you want to open only this occurrence?")) {
+						// edit exception: set inside addEvent/updateEvent method
+						//appt.recurrenceState = "exception";
+					} else {
+						// edit master event:
+						appt = masterAppt;
+					}
+				}
+				/*
+				if (appt.recurrenceState === "exception") {
+				//alert("Exception found:" + appt.id);
+				}*/
 
 			}
 			this._bindApptToDialog(appt);
@@ -4915,7 +5027,6 @@ this.localizeString("labelAllDay", "all-day") +
 							target : target.parents(".wijmo-wijev-appointment"),
 				isResize = target.hasClass("wijmo-wijev-resizer") ||
 							target.parents(".wijmo-wijev-resizer").length > 0;
-
 			if (this.options.disabled) {
 				//fix for 20811
 				return;
@@ -4935,10 +5046,10 @@ this.localizeString("labelAllDay", "all-day") +
 								$.proxy(this._onDayViewAppointmentMouseMove, this));
 			$(document).bind("mouseup.tmp_wijevcal",
 								$.proxy(this._onDayViewAppointmentMouseUp, this));
-			this.element.find(".wijmo-wijev-dayview .wijmo-wijev-daycolumn")
+			$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-daycolumn")
 								.bind("mouseover.tmp_wijevcal",
 								$.proxy(this._onDayViewColumnMouseOver, this));
-			this.element.find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
+			$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
 								.bind("mouseover.tmp_wijevcal",
 								$.proxy(this._onDayViewAllDayMouseOver, this));
 		},
@@ -4988,10 +5099,10 @@ this.localizeString("labelAllDay", "all-day") +
 				this.__targetAppt.removeClass("wijmo-wijev-dragging");
 			}
 			$(document).unbind(".tmp_wijevcal");
-			this.element.find(".wijmo-wijev-dayview .wijmo-wijev-daycolumn")
+			$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-daycolumn")
 												.unbind(".tmp_wijevcal");
 
-			this.element.find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
+			$(this.element).find(".wijmo-wijev-dayview .wijmo-wijev-allday-cell")
 												.unbind(".tmp_wijevcal");
 
 

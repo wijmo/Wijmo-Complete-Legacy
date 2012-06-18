@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -169,6 +169,11 @@ $.widget("wijmo.wijinputmask", $.extend(true, {}, wijinputcore, {
 			}
 		}
 	},
+	
+	// _onPaste: function (e) {
+		// if (this._textProvider && this._textProvider.noMask) { return; };
+		// wijinputcore._onPaste.apply(self, arguments);
+	// },
 	
 	_afterFocused: function () {
 		if (this._isNullText() || !!this.options.hidePromptOnLeave) {

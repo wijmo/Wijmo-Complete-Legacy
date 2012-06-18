@@ -427,6 +427,11 @@
     margin-right: 5px;
 }
 
+.wijmo-wijeditor .wijmo-wijeditor-linkdlg-linkicontype label
+{
+    margin-right: 5px;
+}
+
 .wijmo-wijeditor .wijmo-wijeditor-linkdlg-linktype div
 {
     float: left;
@@ -443,7 +448,12 @@
     height: 100px;
 }
 
-.wijmo-wijeditor .wijmo-wijeditor-linkdlg-target, .wijmo-wijeditor .wijmo-wijeditor-linkdlg-css
+.wijmo-wijeditor .wijmo-wijeditor-linkdlg-text
+{
+    margin-top: 10px;
+}
+
+.wijmo-wijeditor .wijmo-wijeditor-linkdlg-target, .wijmo-wijeditor .wijmo-wijeditor-linkdlg-css 
 {
     margin-top: 5px;
 }
@@ -451,6 +461,16 @@
 .wijmo-wijeditor .wijmo-wijeditor-linkdlg-css input
 {
     width: 300px;
+}
+
+.wijmo-wijeditor .wijmo-wijeditor-linkdlg-src input
+{
+    width: 300px;
+}
+
+.wijmo-wijeditor .wijmo-wijeditor-linkdlg-src, .wijmo-wijeditor .wijmo-wijeditor-linkdlg-width, .wijmo-wijeditor .wijmo-wijeditor-linkdlg-height
+{
+    margin-top: 5px;
 }
 /* --------------------- end of link dialog css --------------------- */
 

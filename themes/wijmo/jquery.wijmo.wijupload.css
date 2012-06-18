@@ -14,8 +14,7 @@
 {
 	list-style: none outside none;
 	position: relative;
-	padding: 5px 110px 5px 5px;
-	width: 100%;
+	width: 99%;
 }
 
 .wijmo-wijupload .wijmo-wijupload-buttonContainer
@@ -37,7 +36,8 @@
 {
 	display: block;
 	padding: 0.4em;
-	line-height: 1.4
+	line-height: 1.4;
+    margin: 5px 105px 5px 5px;
 }
 
 .wijmo-wijupload .wijmo-wijupload-uploadedFile

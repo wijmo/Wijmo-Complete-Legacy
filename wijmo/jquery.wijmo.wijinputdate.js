@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -578,6 +578,7 @@
                     this._autoMoveToNextField(cursor, ch);
                     this._highLightField();
                 } else {
+					this._resetTimeStamp();
                     this._fireIvalidInputEvent();
                 }
 

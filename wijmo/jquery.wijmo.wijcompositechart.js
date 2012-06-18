@@ -1,7 +1,7 @@
 /*globals jQuery, Globalize*/
 /*
  *
- * Wijmo Library 2.1.0
+ * Wijmo Library 2.1.1
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -624,16 +624,12 @@
 			var self = this,
 				element = self.chartElement,
 				fields = element.data("fields"),
-				aniBarsAttr = fields && fields.bars;
+				aniBarsAttr = fields && fields.aniBarsAttr;
 
 			element.removeClass("wijmo-wijcompositechart");
 			$.wijmo.wijchartcore.prototype.destroy.apply(this, arguments);
 
-			if (aniBarsAttr && aniBarsAttr.length) {
-				$.each(aniBarsAttr, function (idx, barAttr) {
-					barAttr = null;
-				});
-			}
+			self._destroyRaphaelArray(aniBarsAttr);
 
 			element.data("fields", null);
 		},
@@ -647,6 +643,14 @@
 				o = self.options,
 				element = self.chartElement,
 				fields = element.data("fields");
+
+			if (fields && fields.allElements) {
+				$.each(fields.allElements, function (key, eles) {
+					self._destroyRaphaelArray(eles);
+				});
+				fields.allElements = null;
+			}
+
 			$.wijmo.wijchartcore.prototype._clearChartElement.apply(self, arguments);
 			if (fields && fields.ctracers) {
 				fields.ctracers = null;
@@ -1036,6 +1040,7 @@
 					hint: o.hint,
 					animation: o.animation,
 					disabled: o.disabled,
+					culture: self._getCulture(),
 					mouseDown: function (e, args) {
 						self._trigger("mouseDown", e, args);
 					},
@@ -1268,6 +1273,7 @@
 			var self = this,
 				fields = self.chartElement.data("fields"),
 				seriesEles = fields.seriesEles,
+				allElements = fields.allElements || {},
 				ctracers;
 			$.each(seriesEles, function (i, ele) {
 				self.seriesEles.push({ eles: ele, type: type });
@@ -1282,6 +1288,26 @@
 					type: type
 				});
 				fields.ctracers = ctracers;
+			}
+
+			if (fields && fields.chartElements) {
+				$.each(fields.chartElements, function (key, eles) {
+					self._copyElements(allElements, key, eles);
+				});
+			}
+			fields.allElements = allElements;
+
+		},
+
+		_copyElements: function (target, key, source) {
+			var tar;
+			if (source && $.isArray(source)) {
+				tar = target[key] || [];
+				target[key] = tar.concat(source);
+			}
+			else if (source) {
+				tar = target[key] || [];
+				tar.concat([source]);
 			}
 		},
 
@@ -1377,6 +1403,7 @@
 						}
 						self.hoverLine = data;
 						self.hoverPoint = null;
+						self.hoverVirtualPoint = null;
 					}
 				}
 				else if (data.type === "scatter") {
@@ -1441,6 +1468,7 @@
 				tooltip = self.tooltip,
 				hint = self.options.hint,
 				markers,
+				virtualMarkers,
 				idx = 0,
 				p, point, valueX, valueY,
 				s = null,
@@ -1464,63 +1492,91 @@
 					self.isNewLine = false;
 				}
 				markers = self.hoverLine.lineMarkers;
+				virtualMarkers = self.hoverLine.virtualMarkers;
 				idx = -1;
 				p = { x: 0, y: 0 };
-				$.each(markers, function (i, marker) {
-					if (marker.removed) {
-						return true;
-					}
-					var box = marker.wijGetBBox(),
-						pos = box.x + box.width / 2,
-						dis = Math.abs(pos - mousePos.left);
-					if (i === 0 || dis < distance) {
-						distance = dis;
-						idx = i;
-						p = {
-							x: pos,
-							y: box.y + box.height / 2
-						};
-					}
-				});
-				if (self.hoverPoint && self.hoverPoint.index === idx) {
-					return;
-				}
-				if (idx > -1) {
-					if (markers[idx].removed) {
+				if (markers && markers.length) {
+					$.each(markers, function (i, marker) {
+						if (marker.removed) {
+							return true;
+						}
+						var box = marker.wijGetBBox(),
+							pos = box.x + box.width / 2,
+							dis = Math.abs(pos - mousePos.left);
+						if (i === 0 || dis < distance) {
+							distance = dis;
+							idx = i;
+							p = {
+								x: pos,
+								y: box.y + box.height / 2
+							};
+						}
+					});
+					if (self.hoverPoint && self.hoverPoint.index === idx) {
 						return;
 					}
-					point = $(markers[idx].node).data("wijchartDataObj");
+					if (idx > -1) {
+						if (markers[idx].removed) {
+							return;
+						}
+						point = $(markers[idx].node).data("wijchartDataObj");
 
-					if (point) {
-						if (self.hoverPoint && !self.hoverPoint.isSymbol) {
-							if (!self.hoverPoint.removed) {
-								self.hoverPoint.marker
-								.wijAttr(self.hoverPoint.markerStyle);
-								self.hoverPoint.marker.transform("s1");
+						if (point) {
+							if (self.hoverPoint && !self.hoverPoint.isSymbol) {
+								if (!self.hoverPoint.removed) {
+									self.hoverPoint.marker
+									.wijAttr(self.hoverPoint.markerStyle);
+									self.hoverPoint.marker.transform("s1");
+								}
+							}
+							if (!point.isSymbol) {
+								if (!point.marker.removed) {
+									point.marker.wijAttr(point.markerHoverStyle);
+								}
 							}
 						}
-						if (!point.isSymbol) {
-							if (!point.marker.removed) {
-								point.marker.wijAttr(point.markerHoverStyle);
-							}
-						}
+
+						self.hoverPoint = point;
+						self.hoverVirtualPoint = virtualMarkers[idx];
 					}
-
-					self.hoverPoint = point;
+				} else {
+					$.each(virtualMarkers, function (i, marker) {
+						var dis = Math.abs(marker.x - mousePos.left);
+						if (i === 0 || dis < distance) {
+							distance = dis;
+							idx = i;
+							p = {
+								x: marker.x,
+								y: marker.y
+							};
+						}
+					});
+					if (self.hoverVirtualPoint && self.hoverVirtualPoint.index === idx) {
+						return;
+					}
+					if (idx > -1) {
+						self.hoverPoint = null;
+						self.hoverVirtualPoint = virtualMarkers[idx];
+					}
 				}
 				if (tooltip) {
-					dataObj = self.hoverPoint;
+					dataObj = self.hoverVirtualPoint;
 					valueX = dataObj.valX;
 					valueY = dataObj.valY;
+					//dataObj = self.hoverPoint;
+					//valueX = dataObj.valX;
+					//valueY = dataObj.valY;
 					if (isTitleFunc || isContentFunc) {
 						if (isTitleFunc) {
 							op.title = function () {
 								var obj = {
 									pointIndex: idx,
-									lineIndex: dataObj.lineSeries.index,
+									//lineIndex: dataObj.lineSeries.index,
+									lineIndex: self.hoverLine.index,
 									x: valueX,
 									y: valueY,
-									label: dataObj.lineSeries.label,
+									//label: dataObj.lineSeries.label,
+									label: self.hoverLine.label,
 									data: dataObj,
 									fmt: title
 								},
@@ -1533,10 +1589,12 @@
 							op.content = function () {
 								var obj = {
 									pointIndex: idx,
-									lineIndex: dataObj.lineSeries.index,
+									//lineIndex: dataObj.lineSeries.index,
+									lineIndex: self.hoverLine.index,
 									x: valueX,
 									y: valueY,
-									label: dataObj.lineSeries.label,
+									//label: dataObj.lineSeries.label,
+									label: self.hoverLine.label,
 									data: dataObj,
 									fmt: content
 								},
@@ -1586,6 +1644,7 @@
 			}
 			self.hoverLine = null;
 			self.hoverPoint = null;
+			self.hoverVirtualPoint = null;
 		},
 
 		_getTooltipText: function (fmt, target) {

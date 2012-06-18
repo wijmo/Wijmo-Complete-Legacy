@@ -1,7 +1,7 @@
 /*globals jQuery Raphael Globalize*/
 /*
 *
-* Wijmo Library 2.1.0
+* Wijmo Library 2.1.1
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -629,7 +629,8 @@
 				mouseOut: $.proxy(self._mouseOut, self),
 				mouseMove: $.proxy(self._mouseMove, self),
 				click: $.proxy(self._click, self),
-				disabled: o.disabled
+				disabled: o.disabled,
+				culture: self._getCulture()
 			});
 
 			self.tooltipbubbles = [];
@@ -720,8 +721,13 @@
 							legendIcon.remove();
 							self.legendIcons[idx] = dot;
 							if (!!chartSeries.visible) {
-								$(self.legends[idx].node)
-								.data("dotOpacity", dot.attr("opacity") || 1);
+								if (o.legend.textWidth) {
+									$(self.legends[idx][0].node)
+										.data("dotOpacity", dot.attr("opacity") || 1);
+								} else {
+									$(self.legends[idx].node)
+										.data("dotOpacity", dot.attr("opacity") || 1);
+								}
 								dot.attr("opacity", 0.3);
 							}
 							idx++;
@@ -755,8 +761,13 @@
 							legendIcon.remove();
 							self.legendIcons[idx] = dot;
 							if (!!chartSeries.visible) {
-								$(self.legends[idx].node)
-								.data("dotOpacity", dot.attr("opacity") || 1);
+								if (o.legend.textWidth) {
+									$(self.legends[idx][0].node)
+										.data("dotOpacity", dot.attr("opacity") || 1);
+								} else {
+									$(self.legends[idx].node)
+										.data("dotOpacity", dot.attr("opacity") || 1);
+								}
 								dot.attr("opacity", 0.3);
 							}
 							idx++;
@@ -1185,7 +1196,8 @@
 				click = o.click,
 				bubbleInfos = [],
 				disabled = o.disabled,
-				trackers = canvas.set();
+				trackers = canvas.set(),
+				culture = o.culture;
 
 			function initAnimationState(bubbleInfo, bounds) {
 				var bubble = bubbleInfo.bubble,
@@ -1363,7 +1375,7 @@
 						chartLabel.chartLabelFormatString,
 					dcl;
 				if (chartLabelFormatString && chartLabelFormatString.length) {
-					text = Globalize.format(text, chartLabelFormatString);
+					text = Globalize.format(text, chartLabelFormatString, culture);
 				}
 				dcl = canvas.text(rf.x, rf.y, text).attr(textStyle);
 				return dcl;
