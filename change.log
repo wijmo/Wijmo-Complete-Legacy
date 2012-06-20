@@ -1,3 +1,57 @@
+==Wijmo Complete==
+===Fixes===
+
+;Grid
+*Data was not fully displayed in grouped grid when groupInfo.position = "footer" was used.
+*Columns are not fully displayed in merged grid if column width is not set.
+
+;Ribbon
+*Fixed a bug: Theme support fixed for ribbon.
+
+
+Wijmo-Complete v2.1.1
+=====================
+
+CompositeChart
+--------------
+Fixed a memory leak issue when calling destroy/redraw methods for the chart.
+
+editor
+-----------------------------
+Indent and outdent icons were switched in Editor. Now they are correct.
+Added feature: Ability to assign a hyperlink to an image
+
+ComboBox
+--------
+Fixed a bug that columns.width wasn't working properly.
+Fixed a bug that datasource loaded event didn't fire when bound in the combobox.
+Fixed a bug with nesting combobox inside collapsed Accordion or Expander 
+
+Charts
+-------
+Added option legend.textWidth.
+Fixed a bug that when setting the seriesList option by code, if the seriesList's length is more than the seriesStyles' length, the extend seriesStyle was not functioning properly.
+Fixed a bug that when setting the datasource and seriesList options, databind will not fired.
+Fixed a bug that the valueLabels of axis didn't work.
+Fixed a bug that the chart label culture format lost effect.
+
+LinearGauge
+-----------
+Fixed a memory leak issue when changing the value.
+
+Input
+----------
+Fixed pasting when there is no mask defined.
+Fixed a validation issue for numeric input.
+Clears the timestamp when incorrect value is input.
+
+Grid
+-----
+Javascript exception is thrown if wijgrid is placed inside an invisible element and the scrollMode option is enabled.
+NaN value returned by a string column parser considered correct.
+Now the value of the dataFormatString option is passed to the filter editor of "datetime" columns.
+
+
 Wijmo-Complete v2.1.0
 =====================
 
