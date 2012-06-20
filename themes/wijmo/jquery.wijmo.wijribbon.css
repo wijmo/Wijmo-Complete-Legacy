@@ -474,11 +474,21 @@
     border-right: solid 1px #b2b7bd;
 }
 
-.wijmo-wijribbon, .wijmo-wijribbon .wijmo-wijribbon-panel .wijmo-wijribbon-groups
+.wijmo-wijribbon .wijmo-wijribbon-panel .wijmo-wijribbon-groups
 {
     border-bottom: none;
     border-top: none;
     background: none;
+}
+
+.wijmo-wijribbon .ui-tabs-nav
+{
+-webkit-border-bottom-right-radius: 0px;
+-webkit-border-bottom-left-radius: 0px;
+-moz-border-radius-bottomright: 0px;
+-moz-border-radius-bottomleft: 0px;
+border-bottom-right-radius: 0px;
+border-bottom-left-radius: 0px;
 }
 
 .wijmo-wijribbon-groups

@@ -3,7 +3,7 @@
 
 /*
  *
- * Wijmo Library 2.1.1
+ * Wijmo Library 2.1.2
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -1806,25 +1806,11 @@
 		},
 
 		_headerRows: function () {
-			var accessor = this._field("headerRowsAccessor"),
-				bottomOffset;
-
-			if (!accessor) {
-				bottomOffset = this.options.showFilter ? 1 : 0;
-				this._field("headerRowsAccessor", accessor = new $.wijmo.wijgrid.rowAccessor(this._view(), 1 /* thead */, 0, bottomOffset));
-			}
-
-			return accessor;
+			return this._view().headerRows();
 		},
 
 		_filterRow: function () {
-			if (this.options.showFilter) {
-				var tHeadAccessor = new $.wijmo.wijgrid.rowAccessor(this._view(), 1 /* thead */, 0, 0);
-
-				return tHeadAccessor.item(tHeadAccessor.length() - 1); // filter is the last row in the tHead section
-			}
-
-			return null;
+			return this._view().filterRow();
 		},
 
 		_localizeFilterOperators: function (locArray) {
@@ -1840,13 +1826,7 @@
 		},
 
 		_rows: function () {
-			var accessor = this._field("rowsAccessor");
-
-			if (!accessor) {
-				this._field("rowsAccessor", accessor = new $.wijmo.wijgrid.rowAccessor(this._view(), 2 /* tbody */, 0, 0));
-			}
-
-			return accessor;
+			return this._view().bodyRows();
 		},
 
 		_selectionui: function () {
@@ -2362,14 +2342,6 @@
 			if (this._field("selectionui")) {
 				this._field("selectionui").dispose();
 				this._field("selectionui", null);
-			}
-
-			if (this._field("headerRowsAccessor")) {
-				this._field("headerRowsAccessor", null);
-			}
-
-			if (this._field("rowsAccessor")) {
-				this._field("rowsAccessor", null);
 			}
 
 			if (this._field("resizer")) {
@@ -3739,16 +3711,11 @@
 		},
 
 		_getStaticIndex: function (bRow) {
-			var i, len, leaf, maxStaticIndex, result,
-				leaves = this._field("leaves"),
+			var result,
 				dataRange = this._getDataCellsRange();
 
-			for (i = 0, len = leaves.length; i < len; i++) {
-				leaf = leaves[i];
-
-				if (leaf.rowMerge !== "none" || (leaf.groupInfo && leaf.groupInfo.position !== "none")) {
-					return -1; // can't use static columns\ rows
-				}
+			if (this._hasSpannedCells()) {
+				return -1; // can't use static columns\ rows
 			}
 
 			if (bRow) {
@@ -3820,6 +3787,23 @@
 
 			return this._getStaticIndex(true) + index;
 		},
+
+		_hasSpannedCells: function () {
+			var leaves = this._field("leaves"),
+				i, len, leaf,
+				result = false;
+
+			for (i = 0, len = leaves.length; (i < len) && !result; i++) {
+				leaf = leaves[i];
+
+				result = leaf.groupInfo && (leaf.groupInfo.position !== "none"); // grouped column?
+
+				result |= leaf.parentVis && (leaf.rowMerge !== "none"); // merged visible column?
+			}
+
+			return result;
+		},
+
 
 		_view: function () {
 			return this._field("view");
@@ -9089,6 +9073,10 @@
 			this._wijgrid = wijgrid;
 
 			this._wijgrid.element.addClass("wijmo-wijgrid-table");
+
+			this._bodyRowsAccessor = null;
+			this._headerRowsAccessor = null;
+			this._rowsAccessor = null;
 		},
 
 		dispose: function () {
@@ -9154,6 +9142,44 @@
 		// public **
 
 		// ** DOMTable abstraction
+
+		// ** rows accessors
+		bodyRows: function () {
+			if (!this._bodyRowsAccessor) {
+				this._bodyRowsAccessor = new $.wijmo.wijgrid.rowAccessor(this, 2 /* tbody */, 0, 0);
+			}
+
+			return this._bodyRowsAccessor;
+		},
+
+		filterRow: function () {
+			if (this._wijgrid.options.showFilter) {
+				var accessor = new $.wijmo.wijgrid.rowAccessor(this, 1 /* thead */, 0, 0);
+				return accessor.item(accessor.length() - 1); // filter is the last row in the tHead section
+			}
+
+			return null;
+		},
+
+		headerRows: function () {
+			var bottomOffset;
+
+			if (!this._headerRowsAccessor) {
+				bottomOffset = this._wijgrid.options.showFilter ? 1 : 0;
+				this._headerRowsAccessor = new $.wijmo.wijgrid.rowAccessor(this, 1 /* thead */, 0, bottomOffset);
+			}
+
+			return this._headerRowsAccessor;
+		},
+
+		rows: function () {
+			if (!this._rowsAccessor) {
+				this._rowsAccessor = new $.wijmo.wijgrid.rowAccessor(this, 0 /* all rows */, 0, 0);
+			}
+
+			return this._rowsAccessor;
+		},
+		// rows accessors **
 
 		focusableElement: function () {
 			throw "not implemented";
@@ -9615,7 +9641,7 @@
 		},
 
 		_getColumnWidth: function (index, widthArray) {
-			var leaf, colWidth, maxW, joinedTables, relIdx, i, table, rows, cell, cellWidth,
+			var leaf, colWidth, maxW, joinedTables, relIdx, i, table, rows, cell,
 				row, j, len;
 
 			if (widthArray) {
@@ -9636,28 +9662,17 @@
 						if (table !== null) {
 							rows = table.element().rows;
 
-							if (rows.length > 0) {
-
-								// try to find row which doesn't contains a spanned cells (skip groupHeaders, groupFooters and so on)
-								for (row = null, len = rows.length; !row && (j < len); j++) {
+							if (len = rows.length) {
+								// try to find row which doesn't contains a spanned cells
+								for (j = len - 1, row = null; j >= 0; j--) {
 									if (rows[j].cells.length === table.width()) {
 										row = rows[j];
+										break;
 									}
-
-									// rowInfo = this._getRowInfo([rows[j]]);
-									// if (rowInfo && (rowInfo.type !== $rt.groupHeader && rowInfo.type !== $rt.groupFooter)) { // doesn't work for merged columns
-									//		row = rowInfo.$rows[0];
-									//	}
 								}
-
-								row = row || rows[0]; // ensure
 
 								cell = row.cells[relIdx];
-								cellWidth = $(cell).outerWidth();
-
-								if (cellWidth > maxW) {
-									maxW = cellWidth;
-								}
+								maxW = Math.max(maxW, $(cell).outerWidth());
 							}
 						}
 					}
@@ -10574,6 +10589,16 @@
 		// public **
 
 		// ** DOMTable abstraction
+
+		bodyRows: function() {
+			var accessor = this._base();
+
+			if (accessor && this.fooRow) {
+				accessor._offsetBottom(1); // ignore fooRow (the bottomost row of the tBody section)
+			}
+
+			return accessor;
+		},
 
 		focusableElement: function () {
 			return this._wijgrid.outerDiv;
@@ -12422,12 +12447,15 @@
 		/// Object for convenient access to rows of a wijgrid widget.
 		/// </summary>
 
-		if (!offsetTop) {
-			offsetTop = 0;
+		var _offsetTop = offsetTop,
+			_offsetBottom = offsetBottom;
+
+		if (!_offsetTop) {
+			_offsetTop = 0;
 		}
 
-		if (!offsetBottom) {
-			offsetBottom = 0;
+		if (!_offsetBottom) {
+			_offsetBottom = 0;
 		}
 
 		this.item = function (index) {
@@ -12444,7 +12472,7 @@
 			var len = this.length();
 
 			return (index < len)
-				? view.getJoinedRows(index + offsetTop, scope)
+				? view.getJoinedRows(index + _offsetTop, scope)
 				: null;
 		};
 
@@ -12463,7 +12491,7 @@
 				len += htmlAccessor.getSectionLength(scope);
 			}
 
-			len -= offsetTop + offsetBottom;
+			len -= _offsetTop + _offsetBottom;
 
 			if (len < 0) {
 				len = 0;
@@ -12552,15 +12580,35 @@
 				domRow;
 
 			if (rowObj && (domRow = rowObj[0])) {
-				res = domRow.cells.Length;
+				res = domRow.cells.length;
 
 				if (domRow = rowObj[1]) {
-					res += domRow.cells.Length;
+					res += domRow.cells.length;
 				}
 			}
 
 			return res;
 		};
+
+		// ** internal
+
+		this._offsetBottom = function (value) {
+			if (arguments.length) { // setter
+				_offsetBottom = value;
+			}
+
+			return _offsetBottom;
+		};
+
+		this._offsetTop = function (value) {
+			if (arguments.length) { // setter
+				_offsetTop = value;
+			}
+
+			return _offsetTop;
+		};
+
+		// internal **
 	};
 })(jQuery);(function ($) {
 	"use strict";

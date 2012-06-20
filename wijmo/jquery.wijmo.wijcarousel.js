@@ -1,7 +1,7 @@
 /*globals jQuery window */
 /*
 *
-* Wijmo Library 2.1.1
+* Wijmo Library 2.1.2
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -54,7 +54,7 @@
 		pauseBtnCss = "ui-icon-pause",
 		btnHtml = "<a class=\"ui-state-default\">" +
 		"<span class=\"ui-icon\"></span></a>",
-		ctrlSelector = ".wijmo-wijpager,." + btnCss + ",." +
+		ctrlSelector = ".wijmo-wijcarousel-pager,." + btnCss + ",." +
 		nextBtnCss + ",." + prevBtnCss,
 		captionHtml = "<div class=\"ui-helper-clearfix\"></div>",
 		pagerHtml = "<li class=\"ui-state-default wijmo-wijcarousel-page\"><a></a></li>",
@@ -198,7 +198,15 @@
 			/// </summary>
 			orientation: "horizontal",
 			/// <summary>
-			/// Allows carousel to loop back to the beginning 
+			/// Determines the orientation of the slider. 
+			/// Possible values are: "vertical" & "horizontal"
+			/// Default: "horizontal".
+			/// Type: String.
+			/// Code example: $("#element").wijcarousel( { orientation: "vertical" } );
+			/// </summary>
+			sliderOrientation: "horizontal",
+			/// <summary>
+			/// Allows carousel to loop back to the beginning.
 			/// Default: true.
 			/// Type: Boolean.
 			/// Code example: $("#element").wijcarousel( { loop: true } );
@@ -311,7 +319,7 @@
 			/// or hover on the dom element.
 			/// Default: true.
 			/// Type: Boolean.
-			/// Code example: $("#element").wijcarousel( { showContorlsOnHover: true } );
+			/// Code example: $("#element").wijcarousel( { showControlsOnHover: true } );
 			/// </summary>
 			showControlsOnHover: false,
 			/// <summary>
@@ -465,7 +473,7 @@
 			self._createDom(self.isHorizontal);
 			self.list.bind("click." + self.widgetName, $.proxy(self._itemClick, self));
 
-			if (o.showContorlsOnHover) {
+			if (o.showControlsOnHover) {
 				self.container.bind("mouseenter." + self.widgetName, function () {
 					self._showControls();
 				}).bind("mouseleave." + self.widgetName, function () {
@@ -491,7 +499,7 @@
 		_showControls: function () {
 			this.container.find(ctrlSelector).stop(true, true)
 			.fadeIn(600, function () {
-				$(this).css('opacity', '');
+				$(this).css("opacity", "");
 			});
 		},
 
@@ -1103,8 +1111,9 @@
 
 		_createWijSlider: function () {
 			var self = this,
+				sOri = self.options.sliderOrientation,
 				options = {
-					orientation: "horizontal",
+					orientation: sOri,
 					range: false,
 					min: 0,
 					max: self.count - 1, //pageSize
@@ -1119,10 +1128,9 @@
 						self.scrollTo(idx);
 					}
 				},
-				slider = $("<div></div>").css({
-					"margin-bottom": "10px",
-					width: "200px"
-				})
+				slider = $("<div></div>")
+				.css("margin-bottom", "10px")
+				.css(sOri === "horizontal" ? "width" : "height", "200px")
 				.appendTo(self.container);
 
 			self.pager = slider.wijslider(options).parent()
@@ -1159,17 +1167,18 @@
 
 			if (o.pagerType === "numbers") {
 				self._createWijPager();
-			}
-			else if (o.pagerType === "dots" || o.pagerType === "thumbnails") {
+			} else if (o.pagerType === "dots" || o.pagerType === "thumbnails") {
 				self._createPaging(o.pagerType);
 				self.pager.css({
 					position: "absolute"
 				});
-			}
-			else if ($.wijmo.wijslider && o.pagerType === "slider") {
+			} else if ($.wijmo.wijslider && o.pagerType === "slider") {
 				self._createWijSlider();
-			}
-			else {
+				if (o.sliderOrientation !== "horizontal") {
+					position.my = "left center";
+					position.at = "right center";
+				}
+			} else {
 				return;
 			}
 			self.pager.width(self.pager.width() + 1);

@@ -10,7 +10,7 @@ amplify*/
 
 /*
 *
-* Wijmo Library 2.1.1
+* Wijmo Library 2.1.2
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -4236,7 +4236,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 			switch (this.options.viewType.toLowerCase()) {
 				case "day":
 				case "week":
-					this._clearViewsCache();
+					this._clearDayViewCache();
 					this._templateDayColumn = null;
 					break;
 			}
@@ -4422,7 +4422,14 @@ this.localizeString("labelAllDay", "all-day") +
 			this._dayViewCache[dt] = { "h": h, "c": c };
 		},
 		_clearViewsCache: function () {
+			this._clearDayViewCache();
+			this._clearListViewCache();
+		},
+		_clearDayViewCache: function () {
 			this._dayViewCache = {};
+		},
+		_clearListViewCache: function () {
+			this._agendaCache = {};
 		},
 		//<< end of views cache
 
@@ -4563,7 +4570,9 @@ this.localizeString("labelAllDay", "all-day") +
 				daysCount, dayIdx = 0, curDayApptsCount,
 				s = "", s2 = "",
 				viewStart = null, viewEnd = null,
+				o = this.options,
 				curDayStart, curDayEnd, isSuperPanelUsed = false;
+
 			if ($agendaList.find(".wijmo-wijsuperpanel-templateouterwrapper")
 																	.length > 0) {
 				$agendaList = $agendaList
@@ -4579,6 +4588,11 @@ this.localizeString("labelAllDay", "all-day") +
 												(1000 * 60 * 60 * 24);
 			}
 
+			//////////////////////// qq: implement cache
+			if (!this._agendaCache) {
+				this._agendaCache = {};
+			}
+			////////////////////////
 
 			if (appts) {
 				apptsCount = appts.length;
