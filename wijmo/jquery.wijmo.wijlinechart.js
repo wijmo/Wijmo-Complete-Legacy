@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window, Globalize*/
 /*
  *
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -985,7 +985,7 @@
 				duration = seTrans.duration;
 				easing = seTrans.easing;
 			}
-			self.playHAnimation(duration, easing, animationSet, cBounds);
+			self.playHAnimation(duration, easing, animationSet, cBounds, paths);
 		} else {
 			$.each(paths, function (idx, path) {
 				if (typeof path === "undefined" || path === null) {
@@ -1109,7 +1109,12 @@
 	};
 	
 	$.wijchart._line.prototype.playHAnimation = function (duration, easing, 
-			animationSet, cBounds) {
+			animationSet, cBounds, paths) {
+		$.each(paths, function (idx, path) {
+			if (path.tracker) {
+				path.tracker.hide();
+			}
+		});
 		var width = cBounds.endX - cBounds.startX + 20,
 			height = cBounds.endY - cBounds.startY + 20;
 		animationSet.wijAttr("clip-rect", (cBounds.startX - 10) +
@@ -1117,6 +1122,9 @@
 		animationSet.wijAnimate({"clip-rect": (cBounds.startX - 10) +
 				" " + (cBounds.startY - 10) + " " + width + " " + height},
 				duration, easing, function () {
+				if (this.tracker) {
+					this.tracker.show();
+				}
 				if (Raphael.vml) {
 					//delete clip-rect's div in vml
 					var attrs = null, 

@@ -1,6 +1,6 @@
 /*globals jQuery, alert, document, window, setTimeout, $, Components, netscape */
 /*
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -49,7 +49,7 @@
 		undoBuffers = [],
 		rangeSelection = null,
 		inspectElement = null,
-		id_prefix = "wijeditor-",
+		//id_prefix ="",
 		setButtonDisabled = "setButtonDisabled",
 		setButtonsDisabled = "setButtonsDisabled",
 		setButtonChecked = "setButtonChecked",
@@ -794,9 +794,12 @@
 			}
 			//end for 18157
 
+			//if place two editors, it will be mess in ui and function
+			self.id_prefix = "wijeditor-" + self.element.attr("id") + "-";
+			
 			self._editorify();
 			self._initElements();
-
+			
 			wijWindow.setTimeout(function () {
 				if (self.options.disabled) {
 					self._handleDisabledOption(true, self.editor);
@@ -1032,7 +1035,7 @@
 			case cmd_italic:
 			case cmd_underline:
 			case cmd_strike:
-				button = self._createImageCheckButton(buttoninfo.tip, id_prefix,
+				button = self._createImageCheckButton(buttoninfo.tip, self.id_prefix,
 				buttoninfo.css, cmdName);
 				break;
 			case cmd_designview:
@@ -1046,7 +1049,7 @@
 			case cmd_indent:
 			case cmd_numberedlist:
 			case cmd_bulletedlist:
-				button = self._createImageRadioButton(buttoninfo.tip, id_prefix,
+				button = self._createImageRadioButton(buttoninfo.tip, self.id_prefix,
 				buttoninfo.css, cmdName, buttoninfo.grpname);
 				break;
 			case cmd_table:
@@ -1112,7 +1115,7 @@
 					tip: "Wingdings",
 					name: "fn7",
 					text: "Wingdings"
-				}], id_prefix);
+				}], self.id_prefix);
 				break;
 			case cmd_fontsize:
 				button = self._createDropdownButton("Font Size",
@@ -1144,7 +1147,7 @@
 					tip: "VeryLarge",
 					name: "xx-large",
 					text: "VeryLarge"
-				}], id_prefix);
+				}], self.id_prefix);
 				break;
 			case cmd_spelling:
 				break;
@@ -1434,8 +1437,8 @@
 				rbTabs = self._createElement("ul"),
 				rbFmtTab = self._createElement("li"),
 				rbIstTab = self._createElement("li"),
-				rbFmtPnl = self._createElement("div", { id: id_prefix + "format" }),
-				rbIstPnl = self._createElement("div", { id: id_prefix + "insert" }),
+				rbFmtPnl = self._createElement("div", { id: self.id_prefix + "format" }),
+				rbIstPnl = self._createElement("div", { id: self.id_prefix + "insert" }),
 				rbFmtGrps = self._createElement("ul"),
 				rbIstGrps = self._createElement("ul");
 
@@ -1447,10 +1450,10 @@
 			rbTabs.add(rbFmtTab);
 			rbTabs.add(rbIstTab);
 			rbFmtTab.add(self._createElement("a", "Format", {
-				href: "#" + id_prefix + "format"
+				href: "#" + self.id_prefix + "format"
 			}));
 			rbIstTab.add(self._createElement("a", "Insert", {
-				href: "#" + id_prefix + "insert"
+				href: "#" + self.id_prefix + "insert"
 			}));
 
 			//format groups
@@ -2565,7 +2568,7 @@
 							rangeSelection = doc.selection.createRange();
 				        }
 						//end for 20382 issue.
-						sublist.show();
+						//sublist.element.show();
 						var offset = self.designView.offset(),
 						contentWindowScrollLeft = $($(self.designView)[0].contentWindow)
 												.scrollLeft(),
@@ -2573,13 +2576,13 @@
 							.scrollTop(),
 						menuOffsetLeft = offset.left + 2 - contentWindowScrollLeft,
 						menuOffsetTop = offset.top - contentWindowScrollTop;
-						sublist.position({ my: 'left top',
+						sublist.options.position = { my: 'left top',
 							at: 'right top',
 							of: e,
 							offset: (menuOffsetLeft) + " " + (menuOffsetTop),
 							collision: 'none none'
-						});
-						sublist.hide();
+						};
+						//sublist.element.hide();
 					},
 					animation: { animated: "fade" },
 					select: function (e, item) {
@@ -2587,6 +2590,8 @@
 						self._setIESelection();
 						//end for 20488 issue.
 						self._contextMenuItemClick(e, item);
+						//fixed a bug: the hover state remain after select
+						self.contextMenu.wijmenu("deactivate");         
 					}
 				});
 			}
@@ -3118,7 +3123,7 @@
 
 		_contextMenuItemClick: function (e, item, sender) {
 			var self = this,
-				cmd = item.item.attr("_c1buttoncmd");
+				cmd = item.item.element.attr("_c1buttoncmd");
 
 			switch (cmd) {
 			case cmd_cut:
@@ -3225,7 +3230,7 @@
 				$fontSizeSpans,
 				target = e.target,
 				$target = $(target);
-
+			
 			$.each(stateButtons, function (idx, btnKey) {
 				buttonStates[btnKey] = doc.queryCommandState(btnKey);
 			});
@@ -3286,6 +3291,7 @@
 			//end by RyanWu@20110923.
 
 			$ribbon.wijribbon(setButtonChecked, cmd, true, cmd_fontsize);
+			
 		},
 
 		_queryCommandValue: function (commandName) {

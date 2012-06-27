@@ -2,6 +2,7 @@
 {
     position: relative;
     width: 150px;
+    display: inline-block;
 }
 
 .wijmo-wijinput-wrapper

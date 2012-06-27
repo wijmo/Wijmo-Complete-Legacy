@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window, Globalize, wijmoASPNetParseOptions*/
 /*
 *
-* Wijmo Library 2.1.2
+* Wijmo Library 2.1.3
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -4424,7 +4424,9 @@
 							autoMax: true,
 							autoMin: true,
 							autoMajor: true,
-							autoMinor: true
+							autoMinor: true,
+							annoMethod: axisOption.x.annoMethod,
+							valueLabels: []
 						},
 						y: {}
 					};
@@ -4448,7 +4450,9 @@
 								autoMax: true,
 								autoMin: true,
 								autoMajor: true,
-								autoMinor: true
+								autoMinor: true,
+								annoMethod: axisY.annoMethod,
+								valueLabels: []
 							};
 						});				
 					} else
@@ -4470,7 +4474,9 @@
 							autoMax: true,
 							autoMin: true,
 							autoMajor: true,
-							autoMinor: true
+							autoMinor: true,
+							annoMethod: axisOption.y.annoMethod,
+							valueLabels: []
 						};
 					}
 
@@ -4865,17 +4871,20 @@
 						return true;
 					}
 
-					if (axisOptions.annoMethod === "valueLabels") {
+					//if (axisOptions.annoMethod === "valueLabels") {
+					if (axisInfo.annoMethod === "valueLabels") {
 						if (mtv < 0) {
 							return true;
 						}
 
-						if (index >= axisOptions.valueLabels.length) {
+						//if (index >= axisOptions.valueLabels.length) {
+						if (index >= axisInfo.valueLabels.length) {
 							return false;
 						}
 
-						// mtv = axisOptions.valueLabels[index].text;
-						mtv = axisOptions.valueLabels[index];
+						//// mtv = axisOptions.valueLabels[index].text;
+						//mtv = axisOptions.valueLabels[index];
+						mtv = axisInfo.valueLabels[index];
 						if (mtv.text) {
 							mtv = mtv.text;
 						} else if (typeof mtv.value !== "undefined") {
@@ -4886,7 +4895,8 @@
 									self._getCulture());
 							}
 						}
-					} else if (axisOptions.annoMethod === "values") {
+					} else if (axisInfo.annoMethod === "values") {
+					//} else if (axisOptions.annoMethod === "values") {
 						if (formatString && formatString.length) {
 							if (isTime) {
 								mtv = $.fromOADate(mtv);
@@ -4911,7 +4921,8 @@
 					size = txt.wijGetBBox();
 
 					if (!self._isVertical(compass) && !hasDefaultRotation &&
-							axisOptions.annoMethod === "valueLabels") {
+							axisInfo.annoMethod === "valueLabels") {
+							//axisOptions.annoMethod === "valueLabels") {
 						if (size.width > width) {
 							txt.attr({transform: "r-45"});
 							size = txt.wijGetBBox();
@@ -4976,7 +4987,8 @@
 
 		_getMajorTickValues: function (axisInfo, axisOptions) {
 			var rc = [],
-				valueLabels = axisOptions.valueLabels;
+				//valueLabels = axisOptions.valueLabels;
+				valueLabels = axisInfo.valueLabels;
 			if (valueLabels && valueLabels.length > 0) {
 				$.each(valueLabels, function (idx, valueLabel) {
 					if (typeof valueLabel.text !== "undefined" ||
@@ -4996,7 +5008,8 @@
 					}
 				});
 			}
-			if (axisOptions.annoMethod === "valueLabels" && 
+			//if (axisOptions.annoMethod === "valueLabels" && 
+			if (axisInfo.annoMethod === "valueLabels" && 
 					valueLabels && valueLabels.length > 0 && 
 					typeof valueLabels[0].value !== "undefined") {
 				rc = this._getSortedDataValues(axisInfo, axisOptions);
@@ -5014,7 +5027,8 @@
 			var self = this,
 				rc = [],
 				// isXAxis = (axisInfo.id === "x"),
-				valueLabels = axisOptions.valueLabels;
+				valueLabels = axisInfo.valueLabels;
+				//valueLabels = axisOptions.valueLabels;
 			$.each(valueLabels, function (idx, label) {
 				var val = label.value;
 				if (self._isDate(val)) {
@@ -5419,17 +5433,20 @@
 					return true;
 				}
 
-				if (axisOptions.annoMethod === "valueLabels") {
+				if (axisInfo.annoMethod === "valueLabels") {
+				//if (axisOptions.annoMethod === "valueLabels") {
 					// if (val < 0) {
 					// return true;
 					// }
 
-					if (index >= axisOptions.valueLabels.length) {
+					//if (index >= axisOptions.valueLabels.length) {
+					if (index >= axisInfo.valueLabels.length) {
 						return false;
 					}
 
-					// text = axisOptions.valueLabels[index].text;
-					text = axisOptions.valueLabels[index];
+					//// text = axisOptions.valueLabels[index].text;
+					//text = axisOptions.valueLabels[index];
+					text = axisInfo.valueLabels[index];
 					vlGridLine = text.gridLine;
 					vlGridLineStyle = text.gridLineStyle;
 					if (text.text) {
@@ -5442,7 +5459,8 @@
 								self._getCulture());
 						}
 					}
-				} else if (axisOptions.annoMethod === "values") {
+				} else if (axisInfo.annoMethod === "values") {
+				//} else if (axisOptions.annoMethod === "values") {
 					if (formatString && formatString.length) {
 						if (isTime) {
 							text = $.fromOADate(val);
@@ -6158,7 +6176,8 @@
 				autoMinor = axisOptions.autoMinor && axisInfo.autoMinor,
 				axisAnno = null,
 				prec = null,
-				isVL = axisOptions.annoMethod === "valueLabels",
+				isVL = axisInfo.annoMethod === "valueLabels",
+				//isVL = axisOptions.annoMethod === "valueLabels",
 				major = 0,
 				newmax = 0,
 				newmin = 0,
@@ -6858,9 +6877,13 @@
 								// end by RyanWu@20110707.
 							});
 
-							axis.y[k].annoMethod = "valueLabels";
-							if (!axis.y[k].valueLables && axis.y[k].valueLabels.length === 0) {
-								axis.y[k].valueLabels = valueLabels;
+							//axis.y[k].annoMethod = "valueLabels";
+							axisInfo.y[key].annoMethod = "valueLabels";
+							if (!axis.y[k].valueLabels && axis.y[k].valueLabels.length === 0) {
+								//axis.y[k].valueLabels = valueLabels;
+								axisInfo.y[key].valueLabels = valueLabels;
+							} else {
+								axisInfo.y[key].valueLabels = axis.y[k].valueLabels;
 							}
 							//axis.y[parseInt(key, 10)].valueLabels = valueLabels;
 							axis.x.max = valuesY.length - 1;
@@ -6906,12 +6929,14 @@
 						// valueLabels.push(valueX);
 					});
 
-					axis.x.annoMethod = "valueLabels";
-					axis.x.valueLabels = valueLabels;
+					//axis.x.annoMethod = "valueLabels";
+					//axis.x.valueLabels = valueLabels;
 					axis.x.max = valuesX.length - 1;
 					axis.x.min = 0;
 					axis.x.unitMajor = 1;
 					axis.x.unitMinor = 0.5;
+					axisInfo.x.annoMethod = "valueLabels";
+					axisInfo.x.valueLabels = valueLabels;
 					axisInfo.x.autoMax = false;
 					axisInfo.x.autoMin = false;
 					axisInfo.x.autoMajor = false;

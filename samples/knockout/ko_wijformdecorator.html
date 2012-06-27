@@ -43,14 +43,16 @@
 	</style>
 	<script type="text/javascript">
 		//Create ViewModel
-		var viewModel = function () {
-		};
+	    var viewModel = function () {
+	        this.check = ko.observable(true);
+	    };
 
 		//Bind ViewModel
-		$(document).ready(function () {
-			var vm = new viewModel();
-			ko.applyBindings(vm);
-		});
+	    $(document).ready(function () {
+	        var vm = new viewModel();
+	        ko.applyBindings(vm);
+	        //$(":wijmo-wijcheckbox").wijcheckbox("refresh"); // Work around to get wijcheckbox displaying correctly on init.
+	    });
 	</script>
 </head>
 <body class="demo-single">
@@ -101,7 +103,7 @@
 					<li>
 						<h3>
 							CheckBox</h3>
-						<label for="checkbox1">checkbox1</label><input id="checkbox1" type="checkbox" data-bind="wijcheckbox: {}" />
+						<label for="checkbox1">checkbox1</label><input id="checkbox1" type="checkbox"  data-bind="wijcheckbox: {checked: check}" />
 						<label for="checkbox2">checkbox2</label><input id="checkbox2" type="checkbox" data-bind="wijcheckbox: {}" />
 						<label for="checkbox3">checkbox3</label><input id="checkbox3" type="checkbox" data-bind="wijcheckbox: {}" />
 						<label for="checkbox4">checkbox4</label><input id="checkbox4" type="checkbox" data-bind="wijcheckbox: {}" />
@@ -109,7 +111,7 @@
 					<li>
 						<h3 id="H1">
 							Radio</h3>
-						<label for="radio1">radio1</label><input type="radio" name="radiobutton1" id="radio1" data-bind="wijradio: {}" />
+						<label for="radio1">radio1</label><input type="radio" name="radiobutton1" id="radio1" data-bind="wijradio: {checked: check}" />
 						<label for="radio2">radio2</label><input type="radio" name="radiobutton1" id="radio2" data-bind="wijradio: {}" />
 						<label for="radio3">radio3</label><input type="radio" name="radiobutton1" id="radio3" data-bind="wijradio: {}" />
 						<label for="radio4">radio4</label><input type="radio" name="radiobutton1" id="radio4" data-bind="wijradio: {}" />

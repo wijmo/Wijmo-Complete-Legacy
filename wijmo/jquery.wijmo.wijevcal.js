@@ -10,7 +10,7 @@ amplify*/
 
 /*
 *
-* Wijmo Library 2.1.2
+* Wijmo Library 2.1.3
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -4429,7 +4429,11 @@ this.localizeString("labelAllDay", "all-day") +
 			this._dayViewCache = {};
 		},
 		_clearListViewCache: function () {
-			this._agendaCache = {};
+			var $agendaList = this.element
+.find(".wijmo-wijev-list-details .wijmo-wijev-agenda-container .wijmo-wijsuperpanel-templateouterwrapper");
+			$agendaList.data("wijevcal_agenda_initialized", false);
+			$agendaList.data("wijevcal_agenda_loadedeventscount", 0);
+			
 		},
 		//<< end of views cache
 
@@ -4544,12 +4548,28 @@ this.localizeString("labelAllDay", "all-day") +
 			//Tuesday, November 1
 			this.element.find(".wijmo-wijev-day-details .wijmo-wijev-year-label")
 									.html(selectedDate.getFullYear());
-			this._loadAgendaList(this.element
+			this._updateAgendaList(this.element
 					.find(".wijmo-wijev-day-details  .wijmo-wijev-agenda-container"),
 					selectedDate, selectedDate, false);
+		},
 
-
-
+		_listViewAgendaScrolled: function () {
+			var supPanel = this.element
+					.find(".wijmo-wijev-list-details .wijmo-wijev-agenda-container"),
+				vScroller = supPanel.wijsuperpanel("option", "vScroller"),
+				$agendaList,
+				scrollValue = vScroller.scrollValue,
+				scrollMax = vScroller.scrollMax - vScroller.scrollLargeChange * 2;
+			if (scrollValue >= scrollMax) {
+				$agendaList = supPanel.find(".wijmo-wijsuperpanel-templateouterwrapper");
+				if ($agendaList.data("wijevcal_agenda_loadnextpage")) {
+					$agendaList.data("wijevcal_agenda_loadnextpage", false);
+					$agendaList.find(".wijmo-wijev-agenda-more-events").show().html("Loading more events...");
+					setTimeout($.proxy(function () {
+						this._renderAgendaEvents($agendaList, null, null, true);
+					}, this), 100);
+				}
+			}
 		},
 
 		_updateListViewDetails: function () {
@@ -4557,30 +4577,43 @@ this.localizeString("labelAllDay", "all-day") +
 				this._listViewDetailsInit = true;
 				this.element
 					.find(".wijmo-wijev-list-details .wijmo-wijev-agenda-container")
-																.wijsuperpanel();
+																.wijsuperpanel({
+																	scrolled: $.proxy(this._listViewAgendaScrolled, this)
+																	//scrolling
+																});
 			}
-			this._loadAgendaList(this.element
+			this._updateAgendaList(this.element
 					.find(".wijmo-wijev-list-details  .wijmo-wijev-agenda-container"),
 					null, null, true);
 		},
 
-		_loadAgendaList: function ($agendaList, startDt, endDt, detailedMode) {
+		_updateAgendaList: function ($agendaList, startDt, endDt, listViewMode) {
+			if ($agendaList.find(".wijmo-wijsuperpanel-templateouterwrapper")
+																	.length > 0) {
+				$agendaList = $agendaList
+									.find(".wijmo-wijsuperpanel-templateouterwrapper");
+			}
+			///////////
+			if (listViewMode && $agendaList.data("wijevcal_agenda_initialized")) {
+				return;
+			}
+			$agendaList.data("wijevcal_agenda_initialized", true);
+			$agendaList.data("wijevcal_agenda_loadedeventscount", 0);
+			/////////
+			$agendaList.html("");
+			this._renderAgendaEvents($agendaList, startDt, endDt, listViewMode);
+		},
+
+		_renderAgendaEvents: function ($agendaList, startDt, endDt, listViewMode) {
 			var appts = this._eventsView,
 				appt, i, apptsCount,
 				daysCount, dayIdx = 0, curDayApptsCount,
 				s = "", s2 = "",
 				viewStart = null, viewEnd = null,
 				o = this.options,
-				curDayStart, curDayEnd, isSuperPanelUsed = false;
-
-			if ($agendaList.find(".wijmo-wijsuperpanel-templateouterwrapper")
-																	.length > 0) {
-				$agendaList = $agendaList
-									.find(".wijmo-wijsuperpanel-templateouterwrapper");
-				isSuperPanelUsed = true;
-			}
-			$agendaList.html("");
-
+				curDayStart, curDayEnd,
+				eventsPerPage = 100,
+				loadedEventsCount = $agendaList.data("wijevcal_agenda_loadedeventscount");
 			if (startDt) {
 				viewStart = _toDayDate(startDt);
 				viewEnd = this._addDays(_toDayDate(endDt), 1);
@@ -4588,19 +4621,15 @@ this.localizeString("labelAllDay", "all-day") +
 												(1000 * 60 * 60 * 24);
 			}
 
-			//////////////////////// qq: implement cache
-			if (!this._agendaCache) {
-				this._agendaCache = {};
-			}
-			////////////////////////
 
 			if (appts) {
-				apptsCount = appts.length;
+				apptsCount = (appts.length < (eventsPerPage + loadedEventsCount) || !listViewMode) ? appts.length : (eventsPerPage + loadedEventsCount);
+				$agendaList.data("wijevcal_agenda_loadedeventscount", apptsCount);
 				if (!viewStart) {
 					s2 = "";
-					for (i = 0; i < apptsCount; i += 1) {
+					for (i = loadedEventsCount; i < apptsCount; i += 1) {
 						appt = appts[i];
-						if (i === 0 || curDayStart.getDate() !== appt.start.getDate()) {
+						if (i === loadedEventsCount || curDayStart.getDate() !== appt.start.getDate()) {
 							curDayStart = appt.start;
 
 							if (i !== 0) {
@@ -4610,7 +4639,7 @@ this.localizeString("labelAllDay", "all-day") +
 
 							s += "<div class=\"wijmo-wijev-agenda-day-container " +
 								this._dayDateToCssClass(curDayStart) + "\">";
-							if (detailedMode) {
+							if (listViewMode) {
 								s += this._renderAgendaDayHeader(curDayStart);
 							}
 							s2 = "";
@@ -4621,6 +4650,14 @@ this.localizeString("labelAllDay", "all-day") +
 						if (i === apptsCount - 1) {
 							s += "<ul class=\"wijmo-wijev-agenda-list\">" + s2 + "</ul>";
 							s += "</div>";
+							if (apptsCount < appts.length) {
+								s += "<div class=\"wijmo-wijev-agenda-more-events\">";
+								s += "More events (" + (appts.length - apptsCount) + ")...";
+								s += "<div>";
+								$agendaList.data("wijevcal_agenda_loadnextpage", true);
+							} else {
+								$agendaList.data("wijevcal_agenda_loadnextpage", false);
+							}
 						}
 
 					}
@@ -4634,7 +4671,7 @@ this.localizeString("labelAllDay", "all-day") +
 									23, 59, 59);
 						curDayApptsCount = 0;
 						s2 = "";
-						for (i = 0; i < apptsCount; i += 1) {
+						for (i = loadedEventsCount; i < apptsCount; i += 1) {
 							appt = appts[i];
 							if ((appt.start < viewEnd && appt.end > viewStart) &&
 							(appt.start < curDayEnd && appt.start >= curDayStart)) {
@@ -4645,7 +4682,7 @@ this.localizeString("labelAllDay", "all-day") +
 						if (s2 !== "") {
 							s += "<div class=\"wijmo-wijev-agenda-day-container " +
 								this._dayDateToCssClass(curDayStart) + "\">";
-							if (detailedMode) {
+							if (listViewMode) {
 								s += this._renderAgendaDayHeader(curDayStart);
 							}
 							s += "<ul class=\"wijmo-wijev-agenda-list\">" + s2 + "</ul>";
@@ -4656,7 +4693,7 @@ this.localizeString("labelAllDay", "all-day") +
 				}
 				$(s).appendTo($agendaList);
 			}
-			$agendaList.find(".wijmo-wijev-agenda-event").click($.proxy(this._onAgendaEventClick, this))
+			$agendaList.find(".wijmo-wijev-agenda-event").live("click", $.proxy(this._onAgendaEventClick, this))
 							.hover(function () {
 								$(this).addClass("ui-state-hover");
 							},
@@ -4670,10 +4707,11 @@ this.localizeString("labelAllDay", "all-day") +
 							.mouseup(function () {
 								$(this).removeClass("ui-state-active");
 							});
-			if (isSuperPanelUsed) {
-				$agendaList.parents(".wijmo-wijsuperpanel").wijsuperpanel("refresh");
-			}
+
+			$agendaList.parents(".wijmo-wijsuperpanel").wijsuperpanel("refresh");
+
 		},
+
 		_renderAgendaDayHeader: function (curDayStart) {
 			var s = "<div class=\"wijmo-wijev-agenda-header ui-widget-header\">" +
 								"<div class=\"wijmo-wijev-weekday\">" +

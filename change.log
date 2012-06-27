@@ -1,12 +1,57 @@
-==Wijmo Complete==
-===Fixes===
+Wijmo-Complete v2.1.3
+=====================
+Themes
+------
+Updated all themes to used the improved ui-helper-clearfix pattern.
 
-;Grid
-*Data was not fully displayed in grouped grid when groupInfo.position = "footer" was used.
-*Columns are not fully displayed in merged grid if column width is not set.
+New Knockout Integration Library
+--------------------------------
+Added knockout support for ribbon, inputdate, inputnumber and inputmask
 
-;Ribbon
-*Fixed a bug: Theme support fixed for ribbon.
+Charts
+------
+Fixed an issue that x labels didn't update when resetting data.
+
+Compositechart
+--------------
+Fixed a issue regarding raphael exception.
+
+Grid
+----
+"Unable to get value of the property" exception is thrown on pressing DownArrow key after selection is set to last row if allowKeyboardNavigation and scrollMode options are enabled.
+
+Editor
+----
+Fixed a bug allowing two editors to exist on a page.
+Fixed a bug with contextmenu not displaying correctly.
+
+Combobox
+----
+Fixed a bug: selectedValue didn't change when selectedIndex was updated.
+Fixed a bug: setting "selectedIndex" to -1 or "selectedValue" to null had no effect.
+Updated CSS to line up better in certain situations.
+
+Inputdate
+---------
+Fixed a bug: Issue with selecting day in popup calendar
+Fixed a bug: Issue with setting value to dateTime string without specifying format. 
+
+InputNumber
+-----------
+Fixed a bug: When minValue option was set to negative value, showNullText was not working.
+
+
+Wijmo-Complete v2.1.2
+=====================
+
+Grid
+-----
+Data was not fully displayed in grouped grid when groupInfo.position = "footer" was used.
+Columns are not fully displayed in merged grid if column width is not set.
+
+ribbon
+-----
+Fixed a bug: Theme support fixed for ribbon.
 
 
 Wijmo-Complete v2.1.1

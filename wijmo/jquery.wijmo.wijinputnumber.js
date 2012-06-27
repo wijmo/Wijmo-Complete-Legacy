@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -317,7 +317,8 @@
 
 		 isValueNull: function () {
 			var o = this.inputWidget.options,
-				nullValue = Math.max(0, o.minValue);
+				nullValue = o.minValue;
+				//nullValue = Math.max(0, o.minValue);
 
 			return null === o.value || undefined === o.value || nullValue === o.value;
 		 },

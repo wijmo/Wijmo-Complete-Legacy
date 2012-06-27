@@ -1,6 +1,6 @@
 /*
  *
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -622,16 +622,24 @@
             if (calendar.length != 1) { return; }
 
             this.element.data('calendar', calendar);
-            calendar.wijcalendar({ popupMode: true, culture: this.options.culture });
+            calendar.wijcalendar({ popupMode: true, culture: this.options.culture,
+            	selectedDatesChanged: function () {
+            		var selDate = $(this).wijcalendar("getSelectedDate");
+            		$(this).wijcalendar("close");
+            		if (!!selDate) { self.option('date', selDate); }
+            		self._trySetFocus();
+				}
+			 });
             this._syncCalendar();
 
             var self = this;
-            calendar.bind('wijcalendarselecteddateschanged', function () {
-                var selDate = $(this).wijcalendar("getSelectedDate");
-                $(this).wijcalendar("close");
-                if (!!selDate) { self.option('date', selDate); }
-                self._trySetFocus();
-            });
+			// the bind event can't trigger.!!!
+//            calendar.bind('wijcalendarselectedDatesChanged', function () {
+//                var selDate = $(this).wijcalendar("getSelectedDate");
+//                $(this).wijcalendar("close");
+//                if (!!selDate) { self.option('date', selDate); }
+//                self._trySetFocus();
+//               });
         },
 
         _syncCalendar: function () {
@@ -1489,7 +1497,7 @@
                 date = Globalize.parseDate(str, this.pattern, this._getCulture());
                 if (!date) {
                     date = this._tryParseDate(str, this.pattern);
-                }
+                }				
                 if (!date) {
                     date = new Date();
                 }
@@ -1808,6 +1816,12 @@
             if (d) {
                 return d;
             }
+
+			// if the val is datetime string, parse the string to datetime. added by dail 2012-6-25
+            d = new Date(val);
+            if (d.toString() !== "Invalid Date" && val && val !== "") {
+            	return d;
+			}
 
             return 0;
         },

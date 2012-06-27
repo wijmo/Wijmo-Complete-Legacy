@@ -1,7 +1,7 @@
 /*globals $, Raphael, jQuery, document, window, Globalize*/
 /*
 *
-* Wijmo Library 2.1.2
+* Wijmo Library 2.1.3
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -685,7 +685,7 @@
 
 	Raphael.st.wijRemove = function () {
 		$.each(this, function (idx, obj) {
-			if (obj.wijRemove) {
+			if (obj.wijRemove && !obj.removed) {
 				obj.wijRemove();
 			}
 		});

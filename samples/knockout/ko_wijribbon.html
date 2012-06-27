@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Knockout - Editor</title>
+    <link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo-open.2.1.3.css" rel="stylesheet" type="text/css" />
+    <link href="../../themes/wijmo/jquery.wijmo.wijribbon.css" rel="stylesheet" type="text/css" />
+    <script src="../../external/jquery-1.7.1.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.18.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery.wijmo-open.all.2.1.3.min.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijribbon.js" type="text/javascript"></script>
+    <script src="../../../../Wijmo-Open/development-bundle/external/knockout-2.0.0.js" type="text/javascript"></script>
+    <script src="../../../../Wijmo-Open/development-bundle/external/knockout.wijmo.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //Create ViewModel
+        var viewModel = function () {
+            var self = this;
+            self.disabled = ko.observable(false);
+        };
+
+        //Bind ViewModel
+        $(document).ready(function () {
+            var vm = new viewModel();
+            ko.applyBindings(vm);
+        });
+    </script>
+    <style type="text/css">
+        #ribbon
+        {
+            width: 500px;
+        }
+        #actiongroup
+        {
+            width: 200px;
+        }
+        #fontgroup
+        {
+            width: 250px;
+        }
+    </style>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Editor</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+            <div id="ribbon" data-bind="wijribbon: {}">
+                <ul>
+                    <li><a href="#C1Editor1Format">Format</a></li><li><a href="#C1Editor1insert">Customize Tab</a></li>
+                </ul>
+                <div id="C1Editor1Format">
+                    <ul>
+                        <li id="actiongroup">
+                            <button title="Save" class="wijmo-wijribbon-bigbutton" name="save">
+                                <div class="wijmo-wijribbon-save">
+                                </div>
+                                <span>Save</span></button><span class="wijmo-wijribbon-list">
+                                    <button title="Undo" class="wijmo-wijribbon-undo" name="undo">
+                                    </button>
+                                    <button title="Redo" class="wijmo-wijribbon-redo" name="redo">
+                                    </button>
+                                </span><span class="wijmo-wijribbon-list">
+                                    <button title="Preview" class="wijmo-wijribbon-preview" name="preview">
+                                    </button>
+                                    <button title="Clean up" class="wijmo-wijribbon-cleanup" name="cleanup">
+                                    </button>
+                                </span><span class="wijmo-wijribbon-list">
+                                    <button title="Cut" class="wijmo-wijribbon-cut" name="cut">
+                                    </button>
+                                    <button title="Copy" class="wijmo-wijribbon-copy" name="copy">
+                                    </button>
+                                    <button title="Paste" class="wijmo-wijribbon-paste" name="paste">
+                                    </button>
+                                    <button title="Select All" class="wijmo-wijribbon-selectall" name="selectall">
+                                    </button>
+                                </span>
+                            <div>
+                                Actions</div>
+                        </li>
+                        <li id="fontgroup">
+                            <div title="Font Name" class="wijmo-wijribbon-dropdownbutton">
+                                <button title="Font Name" name="fontname">
+                                    Font Name</button><ul>
+                                        <li>
+                                            <input type="radio" id="C1Editor1_ctl74" name="fontname"></input><label for="C1Editor1_ctl74" name="fn1" title="Arial">Arial</label></li><li>
+                                                <input type="radio" id="C1Editor1_ctl76" name="fontname"></input><label for="C1Editor1_ctl76" name="fn2" title="Courier New">Courier New</label></li><li>
+                                                    <input type="radio" id="C1Editor1_ctl78" name="fontname"></input><label for="C1Editor1_ctl78" name="fn3" title="Garamond">Garamond</label></li><li>
+                                                        <input type="radio" id="C1Editor1_ctl80" name="fontname"></input><label for="C1Editor1_ctl80" name="fn4" title="Tahoma">Tahoma</label></li><li>
+                                                            <input type="radio" id="C1Editor1_ctl82" name="fontname"></input><label for="C1Editor1_ctl82" name="fn5" title="Times New Roman">Times New Roman</label></li><li>
+                                                                <input type="radio" id="C1Editor1_ctl84" name="fontname"></input><label for="C1Editor1_ctl84" name="fn6" title="Verdana">Verdana</label></li><li>
+                                                                    <input type="radio" id="C1Editor1_ctl86" name="fontname"></input><label for="C1Editor1_ctl86" name="fn7" title="Wingdings">Wingdings</label></li></ul>
+                            </div>
+                            <div title="Font Size" class="wijmo-wijribbon-dropdownbutton">
+                                <button title="Font Size" name="fontsize">
+                                    Font Size</button><ul>
+                                        <li>
+                                            <input type="radio" id="C1Editor1_ctl104" name="fontsize"></input><label for="C1Editor1_ctl104" name="xx-small" title="VerySmall">VerySmall</label></li><li>
+                                                <input type="radio" id="C1Editor1_ctl106" name="fontsize"></input><label for="C1Editor1_ctl106" name="x-small" title="Smaller">Smaller</label></li><li>
+                                                    <input type="radio" id="C1Editor1_ctl108" name="fontsize"></input><label for="C1Editor1_ctl108" name="small" title="Small">Small</label></li><li>
+                                                        <input type="radio" id="C1Editor1_ctl110" name="fontsize"></input><label for="C1Editor1_ctl110" name="medium" title="Medium">Medium</label></li><li>
+                                                            <input type="radio" id="C1Editor1_ctl112" name="fontsize"></input><label for="C1Editor1_ctl112" name="large" title="Large">Large</label></li><li>
+                                                                <input type="radio" id="C1Editor1_ctl114" name="fontsize"></input><label for="C1Editor1_ctl114" name="x-large" title="Larger">Larger</label></li><li>
+                                                                    <input type="radio" id="C1Editor1_ctl116" name="fontsize"></input><label for="C1Editor1_ctl116" name="xx-large" title="VeryLarge">VeryLarge</label></li><li>
+                                                                        <input type="radio" id="C1Editor1_ctl117" name="fontsize"></input><label for="C1Editor1_ctl117" name="40pt" title="40pt">40pt</label></li></ul>
+                            </div>
+                            <span class="wijmo-wijribbon-list">
+                                <button title="Background Color" class="wijmo-wijribbon-bgcolor" name="backcolor">
+                                </button>
+                                <button title="Font Color" class="wijmo-wijribbon-color" name="fontcolor">
+                                </button>
+                            </span><span class="wijmo-wijribbon-list">
+                                <input type="checkbox" id="C1Editor1_ctl133"></input><label for="C1Editor1_ctl133" name="bold" title="Bold" class="wijmo-wijribbon-bold"></label><input type="checkbox" id="C1Editor1_ctl134"></input><label for="C1Editor1_ctl134" name="italic" title="Italic" class="wijmo-wijribbon-italic"></label><input type="checkbox" id="C1Editor1_ctl135"></input><label for="C1Editor1_ctl135" name="underline" title="Underline" class="wijmo-wijribbon-underline"></label><input type="checkbox" id="C1Editor1_ctl136"></input><label for="C1Editor1_ctl136" name="strike" title="Strikethrough" class="wijmo-wijribbon-strike"></label><input type="checkbox" id="C1Editor1_ctl137"></input><label for="C1Editor1_ctl137" name="subscript" title="Subscript" class="wijmo-wijribbon-sub"></label><input type="checkbox" id="C1Editor1_ctl138"></input><label for="C1Editor1_ctl138" name="superscript" title="Superscript" class="wijmo-wijribbon-sup"></label></span><span class="wijmo-wijribbon-list">
+                                    <button title="Template" class="wijmo-wijribbon-template" name="template">
+                                    </button>
+                                </span><span class="wijmo-wijribbon-list">
+                                    <button title="RemoveFormat" class="wijmo-wijribbon-removeformat" name="removeformat">
+                                    </button>
+                                </span>
+                            <div>
+                                Font</div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="C1Editor1insert">
+                    <ul>
+                        <li>
+                            <div title="Table" class="wijmo-wijribbon-splitbutton">
+                                <button title="customize button" name="customcommand">
+                                    Click Me
+                                </button>
+                            </div>
+                            <div>
+                                customize group</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <div>
+                    disabled:<input type="checkbox" data-bind="checked: disabled" />
+                </div>
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+            <p>
+                Wijmo provides a Knockout Integration Library so that all jQuery UI and Wijmo widgets can be used with Knockout declarative syntax.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

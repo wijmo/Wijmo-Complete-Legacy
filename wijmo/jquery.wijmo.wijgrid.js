@@ -3,7 +3,7 @@
 
 /*
  *
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -4754,7 +4754,8 @@
 
 					switch (editorType = column._getInputEditorType(column.options)) {
 						case "date":
-							filterValue = column.$filterEditor.wijinputdate("option", "date");
+							filterValue = column.$filterEditor.wijinputdate("option", "date")
+								|| new Date(); // current date
 							break;
 
 						case "mask":
@@ -9671,8 +9672,10 @@
 									}
 								}
 
-								cell = row.cells[relIdx];
-								maxW = Math.max(maxW, $(cell).outerWidth());
+								if (row) {
+									cell = row.cells[relIdx];
+									maxW = Math.max(maxW, $(cell).outerWidth());
+								}
 							}
 						}
 					}

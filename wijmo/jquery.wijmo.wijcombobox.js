@@ -1,7 +1,7 @@
 /*globals jQuery,window,document*/
 /*
  *
- * Wijmo Library 2.1.2
+ * Wijmo Library 2.1.3
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -1186,7 +1186,10 @@
 						self.selectedItem = items[value];
 						self.selectedItem.selected = true;
 						self._input.val(self.selectedItem.label);
+						o.selectedValue = self.selectedItem.value;
 					}
+				} else if (value <= -1 || !value) {
+					self._clearSelection();
 				}
 			}
 			else if (key === "selectedValue") {
@@ -1206,6 +1209,8 @@
 							return false;
 						}
 					});
+				} else {
+					self._clearSelection();
 				}
 			}
 		},
@@ -1265,6 +1270,29 @@
 			}
 		},
 
+		_clearSelection: function () {
+			var self = this, o = self.options;
+			
+			if (o.selectionMode === "single") {
+				if (self.selectedItem !== null) {
+					self.selectedItem.selected = false;
+				}
+				self.selectedItem = null;
+			} else {
+				if (self.selectedItems) {
+					$.each(self.selectedItems, function (index, item) {
+						if (item.selected) {
+							item.selected = false;
+						}
+					});
+					self.selectedItem = null;
+					self.selectedItems = null;
+				}
+			}
+			o.selectedValue = null;
+			self._input.val("");
+		},
+		
 		_usingRemoteData: function () {
 			var o = this.options.data, r = false;
 			if (!$.isArray(o) && o !== null && o.proxy !== null) {
