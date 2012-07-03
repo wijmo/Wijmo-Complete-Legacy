@@ -44,12 +44,13 @@
 	border: 1px solid transparent;
 	padding: 3px;
 	vertical-align:middle;
+	display: block;
 }
 .wijmo-wijtree .wijmo-wijtree-list .wijmo-wijtree-node .wijmo-wijtree-inner a,
 .wijmo-wijtree .wijmo-wijtree-list .wijmo-wijtree-node .wijmo-wijtree-inner .wijmo-wijtree-template
 {
 	outline: none;
-    margin:0 0 0 0.5em;
+    margin:0 0.5em;
     display: block;
     float: left;
 }

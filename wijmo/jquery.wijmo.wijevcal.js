@@ -10,7 +10,7 @@ amplify*/
 
 /*
 *
-* Wijmo Library 2.1.3
+* Wijmo Library 2.1.4
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -3006,7 +3006,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 					return;
 				}
 				self._readUpdatedServerDataIfAny(result, o);
-				if (!self._eventsDataById[o.id]) {
+				if (!self._eventsDataById[o.id] || o.recurrenceState === "exception") {
 					self._storeEventWithSort(o);
 					self.status("Event '" + o.subject + "' added.");
 				} else {
@@ -3137,7 +3137,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		///	</param>
 		updateEvent: function (o, successCallback, errorCallback) {
 			var updateEventCallback, updateEventErrorCallback, k,
-				self = this, storeEventFlag;
+				self = this;
 			if (!this._trigger("beforeUpdateEvent", null,
 					{ data: o, prevData: o.prevData || {} })) {
 				if (o.prevData) {
@@ -3186,9 +3186,9 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				}
 				if (o.recurrenceState === "occurrence") {
 					this.log(this._formatString(
-	"[updateEvent] recurrenceState for event {0} changed to 'exception'.", o.id));
+	"[updateEvent->addEvent] recurrenceState for event {0} changed to 'exception'.", o.id));
 					o.recurrenceState = "exception";
-					storeEventFlag = true;
+					return this.addEvent(o, successCallback, errorCallback);
 				}
 			}
 
@@ -3198,7 +3198,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 					return;
 				}
 				self._readUpdatedServerDataIfAny(result, o);
-				if (!self._eventsDataById[o.id] || storeEventFlag) {
+				if (!self._eventsDataById[o.id]) {
 					self._storeEventWithSort(o);
 					self.status("Event '" + o.subject + "' added.");
 				} else {
@@ -4433,7 +4433,7 @@ this.localizeString("labelAllDay", "all-day") +
 .find(".wijmo-wijev-list-details .wijmo-wijev-agenda-container .wijmo-wijsuperpanel-templateouterwrapper");
 			$agendaList.data("wijevcal_agenda_initialized", false);
 			$agendaList.data("wijevcal_agenda_loadedeventscount", 0);
-			
+
 		},
 		//<< end of views cache
 

@@ -1,7 +1,7 @@
 /*globals jQuery,window*/
 /*
 *
-* Wijmo Library 2.1.3
+* Wijmo Library 2.1.4
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -197,6 +197,23 @@
 			/// The node widget that relates to this event.
 			/// </param>
 			nodeBlur: null,
+			// <summary>
+			/// The nodeFocus event handler. A function called when a node is focused.
+			/// Default: null
+			/// Type: Function
+			/// Code example: 
+			/// Supply a function as an option.
+			/// $("#selector").wijtree({ nodeFocus: function (e, data) { } });
+			/// Bind to the event by type: wijtreenodeBlur
+			/// $("#selector").bind("wijtreenodefocus", function(e, data) { } );
+			/// </summary>
+			/// <param name="e" type="Object">
+			/// jQuery.Event object.
+			/// </param>
+			/// <param name="data" type="Object">
+			/// The node widget that relates to this event.
+			/// </param>
+			nodeFocus: null,
 			/// <summary>
 			/// The nodeClick event handler. A function called when a node is clicked.
 			/// Default: null
@@ -2036,6 +2053,7 @@
 				self._focused = true;
 				self._tree._focusNode = this;
 				self.$inner.addClass("ui-state-focus");
+				self._tree._trigger("nodeFocus", event, self);  // < = NEW LINE
 			}
 		},
 
@@ -2688,6 +2706,7 @@
 			this._focused = true;
 			this._tree._focusNode = this;
 			this.$inner.addClass("ui-state-focus");
+			this._tree._trigger("nodeFocus", null, this); 
 		},
 
 		_setToolTip: function (value) {

@@ -1,3 +1,21 @@
+Wijmo-Complete v2.1.4
+=====================
+Combobox
+--------
+CSS fix for clearfix
+
+Treeview
+--------
+CSS fix for clearfix
+
+InputDate
+---------
+Fixed a bug that when setting time to 0:00:00 and the format text to '0:00:00 AM', the correct text should be '12:00:00 AM'
+
+InputNumber
+----------
+Fixed a bug that when selecting all text of the input and typing '2', the inputnumber widget would set the value to 20.
+
 Wijmo-Complete v2.1.3
 =====================
 Themes

@@ -7,7 +7,6 @@
 }
 .wijmo-wijcombobox-wrapper
 {
-
 }
 /* wijcombobox textbox
  ----------------------------------*/
@@ -40,9 +39,8 @@
     position: absolute;
     top: 0px;
     font-size: 0px;
-    width: 20px;
+    width: 22px;
     cursor: pointer;
-    padding: 2px 0;
 }
 /* dropdown list
 ----------------------------------*/

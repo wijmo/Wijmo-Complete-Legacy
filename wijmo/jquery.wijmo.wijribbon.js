@@ -1,7 +1,7 @@
 /*globals window,document,jQuery*/
 /*
 *
-* Wijmo Library 2.1.3
+* Wijmo Library 2.1.4
 * http://wijmo.com/
 *
 * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -98,6 +98,7 @@
 		_setDisabled: function (value) {
 			var self = this,
 				element = self.element,
+				eleOffset = element.offset(),
 				disabledModal = self.disabledModal;
 
 			element.wijtabs("option", "disabled", value);
@@ -107,8 +108,8 @@
 					disabledModal = $("<div></div>")
 						.addClass(css_state_disabled + " " + css_ribbon_disabled)
 						.css({
-							top: 0,
-							left: 0,
+							top: eleOffset.top,
+							left: eleOffset.left,
 							"z-index": "10000",
 							//for ie can't disabled, so add background-color attribute
 							"background-color": "lightgray",

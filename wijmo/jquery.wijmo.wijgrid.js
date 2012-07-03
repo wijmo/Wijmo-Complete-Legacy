@@ -3,7 +3,7 @@
 
 /*
  *
- * Wijmo Library 2.1.3
+ * Wijmo Library 2.1.4
  * http://wijmo.com/
  *
  * Copyright(c) ComponentOne, LLC.  All rights reserved.
@@ -5607,7 +5607,7 @@
 					}
 
 					for (ci = 0, celLen = row.cells.length; ci < celLen; ci++) {
-						tmp[ci] = row.cells[ci].innerHTML;
+						tmp[ci] = $.trim(row.cells[ci].innerHTML);
 
 						if (readAttributes) {
 							tmp.cellsAttributes[ci] = $.wijmo.wijgrid.getAttributes(row.cells[ci], prevent);
