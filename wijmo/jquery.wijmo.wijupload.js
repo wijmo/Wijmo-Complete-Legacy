@@ -2,10 +2,10 @@
 
 /*
 * 
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 * 
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
 * licensing@wijmo.com
@@ -480,7 +480,9 @@
 			/// Code Example: 
 			///		$(".selector").wijupload("accept", "image/*")
 			/// </summary>
-			accept: ""
+			accept: "",
+
+			localization: {}
 		},
 
 		_create: function () {
@@ -488,6 +490,11 @@
 				o = self.options,
 				id = new Date().getTime(),
 				useXhr = self.supportXhr();
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			self.filesLen = 0;
 			self.totalUploadFiles = 0;
@@ -504,6 +511,15 @@
 				self.disable();
 			}
 			//end for disabled option
+
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self._applyInputPosition();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijupload");
+			}
 		},
 
 		_setOption: function (key, value) {
@@ -639,14 +655,15 @@
 		},
 
 		_createCommandRow: function (commandRow) {
-			var uploadAllBtn = $("<a>").attr("href", "#")
+			var self = this,
+				uploadAllBtn = $("<a>").attr("href", "#")
 				.text("uploadAll")
 				.addClass(uploadUploadAllClass)
 				.button({
 					icons: {
 						primary: "ui-icon-circle-arrow-n"
 					},
-					label: "Upload All"
+					label: self._getLocalization("uploadAll", "Upload All")
 				}),
 				cancelAllBtn = $("<a>").attr("href", "#")
 				.text("cancelAll")
@@ -655,28 +672,49 @@
 					icons: {
 						primary: "ui-icon-cancel"
 					},
-					label: "Cancel All"
+					label: self._getLocalization("cancelAll", "Cancel All")
 				});
 			commandRow.append(uploadAllBtn).append(cancelAllBtn);
+		},
+
+		_getLocalization: function (key, defaultVal) {
+			var lo = this.options.localization;
+			return (lo && lo[key]) || defaultVal;
 		},
 
 		_createUploadButton: function () {
 			var self = this,
 				addBtn = $("<a>").attr("href", "#").button({
-					label: "Upload files"
+					label: self._getLocalization("uploadFiles", "Upload files")
 				});
 			addBtn.mousemove(function (e) {
+				var disabled = addBtn.data("button").options.disabled;
 				if (self.input) {
 					var pageX = e.pageX,
 						pageY = e.pageY;
-					self.input.offset({
-						left: pageX + 10 - self.input.width(),
-						top: pageY + 10 - self.input.height()
-					});
+
+					if (!disabled) {
+						self.input.offset({
+							left: pageX + 10 - self.input.width(),
+							top: pageY + 10 - self.input.height()
+						});
+					}
 				}
 			});
 			self.addBtn = addBtn;
 			self.upload.prepend(addBtn);
+		},
+
+		_applyInputPosition: function () {
+			var self = this,
+				addBtn = self.addBtn,
+				addBtnOffset = addBtn.offset(),
+				fileInput = self.cuurentInput;
+
+			fileInput.offset({
+				left: addBtnOffset.left + addBtn.width() - fileInput.width(),
+				top: addBtnOffset.top
+			}).height(addBtn.height());
 		},
 
 		_createFileInput: function () {
@@ -696,6 +734,7 @@
 				fileInput.attr("accept", accept);
 			}
 
+			self.cuurentInput = fileInput;
 			self.filesLen++;
 			fileInput.attr("id", id)
 				.attr("name", id)
@@ -748,8 +787,8 @@
 					.css("z-index", "9999")
 					.width(addBtn.outerWidth())
 					.height(addBtn.outerHeight())
-					.offset(addBtn.offset())
-					.appendTo(self.upload);
+					.appendTo(self.upload)
+					.offset(addBtn.offset());
 			}
 			files = $("li", self.filesList);
 			if (files.length >= maxFiles) {
@@ -781,7 +820,7 @@
 					icons: {
 						primary: "ui-icon-circle-arrow-n"
 					},
-					label: "upload"
+					label: self._getLocalization("upload", "upload")
 				}),
 				cancelBtn = $("<a>").attr("href", "#")
 				.text("cancel")
@@ -791,7 +830,7 @@
 					icons: {
 						primary: "ui-icon-cancel"
 					},
-					label: "cancel"
+					label: self._getLocalization("cancel", "cancel")
 				});
 			fileRow.addClass(uploadFileRowClass)
 				.addClass(uiContentClass)
@@ -981,7 +1020,7 @@
 					}
 					if (self.options.autoSubmit) {
 						//when autoSubmit set to "true", will trigger "totalUpload" immediately.
-						self.uploadAll = true;
+						//self.uploadAll = true; //fixed bug 23877
 						uploader.autoSubmit = true;
 						if (self._trigger("totalUpload", e, null) === false) {
 							return false;

@@ -109,8 +109,12 @@
 }
 .ui-widget-header {
 	border: 1px solid transparent;
-	background: none;
+	background: #1F1F1F;
 	color: #fff;
+}
+.ui-widget-header .ui-button
+{
+    vertical-align: middle;
 }
 .ui-widget-header a {
 	color: #fff;
@@ -1684,4 +1688,9 @@ div.wijmo-wijribbon .wijmo-wijribbon-group .wijmo-wijribbon-group-label, div.wij
 .wijmo-wijeditor-content .ui-widget-content
 {
 	background: #fff;
+}
+
+.wijmo-wijinput .wijmo-wijinput-input
+{
+    color: #fff;
 }

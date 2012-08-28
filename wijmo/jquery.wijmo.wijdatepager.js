@@ -4,10 +4,10 @@ clearTimeout,amplify*/
 /*jslint nomen: false*/
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the MIT or GPL Version 2 licenses.
 * licensing@wijmo.com
@@ -60,7 +60,25 @@ clearTimeout,amplify*/
 			/// Code example: $("#datepager").wijdatepager(
 			///			{ viewType: "month" });
 			/// </summary>
-			viewType: "day"
+			viewType: "day",
+
+			///	<summary>
+			///	Gets or sets the text for the 'next' button's ToolTip. 
+			/// Default: "right"
+			/// Type: String
+			/// Code example:
+			///		$(".selector").wijdatepager({nextTooltip: "Next"}); 
+			///	</summary>
+			nextTooltip: "right",
+
+			///	<summary>
+			///	Gets or sets the text for the 'previous' button's ToolTip. 
+			/// Default: "left"
+			/// Type: String
+			/// Code example:
+			///		$(".selector").wijdatepager({prevTooltip: "Previous"}); 
+			///	</summary>
+			prevTooltip: "left"
 
 			/*Available Events:
 			/// <summary>
@@ -91,6 +109,10 @@ clearTimeout,amplify*/
 		_setOption: function (key, value) {
 			$.Widget.prototype._setOption.apply(this, arguments);
 			switch (key) {
+				case "culture":
+					this.options.culture = value;
+					this._initBackground();
+					break;
 				case "selectedDate":
 					this.options.selectedDate = value;
 					this._initBackground();
@@ -105,6 +127,14 @@ clearTimeout,amplify*/
 				case "viewType":
 					this.options.viewType = value;
 					this._initBackground();
+					break;
+				case "nextTooltip":
+					//this.element.find(".wijmo-wijdatepager-increment").text(value).button("refresh");
+					this.element.find(".wijmo-wijdatepager-increment").attr("title", value);
+					break;
+				case "prevTooltip":
+					//this.element.find(".wijmo-wijdatepager-decrement").text(value).button("refresh");
+					this.element.find(".wijmo-wijdatepager-decrement").attr("title", value);
 					break;
 			}
 			return this;
@@ -131,6 +161,12 @@ clearTimeout,amplify*/
 		///	</summary>
 		_create: function () {
 			var o = this.options, resizeHandler;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
+			
 			if (!o.selectedDate) {
 				o.selectedDate = new Date();
 			}
@@ -141,13 +177,14 @@ clearTimeout,amplify*/
 
 			this.element.disableSelection();
 			this.element
-				.append($("<a class=\"wijmo-wijdatepager-decrement\"><span>left</span></a>"
+				.append($("<a class=\"wijmo-wijdatepager-decrement\"><span>" +
+				o.prevTooltip + "</span></a>"
 		))
 				.append("<div class=\"wijmo-wijdatepager-container ui-widget-content\">" +
 
 						"<div class=\"wijmo-wijdatepager-pages\"></div>" +
 						"</div>" +
-"<a class=\"wijmo-wijdatepager-increment\"><span>right</span></a>"
+"<a class=\"wijmo-wijdatepager-increment\"><span>" + o.nextTooltip + "</span></a>"
 );
 
 			$.Widget.prototype._create.apply(this, arguments);

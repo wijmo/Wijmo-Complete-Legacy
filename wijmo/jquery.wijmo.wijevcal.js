@@ -10,10 +10,10 @@ amplify*/
 
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the MIT or GPL Version 2 licenses.
 * licensing@wijmo.com
@@ -440,6 +440,17 @@ block comments:
 			///	Use the localization option in order to localize
 			///	text which not depends on culture option.
 			/// Default: {
+			/// activityLoading: "Loading...",
+			///	activityDeletingCalendar: "Deleting calendar...",
+			/// activityCreatingCalendar: "Creating calendar...",
+			///	activityUpdatingCalendar: "Updating calendar...",
+			///	activityCreatingEvent: "Creating event...",
+			///	activityUpdatingEvent: "Updating event...",
+			///	activityDeletingEvent: "Deleting event...",
+			///	activityUpdating: "Updating...",
+			///	agendaLoadingMoreEvents: "Loading more events...",
+			///	agendaMoreEventsFormat: "More events ({0})...", // (0) - Number, invisible events count			
+			///	agendaTimeFormat: "{0:hh:mm tt} to {1:hh:mm tt}", // {0} Date, event start time, {1} - Date, event end time
 			///	buttonToday: "today",
 			///	buttonDayView: "Day",
 			///	buttonWeekView: "Week",
@@ -448,6 +459,10 @@ block comments:
 			///	buttonDelete: "Delete",
 			///	buttonOK: "OK",
 			///	buttonCancel: "Cancel",
+			///	calendarNextTooltip: "Next",
+			///	calendarPrevTooltip: "Previous",
+			///	navigatorBarNextTooltip: "right",
+			///	navigatorBarPrevTooltip: "left",
 			///	labelAllDay: "all-day",
 			///	labelToday: "Today",
 			///	labelName: "name",
@@ -457,13 +472,27 @@ block comments:
 			///	labelRepeat: "repeat",
 			///	labelCalendar: "calendar",
 			///	labelDescription: "description",
+			///	monthCellMoreEventsFormat: "{0}  more...", // (0) - Number, invisible events count
+			///	promptOpenOccurrenceFormat: "{2}  is recurring event. Do you want to open only this occurrence?", // {0} = Start, {1} = End, {2} = Subject, {3} = Location
 			///	textNewEvent: "New event",
 			///	repeatNone: "None",
 			///	repeatDaily: "Every Day",
 			///	repeatWorkDays: "Work days",		
 			///	repeatWeekly: "Every Week",
 			///	repeatMonthly: "Every Month",
-			///	repeatYearly: "Every Year"
+			///	repeatYearly: "Every Year",			
+			/// labelCalendarName: "Calendar name",
+			/// labelColor: "Color",
+			/// buttonSave: "Save",
+			/// titleEditCalendar: "Edit calendar",
+			///	calendarToolTipFormat: "dddd, MMMM dd, yyyy",
+			/// calendarTitleFormat: "MMMM yyyy",
+			///	dayDetailsLabelFulldateFormat: "{0:dddd, MMMM d}",
+			///	dayDetailsLabelYearFormat: "{0:yyyy}"
+			///	weekViewHeaderFormat2Months: "{0:MMMM} - {1:MMMM yyyy}", 
+			///	weekViewHeaderFormat: "{0:MMMM yyyy}",
+			///	monthViewHeaderFormat: "{0:MMMM yyyy}"
+			///	agendaHeaderFullDateFormat": "{0:MMMM d, yyyy}"
 			/// }
 			/// Type: Object.
 			/// Code example: $("#eventscalendar").wijevcal(
@@ -475,34 +504,7 @@ block comments:
 			///					});
 			///	</summary>
 			localization: null,
-			/*
-			{
-			buttonToday: "today",
-			buttonDayView: "Day",
-			buttonWeekView: "Week",
-			buttonMonthView: "Month",
-			buttonListView: "List",
-			buttonDelete: "Delete",
-			buttonOK: "OK",
-			buttonCancel: "Cancel",
-			labelAllDay: "all-day",
-			labelToday: "Today",
-			labelName: "name",
-			labelStarts: "starts",
-			labelEnds: "ends",
-			labelLocation: "location",
-			labelRepeat: "repeat",
-			labelCalendar: "calendar",
-			labelDescription: "description",
-			textNewEvent: "New event",
-			repeatNone: "None",
-			repeatDaily: "Every Day",
-			repeatWorkDays: "Work days",		
-			repeatWeekly: "Every Week",
-			repeatMonthly: "Every Month",
-			repeatYearly: "Every Year"
-			},
-			*/
+
 			/// <summary>
 			/// The URL to the web service which will be used 
 			///	to store information about events.
@@ -669,7 +671,7 @@ block comments:
 			titleFormat: {
 				day: false,
 				week: "_formatWeekTitle",
-				month: "{0:MMMM yyyy}",
+				month: "_formatMonthTitle",
 				list: false
 			},
 
@@ -933,6 +935,37 @@ block comments:
 		viewTypeChanged(e, viewType)
 
 		/// <summary>
+		/// Occurs before the built-in event dialog is shown.
+		/// Return false or call event.preventDefault() in order to cancel event and
+		///	prevent the built-in dialog to be shown.
+		/// Type: Function
+		/// Event type: wijevcalbeforeediteventdialogshow
+		/// Code example:
+		/// Supply a callback function to handle the beforeEditEventDialogShow event
+		///	as an option.
+		/// $("#eventscalendar").wijevcal(
+		///	   { 
+		///			beforeEditEventDialogShow: function (e, args) 
+		///			{
+		///				alert("Show dialog for event with subject " + 
+		///					args.data.subject + ".");
+		///				return false;// own dialog is shown
+		///			}
+		///	});
+		/// Bind to the event by type: wijevcalbeforeediteventdialogshow.
+		/// $("#eventscalendar").bind("wijevcalbeforeediteventdialogshow", 
+		///	function(e, args) {
+		///		...		
+		/// });
+		/// </summary>
+		/// <param name="e" type="Object">jQuery.Event object.</param>
+		/// <param name="args" type="Object">
+		///		args.data - the event data.
+		///		args.targetCell - target offset DOM element which can be used for popup callout.
+		///	</param>
+		beforeEditEventDialogShow(e, args)
+
+		/// <summary>
 		/// Occurs before the add event action.
 		/// Return false or call event.preventDefault() in order to cancel event and
 		///	prevent the add action.
@@ -1151,6 +1184,18 @@ block comments:
 					o.eventsData = value;
 					o.appointments = value; //remove deprecated appointments option?
 					this._onEventsDataChanged();
+					break;
+				case "culture":
+					o.culture = value;
+					this.element.find(".wijmo-wijdatepager")
+							.wijdatepager("option", "culture", o.culture);
+					if (this._editEventDialog) {
+						this._editEventDialog.find(".wijmo-wijinput-date")
+							.wijinputdate("option", "culture", o.culture);
+					}
+					this.element.find(".wijmo-wijcalendar")
+							.wijcalendar("option", "culture", o.culture);
+					this._redrawActiveView(); // fix for 23766
 					break;
 				case "disabled":
 					if (o.disabled !== value) {
@@ -1382,7 +1427,10 @@ block comments:
 					"<div class=\"wijmo-wijev-daycalendar\"></div>" +
 					"<div class=\"wijmo-wijev-monthday-container\">" +
 						"<div class=\"wijmo-wijev-monthday-label\">...</div>" +
-						"<div class=\"wijmo-wijev-fulldate-label\">Loading...</div>" +
+						"<div class=\"wijmo-wijev-fulldate-label\">" +
+
+				this.localizeString("activityLoading", "Loading...") +
+"</div>" +
 						"<div class=\"wijmo-wijev-year-label\">...</div>" +
 					"</div>" +
 					"<div class=\"wijmo-wijev-agenda-container " +
@@ -1405,7 +1453,8 @@ block comments:
 
 			$("<div class=\"wijmo-wijev-loading-modal-frame\"></div>" +
 "<div class=\"wijmo-wijev-loading\">" +
-				"<div class=\"wijmo-wijev-loading-text\">Loading..." +
+				"<div class=\"wijmo-wijev-loading-text\">" +
+this.localizeString("activityLoading", "Loading...") +
 				"</div></div>")
 				.appendTo(this.element);
 
@@ -1440,6 +1489,8 @@ block comments:
 				selectedDate: o.selectedDate,
 				culture: o.culture,
 				viewType: o.viewType,
+				nextTooltip: this.localizeString("navigatorBarNextTooltip", "right"),
+				prevTooltip: this.localizeString("navigatorBarPrevTooltip", "left"),
 				firstDayOfWeek: o.firstDayOfWeek,
 				selectedDateChanged: $.proxy(function (e, args) {
 					this.goToDate(args.selectedDate);
@@ -1467,7 +1518,7 @@ block comments:
 			else {
 				this.element.find(".wijmo-wijev-loading-text").show();
 				if (!text) {
-					text = "Loading...";
+					text = this.localizeString("activityLoading", "Loading...");
 				}
 			}
 			if (isModal === undefined || isModal === true) {
@@ -1877,47 +1928,47 @@ block comments:
 		// UI behavior
 		/* dialogs */
 		_ensureEditCalendarDialogCreated: function () {
-			var o = this.options, dialogContent;
+			var o = this.options, dialogContent, buttonsHash = {};
 
 			if (!this._editCalendarDialog) {
 				dialogContent = o.editCalendarTemplate;
 				if (!dialogContent) {
-					dialogContent = "<p><label>Calendar name</label>" +
+					dialogContent = "<p><label>" + this.localizeString("labelCalendarName", "Calendar name") + "</label>" +
 	"<input type=\"text\" class=\"wijmo-wijev-name\" value=\"\"></p>" +
-	"<p><label>Location</label>" +
+	"<p><label>" + this.localizeString("labelLocation", "Location") + "</label>" +
 	"<input type=\"text\" class=\"wijmo-wijev-location\" value=\"\"></p>" +
 
-"<p><label>Description</label><textarea class=\"wijmo-wijev-description\" /></p>" +
-"<p><label>Color</label><select class=\"wijmo-wijev-color\"></p>";
+"<p><label>" + this.localizeString("labelDescription", "Description") + "</label><textarea class=\"wijmo-wijev-description\" /></p>" +
+"<p><label>" + this.localizeString("labelColor", "Color") + "</label><select class=\"wijmo-wijev-color\"></p>";
 				}
 				this._editCalendarDialog =
 					$("<div class=\"wijmo-wijev-editcalendar-dialog\">" +
 						dialogContent + "</div>");
 				this.element.append(this._editCalendarDialog);
+
+				buttonsHash[this.localizeString("buttonSave", "Save")] = $.proxy(function () {
+					var dlg = this._editCalendarDialog, cal = dlg.cal || {};
+					cal.name = dlg.find(".wijmo-wijev-name").val();
+					cal.location = dlg.find(".wijmo-wijev-location").val();
+					cal.description = dlg.find(".wijmo-wijev-description").val();
+					cal.color = dlg.find(".wijmo-wijev-color").val();
+					if (cal.prevData) {
+						this.updateCalendar(cal);
+					} else {
+						this.addCalendar(cal);
+					}
+
+
+					dlg.wijdialog("close");
+
+				}, this);
 				this._editCalendarDialog.wijdialog({
 					autoOpen: true,
 					height: 600,
 					width: 700,
 					modal: true,
-					title: "Edit calendar",
-					buttons: {
-						Save: $.proxy(function () {
-							var dlg = this._editCalendarDialog, cal = dlg.cal || {};
-							cal.name = dlg.find(".wijmo-wijev-name").val();
-							cal.location = dlg.find(".wijmo-wijev-location").val();
-							cal.description = dlg.find(".wijmo-wijev-description").val();
-							cal.color = dlg.find(".wijmo-wijev-color").val();
-							if (cal.prevData) {
-								this.updateCalendar(cal);
-							} else {
-								this.addCalendar(cal);
-							}
-
-
-							dlg.wijdialog("close");
-
-						}, this)
-					},
+					title: this.localizeString("titleEditCalendar", "Edit calendar"),
+					buttons: buttonsHash,
 					captionButtons: {
 						pin: { visible: false },
 						refresh: { visible: false },
@@ -1938,7 +1989,7 @@ block comments:
 						"wijmo-wijev-event-dialog ui-widget-content ui-corner-all\">" +
 "<ul class=\"wijmo-wijev-brief-content\">" +
 "<li><label>" +
-	"Name" +
+	this.localizeString("labelName", "name") +
 					"</label>" +
 	"<input type=\"text\" name=\"subject\" class=\"wijmo-wijev-subject\" value=\"\">" +
 
@@ -2038,6 +2089,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				this._editEventDialog.find(".wijmo-wijev-start").width(114).wijinputdate(
 					{
 						culture: this.options.culture,
+						titleFormat: this.localizeString("calendarTitleFormat", "MMMM yyyy"),
+						toolTipFormat: this.localizeString("calendarToolTipFormat", "dddd, MMMM dd, yyyy"),
+						nextTooltip: this.localizeString("calendarNextTooltip", "Next"),
+						prevTooltip: this.localizeString("calendarPrevTooltip", "Previous"),
 						showTrigger: true,
 						dateFormat: "d",
 						dateChanged: $.proxy(function (e, args) {
@@ -2056,6 +2111,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 						.width(80).wijinputdate(
 					{
 						culture: this.options.culture,
+						titleFormat: this.localizeString("calendarTitleFormat", "MMMM yyyy"),
+						toolTipFormat: this.localizeString("calendarToolTipFormat", "dddd, MMMM dd, yyyy"),
+						nextTooltip: this.localizeString("calendarNextTooltip", "Next"),
+						prevTooltip: this.localizeString("calendarPrevTooltip", "Previous"),
 						dateFormat: "t",
 						dateChanged: $.proxy(function (e, args) {
 							var endDt = this._editEventDialog
@@ -2081,6 +2140,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				this._editEventDialog.find(".wijmo-wijev-end").width(114).wijinputdate(
 					{
 						culture: this.options.culture,
+						titleFormat: this.localizeString("calendarTitleFormat", "MMMM yyyy"),
+						toolTipFormat: this.localizeString("calendarToolTipFormat", "dddd, MMMM dd, yyyy"),
+						nextTooltip: this.localizeString("calendarNextTooltip", "Next"),
+						prevTooltip: this.localizeString("calendarPrevTooltip", "Previous"),
 						showTrigger: true,
 						dateFormat: "d",
 						dateChanged: $.proxy(function (e, args) {
@@ -2097,6 +2160,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				this._editEventDialog.find(".wijmo-wijev-end-time").width(80).wijinputdate(
 					{
 						culture: this.options.culture,
+						titleFormat: this.localizeString("calendarTitleFormat", "MMMM yyyy"),
+						toolTipFormat: this.localizeString("calendarToolTipFormat", "dddd, MMMM dd, yyyy"),
+						nextTooltip: this.localizeString("calendarNextTooltip", "Next"),
+						prevTooltip: this.localizeString("calendarPrevTooltip", "Previous"),
 						dateFormat: "t"
 						/*,
 						dateChanged: $.proxy(function (e, args) {
@@ -2649,7 +2716,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				this.status("Calendar with name '" + name + "' not found.");
 				return false;
 			}
-			this.showLoadingLabel("Deleting calendar...");
+			this.showLoadingLabel(this.localizeString("activityDeletingCalendar",
+								"Deleting calendar..."));
 			deleteCalendarCallback = function (sqlResult) {
 				self.status("Calendar '" + o.name + "' deleted.");
 				self._onCalendarsChanged();
@@ -2748,7 +2816,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				o.id = "dynid" + this._dynIdCounter + "ts" + new Date().getTime();
 
 			}
-			this.showLoadingLabel("Creating calendar...");
+			this.showLoadingLabel(this.localizeString("activityCreatingCalendar",
+													"Creating calendar..."));
 			addCalendarCallback = function (sqlResult) {
 				if (self._handleServerError(sqlResult)) {
 					addCalendarErrorCallback(sqlResult);
@@ -2862,7 +2931,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				o.id = "dynid" + this._dynIdCounter + "ts" + new Date().getTime();
 
 			}
-			this.showLoadingLabel("Updating calendar...");
+			this.showLoadingLabel(this.localizeString("activityUpdatingCalendar",
+													"Updating calendar..."));
 			updateCalendarCallback = function (sqlResult) {
 				if (self._handleServerError(sqlResult)) {
 					updateCalendarErrorCallback(sqlResult);
@@ -2983,7 +3053,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 			if (!o.calendar) {
 				o.calendar = "Default";
 			}
-			this.showLoadingLabel("Creating event...");
+			this.showLoadingLabel(this.localizeString("activityCreatingEvent",
+															"Creating event..."));
 
 			addEventErrorCallback = function (e) {
 				self.hideLoadingLabel();
@@ -3154,7 +3225,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 			if (!o.calendar) {
 				o.calendar = "Default";
 			}
-			this.showLoadingLabel("Updating event...");
+			this.showLoadingLabel(this.localizeString("activityUpdatingEvent",
+															"Updating event..."));
 
 			updateEventErrorCallback = function (e) {
 				self.hideLoadingLabel();
@@ -3755,7 +3827,8 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 					{ data: o })) {
 				return false;
 			}
-			this.showLoadingLabel("Deleting event...");
+			this.showLoadingLabel(this.localizeString("activityDeletingEvent",
+															"Deleting event..."));
 
 			deleteEventErrorCallback = function (e) {
 				self.status("Unable to delete event '" + (o ? o.subject : "undefined") + "': " + e);
@@ -4132,7 +4205,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 			}
 			if (!appt) {
 				appt = { subject: this.localizeString("textNewEvent", "New event") };
-
+				appt.isNewEvent = true;
 				if (targetCell && targetCell.length > 0) {
 					this._editEventDialog._arrowTarget = targetCell;
 					targetCell.addClass("ui-selected");
@@ -4172,9 +4245,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				this._editEventDialog._arrowTarget = targetCell;
 				if (appt.recurrenceState === "occurrence") {
 					masterAppt = this._eventsDataById[appt.parentRecurrenceId];
-					if (window.confirm(appt.subject +
-						" is recurring event. " +
-						"Do you want to open only this occurrence?")) {
+					if (window.confirm(
+this._formatString(this.localizeString("promptOpenOccurrenceFormat", "{2}  is recurring event. Do you want to open only this occurrence?"),
+appt.start, appt.end, appt.subject, appt.location)
+					)) {
 						// edit exception: set inside addEvent/updateEvent method
 						//appt.recurrenceState = "exception";
 					} else {
@@ -4188,8 +4262,10 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 				}*/
 
 			}
-			this._bindApptToDialog(appt);
-			this._editEventDialog.wijpopup("show",
+			if (this._trigger("beforeEditEventDialogShow", null,
+					{ data: appt, targetCell: targetCell })) {
+				this._bindApptToDialog(appt);
+				this._editEventDialog.wijpopup("show",
 				{ of: targetCell,
 					my: "left center",
 					at: "right center",
@@ -4197,6 +4273,7 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 							Math.round(e.offsetX - targetCell.width()) : 10) + " 0",
 					collision: "fit"
 				});
+			}
 		},
 
 
@@ -4244,19 +4321,39 @@ this.localizeString("labelDescription", "Description") + "</label>" +
 		},
 
 		/* DAY(S)/WEEK view*/
-
+		_getDayColumnDates: function (updateSelectedDates) {
+			var o = this.options,
+				columnDates = o.selectedDates, startDt, dt, i;
+			if (!columnDates) {
+				columnDates = [new Date()];
+			}
+			if (o.viewType === "week") {
+				startDt = o.selectedDate || columnDates[0];
+				i = o.firstDayOfWeek - startDt.getDay();
+				if (Math.abs(i) > 6) {
+					i = startDt.getDay() - o.firstDayOfWeek;
+				}
+				startDt = this._addDays(startDt, i);
+				columnDates = [];
+				for (i = 0; i < 7; i += 1) {
+					dt = this._addDays(startDt, i);
+					columnDates.push(dt);
+				}
+			}
+			if (updateSelectedDates) {
+				o.selectedDates = columnDates;
+			}
+			return columnDates;
+		},
 		_renderDayView: function () {
 			var o = this.options, curMinute = 0, lastMinute = 24 * 60,
 				s, cellClass, timeRulerCellClass,
-				selectedDates = o.selectedDates, i,
+				columnDates = this._getDayColumnDates(true), i,
 				curDayHeader, curDayColumn, curDayDate, todayDate = new Date(),
 				columnCount, skipNextBorder = false,
 				dayview = this.element.find(".wijmo-wijev-dayview"),
 				headercontainer, scrollcontent, timeruler,
 				curTimeRulerInterval = 0, isOddRow;
-			if (!selectedDates) {
-				selectedDates = [new Date()];
-			}
 			if (dayview.length === 0) {
 				dayview = $("<div class=\"wijmo-wijev-view wijmo-wijev-dayview ui-widget-content\">" +
 								"<h3 class=\"wijmo-wijev-header-title\">title" +
@@ -4289,7 +4386,8 @@ this.localizeString("labelAllDay", "all-day") +
 							.find(".wijmo-wijev-view-container"));
 				this.element.find(".wijmo-wijev-scrollpanel").wijsuperpanel(
 										{
-											hScroller: { scrollBarVisibility: "hidden" }
+											hScroller: { scrollBarVisibility: "hidden" },
+											animationOptions: { disabled: true }
 										}
 							);
 			}
@@ -4349,8 +4447,8 @@ this.localizeString("labelAllDay", "all-day") +
 			}
 			headercontainer.find(".wijmo-wijev-dayheadercolumn").remove();
 			scrollcontent.find(".wijmo-wijev-daycolumn").remove();
-			for (i = 0, columnCount = selectedDates.length; i < columnCount; i = i + 1) {
-				curDayDate = selectedDates[i];
+			for (i = 0, columnCount = columnDates.length; i < columnCount; i = i + 1) {
+				curDayDate = columnDates[i];
 				curDayHeader = this._getCachedDayHeader(curDayDate);
 				curDayColumn = this._getCachedDayColumn(curDayDate);
 				if (!curDayHeader) {
@@ -4519,6 +4617,8 @@ this.localizeString("labelAllDay", "all-day") +
 				this.element.find(".wijmo-wijev-day-details .wijmo-wijev-daycalendar")
 					.wijcalendar({
 						culture: o.culture,
+						titleFormat: this.localizeString("calendarTitleFormat", "MMMM yyyy"),
+						toolTipFormat: this.localizeString("calendarToolTipFormat", "dddd, MMMM dd, yyyy"),
 						showTitle: false,
 						showOtherMonthDays: false,
 						showWeekNumbers: false,
@@ -4527,7 +4627,9 @@ this.localizeString("labelAllDay", "all-day") +
 							if (args.dates && !o.disabled) {
 								this.goToDate(args.dates[0]);
 							}
-						}, this)
+						}, this),
+						nextTooltip: this.localizeString("calendarNextTooltip", "Next"),
+						prevTooltip: this.localizeString("calendarPrevTooltip", "Previous")
 					});
 				this.element
 					.find(".wijmo-wijev-day-details .wijmo-wijev-agenda-container")
@@ -4544,10 +4646,18 @@ this.localizeString("labelAllDay", "all-day") +
 			this.element.find(".wijmo-wijev-day-details .wijmo-wijev-monthday-label")
 									.html(selectedDate.getDate());
 			this.element.find(".wijmo-wijev-day-details .wijmo-wijev-fulldate-label")
-						.html(this._formatString("{0:dddd, MMMM d}", selectedDate));
+						.html(this._formatString(this.localizeString("dayDetailsLabelFulldateFormat", "{0:dddd, MMMM d}"), selectedDate));
+
+
+
 			//Tuesday, November 1
 			this.element.find(".wijmo-wijev-day-details .wijmo-wijev-year-label")
-									.html(selectedDate.getFullYear());
+									.html(
+						this._formatString(
+							this.localizeString("dayDetailsLabelYearFormat", "{0:yyyy}"),
+														selectedDate));
+
+			//selectedDate.getFullYear()
 			this._updateAgendaList(this.element
 					.find(".wijmo-wijev-day-details  .wijmo-wijev-agenda-container"),
 					selectedDate, selectedDate, false);
@@ -4564,7 +4674,10 @@ this.localizeString("labelAllDay", "all-day") +
 				$agendaList = supPanel.find(".wijmo-wijsuperpanel-templateouterwrapper");
 				if ($agendaList.data("wijevcal_agenda_loadnextpage")) {
 					$agendaList.data("wijevcal_agenda_loadnextpage", false);
-					$agendaList.find(".wijmo-wijev-agenda-more-events").show().html("Loading more events...");
+					$agendaList.find(".wijmo-wijev-agenda-more-events")
+						.show()
+						.html(this.localizeString("agendaLoadingMoreEvents",
+														"Loading more events..."));
 					setTimeout($.proxy(function () {
 						this._renderAgendaEvents($agendaList, null, null, true);
 					}, this), 100);
@@ -4595,6 +4708,8 @@ this.localizeString("labelAllDay", "all-day") +
 			}
 			///////////
 			if (listViewMode && $agendaList.data("wijevcal_agenda_initialized")) {
+				/*fix for 24623 */
+				$agendaList.parents(".wijmo-wijsuperpanel").wijsuperpanel("refresh");
 				return;
 			}
 			$agendaList.data("wijevcal_agenda_initialized", true);
@@ -4652,7 +4767,12 @@ this.localizeString("labelAllDay", "all-day") +
 							s += "</div>";
 							if (apptsCount < appts.length) {
 								s += "<div class=\"wijmo-wijev-agenda-more-events\">";
-								s += "More events (" + (appts.length - apptsCount) + ")...";
+
+								s += this._formatString(
+									this.localizeString("agendaMoreEventsFormat",
+											"More events ({0})..."),
+									(appts.length - apptsCount));
+
 								s += "<div>";
 								$agendaList.data("wijevcal_agenda_loadnextpage", true);
 							} else {
@@ -4718,7 +4838,8 @@ this.localizeString("labelAllDay", "all-day") +
 									this._formatString("{0:dddd}", curDayStart) +
 								"</div>" +
 								"<div class=\"wijmo-wijev-date\">" +
-								this._formatString("{0:MMMM d, yyyy}", curDayStart) +
+								this._formatString(
+this.localizeString("agendaHeaderFullDateFormat", "{0:MMMM d, yyyy}"), curDayStart) +
 								"</div>" +
 								"</div>";
 			return s;
@@ -4751,7 +4872,9 @@ this.localizeString("labelAllDay", "all-day") +
 					"</div>" +
 					"<div class=\"wijmo-wijev-agenda-event-time\">" +
 						(this.isAllDayEvent(ev) ? this.localizeString("labelAllDay", "all-day") :
-				    this._formatString("{0:hh:mm tt} to {1:hh:mm tt}",
+				    this._formatString(
+									this.localizeString("agendaTimeFormat",
+											"{0:hh:mm tt} to {1:hh:mm tt}"),
 									ev.start, ev.end)) +
 					"</div>" +
 					"</li>";
@@ -4788,18 +4911,18 @@ this.localizeString("labelAllDay", "all-day") +
 				dayHeaderColumns = headercontainer.find(".wijmo-wijev-dayheadercolumn"),
 				dayColumns = scrollcontent.find(".wijmo-wijev-daycolumn"),
 				curDayStart, curDayEnd, o = this.options,
-				selectedDates = o.selectedDates,
-				viewStart = selectedDates[0],
+				columnDates = this._getDayColumnDates(),
+				viewStart = columnDates[0],
 				viewEnd, allDayCellChanged,
 				apptVisual, visualStartDt, visualEndDt, visualStartMin, visualEndMin,
 				visualStartPx, visualEndPx, conflictColumns = [];
-			viewEnd = selectedDates[selectedDates.length - 1];
+			viewEnd = columnDates[columnDates.length - 1];
 			viewEnd = new Date(viewEnd.getFullYear(), viewEnd.getMonth(),
 								viewEnd.getDate(), 23, 59, 59);
 			if (appts) {
-				for (j = 0, daysCount = selectedDates.length; j < daysCount; j += 1) {
+				for (j = 0, daysCount = columnDates.length; j < daysCount; j += 1) {
 					if (!dayColumns[j]._cached) {
-						curDayStart = selectedDates[j];
+						curDayStart = columnDates[j];
 						curDayStart = new Date(curDayStart.getFullYear(),
 										curDayStart.getMonth(), curDayStart.getDate());
 						curDayEnd = new Date(curDayStart.getFullYear(),
@@ -4852,7 +4975,7 @@ this.localizeString("labelAllDay", "all-day") +
 
 						//
 
-						this._storeDayCache(selectedDates[j], dayHeaderColumns[j],
+						this._storeDayCache(columnDates[j], dayHeaderColumns[j],
 														dayColumns[j]);
 						dayColumns[j]._cached = true;
 						conflictColumns.push(dayColumns[j]);
@@ -5109,7 +5232,7 @@ this.localizeString("labelAllDay", "all-day") +
 		_onDayViewAppointmentMouseMove: function (e) {
 			e.preventDefault();
 			var ychange = e.clientY - this.__startClientY, top, o = this.options,
-				newHeight;
+				newHeight, offsetTop;
 			if (!e.ctrlKey) {
 				ychange = Math.round(ychange / o.timeIntervalHeight) *
 								o.timeIntervalHeight;
@@ -5140,6 +5263,15 @@ this.localizeString("labelAllDay", "all-day") +
 						top = 0;
 					}
 					this.__targetAppt.css("top", top);
+					offsetTop = this.__targetAppt.offset().top;
+					//fix for 25070 (part 1):
+					this.element.find(".wijmo-wijev-scrollpanel")
+						.wijsuperpanel("scrollChildIntoView", this.__targetAppt);
+
+					this.__startApptY = this.__startApptY -
+							(this.__targetAppt.offset().top - offsetTop);
+					//console.log();
+
 				}
 				this._onApptVisualDargOrResize(this.__targetAppt,
 							this.findEventById(this.__targetAppt[0].className));
@@ -5164,6 +5296,7 @@ this.localizeString("labelAllDay", "all-day") +
 				var o = this.findEventById(this.__targetAppt[0].className);
 				this._onApptVisualDargOrResize(this.__targetAppt, o);
 				this._apptMovedFlag = false;
+				this._movedFromTimeInervalApptElem = null;
 				this.updateEvent(o);
 				window.setTimeout($.proxy(function () {
 					if (this.__targetAppt &&
@@ -5276,13 +5409,21 @@ this.localizeString("labelAllDay", "all-day") +
 				} else {
 
 					// move from all day event cell to time interval.
-					this.__targetAppt.html(
+					if (this._movedFromTimeInervalApptElem) {
+						// fix for 25070 case 2.
+						this.__targetAppt.replaceWith(this._movedFromTimeInervalApptElem);
+						this.__targetAppt = $(this._movedFromTimeInervalApptElem);
+						this._movedFromTimeInervalApptElem = null;
+					} else {
+						this.__targetAppt.html(
 this._getEventMarkup(this.findEventById(this.__targetAppt[0].className), true)
 );
+					}
 				}
 			}
 			if (targetCol[0].className !== sourceCol[0].className) {
 				this.__targetAppt[0].parentNode.removeChild(this.__targetAppt[0]);
+
 				this._resolveDayViewAppointmentConflicts(sourceCol);
 				this.__targetAppt.appendTo(targetCol);
 				this._apptMovedFlag = true;
@@ -5336,8 +5477,11 @@ this._getEventMarkup(this.findEventById(this.__targetAppt[0].className), true)
 			if (sourceCol.length > 0) {
 				// update appointment element
 				// move from time interval to all day cell
-
 				newVisual = $(this._getAllDayEventMarkup(this.findEventById(this.__targetAppt[0].className)));
+
+				// fix for 25070 case 2:
+				this._movedFromTimeInervalApptElem = this.__targetAppt[0].cloneNode(true);
+
 				this.__targetAppt.replaceWith(newVisual);
 				this.__targetAppt = newVisual;
 
@@ -5589,7 +5733,11 @@ appt.subject +
 						if (monthcell.find(".wijmo-wijev-monthcell-showmore").length < 1) {
 							monthcell.append(
 								$("<div class=\"wijmo-wijev-monthcell-showmore\">" +
-								hiddenCount + " more...</div>"));
+	this._formatString(
+		this.localizeString("monthCellMoreEventsFormat", "{0}  more..."),
+		hiddenCount) +
+
+								"</div>"));
 						}
 					}
 				}
@@ -5837,6 +5985,9 @@ appt.subject +
 				if (fmt === "_formatWeekTitle") {
 					fmt = this._formatWeekTitle;
 				}
+				else if (fmt === "_formatMonthTitle") {
+					fmt = this._formatMonthTitle;
+				}
 				else if (typeof window[fmt] === "function") {
 					fmt = window[fmt];
 				}
@@ -5859,14 +6010,19 @@ appt.subject +
 				}
 			});
 		},
+		_formatMonthTitle: function (dt) {
+			return this._formatString(this.localizeString("monthViewHeaderFormat", "{0:MMMM yyyy}"), dt);
+		},
 
 		_formatWeekTitle: function (start, end) {
 			if (start.getMonth() !== end.getMonth()) {
-				return this._formatString("{0:MMMM} - {1:MMMM yyyy}", start, end);
+				return this._formatString(
+this.localizeString("weekViewHeaderFormat2Months", "{0:MMMM} - {1:MMMM yyyy}"),
+															start, end);
 			} else {
-				return this._formatString("{0:MMMM yyyy}", start);
+				return this._formatString(
+this.localizeString("weekViewHeaderFormat", "{0:MMMM yyyy}"), start);
 			}
-
 		},
 		// format date/time:
 		_formatDayHeaderDate: function (dt) {

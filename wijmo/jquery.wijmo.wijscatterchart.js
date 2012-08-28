@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window, navigator*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -461,12 +461,21 @@
 			var self = this,
 				o = tooltip.options,
 				hintStyle = self.options.hint.style,
-				target = tooltip.target;
+				target = tooltip.target, obj, 
+				dotStyle;
 
 			if (target) {
-				o.style.stroke = hintStyle.stroke || 
-				target.getAttribute("stroke") ||
-				target.getAttribute("fill") || "#ffffff";
+				if ($.browser.msie && $.browser.version < 9) {
+					obj = $(target).data().wijchartDataObj;
+					dotStyle = obj.style;
+					o.style.stroke = hintStyle.stroke ||
+					dotStyle.stroke ||
+					dotStyle.fill || "#ffffff";
+				} else {
+					o.style.stroke = hintStyle.stroke || 
+					target.getAttribute("stroke") ||
+					target.getAttribute("fill") || "#ffffff";
+				}
 				target.attrs = { stroke: o.style.stroke };
 			}
 
@@ -704,8 +713,9 @@
 						if (zoomOnHover) {
 							seriesIndex = dataObj.seriesIndex;
 							if (dot.attr) {
-								style = $.extend(true, dot.attr(), 
-									seriesHoverStyles[seriesIndex]);
+//								style = $.extend(true, dot.attr(), 
+//									seriesHoverStyles[seriesIndex]);
+								style = $(true, { }, seriesHoverStyles[seriesIndex]);
 								dot.attr(style);
 							}
 							if (document.createElementNS) {
@@ -730,7 +740,7 @@
 						if (zoomOnHover) {
 							seriesIndex = dataObj.seriesIndex;
 							if (dot.attr) {
-								dot.attr(seriesStyles[seriesIndex]);
+								dot.attr($.extend(true, { }, seriesStyles[seriesIndex]));
 							}
 						}
 						if (document.createElementNS) {
@@ -845,7 +855,8 @@
 						seriesIndex: i,
 						index: j,
 						markerType: type,
-						type: "scatter"
+						type: "scatter",
+						style: style
 					}, series);
 
 					$(dot.element).data("wijchartDataObj", dotData);
@@ -1888,7 +1899,10 @@
 							}
 						}						
 						if (!skipAttr) {
-							if (docMode8) { 
+							if (key === "opacity") {
+								key = "fill-opacity";
+							}
+							if (docMode8) {								
 								element[key] = value;
 							} else {
 								attr(element, key, value);

@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window, Globalize, wijmoASPNetParseOptions*/
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
 * licensing@wijmo.com
@@ -920,6 +920,14 @@
 					content.transform(Raphael.format("T0,{0}",
 					titleBox.height / 2 + contentBox.height / 2));
 				}
+
+				if (title) {
+					// content.translate(0, titleBox.height / 2 +
+					// contentBox.height / 2);
+					title.transform(Raphael.format("T0,{0}",
+					0));
+				}
+
 				if (o.closeBehavior === "sticky") {
 					closeBtn = self.closeBtn(-1000, -1000, closeBtnLength);
 					elements.push(closeBtn);
@@ -2911,8 +2919,9 @@
 				idx = 0,
 				oldXMajorFactor = o.axis.x.tickMajor.factor,
 				oldXMinorFactor = o.axis.x.tickMinor.factor,
-				oldYMajorFactor = o.axis.y.tickMajor.factor,
-				oldYMinorFactor = o.axis.y.tickMinor.factor,
+				oldYMajorFactor, oldYMinorFactor, bakYAxis, newYAxis,
+//				oldYMajorFactor = o.axis.y.tickMajor.factor,
+//				oldYMinorFactor = o.axis.y.tickMinor.factor,
 				hoverStyleLen;
 
 			if (key === "dataSource") {
@@ -2945,20 +2954,64 @@
 			}
 			else {
 				if ($.isPlainObject(o[key])) {
-					$.extend(true, o[key], value);
+					
 					if (key === "axis") {
+						if ($.isArray(o.axis.y)) {
+							bakYAxis = $.arrayClone(o.axis.y);
+						}
+						else {
+							bakYAxis = $.extend(true, {}, o.axis.y);
+						}
+					}
+					$.extend(true, o[key], value);
+
+					if (key === "axis") {
+						newYAxis = o.axis.y;
 						if (o.axis.x.tickMajor.factor < 0) {
 							o.axis.x.tickMajor.factor = oldXMajorFactor;
 						}
 						if (o.axis.x.tickMinor.factor < 0) {
 							o.axis.x.tickMinor.factor = oldXMinorFactor;
 						}
-						if (o.axis.y.tickMajor.factor < 0) {
-							o.axis.y.tickMajor.factor = oldYMajorFactor;
+
+						//case origin y is object, now is object
+						if (!$.isArray(newYAxis)) {
+							if ($.isArray(bakYAxis)) {
+								oldYMajorFactor = bakYAxis[0].tickMajor.factor;
+								oldYMinorFactor = bakYAxis[0].tickMinor.factor;
+							}
+							else {
+								oldXMajorFactor = bakYAxis.tickMajor.factor;
+								oldXMinorFactor = bakYAxis.tickMinor.factor;
+							}
+							if (o.axis.y.tickMajor.factor < 0) {
+								o.axis.y.tickMajor.factor = oldYMajorFactor;
+							}
+							if (o.axis.y.tickMinor.factor < 0) {
+								o.axis.y.tickMinor.factor = oldYMinorFactor;
+							}	
 						}
-						if (o.axis.y.tickMinor.factor < 0) {
-							o.axis.y.tickMinor.factor = oldYMinorFactor;
+						// case newYAxis is array
+						else {
+							if (!$.isArray(bakYAxis)) {
+								bakYAxis = [bakYAxis];
+							}
+							$.each(newYAxis, function (i, yAxis) {
+								var baky = bakYAxis[i] || {};
+								if (baky.tickMajor && yAxis.tickMajor.factor) {
+									if (yAxis.tickMajor.factor < 0) {
+										yAxis.tickMajor.factor = baky.tickMajor.factor;
+									}
+								}
+								if (baky.tickMinor && baky.tickMinor.factor) {
+									if (yAxis.tickMinor.factor < 0) {
+										yAxis.tickMinor.factor = baky.tickMinor.factor;
+									}
+								}
+								
+							});
 						}
+						
 					}
 				} else {
 					$.Widget.prototype._setOption.apply(self, arguments);
@@ -3049,9 +3102,23 @@
 				height = o.height || self.element.height(),
 				newEle = null,
 				canvas;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			self.updating = 0;
 			self.innerState = {};
+			
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.redraw();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijchart");
+			}
 
 			// Add for parse date options for jUICE. D.H
 			if ($.isFunction(window["wijmoASPNetParseOptions"])) {
@@ -3123,7 +3190,7 @@
 				// fixed the issue 20422 by dail on 2012-3-12, If user set 
 				// rotation and scale. the transform will only effect on scale.
 				canvas.customAttributes.rotation = function (num) {
-				    //return {transform: "...R" + num};
+					//return {transform: "...R" + num};
 					this.transform("...R" + num);
 				};
 				canvas.customAttributes.scale = function (num) {
@@ -3161,8 +3228,8 @@
 		},
 
 		_getCulture: function (name) {
-            return Globalize.findClosestCulture(name || this.options.culture);
-        },
+			return Globalize.findClosestCulture(name || this.options.culture);
+		},
 
 		_handleDisabledOption: function (disabled, ele) {
 			var self = this;
@@ -3668,7 +3735,7 @@
 			self._paintFooter();
 			self._paintLegend();
 			self._paintChartArea();
-			self._paintChartLabels();
+			//self._paintChartLabels();
 			self._paintTooltip();
 			self._trigger("painted");
 
@@ -3918,7 +3985,8 @@
 						textStyle = $.extend(true, {}, o.textStyle, legend.textStyle);
 						//text.attr(textStyle);
 						if (legend.textWidth) {
-							text = self.canvas.wrapText(0, 0, series.label, legend.textWidth, "far", textStyle);
+							text = self.canvas.wrapText(0, 0, series.label, 
+								legend.textWidth, "far", textStyle);
 						} else {
 							text = self._text(0, 0, series.label);
 							text.attr(textStyle);
@@ -3961,7 +4029,7 @@
 							if (series.visible === false && !isline) {
 								$(text.node).data("hidden", true)
 								.data("textOpacity", 
-									text.attr("opacity") || 1);							
+									text.attr("opacity") || 1);	
 								text.attr("opacity", 0.3);
 							}
 							$.wijraphael.addClass($(text.node), 
@@ -4157,7 +4225,8 @@
 						});
 					$.wijraphael.addClass($(legCover.node), 
 					"wijchart-legend-textCover wijchart-legend");
-					$(legCover.node).data("legendIndex", $(leg0.node).data("legendIndex"));
+					$(legCover.node).data("legendIndex", 
+						$(leg0.node).data("legendIndex"));
 					$(legCover.node).data("index", $(leg0.node).data("index"));
 					self.legendEles.push(legCover);
 				}
@@ -4426,7 +4495,7 @@
 							autoMajor: true,
 							autoMinor: true,
 							annoMethod: axisOption.x.annoMethod,
-							valueLabels: []
+							valueLabels: axisOption.x.valueLabels || []
 						},
 						y: {}
 					};
@@ -4452,7 +4521,7 @@
 								autoMajor: true,
 								autoMinor: true,
 								annoMethod: axisY.annoMethod,
-								valueLabels: []
+								valueLabels: axisY.valueLabels || []
 							};
 						});				
 					} else
@@ -4476,7 +4545,7 @@
 							autoMajor: true,
 							autoMinor: true,
 							annoMethod: axisOption.y.annoMethod,
-							valueLabels: []
+							valueLabels: axisOption.y.valueLabels || []
 						};
 					}
 
@@ -6104,7 +6173,8 @@
 					self._hideSerieEles(seriesEle);
 					if (!legendNode.data("textOpacity")) {
 						if (l.textWidth) {
-							legendNode.data("textOpacity", legend[0].attr("opacity") || 1);
+							legendNode.data("textOpacity", 
+								legend[0].attr("opacity") || 1);
 						} else {
 							legendNode.data("textOpacity", legend.attr("opacity") || 1);
 						}
@@ -6736,7 +6806,9 @@
 				valueLabels = [],
 				validValue,
 				valGroup = { y: {} },
-				xValueLabels = axis.x.valueLabels;
+				xValueLabels = axis.x.valueLabels,
+				xAnnoMethod = axisInfo.x.annoMethod,
+				yAnnoMethod = axisInfo.y.annoMethod;
 
 			if (!seriesList || seriesList.length === 0) {
 				return val;
@@ -6744,7 +6816,8 @@
 			
 			if (self.seriesGroup) {
 				$.each(self.seriesGroup, function (key, seriesL) {
-					var valuesY = [];
+					var valuesY = [],
+						k = parseInt(key, 10);
 					$.each(seriesL, function (i, series) {
 						if (series.type === "pie") {
 							return true;
@@ -6857,8 +6930,7 @@
 								// For fixing the issue#15881.
 								// valueLabels.push(valueY);
 								var formatString = axis.y.annoFormatString,
-									value = valueY,
-									k = parseInt(key, 10);
+									value = valueY;
 
 								if (formatString && formatString.length > 0) {
 									// value = $.format(value, formatString);
@@ -6879,7 +6951,8 @@
 
 							//axis.y[k].annoMethod = "valueLabels";
 							axisInfo.y[key].annoMethod = "valueLabels";
-							if (!axis.y[k].valueLabels && axis.y[k].valueLabels.length === 0) {
+							if (!axis.y[k].valueLabels && 
+								axis.y[k].valueLabels.length === 0) {
 								//axis.y[k].valueLabels = valueLabels;
 								axisInfo.y[key].valueLabels = valueLabels;
 							} else {
@@ -6902,6 +6975,9 @@
 			
 			if (valuesX.length) {
 				validValue = $.wijchart.getFirstValidListValue(valuesX);
+				if (xAnnoMethod === "valueLabels" && xValueLabels && xValueLabels.length > 0) {
+					axisInfo.x.valueLabels = xValueLabels;
+				}
 				if (self._isDate(validValue)) {
 					axisInfo.x.isTime = true;
 				} else if (typeof (validValue) !== "number") {
@@ -6909,14 +6985,14 @@
 						var vLabel = {},
 							xvl,
 							xvlType;
-						if (xValueLabels && xValueLabels.length 
-								&& idx < xValueLabels.length) {
+						if (xAnnoMethod === "valueLabels" && xValueLabels && xValueLabels.length && 
+							idx < xValueLabels.length) {
 							xvl = xValueLabels[idx];
 							xvlType = typeof xvl;
 							if (xvlType === "string") {
 								xvl = { text: xvl };
-							} else if (xvlType === "number" 
-									|| self._isDate(xvl)) {
+							} else if (xvlType === "number" || 
+								self._isDate(xvl)) {
 								xvl = { value: xvl };
 							}
 						}

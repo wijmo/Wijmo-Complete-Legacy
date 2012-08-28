@@ -1,10 +1,10 @@
 /*globals window, document, jQuery, _comma_separated_list_of_variables_*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -97,6 +97,18 @@
 			/// Pass in empty string to deactivate that behavior. 
 			/// </summary>
 			spinner: '',
+			/// <summary>
+			/// A value that indicates the text of back button. 
+			/// Code example: 
+			/// $("#element").wijwizard("option", "backBtnText", "Back Button");
+			/// </summary>
+			backBtnText: 'back',
+			/// <summary>
+			/// A value that indicates the text of next button.
+			/// Code example: 
+			/// $("#element").wijwizard("option", "nextBtnText", "next Button");
+			/// </summary>
+			nextBtnText: 'next',
 			/// <summary>
 			/// The add event handler. A function called when a panel is added.
 			/// Default: null.
@@ -197,7 +209,24 @@
 		},
 
 		_create: function () {
-			this._pageLize(true);
+			var self = this;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
+			
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self._pageLize(true);
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijchart");
+				return;
+			}
+			
+			self._pageLize(true);
 		},
 
 		_init: function () {
@@ -283,7 +312,9 @@
 
 		_createButtons: function () {
 			var self = this, o = this.options, bt,
-				addState, removeState;
+				addState, removeState,
+				backBtnText = o.backBtnText,
+				nextBtnText = o.nextBtnText;
 
 			this._removeButtons();
 			if (o.navButtons === 'none') {
@@ -316,7 +347,8 @@
 
 				if (bt === 'common') {
 					this.backBtn =
-						$("<a href='#'><span class='ui-button-text'>back</span></a>")
+						$("<a href='#'><span class='ui-button-text'>" + 
+							backBtnText + "</span></a>")
 						.addClass('ui-widget ui-button ui-button-text-only' +
 							' ui-state-default ui-corner-all')
 						.appendTo(this.buttons).bind({
@@ -339,7 +371,8 @@
 						}).attr("role", "button");
 
 					this.nextBtn =
-						$("<a href='#'><span class='ui-button-text'>next</span></a>")
+						$("<a href='#'><span class='ui-button-text'>" +
+							nextBtnText + "</span></a>")
 						.addClass('ui-widget ui-button ui-button-text-only' +
 							' ui-state-default ui-corner-all')
 						.appendTo(this.buttons).bind({
@@ -421,7 +454,9 @@
 			var self = this, o = this.options,
 				fragmentId = /^#.+/; // Safari 2 reports '#' for an empty hash;
 
-			this.list = this.element.find('ol,ul').eq(0);
+			//Fix a bug that when no title and has ul li element in its content
+			//this.list = this.element.find('ol,ul').eq(0);
+			this.list = this.element.children('ol,ul').eq(0);
 			if (this.list && this.list.length === 0) {
 				this.list = null;
 			}
@@ -801,6 +836,9 @@
 				$show.hide().removeClass('wijmo-wijwizard-hide') // avoid flicker that way
 					.animate(props, o.showOption.duration || 'normal', function () {
 						self._resetStyle($show);
+						if ($show.wijTriggerVisibility) {
+							$show.wijTriggerVisibility();
+						}
 						self._trigger('show', null, self._ui($show[0]));
 						self._removeSpinner();
 						$show.attr('aria-hidden', false);
@@ -808,6 +846,9 @@
 					});
 			} else {
 				$show.removeClass('wijmo-wijwizard-hide').attr('aria-hidden', false);
+				if ($show.wijTriggerVisibility) {
+					$show.wijTriggerVisibility();
+				}
 				self._trigger('show', null, self._ui($show[0]));
 				self._removeSpinner();
 				self._trigger('activeIndexChanged', null, self._ui($show[0]));

@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Events calendar - Custom event dialog</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="%description%" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="ComponentOne" />
+
+	<!-- External dependencies -->
+    <script src="../../external/jquery-1.8.0.min.js" type="text/javascript"></script>
+    <script src="../../external/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+    <script src="../../external/globalize.min.js" type="text/javascript"></script>
+    <script src="../../external/cultures/globalize.cultures.js" type="text/javascript"></script>
+    <script src="../../external/jquery.mousewheel.min.js" type="text/javascript"></script>
+	    	
+	<!-- Enable built-in datastorage -->
+    <script src="../explore/js/amplify.core.min.js" type="text/javascript"></script>
+    <script src="../explore/js/amplify.request.min.js" type="text/javascript"></script>
+    <script src="../explore/js/amplify.store.min.js" type="text/javascript"></script>
+
+	<!-- Wijmo-Open dependencies -->
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijutil.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijutil.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijtouchutil.js" type="text/javascript"></script>	
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijcalendar.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijcalendar.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijdropdown.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijdropdown.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijtextbox.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijtextbox.css" rel="stylesheet" type="text/css" />
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijcheckbox.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijcheckbox.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijpopup.js" type="text/javascript"></script>	
+	<script src="../../../../Wijmo-Open/development-bundle/wijmo/jquery.wijmo.wijsuperpanel.js" type="text/javascript"></script>
+	<link href="../../../../Wijmo-Open/development-bundle/themes/wijmo/jquery.wijmo.wijsuperpanel.css" rel="stylesheet" type="text/css" />
+	
+	<!-- Wijmo-Complete dependencies -->
+    <script src="../../wijmo/jquery.plugin.wijtextselection.js" type="text/javascript"></script>
+    <script src="../../wijmo/jquery.wijmo.wijinputcore.js" type="text/javascript"></script>
+	<link href="../../themes/wijmo/jquery.wijmo.wijinput.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.wijmo.wijinputdate.js" type="text/javascript"></script>	
+    <script src="../../wijmo/jquery.wijmo.wijdatepager.js" type="text/javascript"></script>
+	<link href="../../themes/wijmo/jquery.wijmo.wijdatepager.css" rel="stylesheet" type="text/css" />
+    <script src="../../wijmo/jquery.wijmo.wijevcal.js" type="text/javascript"></script>
+    <link href="../../themes/wijmo/jquery.wijmo.wijevcal.css" rel="stylesheet" type="text/css" />    	
+
+	<!-- Theme -->
+    <link href="../../themes/aristo/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+
+	<!-- Widget initialization -->
+    <script type="text/javascript">
+    	$(document).ready(function () {
+
+
+    		$("#eventscalendar").wijevcal({
+    			beforeEditEventDialogShow: function (e, args) {
+    				// *** Variant 1:  create custom dialog for new events:
+    				var dlg = $(".customEventDialogSample"),
+							targetCell = args.targetCell,
+							eventData = args.data;
+    				if (eventData.prevData) {
+    					// show custom dialog only for new events
+    					return true;
+    				}
+    				if (!dlg.length) {
+    					// create custom dialog content
+    					dlg = $("<div class=\"customEventDialogSample ui-widget-content ui-corner-all\"" +
+						" style=\"width: 300px; height: 300px; z-index: 999; position: absolute; top: 0px; left: 0px;\">" +
+						"<label class=\"dialogCaption\"></label>" +
+						"<hr/>" +
+						"Subject: <input type=\"text\" name=\"subject\" class=\"inputSubject\" value=\"\">" +
+						"<hr/>" +
+						"<a href=\"#\" class=\"cancelButton\">Cancel</a>" +
+						"<a href=\"#\" class=\"saveButton\">Save</a></div>");
+    					$(document.body).append(dlg);
+
+    					dlg.wijpopup({
+    						autoHide: true
+    					});
+    					dlg.find(".cancelButton").button().click(function () {
+    						dlg.wijpopup("hide");
+    					});
+    					dlg.find(".saveButton").button().click(function () {
+
+    						eventData.subject = dlg.find(".inputSubject").val();
+
+    						if (!eventData.prevData) {
+    							// add new event
+    							$("#eventscalendar").wijevcal("addEvent", eventData,
+									function () { /*alert("Event added.") */ },
+									function (err) { alert("(Add event) Error:" + err) });
+    						} else {
+    							$("#eventscalendar").wijevcal("updateEvent", eventData,
+								function () { /*alert("Event updated.") */ },
+									function (err) { alert("(Update event) Error:" + err) });
+    						}
+    						dlg.wijpopup("hide");
+    					});
+
+
+    				}
+
+    				// bind event to dialog controls:
+    				dlg.find(".dialogCaption").html(eventData.prevData ? "Edit event dialog caption" : "Add event dialog caption");
+    				dlg.find(".inputSubject").val(eventData.subject);
+
+    				// show dialog using wijpopup widget:
+    				dlg.wijpopup("show",
+					{
+						of: targetCell,
+						my: "left center",
+						at: "right center",
+						offset: "0 0",
+						collision: "fit"
+					});
+    				return false; // prevent built-in dialog to be shown.
+    			},
+    			/* *** Variant 2: override built-in dialog content */
+    			editEventDialogTemplate: "<div class=\"" +
+						"customdialog-sample wijmo-wijev-event-dialog ui-widget-content ui-corner-all\">" +
+"<ul class=\"wijmo-wijev-brief-content\">" +
+"<li style=\"color: red;\"><label>Subject:</label>" +
+	"<input type=\"text\" name=\"subject\" class=\"wijmo-wijev-subject\" value=\"\">" +
+
+	"<div class=\"wijmo-wijev-color-button\">" +
+		"<div class=\"wijmo-wijev-color ui-wijmo-wijev-event-color-default\">&nbsp;</div>" +
+	"</div>" +
+
+"</li>" +
+"<li><label for=\"_alldaybtn\">all-day</label>" +
+	"<input type=\"checkbox\" class=\"wijmo-wijev-allday\" id=\"_alldaybtn\" />" +
+"</li>" +
+"<li><label>Starts</label>" +
+	"<input type=\"text\" class=\"wijmo-wijev-start\" value=\"\">" +
+	"<input type=\"text\" class=\"wijmo-wijev-start-time\" value=\"\">" +
+"</li>" +
+"<li><label>Ends</label>" +
+	"<input type=\"text\" class=\"wijmo-wijev-end\" value=\"\">" +
+	"<input type=\"text\" class=\"wijmo-wijev-end-time\" value=\"\">" +
+"</li>" +
+"</ul>" +
+
+"<ul class=\"wijmo-wijev-detailed-content ui-corner-all\">" +
+"<li><label>Location</label>" +
+	"<input type=\"text\" class=\"wijmo-wijev-location\" value=\"\"></li>" +
+"<li><label>Repeat</label>" +
+	"<select class=\"wijmo-wijev-repeat\">" +
+		"<option value=\"none\">None</option>" +
+		"<option value=\"daily\">Every Day</option>" +
+		"<option value=\"workdays\">Work days</option>" +
+		"<option value=\"weekly\">Every Week</option>" +
+		"<option value=\"monthly\">Every Month</option>" +
+		"<option value=\"yearly\">Every Year</option>" +
+	"</select></li>" +
+"<li><label>Calendar</label>" +
+	"<select class=\"wijmo-wijev-calendar\"></select></li>" +
+"<li class=\"wijmo-wijev-description-item\"><label>Description</label>" +
+	"<textarea class=\"wijmo-wijev-description\" /></li>" +
+"</ul>" +
+
+"<div class=\"footer\">" +
+						"<a href=\"#\" class=\"wijmo-wijev-delete\">Delete</a>" +
+						"<a href=\"#\" class=\"wijmo-wijev-save\">OK</a>" +
+						"<a href=\"#\" class=\"wijmo-wijev-cancel\">Cancel</a>" +
+"</div>" +
+"<div class=\"wijmo-wijev-angle\"></div>" +
+"</div>"
+    		});
+    	});
+
+
+    </script>
+    <style type="text/css">
+        #eventscalendar
+        {
+            width: 750px;
+        }
+    </style>
+</head>
+<body class="demo-single">
+    <div class="container">
+        <div class="header">
+            <h2>
+                Custom event dialog</h2>
+        </div>
+        <div class="main demo">
+            <!-- Begin demo markup -->
+               <div id="eventscalendar"></div>
+            <!-- End demo markup -->
+            <div class="demo-options">
+                <!-- Begin options markup -->
+                <!-- End options markup -->
+            </div>
+        </div>
+        <div class="footer demo-description">
+			<p>
+				The sample demonstrates how to create new custom event dialog.
+			</p>
+			<p>&nbsp;</p>
+			<p>Options used in the sample:</p>
+			<ul>
+				<li><strong>editEventDialogTemplate</strong> - use this option in order to replace built-in event dialog content.</li>
+			</ul>
+			<p>Events used in the sample:</p>
+			<ul>
+				<li><strong>beforeEditEventDialogShow</strong> - occurs before the built-in event dialog is shown.
+					Return false or call event.preventDefault() in order to cancel event and
+					prevent the built-in dialog to be shown. Event parameters: e - jQuery.Event object. args - event arguments:
+					args.data - the event object data, args.targetCell - target offset DOM element which can be used for popup callout.
+		</li>
+			</ul>
+			<p>
+			Bellow is the event object syntax which is passing to beforeEditEventDialogShow event handler (args.data).
+			</p>
+			<pre>	 
+		     id - String, unique event id, this field generated automatically;
+				calendar - String, calendar id to which the event belongs;
+				subject - String, event title;
+				location - String, event location;
+				start - Date, start date/time;
+				end - Date, end date/time;
+				description - String, event description;
+				color - String, event color;
+				allday - Boolean, indicates all day event
+				tag - String, this field can be used to store custom information.
+
+				parentRecurrenceId - String, id of the event object that 
+						defines the recurrence criteria for this event object. 
+						If an event is recurring it represents an occurrence in the series that is 
+						started and defined by a specific pattern event. 
+						Use the getPatern method in order to obtain the pattern 
+						of the current event. A pattern event can be recognized by its 
+						recurrenceState field set to the "master" value. 
+						The recurrence information defined by the pattern event
+						can be accessed  via the recurrencePattern field of the event. 
+						If this event is a not member of a recurrence, 
+						or is itself a root event, this field will be null. 
+				recurrenceState - String, indicates the recurrence state of the event. 
+						(possible values are "notRecurring"(or null), "master", "occurrence", 
+						"exception", "removed")
+				recurrencePattern - Object, represents the recurrence attributes 
+						of an event. Only master events can have this field
+						(recurrenceState is "master")
+						Object syntax:
+						parentRecurrenceId - String, id of the event object
+							which represents the master event for this 
+							recurrencePattern object.
+						recurrenceType - String, determines the type of recurrence:
+							daily - the recurring event reoccurs on a daily basis.
+							workdays - the recurring event reoccurs every working day.
+							monthly - the recurring event reoccurs on a monthly basis. 
+							monthlyNth - the recurring event reoccurs every N months. 
+							weekly - the recurring event reoccurs on a weekly basis.
+							yearly - the recurring event reoccurs on an yearly basis.
+							yearlyNth - the recurring event reoccurs every N years.
+						interval - Number, specifies the interval between occurrences 
+							of the recurrence. 
+							The interval field works in conjunction with 
+							the "recurrenceType" field to determine the cycle of the recurrence. 
+							The maximum allowable value is 99 for weekly patterns and 999 
+							for daily patterns.
+							The default value is 1.
+							For example, if the recurrenceType is set 
+							to daily, and the "interval" is set to 3, 
+							the recurrence will occur every third day.
+						startTime - Date, indicates the start time for the given 
+							occurrence of the recurrence pattern. 
+						endTime - Date, indicates the end time for the given 
+							occurrence of the recurrence pattern. 
+						patternStartDate - Date, indicates the start date of the 
+							recurrence pattern.
+						patternEndDate - Date, indicates the end date of the 
+							recurrence pattern.
+							This field is optional but must be coordinated 
+							with other fields when setting up a recurrence pattern. 
+							If this field or the "occurrences" field is set, 
+							the pattern is considered to be finite, and the "noEndDate"
+							field is false. 
+							If neither "patternEndDate" nor "occurrences" is set, 
+							the pattern is considered infinite and "noEndDate" is true. 
+							The "interval" field must be set before 
+							setting "patternEndDate".
+						occurrences - Number, the number of occurrences for the 
+							recurrence pattern.	This field allows the definition of 
+							a recurrence pattern that is only valid for the specified 
+							number of subsequent occurrences. 
+							For example, you can set this property to 10 for a formal 
+							training  course that will be held on the next ten Thursday 
+							evenings. The default value is 0. This field must be 
+							coordinated with other fields when setting up a recurrence pattern. 
+							If the "patternEndDate" field or the "occurrences" field 
+							is set, the pattern is considered to be finite and the 
+							"noEndDate" field is false. 
+							If neither "patternEndDate" nor "occurrences" is set, 
+							the pattern is considered infinite and "noEndDate" is true.
+						instance - String, determines the week in a month in which 
+							the event will occur. This field is only valid for recurrences of 
+							the "monthlyNth" and "yearlyNth" types and allows the definition 
+							of a recurrence pattern that is only valid for the Nth occurrence, 
+							such as "the 2nd Sunday in March" pattern. 
+							The default value is "first".
+							Possible values are:
+								first - the recurring event will occur on the specified 
+									day or days of the first week in the month. 
+								second - The recurring event will occur on the specified 
+									day or days of the second week in the month. 
+								third = - The recurring event will occur on the specified 
+									day or days of the third week in the month. 
+								fourth - The recurring event will occur on the specified 
+									day or days of the fourth week in the month.
+								last - The recurring event will occur on the specified 
+									day or days of the last week in the month. 
+						dayOfWeekMask - String, contains set of values representing the mask 
+							for week days on which the recurring event occurs. 
+							Monthly and yearly patterns are only valid for a single day. 
+							The default value is "none".
+							When the "RecurrenceType" field is set to "daily", 
+							the "DayOfWeekMask" field can only be set to "everyDay"; 
+							setting the field to any other value will result in an exception.
+							When the "recurrenceType" field is set to 
+							"workdays", the "dayOfWeekMask" field 
+							can only be set to "workDays"; setting the field 
+							to any other value will result in an exception.
+							When the "recurrenceType" field is set to 
+							"weekly", the "dayOfWeekMask" field 
+							cannot be set to "none"; doing so will result 
+							in an exception being thrown.
+							When the recurrenceType" field is set to 
+							"monthly" or "yearly" the "dayOfWeekMask" field is not applicable.
+							Possible values are:
+								none - no specific value; the actual value is obtained from 
+									the root event object. 
+								sunday - specifies Sunday.
+								monday - Specifies Monday.
+								tuesday - Specifies Tuesday. 
+								wednesday - Specifies Wednesday.
+								thursday - Specifies Thursday.
+								friday - Specifies Friday.
+								saturday - Specifies Saturday.
+								weekendDays - Specifies Saturday and Sunday (or what ever days according 
+									to the settings of the C1EventsCalendar).
+								workDays - Specifies work days (all days except weekend).
+								everyDay - Specifies every day of the week.
+						dayOfMonth - Number, the number of the day in its respective month on which 
+							each occurrence will occur. Applicable only when the recurrenceType 
+							field is set to "monthly" or "yearly".
+							The default value is 1.
+						monthOfYear - Number, indicates which month of the year is valid 
+							for the specified recurrence pattern. Can be a number from 1 to 12.
+							This field is only valid for recurrence patterns whose recurrenceType" 
+							field is set to "yearlyNth" or "yearly".
+							The default value is 1.
+						noEndDate - Boolean, indicates if the recurrence pattern is endless.
+							The default value is True. This field must be coordinated with 
+							other fields when setting up a recurrence pattern. If the patternEndDate field
+							or the occurrences field is set, the pattern is considered 
+							to be finite and the "noEndDate" field is false. 
+							If neither patternEndDate nor occurrences is set, 
+							the pattern is considered infinite and "noEndDate" is true.
+						exceptions - Array, holds the list of event object ids that 
+							define the exceptions to that series of events. 
+							This field is read-only.
+						removedOccurrences - Array, holds the list of event object's ids
+							removed from that series of events.			
+			</pre>
+				
+			
+        </div>
+    </div>
+</body>
+</html>

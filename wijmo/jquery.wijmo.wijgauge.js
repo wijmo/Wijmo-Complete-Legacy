@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -543,6 +543,20 @@
 			var self = this,
 				o = self.options;
 			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
+			
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.redraw();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijgauge");
+			}
+			
 			if (isNaN(o.width)) {
 				self._setDefaultWidth();
 			}
@@ -657,11 +671,13 @@
 
 		_set_max: function () {
 			this._redrawMarksAndLabels();
+			this._set_ranges();
 			this._setPointer();
 		},
 
 		_set_min: function () {
 			this._redrawMarksAndLabels();
+			this._set_ranges();
 			this._setPointer();
 		},
 
@@ -684,7 +700,7 @@
 		_set_pointer: function () {
 			var self = this;
 			if (self.pointer) {
-				self.pointer.remove();
+				self.pointer.wijRemove();
 			}
 			self._paintPointer();
 			self._setPointer();
@@ -743,15 +759,18 @@
 		_removeMarksAndLabels: function () {
 			var self = this;
 			$.each(self.labels, function (i, n) {
-				n.remove();
+				n.wijRemove();
+				self.labels[i] = null;
 			});
 
 			$.each(self.majorMarks, function (i, n) {
-				n.remove();
+				n.wijRemove();
+				self.majorMarks[i] = null;
 			});
 
 			$.each(self.minorMarks, function (i, n) {
-				n.remove();
+				n.wijRemove();
+				self.minorMarks[i] = null;
 			});
 		},
 
@@ -929,8 +948,10 @@
 		},
 
 		_removeRanges: function () {
-			$.each(this.ranges, function (i, n) {
-				n.remove();
+			var self = this;
+			$.each(self.ranges, function (i, n) {
+				n.wijRemove();
+				self.ranges[i] = null;
 			});
 		},
 

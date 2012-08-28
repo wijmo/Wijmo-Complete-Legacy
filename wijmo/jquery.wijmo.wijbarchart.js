@@ -1,10 +1,10 @@
 /*globals jQuery, Globalize*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -349,7 +349,6 @@
 				o.axis.x.compass = compass;
 			}
 
-
 			$.extend(true, {
 				compass: "east"
 			}, o.hint);
@@ -367,13 +366,13 @@
 		},
 
 		_setOption: function (key, value) {
-			if (key === "horizontal" && !value) {
+			if (key === "horizontal") {
 				$.extend(true, this.options.axis, {
 					x: {
-						compass: "south"
+						compass: value? "west" : "south"
 					},
 					y: {
-						compass: "west"
+						compass: value? "south" : "west"
 					}
 				});
 			}
@@ -528,7 +527,7 @@
 
 		_showSerieEles: function (seriesEle) {
 			$.each(seriesEle, function (i, bar) {
-				if (bar.bar) {
+				if (bar && bar.bar) {
 					bar.bar.show();
 					if (bar.bar.shadow) {
 						bar.bar.shadow.show();
@@ -537,11 +536,11 @@
 						bar.bar.tracker.show();
 					}
 				}
-				if (bar.dcl) {
+				if (bar && bar.dcl) {
 					bar.dcl.show();
 				}
 
-				if (bar.animatedBar && !bar.animatedBar.removed) {
+				if (bar && bar.animatedBar && !bar.animatedBar.removed) {
 					bar.animatedBar.show();
 				}
 			});
@@ -549,7 +548,7 @@
 
 		_hideSerieEles: function (seriesEle) {
 			$.each(seriesEle, function (i, bar) {
-				if (bar.bar) {
+				if (bar && bar.bar) {
 					bar.bar.hide();
 					if (bar.bar.shadow) {
 						bar.bar.shadow.hide();
@@ -558,11 +557,11 @@
 						bar.bar.tracker.hide();
 					}
 				}
-				if (bar.dcl) {
+				if (bar && bar.dcl) {
 					bar.dcl.hide();
 				}
 
-				if (bar.animatedBar && !bar.animatedBar.removed) {
+				if (bar && bar.animatedBar && !bar.animatedBar.removed) {
 					bar.animatedBar.hide();
 				}
 			});

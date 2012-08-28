@@ -16,10 +16,10 @@
     position: absolute;
     right: 0;
     top: 0;
-    height: 16px;
+    height: 100%;
     width: 16px;
     display: block;
-    padding: 5px 3px;
+    padding: 0 3px;
     border-top: none;
     border-right: none;
     border-bottom: none;
@@ -28,10 +28,14 @@
     border-radius: 0;
 }
 
+.wijmo-wijgrid .wijmo-wijgrid-table .wijmo-wijgrid-filter-trigger .ui-icon
+{
+    margin-top: 40%;
+}
+
 .wijmo-wijgrid .wijmo-wijgrid-table .wijmo-wijgrid-filter-input
 {
     width: auto;
-    height: 16px;
     border: none;
     padding: 5px 3px;
     overflow: visible; /* ie6 padding issue fix */
@@ -259,6 +263,11 @@
 .wijmo-wijgrid .wijmo-wijpager
 {
     display: block;
+    position: relative;
+}
+
+.wijmo-wijgrid .wijmo-wijsuperpanel-header
+{
     position: relative;
 }
 

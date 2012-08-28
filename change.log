@@ -1,8 +1,272 @@
+
+Wijmo-Complete v2.2.0
+=====================
+Samples
+-------
+New Widget Explorer entirely built on knockout
+New Northwind in demo-apps that is a guidance app for using Wijmo Grid + Knockout + Odata (remote datasource)
+
+Ribbon
+------
+Fixed a issue: ribbon toolbar remained enabled in "Source View" if it is created inside Expander
+
+Datasource
+----------
+Added a new feature: use "return false;" in loading event to cancel the request.
+
+Grid
+----
+[26394] Page scrolls to top on clicking on column header.
+"sortCommand" parameter is passed within the argument into the sorting event now to easily use sort commands.
+[26395] [Knockout] Adding new row resets the current page.
+Added new option totalRows for manually handling paging
+Added new option allowVirtualScrolling for DOM virtualization when scrolling large datasets
+
+LinearGauge
+-----------
+[26794] Gauge pointer points to incorrect value when triangular pointer is used
+[26793] Label's 'Offset' property does not work
+
+RadialGauge
+-----------
+[23084] Memory leak is observed with Gauges controls in MVC application
+
+Combobox
+-----------
+Fixed an issue: When the tag is <select>, the data option takes no effect.
+
+InputDate
+-----
+[24160] DatePicker is unable to return to "null" value after a date has been selected
+
+CompositeChart
+-------------
+[24430] Unlike previous release build, javascript error is observed after hovering over the plot area quickly and then hovering over the bar chart type
+
+Inputs
+------
+[24738] Calendar is shown when 'disableUserInput' option is set to false, when set the disabled option to false, the trigger is not disabled.
+
+InputMask
+[25546][IE9] Not able to input correctly in InputMask if set Space to PromptChar property
+
+BubbleChart
+-----------
+[27256] Unlike previous build, clicking the legend item does not toggle the serie's visibility, if the bubblechart created from table element, the legend click lost effect.
+[27262] Unlike previous build, animation effect is not seen on hovering the mouse over serie markers
+[27275] Unlike previous build, "Y1" values are not correctly applied in serie marker
+
+Charts
+------
+[26741] Unlike previous build, Hint is not displayed properly on setting both Hint.Content.Content and Hint.Title.Content properties
+[24788] Fixed a bug that when the valueLabels set to x axis, and the x axis's annoMethod is "values", the valueLabels will effect the x axis label text.
+
+
+Wijmo-Complete v2.1.7
+=====================
+Dependencies
+------------
+Updated to support jQuery 1.8 and jQuery UI 1.8.23
+Fixed issue for: Syntax error unrecognized [ expression: .children[className] ] when running the html page with jquery.wijmo.raphael.js and jquery 1.8.
+
+compositechart
+--------------
+Fixed an issue that hole value does not work for line type
+
+piechart
+--------
+textStyle can now be applied to chart label
+
+Events calendar
+----------------
+[25070] [Forum - Premium] Multiple issues are observed on dragging appointments
+
+Editor
+--------------
+Localization updated
+Update the editor style for Japan Localization.
+
+Wizard
+------
+Fixed an issue that class will be added to a wrong element when no title is specified.
+
+Ribbon
+--------------
+Fixed an issue that after switched to SourceView, its Ribbon Menu is still working in sample.
+On keypress, the button text was changing from "Save" to "save".
+
+InputDate
+----------
+Fixed an issue that the input widget is unable to return to "null" value after a date has been selected
+Fixed an issue that the disabled option lost effect in input widgets
+Made some changes for dropdown calendar localization.
+
+BarChart
+---------
+Fixed an issue that when the seriesList's x and y series are not the same length, clicking the legend threw a javascript exception.
+
+Combobox
+----------
+Fixed an issue that selection does not work after first selection
+
+Wijmo-Complete v2.1.6
+=====================
+Platform
+--------
+Observe visible state change for wijmo widgets. Container widgets now trigger a visible state change event when they display their contents. This allows widgets inside them to redraw when visible to eliminate layout issues.
+
+Events calendar
+----------------
+Corrections:
+Fixed: "labelName" localization string is not working.
+24569 - Seting ViewType property to "week" does not work in WijEvent Calendar
+
+
+Added new localization strings(see localization option):
+	agendaTimeFormat: "{0:hh:mm tt} to {1:hh:mm tt}"
+	activityLoading: "Loading..."
+	activityDeletingCalendar: "Deleting calendar..."
+	activityCreatingCalendar: "Creating calendar..."
+	activityUpdatingCalendar: "Updating calendar..."
+	activityCreatingEvent: "Creating event..."
+	activityUpdatingEvent: "Updating event..."
+	activityDeletingEvent: "Deleting event..."
+	activityUpdating: "Updating..."
+	agendaLoadingMoreEvents: "Loading more events..."
+	agendaMoreEventsFormat: "More events ({0})..." // (0) - Number, invisible events count
+	monthCellMoreEventsFormat: "{0}  more..." // (0) - Number, invisible events count
+	promptOpenOccurrenceFormat: "{2}  is recurring event. Do you want to open only this occurrence?" // {0} = Start, {1} = End, {2} = Subject, {3} = Location
+
+Grid
+----
+Now grid automatically resizes itself when browser window sizes change.
+
+CompositeChart
+--------------
+Fixed a issue when setting y axis in multi-axis chart, it would throw a javascript error.
+Fixed a issue that in IE, javascript exception was being thrown when hiding bars and hovering them quickly.
+Fixed a issue that destroy method does not work for Scatter type.
+
+Combobox
+--------------
+ Fixed a bug that post back occurs when pressing Enter Key.
+
+ Editor
+ ----------
+ Fixed a bug that image size is not automatically set when image source is from an HTTP page in IE8
+ Fixed a bug that "Permission denied" javacript error is observed after canceling the "Tag Inspector" dialog and clicking link toolbar button in "FullScreen" mode
+ Add "text" option and "textChanged" event for knockout support
+ Fixed a bug that footer region is covered up by unknown gray area and not accessible if editorMode = "code".
+ 
+ Barchart
+ --------
+ Fixed a bug that when set the horizontal option, the axis compass is wrong.
+
+ Inputs
+ ------
+ Fixed a bug that when the text is very long the text will shows outside of the textbox.
+
+
+Wijmo-Complete v2.1.5
+=====================
+ScatterChart
+-----------
+Fixed a issue that a javascript exception is thrown onmouseover in IE 8.
+
+Wizard
+------
+Added new options "backBtnText" and "nextBtnText".
+
+InputDate
+---------
+Fixed a bug that when the showTrigger is true and the culture option is set, the pop up calendar's culture does not change.
+
+Combobox
+--------
+Fixed a css display issue when nested inside a table
+Fixed a bug of disabled state.
+Fixed a bug that set selectedValue doesn't update selectedIndex.
+Fixed a bug the datasource.loaded event is not null when loading the data. 
+Fixed a bug when setting the "showTrigger" option, the input width is incorrect.
+
+Rating
+------
+Fixed a bug that when direction="reversed", the customized class can't be applied correctly.
+
+Charts
+------
+Fixed a bug of value labels.
+
+PieChart
+--------
+Added "labels" option so that labels can be placed inside or outside the pie slices.
+
+/// <summary>
+/// A value that indicates the chart label elements of chart.
+/// DEfault: {style: {}, formatString: "", formatter: null, 
+/// connectorStyle: {}, position: "inside", offsetX: 10}
+/// Type: Object.
+/// </summary>
+labels: {
+	/// <summary>
+	/// A value that indicates the style of the chart labels.
+	/// Default: {}
+	/// Type: Object
+	/// </summary>
+	style: {},
+	/// <summary>
+	/// A value that indicates the format string of the chart labels.
+	/// Default: ""
+	/// Type: Object
+	/// </summary>
+	formatString: "",
+	/// <summary>
+	/// A value that indicates the formatter of the chart labels.
+	/// Default: null
+	/// Type: Function
+	/// </summary>
+	formatter: null,
+	/// <summary>
+	/// A value that indicates the style of the chart labels' connector.
+	/// Default: {}
+	/// Type: Object
+	/// </summary>
+	connectorStyle: {},
+	/// <summary>
+	/// A value that indicates the style of the chart labels.
+	/// Default: "inside"
+	/// Type: String
+	/// </summary>
+	// / <remarks>
+	// / Options are 'inside', 'outside'.
+	// / </remarks>
+	position: "inside",
+	/// <summary>
+	/// A value that indicates the offset of the chart labels.
+	/// Default: {}
+	/// Type: Object
+	/// </summary>
+	offset: 10
+}
+
+Grid
+----
+Fixed issue: current cell change doesn't work in FireFox when selectionMode is not "none" and allowKeyboardNavigation option is turned on.
+Fixed issue: cell is not set to editing state upon keyboard input in scrolling mode, when browser other than IE is used.
+
 Wijmo-Complete v2.1.4
 =====================
 Combobox
 --------
 CSS fix for clearfix
+
+DatePager
+---------
+[23766] Setting "culture" option after initialization does not change culture information.
+
+EventsCalendar
+--------------
+[23766] Setting "culture" option after initialization does not change culture information present in Calendar,TimeRuler,Navigation bar.
 
 Treeview
 --------

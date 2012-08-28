@@ -1,5 +1,7 @@
 ﻿.wijmo-wijinput
 {
+    display: inline-block;
+    vertical-align: middle;
     position: relative;
     width: 150px;
 }
@@ -28,6 +30,7 @@
 {
     position: absolute;
     right: 0;
+    top: 0;
     width: 16px;
     cursor: pointer;
     padding: 0 3px;
@@ -78,8 +81,8 @@
 {
     position: absolute;
     right: 0;
-    top: 0;
-    width: 17px;
+    top: 0px;
+    width: 16px;
     cursor: pointer;
     height: 100%;
 }
@@ -138,6 +141,7 @@
 .wijmo-wijinput-numeric
 {
     text-align: right;
+    padding: 5px;
 }
 
 .wijmo-wijinput-date

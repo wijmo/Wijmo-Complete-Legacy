@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window, Globalize*/
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
 * licensing@wijmo.com
@@ -150,42 +150,59 @@
 		}
 	};
 
+	var whitespace = "[\\x20\\t\\r\\n\\f]";
+	var jqueryFilterCLASS = $.expr.filter.CLASS;
 	$.expr.filter.CLASS = function (elem, match) {
-		var className = (!$.wijraphael.isSVGElem(elem) ? elem.className :
-			(elem.className ? elem.className.baseVal : elem.getAttribute('class')));
-		return (' ' + className + ' ').indexOf(match) > -1;
+		if (parseFloat($.fn.jquery) < 1.8) {
+			var className = (!($.wijraphael && $.wijraphael.isSVGElem(elem)) ? elem.className :
+						(elem.className ? elem.className.baseVal : elem.getAttribute('class')));
+			return (' ' + className + ' ').indexOf(match) > -1;
+		}
+		else {
+			//return jqueryFilterCLASS(elem);
+			var pattern = new RegExp("(^|" + whitespace + ")" + elem + "(" + whitespace + "|$)");
+			return function (ele) {
+				var className = (!($.wijraphael && $.wijraphael.isSVGElem(ele)) ? ele.className :
+							(ele.className ? ele.className.baseVal : ele.getAttribute('class')));
+				return pattern.test(className);
+			}
+		}
 	};
 
-	$.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) {
-		var i = 0,
-			elem = null,
-			className = null;
-		match = ' ' + match[1].replace(/\\/g, '') + ' ';
-		if (isXML) {
-			return match;
-		}
-		for (i = 0, elem = {}; elem; i++) {
-			elem = curLoop[i];
-			if (!elem) {
-				try {
-					elem = curLoop.item(i);
-				} catch (e) { }
-			}
-			if (elem) {
-				className = (!$.wijraphael.isSVGElem(elem) ? elem.className :
-					(elem.className ? elem.className.baseVal : '') ||
-					elem.getAttribute('class'));
-				if (not ^ (className && (' ' + className + ' ').indexOf(match) > -1)) {
-					if (!inplace) {
-						result.push(elem);
-					}
-				} else if (inplace) {
-					curLoop[i] = false;
+	if (parseFloat($.fn.jquery) < 1.8) {
+		$.expr.preFilter.CLASS = function (match, curLoop, inplace, result, not, isXML) {
+			var i = 0,
+					elem = null,
+					className = null;
+
+				match = ' ' + match[1].replace(/\\/g, '') + ' ';
+				if (isXML) {
+					return match;
 				}
-			}
-		}
-		return false;
-	};
+				for (i = 0, elem = {}; elem; i++) {
+					elem = curLoop[i];
+					if (!elem) {
+						try {
+							elem = curLoop.item(i);
+						} catch (e) { }
+					}
+					if (elem) {
+						className = (!($.wijraphael && $.wijraphael.isSVGElem(elem)) ? elem.className :
+								(elem.className ? elem.className.baseVal : '') ||
+								elem.getAttribute('class'));
+						if (not ^ (className && (' ' + className + ' ').indexOf(match) > -1)) {
+							if (!inplace) {
+								result.push(elem);
+							}
+						} else if (inplace) {
+							curLoop[i] = false;
+						}
+					}
+				}
+				return false;    
+
+		};
+	}
 
 	Raphael.fn.tri = function (x, y, length) {
 		var x1 = x,

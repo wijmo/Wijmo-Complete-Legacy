@@ -4,6 +4,14 @@
     padding: 0;
     border: none;
 }
+
+.ui-widget div.wijmo-wijribbon
+{
+    font-size: 11px;
+    padding: 0;
+    border: none;
+}
+
 .wijmo-wijribbon-simple
 {
     padding: 3px;

@@ -3,10 +3,10 @@
 
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -145,73 +145,101 @@
 		},
 
 		_create: function () {
-			if (this.element[0].tagName.toLowerCase() !== 'input') {
+			var self = this,
+				width = self.element.width(), bw, padding;
+			if (self.element[0].tagName.toLowerCase() !== 'input') {
 				throw "Target element is not a INPUT";
 			}
 
-			this.element.data("widgetName", this.widgetName);
-
-			$.effects.save(this.element, ['width', 'height']);
-			var width = this.element.width();
-			this.element.wrap("<div class='wijmo-wijinput ui-widget ui-helper-clearfix" +
-			" ui-state-default ui-corner-all'><span class='wijmo-wijinput-wrapper'>" +
-			"</span></div>");
-			this.element.addClass('wijmo-wijinput-input ui-corner-all')
-			.attr({ 'role': 'textbox', 'aria-multiline': false });
-			this.wrapper = this.element.parent();
-			this.outerDiv = this.wrapper.parent();
-			this.outerDiv.width(width);
-
-			if (this.options.showTrigger) {
-				this.triggerBtn =
-				$("<div class='wijmo-wijinput-trigger ui-state-default'>" +
-				"<span class='ui-icon ui-icon-triangle-1-s'></span></div>")
-					.addClass(this.options.buttonAlign === 'left' ?
-					'ui-corner-left' : 'ui-corner-right')
-					.attr('role', 'button')
-					.appendTo(this.outerDiv);
-				this.element.attr({ 'role': 'combobox', 'aria-expanded': false });
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
 			}
 
-			if (this.options.showSpinner) {
-				this.spinner =
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.destroy();
+					self._create();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijinput");
+			}
+
+			self.element.data("widgetName", this.widgetName);
+
+			$.effects.save(self.element, ['width', 'height']);
+			self.element.wrap("<div class='wijmo-wijinput ui-widget ui-helper-clearfix" +
+			" ui-state-default ui-corner-all'><span class='wijmo-wijinput-wrapper'>" +
+			"</span></div>");
+			self.element.addClass('wijmo-wijinput-input ui-corner-all')
+			.attr({ 'role': 'textbox', 'aria-multiline': false });
+			self.wrapper = self.element.parent();
+			self.outerDiv = self.wrapper.parent();
+			self.outerDiv.width(width);
+
+			if (self.options.showTrigger) {
+				self.triggerBtn =
+				$("<div class='wijmo-wijinput-trigger ui-state-default'>" +
+				"<span class='ui-icon ui-icon-triangle-1-s'></span></div>")
+					.addClass(self.options.buttonAlign === 'left' ?
+					'ui-corner-left' : 'ui-corner-right')
+					.attr('role', 'button')
+					.appendTo(self.outerDiv);
+				self.element.attr({ 'role': 'combobox', 'aria-expanded': false });
+			}
+
+			if (self.options.showSpinner) {
+				self.spinner =
 				$("<div class='wijmo-wijinput-spinner wijmo-wijinput-button'></div>");
-				this.spinUp = $("<div class='ui-state-default wijmo-wijinput-spinup'>" +
+				self.spinUp = $("<div class='ui-state-default wijmo-wijinput-spinup'>" +
 				"<span class='ui-icon ui-icon-triangle-1-n'></span></div>")
 				.attr('role', 'button');
-				this.spinDown =
+				self.spinDown =
 				$("<div class='ui-state-default wijmo-wijinput-spindown'>" +
 				"<span class='ui-icon ui-icon-triangle-1-s'></span></div>")
 				.attr('role', 'button');
-				if (!this.options.showTrigger) {
-					this.spinUp.addClass(this.options.buttonAlign === 'left' ?
+				if (!self.options.showTrigger) {
+					self.spinUp.addClass(self.options.buttonAlign === 'left' ?
 					'ui-corner-tl' : 'ui-corner-tr');
-					this.spinDown.addClass(this.options.buttonAlign === 'left' ?
+					self.spinDown.addClass(self.options.buttonAlign === 'left' ?
 					'ui-corner-bl' : 'ui-corner-br');
 				}
-				this.spinner.append(this.spinUp)
-					.append(this.spinDown)
-					.appendTo(this.outerDiv);
-				this.element.attr('role', 'spinner');
+				self.spinner.append(self.spinUp)
+					.append(self.spinDown)
+					.appendTo(self.outerDiv);
+				self.element.attr('role', 'spinner');
 			}
 
-			if (this.options.showTrigger && this.options.showSpinner) {
-				this.outerDiv.addClass(this.options.buttonAlign === 'left' ?
+			if (self.options.showTrigger && self.options.showSpinner) {
+				self.outerDiv.addClass(self.options.buttonAlign === 'left' ?
 				'ui-input-spinner-trigger-left' : 'ui-input-spinner-trigger-right');
 			} else {
-				if (this.options.showTrigger) {
-					this.outerDiv.addClass(this.options.buttonAlign === 'left' ?
+				if (self.options.showTrigger) {
+					self.outerDiv.addClass(self.options.buttonAlign === 'left' ?
 					'ui-input-trigger-left' : 'ui-input-trigger-right');
 				}
 
-				if (this.options.showSpinner) {
-					this.outerDiv.addClass(this.options.buttonAlign === 'left' ?
+				if (self.options.showSpinner) {
+					self.outerDiv.addClass(self.options.buttonAlign === 'left' ?
 					'ui-input-spinner-left' : 'ui-input-spinner-right');
 				}
 			}
 
-			this.element.setOutWidth(this.outerDiv.width());
-			this._initialize();
+			bw = self.element.leftBorderWidth() + self.element.rightBorderWidth();
+			self.element.width(self.outerDiv.width() - bw);
+			//self.element.setOutWidth(self.outerDiv.width());
+
+
+			self._initialize();
+
+			if (self.element.width() >= self.wrapper.width()) {
+				padding = parseFloat(self.element.css("padding-left")
+					.replace(/px/, ""), 10) || 0;
+				padding += (parseFloat(self.element.css("padding-right")
+					.replace(/px/, ""), 10) || 0);
+				self.element.width(self.element.width() - padding);
+			}
 		},
 
 		_createTextProvider: function () {
@@ -246,6 +274,9 @@
 				return (!e.which ? e.button : e.which) === 1;
 			},
 			spinButtonDown = function (e) {
+				if (self.options.disabled) {
+					return;
+				}
 				if (!isLeftButton(e)) {
 					return;
 				}
@@ -255,6 +286,9 @@
 				self._doSpin($(e.currentTarget).hasClass('wijmo-wijinput-spinup'), true);
 			},
 			spinButtonUp = function (e) {
+				if (self.options.disabled) {
+					return;
+				}
 				if (!isLeftButton(e)) {
 					return;
 				}
@@ -264,12 +298,21 @@
 			if (this.triggerBtn && !o.disabledState) {
 				this.triggerBtn.bind({
 					'mouseover': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._addState('hover', $(this));
 					},
 					'mouseout': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._removeState('hover', $(this));
 					},
 					'mousedown': function (e) {
+						if (self.options.disabled) {
+							return;
+						}
 						if (!isLeftButton(e)) {
 							return;
 						}
@@ -277,6 +320,9 @@
 						self._trigger('triggerMouseDown');
 					},
 					'click': function (e) {
+						if (self.options.disabled) {
+							return;
+						}
 						self._stopEvent(e);
 						self._stopSpin();
 						self._removeState('active', $(this));
@@ -292,9 +338,15 @@
 			if (this.spinUp && !o.disabledState) {
 				this.spinUp.bind({
 					'mouseover': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._addState('hover', $(this));
 					},
 					'mouseout': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._removeState('hover', $(this));
 						self._removeState('active', $(this));
 						self._stopSpin();
@@ -307,9 +359,15 @@
 			if (this.spinDown && !o.disabledState) {
 				this.spinDown.bind({
 					'mouseover': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._addState('hover', $(this));
 					},
 					'mouseout': function () {
+						if (self.options.disabled) {
+							return;
+						}
 						self._removeState('hover', $(this));
 						self._removeState('active', $(this));
 						self._stopSpin();
@@ -345,6 +403,10 @@
 				o.disabled = dis;
 			}
 
+			if (this.options.disabled) {
+				this.disable();
+			}
+
 			this.element.data('initialized', true);
 			this._trigger('initialized');
 		},
@@ -356,36 +418,36 @@
 			$.Widget.prototype._setOption.apply(this, arguments);
 
 			switch (key) {
-			case 'buttonAlign':
-			case 'showTrigger':
-			case 'showSpinner':
-				this._destroy();
-				this._create();
-				break;
+				case 'buttonAlign':
+				case 'showTrigger':
+				case 'showSpinner':
+					this._destroy();
+					this._create();
+					break;
 
-			case 'showNullText':
-				this._updateText();
-				break;
+				case 'showNullText':
+					this._updateText();
+					break;
 
-			case 'disabled':
-				this.element.attr('disabled', value);
-				this.element[value ? 'addClass' :
+				case 'disabled':
+					this.element.attr('disabled', value);
+					this.element[value ? 'addClass' :
+		'removeClass'](this.namespace + "-state-disabled");
+					if (this.triggerBtn !== undefined) {
+						this.triggerBtn[value ? 'addClass' :
 			'removeClass'](this.namespace + "-state-disabled");
-				if (this.triggerBtn !== undefined) {
-					this.triggerBtn[value ? 'addClass' :
-				'removeClass'](this.namespace + "-state-disabled");
-				}
+					}
 
-				if (this.spinup !== undefined) {
-					this.spinup[value ? 'addClass' :
-				'removeClass'](this.namespace + "-state-disabled");
-				}
+					if (this.spinup !== undefined) {
+						this.spinup[value ? 'addClass' :
+			'removeClass'](this.namespace + "-state-disabled");
+					}
 
-				if (this.spindown !== undefined) {
-					this.spindown[value ? 'addClass' :
-				'removeClass'](this.namespace + "-state-disabled");
-				}
-				break;
+					if (this.spindown !== undefined) {
+						this.spindown[value ? 'addClass' :
+			'removeClass'](this.namespace + "-state-disabled");
+					}
+					break;
 			}
 		},
 
@@ -523,9 +585,19 @@
 
 			// default is false
 			keepSelection = !!keepSelection;
-			var range = this.element.wijtextselection();
-			this.element.val(this._textProvider.toString());
-			this.options.text = this._textProvider.toString(true, false, false);
+			var range = this.element.wijtextselection(),
+				o = this.options;
+
+			if (this.isDeleteAll && o.showNullText) {
+				this.isDeleteAll = false;
+				o.date = null;
+				this.element.val(o.nullText);
+			}
+			else {
+				this.element.val(this._textProvider.toString());
+				this.options.text = this._textProvider.toString(true, false, false);
+			}
+
 			if (this.element.is(':disabled')) {
 				return;
 			}
@@ -590,7 +662,7 @@
 			if (!self.element.data('errorstate')) {
 				cls = self.options.invalidClass || 'ui-state-error';
 				self.element.data('errorstate', true);
-				
+
 				window.setTimeout(function () {
 					self.outerDiv.removeClass(cls);
 					self.element.data('errorstate', false);
@@ -694,23 +766,23 @@
 			}
 
 			switch (k) {
-			case $.ui.keyCode.UP:
-				this._doSpin(true, false);
-				this._stopEvent(e);
-				return;
-			case $.ui.keyCode.DOWN:
-				this._doSpin(false, false);
-				this._stopEvent(e);
-				return;
+				case $.ui.keyCode.UP:
+					this._doSpin(true, false);
+					this._stopEvent(e);
+					return;
+				case $.ui.keyCode.DOWN:
+					this._doSpin(false, false);
+					this._stopEvent(e);
+					return;
 			}
 
 			if (e.ctrlKey) {
 				switch (k) {
-				case $.ui.keyCode.INSERT:
-				case 67: // 'c'
-					return;
-				default:
-					break;
+					case $.ui.keyCode.INSERT:
+					case 67: // 'c'
+						return;
+					default:
+						break;
 				}
 			}
 			if ((e.ctrlKey || e.altKey)) {
@@ -718,41 +790,41 @@
 			}
 
 			switch (k) {
-			case 112: // F1-F6
-			case 113:
-			case 114:
-			case 115:
-			case 116:
-			case 117:
-			case $.ui.keyCode.TAB:
-			case $.ui.keyCode.CAPSLOCK:
-			case $.ui.keyCode.END:
-			case $.ui.keyCode.HOME:
-			case $.ui.keyCode.CTRL:
-			case $.ui.keyCode.SHIFT:
-				return;
-			case $.ui.keyCode.BACKSPACE:
-				this._deleteSelText(true);
-				this._stopEvent(e);
-				return;
-			case $.ui.keyCode.DELETE:
-				this._deleteSelText(false);
-				this._stopEvent(e);
-				return;
-			case $.ui.keyCode.ENTER:
-				if (!this.options.hideEnter) {
+				case 112: // F1-F6
+				case 113:
+				case 114:
+				case 115:
+				case 116:
+				case 117:
+				case $.ui.keyCode.TAB:
+				case $.ui.keyCode.CAPSLOCK:
+				case $.ui.keyCode.END:
+				case $.ui.keyCode.HOME:
+				case $.ui.keyCode.CTRL:
+				case $.ui.keyCode.SHIFT:
 					return;
-				}
-				break;
-			case $.ui.keyCode.ESCAPE:
-				this._stopEvent(e);
-				window.setTimeout($.proxy(this._resetData, this), 1);
-				return;
-			case $.ui.keyCode.PAGE_UP:
-			case $.ui.keyCode.PAGE_DOWN:
-			case $.ui.keyCode.ALT:
-				this._stopEvent(e);
-				return;
+				case $.ui.keyCode.BACKSPACE:
+					this._deleteSelText(true);
+					this._stopEvent(e);
+					return;
+				case $.ui.keyCode.DELETE:
+					this._deleteSelText(false);
+					this._stopEvent(e);
+					return;
+				case $.ui.keyCode.ENTER:
+					if (!this.options.hideEnter) {
+						return;
+					}
+					break;
+				case $.ui.keyCode.ESCAPE:
+					this._stopEvent(e);
+					window.setTimeout($.proxy(this._resetData, this), 1);
+					return;
+				case $.ui.keyCode.PAGE_UP:
+				case $.ui.keyCode.PAGE_DOWN:
+				case $.ui.keyCode.ALT:
+					this._stopEvent(e);
+					return;
 			}
 		},
 
@@ -864,7 +936,7 @@
 		},
 
 		_doFocus: function () {
-			var selRange = this.element.wijtextselection(),	
+			var selRange = this.element.wijtextselection(),
 				sta = selRange.start, s;
 			this._updateText();
 			s = this.element.val();
@@ -932,7 +1004,7 @@
 			}
 
 			this.element.data('value', this.element.val());
-			
+
 			window.setTimeout(function () {
 				self._onChange();
 				self._updateText();
@@ -1135,4 +1207,4 @@
 		}
 	};
 
-}(jQuery));
+} (jQuery));

@@ -1,0 +1,223 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+    <title>GeoDashboard</title>
+        <!-- jQuery -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+    
+        <!-- Wijmo CSS and script -->
+        <link type="text/css" href="http://cdn.wijmo.com/themes/metro/jquery-wijmo.css" rel="stylesheet" title="metro-jqueryui">
+        <link type="text/css" href="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.1.5.min.css" rel="stylesheet">
+        <script type="text/javascript" src="http://cdn.wijmo.com/jquery.wijmo-open.all.2.1.5.min.js"></script>
+        <script type="text/javascript" src="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.1.5.min.js"></script>
+    
+        <!-- KnockoutJS for MVVM-->
+        <script type="text/javascript" src="http://cloud.github.com/downloads/SteveSanderson/knockout/knockout-2.0.0.js"></script>
+        <script type="text/javascript" src="http://cdn.wijmo.com/external/knockout.wijmo.js"></script>
+    
+        <!-- Esri Map API-->
+        <script type="text/javascript" src="http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.8"></script>
+        <!-- geoDashboard CSS and script -->
+        <link type="text/css" href="styles/style.css" rel="stylesheet">
+        <script type="text/javascript" src="scripts/esri-map.js"></script>
+        <script type="text/javascript" src="scripts/view-model.js"></script>
+    
+        <!-- Override Wijmo defaults script -->
+        <script type="text/javascript" src="scripts/wijmo-defaults.js"></script>
+        <script type="text/javascript">
+    
+            // when document loads, create map, ViewModel, and apply bindings
+            dojo.addOnLoad(function () {
+                createMap();
+                vm = new ViewModel();
+                ko.applyBindings(vm);
+
+                $(window).resize(function () {
+                    $(":wijmo-wijbarchart").wijbarchart("redraw");
+                });
+            });
+        </script>
+    </head>
+<body>
+
+	<!-- title -->
+	<header class="title-bar ui-helper-clearfix">
+
+        <div class="padder">
+      	<h1 class="app-title">
+    <img src="styles/img/wijmo_16.png" />ComponentOne GeoDashboard</h1>
+        
+        
+        <h2 class="app-subtitle float-right teal bold" data-bind="text: selectedLocation">
+    		Selected Location
+    	</h2>
+    	<a class="app-link float-right" onclick="gotoCurrentLocation()"> Go to current location</a>
+        </div>
+        
+    </header>
+	
+    <!-- map -->
+	<div id="map" class="map"> 
+    
+      	<!-- crosshairs -->
+      	<div class="abs-center" style="width: 100px; height: 100px; margin-left: -50px; margin-top: -50px; border-radius: 50px; border: solid 2px #d015b3;"> </div>
+      	<div class="abs-center" style="width: 200px; height: 200px; margin-left: -100px; margin-top: -100px; border-radius: 100px; border: solid 2px #d015b3;"> </div>
+      	<div class="abs-center" style="width: 2px; height: 100%; background: #d015b3; top: 0px;"> </div>
+    	<div class="abs-center" style="width: 100%; height: 2px; background: #d015b3; left: 0px;"> </div>
+    </div>
+    
+    <!-- info tiles -->
+    <section class="tile-background ui-helper-clearfix"> 
+        
+        <div class="tile-container ui-helper-clearfix">
+        
+            <!-- tapestry tile -->
+            <div class="tile clickable tile-tapestry" onclick="showTiles('tapestry')">
+                <h3 class="tile-caption" data-bind="text: selectedLocation"></h3>
+                <div class="padder">
+                <h4>
+                    The dominant tapestry is <span class="teal bold" data-bind="text: sources.tapestry.values.TAPSEGNAM.value"></span>
+                </h4>
+                </div> 
+            </div>
+            
+            <!-- sex tile -->
+            <div class="tile clickable" data-bind="with: sources.populationBySex" onclick="showTiles('populationBySex')">
+                <h3 class="tile-caption">Population by Sex</h3>
+                <div class="padder">
+                    <h4 class="tile-value">
+                        <span class="bold teal" data-bind="text: Globalize.format(values.TOTPOP_CY.value(), 'n0')"></span> people
+                    </h4>   
+                    <div class="symbol blue float-left"> &#9794;
+                    <h5 data-bind="text: Globalize.format(values.PMALE_CY.value() / 100, 'p1')"> Male</h5>
+                    </div>
+                    <div class="symbol pink float-right"> &#9792;
+                    <h5 data-bind="text: Globalize.format(values.PFEMALE_CY.value() / 100, 'p1')"> Female</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- age tile -->
+            <div class="tile clickable" data-bind="with: sources.age" onclick="showTiles('age')">
+                <h3 class="tile-caption">Median Age</h3>
+                <div class="padder">
+                    <h4 class="tile-value bold teal" data-bind="text: values.MEDAGE_CY.value"></h4>
+                    <table class="data-table">
+                      <tbody data-bind="foreach: shortList">
+                        <tr>
+                            <td class="align-right"><span data-bind="text: name"></span></td>
+                            <td><span class="histogram-bar" data-bind="style: { width: percentMax() * 100 + '%' }">&nbsp;</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- household income tile -->
+            <div class="tile clickable" data-bind="with: sources.householdIncome" onclick="showTiles('householdIncome')">
+                <h3 class="tile-caption">Median Household Income</h3>
+                <div class="padder">
+                    <h4 class="tile-value teal bold" data-bind="text: Globalize.format(values.MEDHINC_CY.value(), 'c0')"> </h4>
+                    <table class="data-table">
+                        <tbody data-bind="foreach: shortList">
+                            <tr>
+                                <td class="align-right"><span data-bind="text: name"></span></td>
+                                <td><span class="histogram-bar" data-bind="style: { width: percentMax() * 100 + '%' }"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          
+            <!-- net worth tile -->
+            <div class="tile clickable" data-bind="with: sources.netWorth" onclick="showTiles('netWorth')">
+                <h3 class="tile-caption">Median Net Worth</h3>
+                <div class="padder">
+                    <h4 class="tile-value bold teal" data-bind="text: Globalize.format(values.MEDNW_CY.value(), 'c0')"> </h4>
+                    <div class="radial-gauge" data-bind="wijradialgauge: { value: values.MEDNW_CY.value, ranges: [{ startWidth: 24, endWidth: 24, startValue: 0, endValue: 300000, startDistance: 0.5, endDistance: 0.5, style: { fill: '#ccc', stroke: 'none', opacity: 0.4}},{ startWidth: 24, endWidth: 24, startValue: 0, endValue: values.MEDNW_CY.value, startDistance: 0.5, endDistance: 0.5, style: { fill: '#15ced0', stroke: 'none'}}] }"> </div>
+                </div>
+            </div>
+            
+            <!-- app info tile -->
+            <div class="tile">
+                <h3 class="tile-caption">About this App</h3>
+				<div class="padder">
+                <h4><span class="teal bold">HTML5</span> Version</h4>
+                <p> This app uses ComponentOne, <a href="http://wijmo.com">Wijmo</a>, and KnockoutJS. See also the <a href="http://demo.componentone.com/Silverlight/GeoDashboard/">Silverlight version</a>. <a href="http://our.componentone.com/2012/04/30/mvvm-everywhere/">Learn how</a> we built both versions. </p>
+            	</div>
+            </div>
+            
+            <!-- home values -->
+            <div class="tile clickable tile-big" data-bind="with: sources.homeValue" onclick="showTiles('homeValue')">
+                <h3 class="tile-caption">Median Home Value</h3>
+                <div class="padder">
+                <h4 class="tile-value">
+                    <span class="teal bold" data-bind="text: values.NAME.value"></span>'s median home value is <span class="teal bold" data-bind="text: Globalize.format(values.MEDVAL_CY.value(), 'c0')"></span> <span data-bind="text: getIndexDescription(values.MEDVAL_I.value())"></span>
+                </h4>
+                <table>
+                    <tr>
+                        <td>Median Home Value Index</td>
+                        <td>
+                        <div class="gauge-frame">
+                            <div class="gauge-track">
+                                <div class="gauge-center"></div>
+                                <div class="float-left" data-bind="style: { width: (getSliderPosition(values.MEDVAL_I.value()) * 230 - 25) + 'px' }"></div>
+                                <div class="float-left gauge-marker" data-bind="text: values.MEDVAL_I.value"></div>
+                            </div>
+                        </div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>Median Household Income Index</td>
+                        <td>
+                        <div class="gauge-frame">
+                            <div class="gauge-track">
+                                <div class="gauge-center"></div>
+                                <div class="float-left" data-bind="style: { width: (getSliderPosition(values.MEDHINC_I.value()) * 230 - 25) + 'px' }"></div>
+                                <div class="float-left gauge-marker" data-bind="text: values.MEDHINC_I.value"></div>
+                            </div>
+                        </div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>Median Net Worth Index</td>
+                        <td>
+                        <div class="gauge-frame">
+                            <div class="gauge-track">
+                                <div class="gauge-center"></div>
+                                <div class="float-left" data-bind="style: { width: (getSliderPosition(values.MEDNW_I.value()) * 230 - 25) + 'px' }"></div>
+                                <div class="float-left gauge-marker" data-bind="text: values.MEDNW_I.value"></div>
+                            </div>
+                        </div>
+                        </td>
+                    </tr>
+                </table>
+                <table class="data-table">
+                    <tbody data-bind="foreach: shortList">
+                        <tr>
+                            <td class="align-right" data-bind="text: name"></td>
+                            <td class="align-right" data-bind="text: Globalize.format(value(), 'n0') + ' homes'"></td>
+                            <td class="align-right" data-bind="text: Globalize.format(percent(), 'p0') + ' homes'"></td>
+                            <td><span class="histogram-bar" data-bind="style: { width: percentMax() * 100 + '%' }"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+            <!-- home value histogram -->
+            <div class="tile clickable tile-big" data-bind="with: sources.homeValue" onclick="showTiles('homeValue')">
+                <h3 class="tile-caption"> Home Value Distribution</h3>
+                <div class="padder">
+                <h4 class="tile-value teal bold" data-bind="text: values.NAME.value"></h4>
+                <div class="bar-chart" data-bind="wijbarchart: { seriesList: formatChartSeriesList(list) }" style="width:100%"></div>   
+                </div>
+            </div>
+        
+        </div>
+        
+    </section>
+
+</body>
+</html>

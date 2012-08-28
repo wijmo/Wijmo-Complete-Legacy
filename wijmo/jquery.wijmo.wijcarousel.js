@@ -1,10 +1,10 @@
 /*globals jQuery window */
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the MIT or GPL Version 2 licenses.
 * licensing@wijmo.com
@@ -468,6 +468,11 @@
 			var self = this,
 				o = self.options,
 				el = self.element;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			self._initStates(o, el);
 			self._createDom(self.isHorizontal);
@@ -493,6 +498,16 @@
 			}
 			else if (o.auto) {
 				self.play();
+			}
+
+			//update for visibility change
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.refresh();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijcarousel");
 			}
 		},
 
@@ -774,6 +789,11 @@
 			self.container
 				.css("margin-" + dir, offset + "px")
 				.css("margin-" + antiDir, offset + "px");
+
+			self._getItemByIndex(self.currentIdx)
+			.siblings()
+			.find(".wijmo-wijcarousel-text,.wijmo-wijcarousel-caption")
+			.hide();
 		},
 
 		_createItemsFromData: function (data) {
@@ -1004,8 +1024,8 @@
 		_createPagingItem: function (isDot, thumbOpt, ul, idx) {
 			var item = $(pagerHtml).attr({
 				"role": "tab",
-				"aria-label": idx,
-				"title": idx
+				"aria-label": idx + 1,
+				"title": idx + 1
 			}), width, height;
 			if (isDot) {
 				item.addClass("wijmo-wijcarousel-dot");
@@ -1546,6 +1566,9 @@
 					else if (self.currentIdx + o.display < self.count) {
 						scrolled = self.count - self.currentIdx - o.display;
 						offset = -currentLeft - size * scrolled;
+					}
+					else {
+						return;
 					}
 				}
 				else {

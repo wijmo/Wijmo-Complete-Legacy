@@ -1,10 +1,10 @@
 /*globals window,document,jQuery*/
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
 * licensing@wijmo.com
@@ -79,8 +79,27 @@
 
 		_create: function () {
 			var self = this;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			self._ribbonify();
+			
+			//update for visibility change
+			if (self.element.is(":hidden") &&
+					self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.updateRibbonSize();
+					if (self.options.disabled) {
+						self._setDisabled(true);
+					}
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijribbon");
+			}
 
 			if (self.options.disabled) {
 				self._setDisabled(true);
@@ -99,23 +118,32 @@
 			var self = this,
 				element = self.element,
 				eleOffset = element.offset(),
+				offsetTop = eleOffset.top, 
+				offsetLeft = eleOffset.left,
+				offsetParent = "body",
 				disabledModal = self.disabledModal;
 
 			element.wijtabs("option", "disabled", value);
+			
+			if (element.closest(".wijmo-wijeditor").length !== 0) {
+				offsetTop = 0;
+				offsetLeft = 0;
+				offsetParent = element.parent();
+			}
 
 			if (value) {
 				if (!disabledModal) {
 					disabledModal = $("<div></div>")
 						.addClass(css_state_disabled + " " + css_ribbon_disabled)
 						.css({
-							top: eleOffset.top,
-							left: eleOffset.left,
+							top: offsetTop,
+							left: offsetLeft,
 							"z-index": "10000",
 							//for ie can't disabled, so add background-color attribute
 							"background-color": "lightgray",
 							"position": "absolute"
 						})
-						.appendTo(element.parent())
+						.appendTo(offsetParent)
 						.bind("click mousedown mouseup mouseover mouseout " +
 						"focus keydown keypress", function (e) {
 							e.stopPropagation();
@@ -125,12 +153,12 @@
 					self.disabledModal = disabledModal;
 				}
 
-				disabledModal.width(element.width())
+				self.disabledModal.width(element.width())
 					.height(element.height())
 					.show();
 			} else {
-				if (disabledModal) {
-					disabledModal.hide();
+				if (self.disabledModal) {
+					self.disabledModal.hide();
 				}
 			}
 		},
@@ -516,7 +544,9 @@
 				groups.each(function (j, li) {
 					var group = $(li),
 					lblDiv = group.find(">div:last"),
-					text = $.trim(lblDiv.text());
+					//text = $.trim(lblDiv.text());
+					text = lblDiv.attr("displayname") ? 
+								lblDiv.attr("displayname") : $.trim(lblDiv.text());
 					
 					//update by wh for refresh 2012/1/9
 					//recover the ribbon to orign
@@ -560,7 +590,7 @@
 					pageWidth;
 
 				//update for fixed issue 21292 by wh at 2012/5/8
-				if($tabPage.data("destroy.tabs")) {
+				if ($tabPage.data("destroy.tabs")) {
 					$tabPage.remove();
 					return;
 				}
@@ -582,7 +612,9 @@
 					var group = $(li),
 						lblDiv = group.find(">div:last"),
 						css = css_state_default + " " + css_ribbon_group,
-						text = $.trim(lblDiv.text());
+						//text = $.trim(lblDiv.text());
+						text = lblDiv.attr("displayname") ? 
+								lblDiv.attr("displayname") : $.trim(lblDiv.text());
 
 					if (lblDiv) {
 						css += " " + css_ribbon + "-" + text.toLowerCase();
@@ -659,6 +691,7 @@
 			var self = this,
 				grpClass = css_ribbon + "-" + text.toLowerCase(),
 				$group = $(group).removeClass(grpClass),
+				displayText = $group.find(">div:last").text() || text,
 				$abbrevgrp;
 
 			$group.wrapInner("<div class='" + css_ribbon_dropdowngroup +
@@ -674,7 +707,7 @@
 			$abbrevgrp = $("<div class='" + css_ribbon_abbrevgroup + "'>" +
 					"<span class='" + css_ribbon_abbrev + text.toLowerCase() + " " +
 					css_ribbon_icon + " " + css_ribbon_abbrevicon + "'></span>" +
-					"<span class='" + css_ribbon_text + "'>" + text + "</span>" +
+					"<span class='" + css_ribbon_text + "'>" + displayText + "</span>" +
 					"<span class='" + css_icon + " " + css_icon_triangle_s + " " +
 					css_ribbon_icon + "'></span></div>")
 				.appendTo($group)
@@ -935,7 +968,11 @@
 
 				button.button("option", "disabled", disabled);
 				if (isButtonEle) {
-					button.children("." + css_button_text).text(commandName);
+					// when the keypress, the button text will be happen change
+					// For "Save" to "save"
+					if (commandName !== "save") {
+						button.children("." + css_button_text).text(commandName);
+					}
 				} else {
 					$("[for='" + button.attr("id") + "']", button.parent())
 					.children("." + css_button_text).text(commandName);

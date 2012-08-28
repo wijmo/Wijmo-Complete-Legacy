@@ -1,9 +1,9 @@
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -25,28 +25,32 @@
 			var val = this.val();
 			if (arguments.length === 0) {
 				var range, stored_range, s, e;
-				if ($.browser.msie) {
-					var selection = document.selection;
-					if (t.tagName.toLowerCase() != "textarea") {
-						range = selection.createRange().duplicate();
-						range.moveEnd("character", val.length);
-						s = (range.text == "" ? val.length : val.lastIndexOf(range.text));
-						range = selection.createRange().duplicate();
-						range.moveStart("character", -val.length);
-						e = range.text.length;
-					} else {
-						range = selection.createRange();
-						stored_range = range.duplicate();
-						stored_range.moveToElementText(t);
-						stored_range.setEndPoint('EndToEnd', range);
-						s = stored_range.text.length - range.text.length,
-				e = s + range.text.length
+				if ($.browser.msie && $.browser.version < 9) {
+					try {
+						var selection = document.selection;
+						if (t.tagName.toLowerCase() != "textarea") {
+							//$(this).focus();
+							range = selection.createRange().duplicate();
+							range.moveEnd("character", val.length);
+							s = (range.text === "" ? val.length : val.lastIndexOf(range.text));
+							range = selection.createRange().duplicate();
+							range.moveStart("character", -val.length);
+							e = range.text.length;
+						} else {
+							range = selection.createRange();
+							stored_range = range.duplicate();
+							stored_range.moveToElementText(t);
+							stored_range.setEndPoint('EndToEnd', range);
+							s = stored_range.text.length - range.text.length,
+						e = s + range.text.length
+						}
 					}
-			} else {
+					catch(e) {}//fixed bug 26153
+				} else {
 					// invisible input throw an exception in FF
 					//if ($(t).isPrototypeOf(':visible')) {
-						s = t.selectionStart;
-						e = t.selectionEnd;
+					s = t.selectionStart;
+					e = t.selectionEnd;
 					//}
 					//else {
 					//	s = e = 0;

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Data Source</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="%description%" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="ComponentOne" />
+	
+	<link href="../../themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+	
+	<script src="../../external/jquery-1.8.0.min.js" type="text/javascript"></script>
+	<script src="../../external/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
+	<script src="../../external/raphael-min.js" type="text/javascript"></script>
+	<script src="../../external/globalize.min.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.raphael.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijchartcore.js" type="text/javascript"></script>
+	<script src="../../wijmo/jquery.wijmo.wijpiechart.js" type="text/javascript"></script>
+	<style type="text/css">
+		#wijpiechart
+		{
+			width: 756px;
+			height: 475px;
+		}
+	</style>
+	<script id="scriptInit" type="text/javascript">
+		$(document).ready(function () {
+			var data = [{
+				Device: 'MacBook Pro',
+				Percent: 46.78,
+				Offset: 15
+			}, {
+				Device: 'iMac',
+				Percent: 23.18
+			}, {
+				Device: 'MacBook',
+				Percent: 20.25
+			}, {
+				Device: 'Mac Pro',
+				Percent: 5.41
+			}, {
+				Device: 'Mac mini',
+				Percent: 3.44
+			}];
+
+			$("#wijpiechart").wijpiechart({
+				dataSource: data,
+				data: {
+					label: { bind: "Device" },
+					value: { bind: "Percent" },
+					offset: { bind: "Offset" }
+				},
+				radius: 140,
+				legend: { visible: true },
+				hint: {
+					content: function () {
+						return this.data.label + " : " + Globalize.format(this.value / this.total, "p2");
+					}
+				},
+				header: {
+					text: "Steam - Mac Hardware"
+				}
+			});
+		});
+	</script>
+</head>
+<body class="demo-single">
+	<div class="container">
+		<div class="header">
+			<h2>
+				DataSource</h2>
+		</div>
+		<div class="main demo">
+			<!-- Begin demo markup -->
+			<div id="wijpiechart" class="ui-widget ui-widget-content ui-corner-all">
+			</div>
+			<!-- End demo markup -->
+			<div class="demo-options">
+				<!-- Begin options markup -->
+				<!-- End options markup -->
+			</div>
+		</div>
+		<div class="footer demo-description">
+
+<p>This sample shows how to create a pie chart using an array as the data source for the chart.</p>
+
+		</div>
+	</div>
+</body>
+</html>

@@ -1,10 +1,10 @@
 /*globals jQuery, window*/
 /*
  * 
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  * 
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * licensing@wijmo.com
@@ -508,6 +508,11 @@
 				o = self.options,
 				//cre = /({.*})/, 
 				ratingElement;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 				
 			//var m = cre.exec(self.element.attr("class"));
 			//if (m && m.length) {
@@ -519,7 +524,7 @@
 				ratingElement = $("<div></div>");
 				self.element.after(ratingElement);
 			} else if (self.element.is("div")) {
-				if (self.element.children("input:[type='radio']").length > 0) {
+				if (self.element.children("input[type='radio']").length > 0) {
 					self._parseRadio();
 					self.element.hide();
 					ratingElement = $("<div></div>");
@@ -780,8 +785,13 @@
 					if (typeof (iconsClass) === "string") {
 						$(star).addClass(iconsClass);
 					} else if ($.isArray(iconsClass)) {
-						if (iconsIdx < iconsClass.length) {
-							$(star).addClass(iconsClass[iconsIdx]);
+						var len = iconsClass.length;
+						if (iconsIdx < len) {
+							if (self.options.direction === "reversed") {
+								$(star).addClass(iconsClass[len - iconsIdx - 1]);
+							} else {
+								$(star).addClass(iconsClass[iconsIdx]);
+							}
 						}
 					}
 					idx++;
@@ -1083,12 +1093,12 @@
 					if (typeof (ratedIconsClass) === "string") {
 						customizedIconClass = ratedIconsClass;
 					} else if ($.isArray(ratedIconsClass)) {
-						if (o.direction === "reversed") {
-							customizedIconIdx = Math.floor((starCount * split - 1 - idx) /
-								split);
-						} else {
+						//if (o.direction === "reversed") {
+						//	customizedIconIdx = Math.floor((starCount * split - 1 - idx) /
+						//		split);
+						//} else {
 							customizedIconIdx = Math.floor(idx / split);
-						}
+						//}
 						if (ratedIconsClass.length > customizedIconIdx) {
 							customizedIconClass = ratedIconsClass[customizedIconIdx];
 						}
@@ -1122,7 +1132,7 @@
 			var self = this,
 				o = self.options,
 				hintValues = [],
-				radios = $("input:[type='radio']", self.element);
+				radios = $("input[type='radio']", self.element);
 			if (radios.length) {
 				o.count = radios.length;
 				o.totalValue = radios.length;
@@ -1131,7 +1141,7 @@
 						radioId = jRadio.attr("id"),
 						jLabel;
 					if (radioId && radioId.length > 0) {
-						jLabel = $("label:[for='" + radioId + "']", self.element);
+						jLabel = $("label[for='" + radioId + "']", self.element);
 						if (jLabel.length) {
 							hintValues.push(jLabel.html());
 						} else {

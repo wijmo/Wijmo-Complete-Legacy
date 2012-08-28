@@ -1,10 +1,10 @@
 /*globals Raphael,jQuery, window*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -52,6 +52,60 @@
 			///  });
 			/// </summary>
 			innerRadius: 0,
+			/// <summary>
+			/// A value that indicates a function which is used to get a value
+			/// for the chart label shown.
+			/// Default: null.
+			/// Type: Function.
+			/// </summary>
+			chartLabelFormatter: null,
+			/// <summary>
+			/// A value that indicates the chart label elements of chart.
+			/// DEfault: {style: {}, formatString: "", formatter: null, 
+			/// connectorStyle: {}, position: "inside", offsetX: 10}
+			/// Type: Object.
+			/// </summary>
+			labels: {
+				/// <summary>
+				/// A value that indicates the style of the chart labels.
+				/// Default: {}
+				/// Type: Object
+				/// </summary>
+				style: {},
+				/// <summary>
+				/// A value that indicates the format string of the chart labels.
+				/// Default: ""
+				/// Type: Object
+				/// </summary>
+				formatString: "",
+				/// <summary>
+				/// A value that indicates the formatter of the chart labels.
+				/// Default: null
+				/// Type: Function
+				/// </summary>
+				formatter: null,
+				/// <summary>
+				/// A value that indicates the style of the chart labels' connector.
+				/// Default: {}
+				/// Type: Object
+				/// </summary>
+				connectorStyle: {},
+				/// <summary>
+				/// A value that indicates the style of the chart labels.
+				/// Default: "inside"
+				/// Type: String
+				/// </summary>
+				/// <remarks>
+				/// Options are 'inside', 'outside'.
+				/// </remarks>
+				position: "inside",
+				/// <summary>
+				/// A value that indicates the offset of the chart labels.
+				/// Default: {}
+				/// Type: Object
+				/// </summary>
+				offset: 10
+			},
 			/// <summary>
 			/// A value that indicates whether to show animation 
 			///	and the duration for the animation.
@@ -149,7 +203,7 @@
 			/// </summary>
 			seriesList: [],
 			/// <summary>
-			/// Occurs when the user clicks a mouse button.
+			/// Fires when the user clicks a mouse button.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -174,7 +228,7 @@
 			///	</param>
 			mouseDown: null,
 			/// <summary>
-			/// Occurs when the user releases a mouse button
+			/// Fires when the user releases a mouse button
 			/// while the pointer is over the chart element.
 			/// Default: null.
 			/// Type: Function.
@@ -199,7 +253,7 @@
 			///	</param>
 			mouseUp: null,
 			/// <summary>
-			/// Occurs when the user first places the pointer over the chart element.
+			/// Fires when the user first places the pointer over the chart element.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -223,7 +277,7 @@
 			///	</param>
 			mouseOver: null,
 			/// <summary>
-			/// Occurs when the user moves the pointer off of the chart element.
+			/// Fires when the user moves the pointer off of the chart element.
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -247,7 +301,7 @@
 			///	</param>
 			mouseOut: null,
 			/// <summary>
-			/// Occurs when the user moves the mouse pointer
+			/// Fires when the user moves the mouse pointer
 			/// while it is over a chart element.
 			/// Default: null.
 			/// Type: Function.
@@ -272,7 +326,7 @@
 			///	</param>
 			mouseMove: null,
 			/// <summary>
-			/// Occurs when the user clicks the chart element. 
+			/// Fires when the user clicks the chart element. 
 			/// Default: null.
 			/// Type: Function.
 			/// Code example:
@@ -396,9 +450,11 @@
 						if (idx >= 0 && idx < dataLabel.length) {
 							label = dataLabel[idx];
 						}
-						if (dataOffset && $.isArray(dataValue) && dataOffset.length &&
+						if (dataOffset && $.isArray(dataValue) && 
+								dataOffset.length &&
 								idx >= 0 && idx < dataOffset.length) {
-							offset = typeof dataOffset[idx] === 'undefined' ? 0 : dataOffset[idx];
+							offset = typeof dataOffset[idx] === 'undefined' ? 
+								0 : dataOffset[idx];
 						}
 						seriesList.push({
 							data: val,
@@ -552,8 +608,12 @@
 				disabled: o.disabled,
 				textStyle: o.textStyle,
 				chartLabelStyle: o.chartLabelStyle,
+				chartLabelFormatString: o.chartLabelFormatString,
+				chartLabelFormatter: o.chartLabelFormatter,
+				labels: o.labels,
 				shadow: o.shadow,
 				animation: o.animation,
+				culture: self._getCulture(),
 				mouseDown: $.proxy(self._mouseDown, self),
 				mouseUp: $.proxy(self._mouseUp, self),
 				mouseOver: $.proxy(self._mouseOver, self),
@@ -610,7 +670,22 @@
 				innerRadius = options.innerRadius,
 				seriesTransition = options.seriesTransition,
 				showChartLabels = options.showChartLabels,
-				chartLabelStyle = options.chartLabelStyle,
+				textStyle = options.textStyle,
+				labelsOpts = options.labels || {
+					style: {},
+					formatString: "",
+					formatter: null,
+					connectorStyle: {},
+					position: "inside",
+					offset: 10
+				},
+				chartLabelStyle = $.extend(true, {}, textStyle,
+					options.chartLabelStyle, labelsOpts.style),
+				chartLabelFormatString = labelsOpts.formatString || 
+					options.chartLabelFormatString,
+				chartLabelFormatter = labelsOpts.formatter || 
+					options.chartLabelFormatter,
+				culture = options.culture,
 				disabled = options.disabled,
 				mouseDown = options.mouseDown,
 				mouseUp = options.mouseUp,
@@ -1023,8 +1098,12 @@
 					cx = startX + radius,
 					cy = startY + radius,
 					center, sector, label,
-					pos, textStyle,
-					tracker;
+					pos, textStyle, borderPos,
+					tracker, chartLabel, formatter,
+					labelPosition = labelsOpts.position,
+					labelConnectorStyle = labelsOpts.connectorStyle,
+					labelOffset = labelsOpts.offset,
+					calculatedAngle, labelBounds;
 
 				pieID = series.pieID;
 				series = $.extend(true, { offset: 0 }, series);
@@ -1105,17 +1184,41 @@
 				$(sector.node).data("wijchartDataObj", series);
 
 				if (showChartLabels) {
-					pos = getPositionByAngle(cx, cy,
+					if (labelPosition === "outside") {
+						borderPos = getPositionByAngle(cx, cy, 
+							radius, angle + anglePlus / 2);
+						pos = getPositionByAngle(cx, cy, 
+							radius + labelOffset, angle + anglePlus / 2);
+					} else {
+						pos = getPositionByAngle(cx, cy,
 							series.offset + radius * 2 / 3, angle + anglePlus / 2);
+					}
 					textStyle = $.extend(true, {}, textStyle, chartLabelStyle);
 					if (series.textStyle) {
 						textStyle = $.extend(true, textStyle, series.textStyle);
 					}
 
+					chartLabel = series.label;
+					if (chartLabelFormatString && chartLabelFormatString.length > 0) {
+						chartLabel = Globalize.format(chartLabel, 
+							chartLabelFormatString, culture);
+					}
+					if (chartLabelFormatter && $.isFunction(chartLabelFormatter)) {
+						formatter = {
+							index: idx,
+							value: series.data,
+							y: series.data,
+							total: total,
+							chartLabel: chartLabel,
+							chartLabelFormatter: chartLabelFormatter
+						};
+						chartLabel = $.proxy(chartLabelFormatter, formatter)();
+					}
 					if (aniLabelAttrs && seriesTransition.enabled) {
 						if (idx < aniLabelAttrs.length) {
 							attr = aniLabelAttrs[idx];
-							attr.text = series.label;
+							attr.text = chartLabel;
+							//attr.text = series.label;
 							label = canvas.text(0, 0, "").attr(attr);
 							textStyle = getDiffAttrs(attr, textStyle);
 							textStyle.x = pos.x;
@@ -1123,12 +1226,30 @@
 							label.wijAnimate(textStyle, seriesTransition.duration,
 								seriesTransition.easing);
 						} else {
-							label = canvas.text(pos.x, pos.y, series.label)
+							label = canvas.text(pos.x, pos.y, chartLabel)
 								.attr(textStyle);
+							//label = canvas.text(pos.x, pos.y, series.label)
+							//	.attr(textStyle);
 						}
 					} else {
-						label = canvas.text(pos.x, pos.y, series.label)
+						label = canvas.text(pos.x, pos.y, chartLabel)
 							.attr(textStyle);
+						//label = canvas.text(pos.x, pos.y, series.label)
+						//	.attr(textStyle);
+					}
+					if (labelPosition === "outside") {
+						calculatedAngle = (angle + anglePlus / 2) % 360;
+						labelBounds = label.wijGetBBox();
+						if (calculatedAngle >= 90 && calculatedAngle <= 270) {
+							label.transform(Raphael.format("...T{0},{1}", 
+								-labelBounds.width / 2, 0))
+						} else {
+							label.transform(Raphael.format("...T{0},{1}", 
+								labelBounds.width / 2, 0))
+						}
+						//connector
+						canvas.path(Raphael.format("M{0} {1}L{2} {3}", borderPos.x,
+							borderPos.y, pos.x, pos.y)).attr(labelConnectorStyle);
 					}
 					addClass($(label.node), "wijchart-canvas-object wijpiechart");
 					$(label.node).data("wijchartDataObj", series);

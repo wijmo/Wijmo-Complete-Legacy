@@ -1,10 +1,10 @@
 /*globals window jQuery */
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -115,7 +115,11 @@
 			//var d = self.data;
 			// fire loading event.
 			if ($.isFunction(self.loading)) {
-				self.loading(self, data);
+				//self.loading(self, data);
+				//if return false in loading event, cancel this request.
+				if (self.loading(self, data) === false) {
+					return;
+				}
 			}
 			// if datasource has an proxy object, it will use the request method of
 			// proxy to retrive the raw data.

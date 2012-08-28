@@ -1,10 +1,10 @@
 /*globals jQuery,window,S,document */
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the MIT or GPL Version 2 licenses.
 * licensing@wijmo.com
@@ -579,6 +579,11 @@
 			self.currentIdx = -1;
 			self.disabledEles = self.element;
 			self.disabledDiv = $();
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			if (o.showPager) {//remove this.
 				o.pagingPosition = true;
@@ -613,6 +618,15 @@
 			}
 			if (o.disabled) {
 				self.disable();
+			}
+			//update for visibility change
+			if (self.element.is(":hidden") && self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.refresh();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijgallery");
 			}
 		},
 

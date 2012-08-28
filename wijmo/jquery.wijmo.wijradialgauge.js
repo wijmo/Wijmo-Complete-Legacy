@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -259,7 +259,7 @@
 		_set_radius: function () {
 			var self = this;
 			self._redrawMarksAndLabels();
-			self.pointer.remove();
+			self.pointer.wijRemove();
 			self._paintPointer();
 			self._setPointer();
 		},
@@ -299,14 +299,14 @@
 
 		_set_cap: function () {
 			var self = this;
-			self.pointer.remove();
+			self.pointer.wijRemove();
 			self._paintPointer();
 			self._setPointer();
 		},
 
 		//		_removeRanges: function () {
 		//			$.each(this.ranges, function (i, n) {
-		//				n.remove();
+		//				n.wijRemove();
 		//			});
 		//		},
 
@@ -466,7 +466,7 @@
 			var self = this,
 				mark = self._paintMarkEle(opt),
 				bbox = mark.wijGetBBox();
-			mark.remove();
+			mark.wijRemove();
 			return { width: bbox.width, height: bbox.height };
 		},
 
@@ -477,7 +477,7 @@
 			if (face.type === "set") {
 				width = face[0].attr("stroke-width") || 1;
 			}
-			face.remove();
+			face.wijRemove();
 			return width;
 		},
 
@@ -604,7 +604,7 @@
 			text = self.canvas.text(0, 0, value);
 			text.attr(o.gaugeLableStyle);
 			bbox = text.wijGetBBox();
-			text.remove();
+			text.wijRemove();
 			return bbox;
 		},
 
@@ -618,7 +618,7 @@
 				self._applyAlignment(markEle, markOption.position,
 					markOption.offset || 0);
 				self.markBbox = markEle.wijGetBBox();
-				markEle.remove();
+				markEle.wijRemove();
 			}
 			return self.markBbox;
 		},

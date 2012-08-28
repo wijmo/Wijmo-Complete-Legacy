@@ -1,9 +1,9 @@
 /*globals jQuery, alert, document, window, setTimeout, $, Components, netscape */
 /*
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -38,7 +38,7 @@
 		wijParseInt = parseInt,
 
 		oriWidth, oriHeight,
-		$oriParent, $ribbon, $modes,
+		$oriParent, 
 
 		uniqueIds = [],
 	//fullScreen = false,
@@ -782,11 +782,62 @@
 			///      customContextMenu: false
 			///  });
 			/// </summary>
-			customContextMenu: true
+			customContextMenu: true,			
+			/// <summary>
+			/// The text of editor.
+			/// Default: null.
+			/// Type: String.
+			/// Code example:
+			///  $("#wijeditor").wijeditor({
+			///      text: "Editor string"
+			///  });
+			/// </summary>
+			text: null,
+			/// <summary>
+			/// Occurs when the text changed.
+			/// Default: null.
+			/// Type: Function.
+			/// Code example:
+			/// Supply a function as an option.
+			/// $("#wijeditor").wijeditor({textChanged: function(e, data) { } });
+			/// Bind to the event by type: textChanged
+			/// $("#wijeditor")
+			///.bind("textChanged", function(e, data) {} );
+			/// </summary>
+			/// <param name="e" type="eventObj">
+			/// jQuery.Event object.
+			/// </param>
+			/// <param name="data" type="Object">
+			/// An object that contains text of the editor.
+			/// data.text: the text of the editor.
+			/// </param>
+			textChanged: null,
+			///	<summary>
+			///	Use the localization option in order to localize
+			///	text which not depends on culture.
+			/// Default: {
+			///	dialogCancel: "Cancle",
+			///	dialogOK: "Ok"
+			/// }
+			/// Type: Object.
+			/// Code example: $("#editor").wijeditor(
+			///					{ 
+			///						localization: {
+			///							dialogOK: "OK",
+			///							dialogCancel: "Cancel"
+			///						}
+			///					});
+			///	</summary>
+			localization: null
 		},
 
 		_create: function () {
 			var self = this;
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
 
 			//update for fixing bug 18157 at 2011/11/5 by wh
 			if (self.element.is("input")) {
@@ -796,6 +847,8 @@
 
 			//if place two editors, it will be mess in ui and function
 			self.id_prefix = "wijeditor-" + self.element.attr("id") + "-";
+			self.$ribbon = undefined;
+			self.$modes = undefined;
 			
 			self._editorify();
 			self._initElements();
@@ -809,6 +862,17 @@
 			//add for fixing issue 20372 by wh at 2012/3/9
 			self._continueSavingInputTextForUndo = false;
 			//enf for 20372
+			
+			//update for visibility change
+			if (self.element.is(":hidden") &&
+						self.element.wijAddVisibilityObserver) {
+				self.element.wijAddVisibilityObserver(function () {
+					self.refresh();
+					if (self.element.wijRemoveVisibilityObserver) {
+						self.element.wijRemoveVisibilityObserver();
+					}
+				}, "wijeditor");
+			}
 		},
 
 		_createBigButton: function (tip, css, name, text) {
@@ -1484,7 +1548,39 @@
 		_getRibbonModesMarkup: function () {
 			var self = this,
 				rb = self._createDiv(css_ribbon_modes),
-				rbList = self._createRibbonList();
+				rbList = self._createRibbonList(),
+				editorFooter = self.element.find(".wijeditor-footer"),
+				wysiwyg, split, code, wordwrap, fullscreen;
+
+			//added for localization
+			if (editorFooter.length > 0) {
+				wysiwyg = $(editorFooter.find("." + css_ribbon_designview));
+				if (wysiwyg.length > 0) {
+					buttonInfoAsCommand.Wysiwyg.tip = wysiwyg.attr("title") ||
+						buttonInfoAsCommand.Wysiwyg.tip;
+				}
+				split = $(editorFooter.find("." + css_ribbon_splitview));
+				if (split.length > 0) {
+					buttonInfoAsCommand.Split.tip = split.attr("title") ||
+						buttonInfoAsCommand.Split.tip;
+				}
+				code = $(editorFooter.find("." + css_ribbon_sourceview));
+				if (code.length > 0) {
+					buttonInfoAsCommand.Code.tip = code.attr("title") ||
+						buttonInfoAsCommand.Code.tip;
+				}
+				wordwrap = $(editorFooter.find("." + css_ribbon_wordwrap));
+				if (wysiwyg.length > 0) {
+					buttonInfoAsCommand.Wordwrap.tip = wordwrap.attr("title") ||
+						buttonInfoAsCommand.Wordwrap.tip;
+				}
+				fullscreen = $(editorFooter.find("." + css_ribbon_fullscreen));
+				if (wysiwyg.length > 0) {
+					buttonInfoAsCommand.FullScreen.tip = fullscreen.attr("title") ||
+						buttonInfoAsCommand.FullScreen.tip;
+				}
+				editorFooter.remove();
+			}
 
 			rb.add(rbList);
 
@@ -1543,9 +1639,9 @@
 
 			if (element.is("textarea")) {
 				if (mode === "ribbon") {
-					$ribbon = $(self._getDefaultRibbonMarkup());
+					self.$ribbon = $(self._getDefaultRibbonMarkup());
 				} else if (mode === "bbcode") {
-					$ribbon = $(self._getSimpleToolBar(defaultBBCodeModeCommands));
+					self.$ribbon = $(self._getSimpleToolBar(defaultBBCodeModeCommands));
 				}
 				else {
 					if (o.simpleModeCommands && o.simpleModeCommands.length !== 0) {
@@ -1554,25 +1650,36 @@
 						$.grep(o.simpleModeCommands, function (n, i) {
 							return n !== "Table";
 						});
-						$ribbon = 
+						self.$ribbon = 
 						$(self._getSimpleToolBar(filterCustomSimpleModeCommands));
 					} else {
-						$ribbon = 
+						self.$ribbon = 
 						$(self._getSimpleToolBar(defaultSimpleModeCommands));
 					}
+				}
+				if (o.text) {
+					element.val(o.text);
 				}
 				self.sourceView = element;
 				self.editor = element.wrap("<div></div>").parent();
 				self.editor.width(width).height(height);
 			} else {
 				self.editor = element;
-				$ribbon = element.children(":eq(0)");
+				self.$ribbon = element.children(":eq(0)");
 				$content = element.children(":eq(1)");
 
 				if ($content.is("textarea")) {
+					if (o.text) {
+						$content.val(o.text);
+					}
 					self.sourceView = $content;
 				} else {
-					text = $content.html();
+					if (o.text) {
+						text = o.text;
+					} else {
+						text = $content.html();
+					}
+					
 					$content.remove();
 					self.sourceView = $("<textarea></textarea>").val(text);
 				}
@@ -1591,7 +1698,7 @@
 
 			//head
 			//ribbon
-			$ribbon.wrap("<a href='#'></a>").parent()
+			self.$ribbon.wrap("<a href='#'></a>").parent()
 			.appendTo("<div class='" + css_editor_header +
 					" ui-widget-header ui-helper-clearfix ui-corner-top'></div>")
 			.parent().appendTo(container);
@@ -1607,8 +1714,8 @@
 			self.sourceView.wrap("<div></div>")
 				.parent().appendTo(content);
 
-			ribbons = [$ribbon];
-			$modes = $(self._getRibbonModesMarkup());
+			ribbons = [self.$ribbon];
+			self.$modes = $(self._getRibbonModesMarkup());
 			//footer
 			if (o.showFooter) {
 				footer = $("<div class='" + css_editor_footer + " " +
@@ -1616,8 +1723,8 @@
 				container.append(footer);
 				footer.append("<div class='" + css_editor_pathselector + "'></div>");
 
-				$modes.appendTo(footer);
-				ribbons.push($modes);
+				self.$modes.appendTo(footer);
+				ribbons.push(self.$modes);
 			}
 
 			$.each(ribbons, function (idx, ribbon) {
@@ -1634,9 +1741,12 @@
 		_createMenuMarkUp: function (self, o) {
 			if (o.customContextMenu && !$.browser.webkit) {
 				self.contextMenu = $("<ul>" +
-				"<li _c1buttoncmd='cut'><a>Cut</a></li>" +
-				"<li _c1buttoncmd='copy'><a>Copy</a></li>" +
-				"<li _c1buttoncmd='paste'><a>Paste</a></li></ul>");
+				"<li _c1buttoncmd='cut'><a>" + 
+				this.localizeString("contextMenuCut", "Cut") + "</a></li>" +
+				"<li _c1buttoncmd='copy'><a>" + 
+				this.localizeString("contextMenuCopy", "Copy") + "</a></li>" +
+				"<li _c1buttoncmd='paste'><a>" + 
+				this.localizeString("contextMenuPaste", "Paste") + "</a></li></ul>");
 
 				$("<a href='#'></a>").append(self.contextMenu).appendTo(self.editor);
 			}
@@ -1724,14 +1834,14 @@
 
 			buttonStates[cmd_redo] = true;
 			buttonStates[cmd_undo] = true;
-			$ribbon.wijribbon(setButtonsDisabled, buttonStates);
+			self.$ribbon.wijribbon(setButtonsDisabled, buttonStates);
 		},
 
 		_setOption: function (key, value) {
 			var self = this,
 			o = self.options,
 			oldMode = o.mode,
-			ribbonParent = $ribbon.parent(),
+			ribbonParent = self.$ribbon.parent(),
 			oldCustomContextMenu = o.customContextMenu;
 
 			$.Widget.prototype._setOption.apply(self, arguments);
@@ -1757,7 +1867,7 @@
 			} else if (key === "disabled") {
 				self._handleDisabledOption(value, self.editor);
 			} else if (key === "showFooter") {
-				if (value){
+				if (value) {
 					if (!($("." + css_editor_footer).is(":visible"))) {
 						$("." + css_editor_footer).show();
 					}
@@ -1768,7 +1878,11 @@
 				}
 			} else if (key === "commandButtonClick") {
 				o.commandButtonClick = value;
-			} else if (key === "customContextMenu") {
+			} else if (key === "text") {
+				o.text = value;
+				self.setText(value);
+			}
+			else if (key === "customContextMenu") {
 				//fixed bug for customContextMenu
 				if (oldCustomContextMenu === value) {
 					return;
@@ -1784,27 +1898,26 @@
 					.remove();
 					self.contextMenu = undefined;
 				}
-				} else if (key === "mode" && value !== oldMode) {
-					$ribbon.wijribbon("destroy");
-					$ribbon.remove();
-					if (value === "ribbon") {
-						$ribbon = $(self._getDefaultRibbonMarkup());
-					} else if (value === "bbcode") {
-						$ribbon = $(self._getSimpleToolBar(defaultBBCodeModeCommands));
-					}
-					else {
-						$ribbon = 
-							$(self._getSimpleToolBar(defaultSimpleModeCommands));
-						}
-					
-					ribbonParent.append($ribbon);
-					$ribbon.wijribbon({
-						click: function (e, data) {
-							self._ribbonCommand(data.commandName, data.name);
-							self._trigger('commandButtonClick', e, data);
-						}
-					});
+			} else if (key === "mode" && value !== oldMode) {
+				self.$ribbon.wijribbon("destroy");
+				self.$ribbon.remove();
+				if (value === "ribbon") {
+					self.$ribbon = $(self._getDefaultRibbonMarkup());
+				} else if (value === "bbcode") {
+					self.$ribbon = $(self._getSimpleToolBar(defaultBBCodeModeCommands));
+				} else {
+					self.$ribbon = 
+						$(self._getSimpleToolBar(defaultSimpleModeCommands));
 				}
+					
+				ribbonParent.append(self.$ribbon);
+				self.$ribbon.wijribbon({
+					click: function (e, data) {
+						self._ribbonCommand(data.commandName, data.name);
+						self._trigger('commandButtonClick', e, data);
+					}
+				});
+			}
 		},
 
 		_getHeader: function () {
@@ -1872,6 +1985,8 @@
 			if (doc && doc.body) {
 				doc.body.innerHTML = text;
 			}
+			
+			self.options.text = text;
 		},
 
 		_getDialog: function () {
@@ -1934,11 +2049,11 @@
 			if (!$.browser.mozilla) {
 				//end by wh
 				$(win).blur(function (e) {
-					self._onDesignViewBlur();
+					self._onDesignViewBlur(e);
 				});
 			} else {
 				$(doc).bind('blur.' + self.widgetName, function (e) {
-					self._onDesignViewBlur();
+					self._onDesignViewBlur(e);
 				});
 			}
 
@@ -1952,7 +2067,7 @@
 			.bind('keyup.' + self.widgetName, function (e) {
 				self._onDesignViewKeyUp(e);
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			});
 		},
@@ -1997,14 +2112,14 @@
 			if (!defaultValue || defaultValue === null) {
 				return;
 			}
-			$.each($ribbon.wijribbon("getDropdownList", cmd),
+			$.each(this.$ribbon.wijribbon("getDropdownList", cmd),
 					function (key, value) {
 						if (value.toUpperCase() === defaultValue.toUpperCase()) {
 							defaultKey = key;
 							return false;
 						}
 					});
-			$ribbon.wijribbon(setButtonChecked, defaultKey, true, cmd);
+			this.$ribbon.wijribbon(setButtonChecked, defaultKey, true, cmd);
 		},
 		
 		_setDesignModeForFF: function (self) {
@@ -2066,7 +2181,7 @@
 				return isFontSizeCustomized;
 			}
 
-			var fontSizes = $ribbon.wijribbon("getDropdownList", cmd_fontsize),
+			var fontSizes = this.$ribbon.wijribbon("getDropdownList", cmd_fontsize),
 				fss = [cmd_verysmall, cmd_smaller, cmd_small,
 						cmd_medium, cmd_large, cmd_larger, cmd_verylarge];
 
@@ -2145,7 +2260,7 @@
 		_fontNameCommand: function (cmd) {
 			var self = this,
 				doc = self._getDesignViewDocument(),
-				fontNames = $ribbon.wijribbon("getDropdownList", cmd_fontname),
+				fontNames = self.$ribbon.wijribbon("getDropdownList", cmd_fontname),
 				fontName;
 
 			$.each(fontNames, function (key, value) {
@@ -2339,7 +2454,7 @@
 			buttonStates[cmd_alignright] = false;
 			buttonStates[cmd_alignfull] = false;
 
-			$ribbon.wijribbon(setButtonsChecked, buttonStates);
+			self.$ribbon.wijribbon(setButtonsChecked, buttonStates);
 		},
 
 		_removeFormatForIE: function (doc) {
@@ -2498,7 +2613,7 @@
 					height: height
 				});
 				
-				$ribbon.wijribbon("updateRibbonSize");
+				self.$ribbon.wijribbon("updateRibbonSize");
 			} else {
 				//if ($oriParent) {
 				//	$oriParent.append(self.editor);
@@ -2523,7 +2638,7 @@
 					});
 				}
 				$(wijWindow).unbind("resize.wijeditor");
-				$ribbon.wijribbon("updateRibbonSize");
+				self.$ribbon.wijribbon("updateRibbonSize");
 			}
 
 			contentHeight = self.editor.height() -
@@ -2543,14 +2658,14 @@
 			
 			//update for fixing bug 20695 
 			if ($.browser.msie) {
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 						self._setDesignViewText(oriHtml);
 						//for case 20731 fixing at 2012/4/23
 						if (wijParseInt($.browser.version) >= 9) {
 							self.sourceView.val(oriHtml);
 						}
-						},
-						40);
+					},
+					40);
 			}
 		},
 
@@ -2638,7 +2753,7 @@
 			if (parentCmd === cmd_fontname) {
 				self._fontNameCommand(cmd);
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(null);
 				//end for change happens
 				return;
 			}
@@ -2646,7 +2761,7 @@
 			if (parentCmd === cmd_fontsize) {
 				self._fontSizeCommand(cmd);
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(null);
 				//end for change happens
 				return;
 			}
@@ -2765,7 +2880,7 @@
 				try {
 					if (doc.queryCommandState(cmd_superscript)) {
 						doc.execCommand(cmd_superscript, false, null);
-						$ribbon.wijribbon(setButtonChecked, cmd_superscript, false);
+						self.$ribbon.wijribbon(setButtonChecked, cmd_superscript, false);
 					}
 				} catch (e) {
 				}
@@ -2776,7 +2891,7 @@
 				try {
 					if (doc.queryCommandState(cmd_subscript)) {
 						doc.execCommand(cmd_subscript, false, null);
-						$ribbon.wijribbon(setButtonChecked, cmd_subscript, false);
+						self.$ribbon.wijribbon(setButtonChecked, cmd_subscript, false);
 					}
 				} catch (e1) {
 				}
@@ -2827,10 +2942,10 @@
 				self.insertDateAndTime();
 				break;
 			case cmd_designview:
-				$modes.wijribbon(setButtonDisabled, cmd_wordwrap, true)
+				self.$modes.wijribbon(setButtonDisabled, cmd_wordwrap, true)
 			.wijribbon(setButtonChecked, cmd_designview, true);
 
-				$ribbon.wijribbon("option", "disabled", false);
+				self.$ribbon.wijribbon("option", "disabled", false);
 
 				//TODO:maybe need to add the code block
 				//update for bbcode
@@ -2844,10 +2959,10 @@
 				});
 				break;
 			case cmd_splitview:
-				$modes.wijribbon(setButtonDisabled, cmd_wordwrap, true)
+				self.$modes.wijribbon(setButtonDisabled, cmd_wordwrap, true)
 			.wijribbon(setButtonChecked, cmd_splitview, true);
 
-				$ribbon.wijribbon("option", "disabled", false);
+				self.$ribbon.wijribbon("option", "disabled", false);
 
 				content.wijsplitter("option", {
 					panel1: { collapsed: false },
@@ -2855,10 +2970,10 @@
 				});
 				break;
 			case cmd_sourceview:
-				$modes.wijribbon(setButtonDisabled, cmd_wordwrap, false)
+				self.$modes.wijribbon(setButtonDisabled, cmd_wordwrap, false)
 			.wijribbon(setButtonChecked, cmd_sourceview, true);
 
-				$ribbon.wijribbon("option", "disabled", true);
+				self.$ribbon.wijribbon("option", "disabled", true);
 
 				//TODO:maybe need to add the code block
 				//update for bbcode
@@ -2885,7 +3000,8 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Set BackColor",
+				self._createDialog(this.localizeString("backColorDialogTitle", 
+				"Set BackColor"),
 			self._getDialogRes_BackColor(),
 			self.initBackColorDialog);
 				break;
@@ -2898,7 +3014,8 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Set ForeColor",
+				self._createDialog(this.localizeString("foreColorDialogTitle", 
+				"Set ForeColor"),
 			self._getDialogRes_ForeColor(),
 			self.initForeColorDialog);
 				break;
@@ -2911,24 +3028,28 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Insert Table",
-			self._getDialogRes_Table(false),
-			self.initInsertTableDialog);
+				self._createDialog(this.localizeString("insertTableDialogTitle", 
+				"Insert Table"),
+						self._getDialogRes_Table(false),
+							self.initInsertTableDialog);
 				break;
 			case cmd_edittable:
 				if (self._getEditableTable()) {
-					self._createDialog("Edit Table",
+					self._createDialog(this.localizeString("editTableDialogTitle", 
+					"Edit Table"),
 				self._getDialogRes_Table(true),
 				self.initEditTableDialog);
 				}
 				break;
 			case cmd_preview:
-				self._createDialog("Preview",
+				self._createDialog(this.localizeString("previewDialogPreview", 
+				"Preview"),
 			self._getDialogRes_Preview(),
 			self.initPreviewDialog);
 				break;
 			case cmd_cleanup:
-				self._createDialog("Clean up source HTML document",
+				self._createDialog(this.localizeString("cleanUpDialogTitle", 
+				"Clean up source HTML document"),
 			self._getDialogRes_CleanUp(),
 			self.initCleanUpDialog);
 				break;
@@ -2941,7 +3062,8 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Insert media",
+				self._createDialog(this.localizeString("mediaDialogTitle", 
+				"Insert media"),
 			self._getDialogRes_Media(),
 			self.initMediaDialog);
 				break;
@@ -2953,21 +3075,25 @@
 				}*/
 				self._saveSelectionForIE();
 				//end for 20382 issue
-				self._createDialog("Insert special character",
+				self._createDialog(
+				this.localizeString("specialCharacterDialogTitle", 
+				"Insert special character"),
 			self._getDialogRes_SpecialCharacter(),
 			self.initSpecialCharacterDialog);
 				break;
 			case cmd_find:
-				self._createDialog("Find and replace",
+				self._createDialog(this.localizeString("findAndReplaceTitle", 
+				"Find and replace"),
 			self._getDialogRes_FindAndReplace(),
 			self.initFindDialog);
 				break;
 			case cmd_inspect:
 				inspectElement = self._getSelectedElement();
 
-				self._createDialog("Tag Inspector",
-			self._getDialogRes_TagInspector(),
-			self.initTagInspectorDialog);
+				self._createDialog(
+				this.localizeString("tagInspectorDialogTitle", "Tag Inspector"),
+						self._getDialogRes_TagInspector(),
+						self.initTagInspectorDialog);
 				break;
 			case cmd_template:
 				//update for fixing issue 20382 by wh at 2012/3/9
@@ -2978,9 +3104,10 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Apply Template",
-			self._getDialogRes_Template(),
-			self.initTemplateDialog);
+				self._createDialog(
+				this.localizeString("templateDialogApplyTemplate", "Apply Template"),
+						self._getDialogRes_Template(),
+						self.initTemplateDialog);
 				break;
 			case cmd_imagebrowser:
 				//update for fixing issue 20382 by wh at 2012/3/9
@@ -2991,9 +3118,10 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Image Browser",
-			self._getDialogRes_ImageBrowser(),
-			self.initImageBrowserDialog);
+				self._createDialog(
+				this.localizeString("imageEditorDialogImageBrowser", "Image Browser"),
+						self._getDialogRes_ImageBrowser(),
+						self.initImageBrowserDialog);
 				break;
 			case cmd_link:
 				//update for fixing issue 20382 by wh at 2012/3/9
@@ -3004,7 +3132,8 @@
 				self._saveSelectionForIE();
 				//end for 20382 issue
 
-				self._createDialog("Insert hyperLink",
+				self._createDialog(
+				this.localizeString("hyperLinkDialogInserthyperLink", "Insert hyperLink"),
 			self._getDialogRes_Link(),
 			self.initHyperLinkDialog);
 				break;
@@ -3053,7 +3182,7 @@
 				break;
 			}
 			//add for any change happens, the text would be saved by wh at 2011/12/07
-			self._onDesignViewBlur();
+			self._onDesignViewBlur(null);
 			//end for change happens
 		},
 		
@@ -3144,8 +3273,8 @@
 			doc = self._getDesignViewDocument();
 			
 			if ($.browser.safari) {
-				wijAlert("This function is not supported in current browser. " +
-					"Plesse use (Ctrl + X).");
+				wijAlert(this.localizeString("errorMessageCutError", 
+						"This function is not supported in current browser.  Plesse use (Ctrl + X)."));
 			} else if ($.browser.msie) {
 				//add the block for fixing bug 18146 at 2011/11/3 by wh				
 				doc.execCommand("Cut", false, null);
@@ -3164,8 +3293,8 @@
 			doc = self._getDesignViewDocument();
 
 			if ($.browser.safari) {
-				wijAlert("This function is not supported in current browser. " +
-					"Plesse use (Ctrl + C).");
+				wijAlert(this.localizeString("errorMessageCopyError", 
+						"This function is not supported in current browser. Plesse use (Ctrl + C)."));
 			} else if ($.browser.msie) {
 				//add the block for fixing bug 18146 at 2011/11/3 by wh
 				doc.execCommand("Copy", false, null);
@@ -3181,8 +3310,8 @@
 			doc = self._getDesignViewDocument();
 
 			if ($.browser.safari) {
-				wijAlert("This function is not supported in current browser. " +
-					"Plesse use (Ctrl + V).");
+				wijAlert(this.localizeString("errorMessagePasteError", 
+						"This function is not supported in current browser. Plesse use (Ctrl + V)."));
 			} else if ($.browser.msie) {
 				//add the block for fixing bug 18146 at 2011/11/3 by wh
 				doc.execCommand("Paste", false, null);
@@ -3235,11 +3364,11 @@
 				buttonStates[btnKey] = doc.queryCommandState(btnKey);
 			});
 
-			$ribbon.wijribbon(setButtonsChecked, buttonStates);
+			self.$ribbon.wijribbon(setButtonsChecked, buttonStates);
 
 			rawValue = self._queryCommandValue(cmd_fontname) || "";
 
-			$.each($ribbon.wijribbon("getDropdownList", cmd_fontname),
+			$.each(self.$ribbon.wijribbon("getDropdownList", cmd_fontname),
 			function (key, value) {
 				if (value.toUpperCase() === rawValue.toUpperCase()) {
 					cmd = key;
@@ -3247,7 +3376,7 @@
 				}
 			});
 
-			$ribbon.wijribbon(setButtonChecked, cmd, true, cmd_fontname);
+			self.$ribbon.wijribbon(setButtonChecked, cmd, true, cmd_fontname);
 
 			//Add comments by RyanWu@20110923.
 			//For implementing the font size customization.
@@ -3290,7 +3419,7 @@
 			}
 			//end by RyanWu@20110923.
 
-			$ribbon.wijribbon(setButtonChecked, cmd, true, cmd_fontsize);
+			self.$ribbon.wijribbon(setButtonChecked, cmd, true, cmd_fontsize);
 			
 		},
 
@@ -3334,7 +3463,7 @@
 				self.contextMenu.wijmenu("hideAllMenus");
 			}
 
-			$ribbon.wijribbon("hideDropdown", cmd_fontname)
+			self.$ribbon.wijribbon("hideDropdown", cmd_fontname)
 			.wijribbon("hideDropdown", cmd_fontsize)
 			.wijribbon("hideDropdown", cmd_table);
 		},
@@ -3437,12 +3566,12 @@
 			}
 		},
 
-		_onDesignViewBlur: function () {
+		_onDesignViewBlur: function (e) {
 			var self = this, o = self.options, sourceView;
 
 			sourceView = self._getDesignViewText();
 			//update for fixing issue 20372 by wh at 2012/3/9
-			self._onTextChange();
+			self._onTextChange(e);
 			//end for 20372 issue
 			if (o.mode === "bbcode") {
 				//Note: trim leading/trailing whitespace
@@ -3451,14 +3580,17 @@
 				sourceView = self._convertHtmlToBBCode($.trim(sourceView));
 			}
 			self.sourceView.val(sourceView);
+			
+			o.text = sourceView;
 		},
 		
-		_onTextChange: function () {
+		_onTextChange: function (e) {
 			var self = this;
 			if (self._continueSavingInputTextForUndo) {
 				self._addtoUndoBuffer();
 				self._continueSavingInputTextForUndo = false;
 			}
+			self._trigger('textChanged', e, {text: self.options.text});
 		},
 
 		_onSourceViewBlur: function () {
@@ -3467,6 +3599,8 @@
 			designViewText = self.sourceView.val();
 
 			self._setDesignViewText(designViewText);
+			
+			self.options.text = designViewText;
 		},
 
 		//bbcode implement		
@@ -3872,7 +4006,8 @@
 				text = this._getDesignViewText();
 
 			if ($.trim(name) === '') {
-				wijAlert("Please input a template name!");
+				wijAlert(this.localizeString("errorMessageTemplateNameError", 
+						"Please input a template name!"));
 				return;
 			}
 
@@ -3901,7 +4036,8 @@
 		templateList = self._templateList;
 
 			if ($.trim(selectedTpl) === '') {
-				wijAlert("Please select a template file.");
+				wijAlert(this.localizeString("errorMessageTemplateFileError", 
+						"Please select a template file."));
 				return;
 			}
 
@@ -3926,7 +4062,8 @@
 			html = preview.contentWindow.document.body.innerHTML;
 
 			if ($.trim(name) === '' || $.trim(selectedTpl) === '') {
-				wijAlert("Please select a valid template file.");
+				wijAlert(this.localizeString("errorMessageValidTemplateFileError", 
+						"Please select a valid template file."));
 				return;
 			}
 
@@ -3973,22 +4110,30 @@
 
 			$("img", $dlg).hide();
 
+
 			$dlg.delegate("select", "change." + self.widgetName, function () {
 				self.imageListOnChanged(this);
 			})
-		.delegate("." + css_imgdlg_url + " input", "change." + self.widgetName,
-		function () {
-				self.imageUrlChanged(this);
-			})
-		.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			//update for ie don't fire the change event
+		//.delegate("." + css_imgdlg_url + " input", "change." + self.widgetName,
+		//function () {
+		//		self.imageUrlChanged(this);
+		//	})
+		.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitInsertImageDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 		.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
 				self._closeDialog();
 			});
+			
+			//update for ie don't fire the change event
+			$("." + css_imgdlg_url + " input", $dlg).bind("change." + 
+				self.widgetName, function () {
+					self.imageUrlChanged(this);
+				});
 
 			if (!imgList) {
 				imgList = self._imgList;
@@ -4003,10 +4148,12 @@
 		},
 
 		imageUrlChanged: function (element) {
-			var $dlg = self.dialog;
+			var self = this,
+			$dlg = self.dialog;
 			
-			$('img', this.dialog).attr("src", $(element).val()).show()
-			.bind("load", function(){
+			$('img', this.dialog).attr("src", $(element).val() + "?" + 
+				new Date().getTime()).show()
+			.bind("load", function () {
 				$("." + css_imgdlg_width + " input", $dlg).val($('img', $dlg).width());
 				$("." + css_imgdlg_height + " input", $dlg).val($('img', $dlg).height());
 			});
@@ -4043,17 +4190,20 @@
 		css = $("." + css_imgdlg_css + " input", $dlg).val();
 
 			if ($.trim(imgUrl) === "") {
-				wijAlert("Please select a image.");
+				wijAlert(this.localizeString("errorMessageSelectImageError", 
+						"Please select a image."));
 				return;
 			}
 
 			if (!self._isNumeric(width)) {
-				wijAlert("Please input a number for 'Image width' textbox.");
+				wijAlert(this.localizeString("errorMessageImageWidthError", 
+						"Please input a number for 'Image width' textbox."));
 				return;
 			}
 
 			if (!self._isNumeric(height)) {
-				wijAlert("Please input a number for 'Image height' textbox.");
+				wijAlert(this.localizeString("errorMessageImageHeightError", 
+						"Please input a number for 'Image height' textbox."));
 				return;
 			}
 
@@ -4079,25 +4229,32 @@
 			$img,
 			$address = $("." + css_linkdlg_address + " input", $dlg);
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, 
+			"click." + self.widgetName, function (e) {
 				self.submitHyperLinkDialog();
-				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				//add for any change happens, 
+				//the text would be saved by wh at 2011/12/07
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
-			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
+			.delegate(selector_dlg_cancel, 
+			"click." + self.widgetName, function () {
 				self._closeDialog();
 			})
-			.delegate("." + css_linkdlg_anchor, "change." + self.widgetName, function () {
+			.delegate("." + css_linkdlg_anchor, 
+			"change." + self.widgetName, function () {
 				self.anchorListOnChanged(this);
 			})
-			.delegate("." + css_linkdlg_linktype + ">div", "click." + self.widgetName,
+			.delegate("." + css_linkdlg_linktype + ">div", 
+			"click." + self.widgetName,
 			function () {
 				self.radioListOnChanged();
-			}).delegate("." + css_linkdlg_linkicontype+ ">div", "click." + self.widgetName,
+			}).delegate("." + css_linkdlg_linkicontype + ">div", 
+			"click." + self.widgetName,
 			function () {
 				self.linkIconTypeOnChanged();
-			}).delegate("." + css_linkdlg_url + " input", "change." + self.widgetName,
+			}).delegate("." + css_linkdlg_url + " input", 
+			"change." + self.widgetName,
 			function () {
 				self.tempImg = $('<img src="' + 
 						$("." + css_linkdlg_url + " input", $dlg).val() + 
@@ -4116,7 +4273,7 @@
 			} catch (e) { }
 			
 			$img = $(linkInnerHtml);
-			if (linkInnerHtml&& linkInnerHtml.substring(0, 3) === '<img') {
+			if (linkInnerHtml && linkInnerHtml.substring(0, 3) === '<img') {
 				iconTypeIsImg = true;
 			} else {
 				iconTypeIsImg = false;
@@ -4147,10 +4304,10 @@
 					$("#radMail", $dlg).attr("checked", "checked");
 				} else {
 					if (address.substring(0, 1) === '#') {
-	    				$("#radAnchor", $dlg).attr("checked", "checked");
-	                }else {
-	    				$("#radFile", $dlg).attr("checked", "checked");
-	    			}
+						$("#radAnchor", $dlg).attr("checked", "checked");
+					} else {
+						$("#radFile", $dlg).attr("checked", "checked");
+					}
 				}
 			}
 			$img = undefined; 
@@ -4163,8 +4320,12 @@
 			self.focus();
 			inspElem = self._getInspectElement();
 
-			if (inspElem && inspElem.tagName === 'A') {
-				return inspElem.innerHTML || '';
+			try {
+				if (inspElem && inspElem.tagName === 'A') {
+					return inspElem.innerHTML || '';
+				}
+			} catch (error) {
+				
 			}
 
 			return self.getSelectionHTMLContent() || '';
@@ -4193,11 +4354,14 @@
 
 			self.focus();
 			inspElem = self._getInspectElement();
-
-			if (inspElem && inspElem.tagName === 'A') {
-				return inspElem.target || '';
+			
+			try {
+				if (inspElem && inspElem.tagName === 'A') {
+					return inspElem.target || '';
+				}
+			} catch (error) {
+				
 			}
-
 			return '';
 		},
 
@@ -4207,11 +4371,14 @@
 
 			self.focus();
 			inspElem = self._getInspectElement();
-
-			if (inspElem && inspElem.tagName === 'A') {
-				return inspElem.style.cssText || '';
+			
+			try {
+				if (inspElem && inspElem.tagName === 'A') {
+					return inspElem.style.cssText || '';
+				}
+			} catch (error) {
+				
 			}
-
 			return '';
 		},
 
@@ -4234,33 +4401,39 @@
 		css = $css.val();
 
 			if (address === '') {
-				wijAlert('Please input address!');
+				wijAlert(this.localizeString("errorMessageAddressError", 
+						"Please input address!"));
 				return;
 			}
 
 			if (text === '' && !imageChecked) {
-				wijAlert('Please input display text!');
+				wijAlert(this.localizeString("errorMessageDisplayTextError", 
+						"Please input display text!"));
 				return;
 			}
 			
 			if (imageUrl === '' && imageChecked) {
-				wijAlert('Please input image url!');
+				wijAlert(this.localizeString("errorMessageHyperLinkImageUrlError", 
+						"Please input image url!"));
 				return;
 			}
 			
 			if (!self._isNumeric(imageWidth) && imageChecked) {
-				wijAlert('Please input correct image width!');
+				wijAlert(this.localizeString("errorMessageHyperLinkImageWidthError", 
+						"Please input correct image width!"));
 				return;
 			}
 			
 			if (!self._isNumeric(imageHeight) && imageChecked) {
-				wijAlert('Please input correct image height!');
+				wijAlert(this.localizeString("errorMessageHyperLinkImageHeightError", 
+						"Please input correct image height!"));
 				return;
 			}
 
 			if ($radMail.attr("checked") &&
 		!self._isEmail(address)) {
-				wijAlert('Please input correct email!');
+				wijAlert(this.localizeString("errorMessageHyperLinkEmail", 
+						"Please input correct email!"));
 				return;
 			}
 
@@ -4280,22 +4453,26 @@
 
 			self.focus();
 			inspElem = self._getInspectElement();
+			
+			try {
+				if (inspElem && inspElem.tagName === 'A') {
+					inspElem.innerHTML = text;
+					inspElem.href = href;
+					inspElem.target = target;
 
-			if (inspElem && inspElem.tagName === 'A') {
-				inspElem.innerHTML = text;
-				inspElem.href = href;
-				inspElem.target = target;
+					if (css !== inspElem.style.cssText) {
+						inspElem.style.cssText = css;
+					}
 
-				if (css !== inspElem.style.cssText) {
-					inspElem.style.cssText = css;
+					self._addtoUndoBuffer();
+					self._setSaveBtnEnabled();
+
+					return;
 				}
-
-				self._addtoUndoBuffer();
-				self._setSaveBtnEnabled();
-
-				return;
+			} catch (error) {
+				
 			}
-
+			
 			html = '<a href="' + href + '" target="' + target + '"';
 
 			if (css !== '') {
@@ -4321,11 +4498,9 @@
 
 		radioListOnChanged: function () {
 			var self = this,
-		$dlg = self.dialog,
-		$anchor = $("." + css_linkdlg_anchor, $dlg),
-		$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
-		$text = $("." + css_linkdlg_text, $dlg),
-		$address = $("." + css_linkdlg_address + " input", $dlg);
+			$dlg = self.dialog,
+			$anchor = $("." + css_linkdlg_anchor, $dlg),
+			$address = $("." + css_linkdlg_address + " input", $dlg);
 
 			$address.val("");
 
@@ -4343,10 +4518,9 @@
 		
 		linkIconTypeOnChanged: function () {
 			var self = this,
-		$dlg = self.dialog,
-		$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
-		$anchor = $("." + css_linkdlg_anchor, $dlg),
-		$text = $("." + css_linkdlg_text, $dlg);
+			$dlg = self.dialog,
+			$imageContainer = $("." + css_linkdlg_imagecontainer, $dlg),
+			$text = $("." + css_linkdlg_text, $dlg);
 
 			if ($("#radLinkTypeIsText", $dlg).is(":checked")) {
 				$text.show();
@@ -4379,10 +4553,10 @@
 		initInsertCodeDialog: function () {
 			var self = this,
 			$dlg = self.dialog;
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitCodeDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
@@ -4414,10 +4588,10 @@
 			$dlg = self.dialog,
 			$innerHTML = $("." + css_taginsdlg_innerhtml);
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitTagInspectorDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
@@ -4493,6 +4667,8 @@
 			var self = this,
 		el = self._getInspectElement(),
 		dic, tag, attrs,
+		localSaveString = this.localizeString("tagInspectorDialogSave", 
+		"Save"),
 		html = "";
 
 			if (!el) {
@@ -4544,7 +4720,8 @@
 					html += attr + ":</span>";
 					html += "<input type='text' value='" + val + "'/>";
 					html += "<input type='checkbox' id='save" + idx + "'/>";
-					html += "<label for='save" + idx + "'>Save</label></li>";
+					html += "<label for='save" + idx + 
+					"'>" + localSaveString + "</label></li>";
 				});
 				break;
 			}
@@ -4593,10 +4770,10 @@
 				color = doc.queryCommandValue(colorCommand),
 				iColor, items, sColor;
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitColorDialog(colorCommand);
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
@@ -4668,10 +4845,10 @@
 			var self = this,
 			$dlg = self.dialog;
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitInsertTableDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			//update for fixing issue 20275 issue by wh at 2012/3/12
@@ -4743,10 +4920,10 @@
 			el = self._getInspectElement(),
 			rows, columns;
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitEditTableDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			//update for fixing 20275 issue by wh at 2012/3/12
@@ -4868,37 +5045,44 @@
 			bgcolor = $("." + css_tabledlg_bgcolor + " input", $dlg).val();
 
 			if (!self._isNumeric(rows)) {
-				wijAlert("Please input a number for 'Rows' textbox.");
+				wijAlert(this.localizeString("errorMessageRowsError", 
+						"Please input a number for 'Rows' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(cols)) {
-				wijAlert("Please input a number for 'Columns' textbox.");
+				wijAlert(this.localizeString("errorMessageColumnsError", 
+						"Please input a number for 'Columns' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(width)) {
-				wijAlert("Please input a number for 'Table Width ' textbox.");
+				wijAlert(this.localizeString("errorMessageTableWidthError", 
+						"Please input a number for 'Table Width ' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(height)) {
-				wijAlert("Please input a number for 'Table Height' textbox.");
+				wijAlert(this.localizeString("errorMessageTableHeightError", 
+						"Please input a number for 'Table Height' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(border)) {
-				wijAlert("Please input a number for 'Border thickness' textbox.");
+				wijAlert(this.localizeString("tableDialogBorderError", 
+						"Please input a number for 'Border thickness' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(cpadding)) {
-				wijAlert("Please input a number for 'Cell Padding' textbox.");
+				wijAlert(this.localizeString("tableDialogCellPaddingError", 
+						"Please input a number for 'Cell Padding' textbox."));
 				return false;
 			}
 
 			if (!self._isNumeric(cspacing)) {
-				wijAlert("Please input a number for 'Cell Spacing' textbox.");
+				wijAlert(this.localizeString("tableDialogCellSpacingError", 
+						"Please input a number for 'Cell Spacing' textbox."));
 				return false;
 			}
 
@@ -4980,7 +5164,8 @@
 			editableTable = self._getSelectedElement();
 
 			if (!editableTable) {
-				wijAlert('Please select a table!');
+				wijAlert(this.localizeString("errorMessageSelectTableError", 
+						"Please select a table!"));
 				return false;
 			}
 
@@ -4994,7 +5179,8 @@
 					editableTable = table[0];
 				}
 				else {
-					wijAlert('Please select a table!');
+					wijAlert(this.localizeString("errorMessageSelectTableError", 
+							"Please select a table!"));
 					return false;
 				}
 			}
@@ -5181,10 +5367,10 @@
 
 			$("textarea", $dlg).val(self.sourceView.val());
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitCleanUpDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
@@ -5251,10 +5437,10 @@
 			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
 				self.submitFindAction();
 			})
-			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
+			.delegate(selector_dlg_cancel, "click." + self.widgetName, function (e) {
 				self.submitReplaceAction();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			});
 		},
@@ -5281,7 +5467,8 @@
 			}
 
 			if ($.trim(rText) === '') {
-				wijAlert('please input replace string');
+				wijAlert(this.localizeString("errorMessageReplaceStringError", 
+						"please input replace string!"));
 				return;
 			}
 
@@ -5377,10 +5564,10 @@
 			var self = this,
 			$dlg = self.dialog;
 
-			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function () {
+			$dlg.delegate(selector_dlg_ok, "click." + self.widgetName, function (e) {
 				self.submitMediaDialog();
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			})
 			.delegate(selector_dlg_cancel, "click." + self.widgetName, function () {
@@ -5397,22 +5584,26 @@
 		height = $("." + css_mediadlg_height + " input", $dlg).val();
 
 			if (url === '') {
-				wijAlert('URL is empty!');
+				wijAlert(this.localizeString("errorMessageUrlEmptyError", 
+						"URL is empty!"));
 				return;
 			}
 
 			if (!self._isUrl(url)) {
-				wijAlert('please input correct URL!');
+				wijAlert(this.localizeString("errorMessageUrlCorrectError", 
+						"please input correct URL!"));
 				return;
 			}
 
 			if (!self._isNumeric(width)) {
-				wijAlert('please input width of the media!');
+				wijAlert(this.localizeString("errorMessageMediaWidthError", 
+						"please input width of the media!"));
 				return;
 			}
 
 			if (!self._isNumeric(height)) {
-				wijAlert('please input height of the media!');
+				wijAlert(this.localizeString("errorMessageMediaHeightError", 
+						"please input height of the media!"));
 				return;
 			}
 
@@ -5467,10 +5658,10 @@
 		$dlg = self.dialog,
 		$preview = $("." + css_specialchardlg_content + " span", $dlg);
 
-			$dlg.delegate("label", "click." + self.widgetName, function () {
+			$dlg.delegate("label", "click." + self.widgetName, function (e) {
 				self.submitSpecialCharacterDialog(this);
 				//add for any change happens, the text would be saved by wh at 2011/12/07
-				self._onDesignViewBlur();
+				self._onDesignViewBlur(e);
 				//end for change happens
 			}).delegate(selector_dlg_ok, "click." + self.widgetName, function () {
 				self._closeDialog();
@@ -5499,7 +5690,7 @@
 
 		//begin to handle the ribbon commands.
 		_setSaveBtnEnabled: function () {
-			$ribbon.wijribbon(setButtonDisabled, cmd_save, false);
+			this.$ribbon.wijribbon(setButtonDisabled, cmd_save, false);
 		},
 
 		//undo/redo action.
@@ -5517,9 +5708,9 @@
 			if (!undoSteps) {
 				buttonStates[cmd_undo] = true;
 				buttonStates[cmd_redo] = false;
-				$ribbon.wijribbon(setButtonsDisabled, buttonStates);
+				this.$ribbon.wijribbon(setButtonsDisabled, buttonStates);
 			} else {
-				$ribbon.wijribbon(setButtonDisabled, cmd_redo, false);
+				this.$ribbon.wijribbon(setButtonDisabled, cmd_redo, false);
 			}
 		},
 
@@ -5538,9 +5729,9 @@
 			if (undoSteps === len - 1) {
 				buttonStates[cmd_undo] = false;
 				buttonStates[cmd_redo] = true;
-				$ribbon.wijribbon(setButtonsDisabled, buttonStates);
+				this.$ribbon.wijribbon(setButtonsDisabled, buttonStates);
 			} else {
-				$ribbon.wijribbon(setButtonDisabled, cmd_undo, false);
+				this.$ribbon.wijribbon(setButtonDisabled, cmd_undo, false);
 			}
 		},
 
@@ -5553,7 +5744,7 @@
 			}
 			undoSteps++;
 			undoBuffers.push(this._getDesignViewText());
-			$ribbon.wijribbon(setButtonDisabled, cmd_undo, false);
+			this.$ribbon.wijribbon(setButtonDisabled, cmd_undo, false);
 		},
 		//end of undo/redo action.
 
@@ -5846,7 +6037,15 @@
 
 		//insert date time.
 		insertDateAndTime: function () {
-			this.insertHTML(new Date().toDateString() + ' ' + new Date().toTimeString());
+			var curDate = new Date();
+			if (this.options.culture && this.options.culture !== "") {
+				this.insertHTML(Globalize.format(curDate, 
+						"dddd ", Globalize.findClosestCulture(this.options.culture)) + 
+						Globalize.format(curDate, 
+						"F", Globalize.findClosestCulture(this.options.culture)));
+			} else {
+				this.insertHTML(curDate.toDateString() + ' ' + curDate.toTimeString());
+			}
 		},
 		//end of insert date time.
 
@@ -6083,12 +6282,12 @@
 			buttons.add(self._createElement("input", {
 				type: "button",
 				"class": css_dlg_button,
-				value: "OK"
+				value: this.localizeString("dialogOK", "OK") 
 			}));
 			buttons.add(self._createElement("input", {
 				type: "button",
 				"class": css_dlg_button,
-				value: "Cancel"
+				value: this.localizeString("dialogCancel", "Cancel")
 			}));
 
 			return buttons;
@@ -6102,15 +6301,21 @@
 			tpllist = self._createDiv(css_tpl_list),
 			preview = self._createDiv(css_tpl_preview),
 			tplinfo = self._createDiv(css_tpl_tplinfo),
-			namefield = self._createElement("div", "Name :"),
-			desfield = self._createElement("div", "Description :"),
+			namefield = self._createElement("div", 
+			this.localizeString("templateDialogName", "Name :")),
+			desfield = self._createElement("div", 
+					this.localizeString("templateDialogDescription", "Description :")),
 			fields = self._createDiv(css_tpl_fields),
 			tplButtons = self._createDiv(css_tpl_buttons);
 
-			topLabels.add(self._createElement("div", "Select Template:", {
-				"class": css_tpl_tllabel
+			topLabels.add(self._createElement("div", 
+					this.localizeString("templateDialogSelectTemplate", 
+					"Select Template:"), 
+					{ "class": css_tpl_tllabel
 			}));
-			topLabels.add(self._createElement("div", "Template Preview:", {
+			topLabels.add(self._createElement("div", 
+					this.localizeString("templateDialogTemplatePreview", 
+					"Template Preview:"), { 
 				"class": css_tpl_trlabel
 			}));
 			dialog.add(topLabels);
@@ -6127,16 +6332,22 @@
 			tplinfo.add(desfield);
 			dialog.add(tplinfo);
 
-			fields.add(self._createSpan(css_dlg_text, "Name :"));
+			fields.add(self._createSpan(css_dlg_text, 
+			this.localizeString("templateDialogName", "Name :")));
 			fields.add(self._createTextBox(css_tpl_namefield));
-			fields.add(self._createSpan(css_dlg_text, "Description :"));
+			fields.add(self._createSpan(css_dlg_text, 
+					this.localizeString("templateDialogDescription", "Description :")));
 			fields.add(self._createTextBox(css_tpl_desfield));
 			dialog.add(fields);
 
 			tplButtons.add(self._createInputButton(css_dlg_button + " " +
-		css_tpl_delete, "Delete selected"));
+					css_tpl_delete, 
+					this.localizeString("templateDialogDeleteSelected", "Delete selected")
+			));
 			tplButtons.add(self._createInputButton(css_dlg_button + " " +
-		css_tpl_save, "Save current page as template"));
+					css_tpl_save, 
+					this.localizeString("templateDialogSaveCurrentPage", 
+					"Save current page as template")));
 			dialog.add(tplButtons);
 
 			dialog.add(self._createSeparator());
@@ -6154,11 +6365,21 @@
 			imglist = self._createDiv(css_imgdlg_list),
 			imgpreview = self._createDiv(css_imgdlg_preview);
 
-			fields.add(self._createTextField("Image src:", css_imgdlg_url));
-			fields.add(self._createTextField("Image alt text:", css_imgdlg_alt));
-			fields.add(self._createTextField("Image width:", css_imgdlg_width, "px"));
-			fields.add(self._createTextField("Image height:", css_imgdlg_height, "px"));
-			fields.add(self._createTextField("Css text:", css_imgdlg_css));
+			fields.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageSrc", "Image Src:"), 
+						css_imgdlg_url));
+			fields.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageAltText", "Image alt text:"), 
+					css_imgdlg_alt));
+			fields.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageWidth", "Image width:"), 
+					css_imgdlg_width, this.localizeString("dialogPixel", "px")));
+			fields.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageHeight", "Image height:"), 
+					css_imgdlg_height, this.localizeString("dialogPixel", "px")));
+			fields.add(self._createTextField(
+			this.localizeString("imageEditorDialogCssText", "Css text:"), 
+					css_imgdlg_css));
 			content.add(fields);
 
 			imgField.add(imglist);
@@ -6178,31 +6399,52 @@
 		_getDialogRes_Link: function () {
 			var self = this,
 			dialog = self._createDiv(css_linkdlg),
-			address = self._createTextField("Address :", css_linkdlg_address),
+			address = self._createTextField(
+			this.localizeString("hyperLinkDialogAddress", "Address :"), 
+							css_linkdlg_address),
 			linktype = self._createDiv(css_linkdlg_linktype + " ui-helper-clearfix"),
 			linktypecontainer = self._createElement("div"),
 			imageContainer = self._createDiv(css_linkdlg_imagecontainer),
 			linkIconTypeOuterContainer = self._createDiv(css_linkdlg_linkicontype),
 			linkIconTypeContainer = self._createElement("div"),
-			radioArr = [{ id: "radUrl", value: "url" },
-				{ id: "radAnchor", value: "anchor", checked: true },
-				{ id: "radMail", value: "email"}],
-			linkIconType = [{ id: "radLinkTypeIsText", value: "text", checked: true },
-							{ id: "radLinkTypeIsImage", value: "image"}],
+			radioArr = [{ id: "radUrl", value: "url", 
+			text: this.localizeString("hyperLinkDialogUrl", "url")},
+				{ id: "radAnchor", value: "anchor", checked: true, 
+				text: this.localizeString("hyperLinkDialogAnchor", "anchor")},
+				{ id: "radMail", value: "email", 
+				text: this.localizeString("hyperLinkDialogEmail", "email")}],
+			linkIconType = [{ id: "radLinkTypeIsText", value: "text", 
+			checked: true, text: this.localizeString("hyperLinkDialogText", "text")},
+							{ id: "radLinkTypeIsImage", value: "image", 
+							text: this.localizeString("hyperLinkDialogImage", 
+							"image")}],
 			linkTypeOptions = [],
-			text = self._createTextField("Text to display :", css_linkdlg_text),
-			inconTypeSpan = self._createSpan(css_dlg_text, "Icon type :"),
+			text = self._createTextField(
+			this.localizeString("hyperLinkDialogTextToDisplay", 
+			"Text to display :"), 
+					css_linkdlg_text),
+			inconTypeSpan = self._createSpan(css_dlg_text, 
+					this.localizeString("hyperLinkDialogIconType", "Icon Type :")),
 			target = self._createDiv(css_linkdlg_target),
-			targetSpan = self._createSpan(css_dlg_text, "Target :"),
+			targetSpan = self._createSpan(css_dlg_text, 
+					this.localizeString("hyperLinkDialogTarget", "Target :")),
 			targetOption = [{ text: "_blank", selected: true },
 				"_parent", "_self", "_top"],
 			targetSelect = self._createSelect(css_linkdlg_target, targetOption),
-			css = self._createTextField("Css :", css_linkdlg_css),
+			css = self._createTextField(
+			this.localizeString("hyperLinkDialogCss", "Css :"), 
+					css_linkdlg_css),
 			idx;
 
-			imageContainer.add(self._createTextField("Image src:", css_linkdlg_url));
-			imageContainer.add(self._createTextField("Image width:", css_linkdlg_width, "px"));
-			imageContainer.add(self._createTextField("Image height:", css_linkdlg_height, "px"));
+			imageContainer.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageSrc", "Image Src:"), 
+					css_linkdlg_url));
+			imageContainer.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageWidth", "Image width:"), 
+					css_linkdlg_width, this.localizeString("dialogPixel", "px")));
+			imageContainer.add(self._createTextField(
+			this.localizeString("imageEditorDialogImageHeight", "Image height:"), 
+					css_linkdlg_height, this.localizeString("dialogPixel", "px")));
 			
 			dialog.add(address);
 			dialog.add(linktype);
@@ -6214,13 +6456,13 @@
 			$.each(radioArr, function (idx, radio) {
 				linktypecontainer.add(self._createRadio(radio.id, "radioList",
 				radio.value));
-				linktypecontainer.add(self._createLabel(radio.value, radio.id));
+				linktypecontainer.add(self._createLabel(radio.text, radio.id));
 			});
 			
 			$.each(linkIconType, function (idx, radio) {
 				linkIconTypeContainer.add(self._createRadio(radio.id, "linkIconRadioList",
 				radio.value));
-				linkIconTypeContainer.add(self._createLabel(radio.value, radio.id));
+				linkIconTypeContainer.add(self._createLabel(radio.text, radio.id));
 			});
 
 			for (idx = 1; idx < 8; idx++) {
@@ -6254,23 +6496,31 @@
 
 			taginsdlg.add(caption);
 
-			caption.add(self._createSpan(css_taginsdlg_taglabel, "Selected tag:"));
+			caption.add(self._createSpan(css_taginsdlg_taglabel, 
+					this.localizeString("tagInspectorDialogSelectedTag", 
+					"Selected tag :")));
 			caption.add(self._createSpan(css_taginsdlg_tagtext, ""));
 
 			taginsdlg.add(filterempty);
 			filterempty.add(self._createCheckbox("displayNoEmpty"));
-			filterempty.add(self._createLabel("Display not empty attributes only",
+			filterempty.add(self._createLabel(
+			this.localizeString("tagInspectorDialogDisplayNotEmptyAttributes", 
+			"Display not empty attributes only"),
 			"displayNoEmpty"));
 
 			taginsdlg.add(attribs);
-			attribs.add(self._createSpan(css_dlg_text, "Attributes:"));
+			attribs.add(self._createSpan(css_dlg_text, 
+					this.localizeString("tagInspectorDialogAttributes", "Attributes:")));
 			attribs.add(self._createDiv(css_taginsdlg_attriblist));
 
 			taginsdlg.add(innerhtml);
-			innerhtml.add(self._createSpan(css_dlg_text, "Inner HTML:"));
+			innerhtml.add(self._createSpan(css_dlg_text, 
+					this.localizeString("tagInspectorDialogInnerHTML", "Inner HTML:")));
 			innerhtml.add(self._createElement("textarea"));
 
-			taginsdlg.add(self._createTextField("Css Text:", css_taginsdlg_css));
+			taginsdlg.add(self._createTextField(
+			this.localizeString("tagInspectorDialogCSSText", "Css Text:"), 
+					css_taginsdlg_css));
 			taginsdlg.add(self._createSeparator());
 			taginsdlg.add(self._createOKCancelButtons());
 
@@ -6296,7 +6546,9 @@
 
 			colordlg.add(self._createDiv(css_colordlg_picker));
 			colordlg.add(color);
-			color.add(self._createSpan(css_dlg_text, "Selected Color:"));
+			color.add(self._createSpan(css_dlg_text, 
+			this.localizeString("backColorDialogSelectedColor", 
+			"Selected Color:")));
 			color.add(self._createElement("input", { type: "text", value: initColor }));
 
 			colordlg.add(self._createSeparator());
@@ -6310,19 +6562,36 @@
 			tbldlg = self._createDiv(css_tabledlg),
 			bgcolor = self._createDiv(css_tabledlg_bgcolor);
 
-			tbldlg.add(self._createTextField("Rows :", css_tabledlg_rows, "", 3));
-			tbldlg.add(self._createTextField("Columns :", css_tabledlg_columns, "", 3));
-			tbldlg.add(self._createTextField("Table Width :", css_tabledlg_width,
-			"&nbsp;pixels", 200));
-			tbldlg.add(self._createTextField("Table Height :", css_tabledlg_height,
-			"&nbsp;pixels", 200));
-			tbldlg.add(self._createTextField("Border thickness :", css_tabledlg_border));
-			tbldlg.add(self._createTextField("Cell Padding :", css_tabledlg_cellpadding));
-			tbldlg.add(self._createTextField("Cell Spacing :", css_tabledlg_cellspacing));
-			tbldlg.add(self._createTextField("Css Text :", css_tabledlg_csstext));
+			tbldlg.add(self._createTextField(this.localizeString("tableDialogRows",
+			 "Rows :"), 
+					css_tabledlg_rows, "", 3));
+			tbldlg.add(self._createTextField(this.localizeString("tableDialogColumns",
+			 "Columns :"), 
+					css_tabledlg_columns, "", 3));
+			tbldlg.add(self._createTextField(this.localizeString("tableDialogTableWidth", 
+			"Table Width :"), 
+					css_tabledlg_width,	this.localizeString("tableDialogPixels",
+					 "pixels"), 200));
+			tbldlg.add(self._createTextField(
+			this.localizeString("tableDialogTableHeight", "Table Height :"), 
+					css_tabledlg_height, this.localizeString("tableDialogPixels",
+					 "pixels"), 200));
+			tbldlg.add(self._createTextField(
+			this.localizeString("tableDialogBorder", "Border thickness:"), 
+					css_tabledlg_border));
+			tbldlg.add(self._createTextField(
+			this.localizeString("tableDialogCellPadding", "Cell Padding :"), 
+					css_tabledlg_cellpadding));
+			tbldlg.add(self._createTextField(
+			this.localizeString("tableDialogCellSpacing", "Cell Spacing :"), 
+					css_tabledlg_cellspacing));
+			tbldlg.add(self._createTextField(this.localizeString("tableDialogCssText", 
+			"Css Text :"), css_tabledlg_csstext));
 			tbldlg.add(bgcolor);
 
-			bgcolor.add(self._createSpan(css_dlg_text, "Background Color :"));
+			bgcolor.add(self._createSpan(css_dlg_text, 
+					this.localizeString("tableDialogBackgroundColor", 
+					"Background Color:")));
 			bgcolor.add(self._createElement("input", { type: "text" }));
 			bgcolor.add(self._createElement("input", { type: "button", value: "..." }));
 
@@ -6341,7 +6610,8 @@
 			previewFrame = self._createDiv(css_previewdlg_previewiframe);
 
 			previewdlg.add(caption);
-			caption.add(self._createSpan(css_dlg_text, "Preview Size:"));
+			caption.add(self._createSpan(css_dlg_text, 
+					this.localizeString("previewDialogPreviewSize", "Preview Size:")));
 			caption.add(self._createElement("input", {
 				id: "rad640_480",
 				name: "preview",
@@ -6366,25 +6636,30 @@
 				type: "checkbox",
 				checked: "checked"
 			}));
-			caption.add(self._createLabel("Split pages", "chkSplit"));
+			caption.add(self._createLabel(this.localizeString("previewDialogSplit", 
+			"Split pages"), "chkSplit"));
 			previewdlg.add(self._createSeparator());
 			previewdlg.add(buttons);
 
 			buttons.add(self._createInputButton(css_dlg_button +
-			" " + css_previewdlg_printall, "Print All"));
+			" " + css_previewdlg_printall, 
+			this.localizeString("previewDialogPrintAll", "Print All")));
 			buttons.add(self._createInputButton(css_dlg_button +
-			" " + css_previewdlg_printone, "Print Page"));
+			" " + css_previewdlg_printone, 
+			this.localizeString("previewDialogPrintPage", "Print Page")));
 			buttons.add(self._createInputButton(css_dlg_button +
-			" " + css_previewdlg_ok, "OK"));
+			" " + css_previewdlg_ok, this.localizeString("dialogOK", "OK")));
 
 			previewdlg.add(self._createSeparator());
 			previewdlg.add(navigate);
-			navigate.add(self._createElement("a", "Prev page", {
+			navigate.add(self._createElement("a", 
+				this.localizeString("previewDialogPrevPage", "Prev page"), {
 				"class": css_previewdlg_prev,
 				href: "#"
 			}));
 			navigate.add(self._createElement("span", "1 / 1"));
-			navigate.add(self._createElement("a", "Next page", {
+			navigate.add(self._createElement("a", 
+				this.localizeString("previewDialogNextPage", "Next page"), {
 				"class": css_previewdlg_next,
 				href: "#"
 			}));
@@ -6402,14 +6677,26 @@
 			caption = self._createDiv(css_cleanupdlg_caption),
 			doc = self._createDiv(css_cleanupdlg_document),
 			actions = self._createDiv(css_cleanupdlg_actions),
-			actionsArr = [{ id: "replaceSpans", label: "Strip SPAN tag" },
-				{ id: "replaceClass", label: "Strip CLASS tag" },
-				{ id: "replaceStyle", label: "Strip STYLE attribute" },
-				{ id: "replaceNbsp", label: "Replace &amp;nbsp; symbol" },
-				{ id: "transformPtoDiv", label: "Transform Paragraph to DIV"}];
+			actionsArr = [{ id: "replaceSpans", 
+					label: this.localizeString("cleanUpDialogStripSpanTag", 
+							"Strip SPAN tag") },
+					{ id: "replaceClass", 
+						label: this.localizeString("cleanUpDialogStripClass", 
+							"Strip CLASS tag") },
+					{ id: "replaceStyle", 
+						label: this.localizeString("cleanUpDialogStripStyle",
+							"Strip STYLE attribute") },
+					{ id: "replaceNbsp", 
+						label: this.localizeString("cleanUpDialogReplaceSymbol", 
+							"Replace &amp;nbsp; symbol")},
+					{ id: "transformPtoDiv", 
+						label: this.localizeString("cleanUpDialogTransformParagraphToDIV", 
+							"Transform Paragraph to DIV")}];
 
 			cleanupdlg.add(caption);
-			caption.add(self._createSpan(css_dlg_text, "Document source :"));
+			caption.add(self._createSpan(css_dlg_text, 
+						this.localizeString("cleanUpDialogDocumentSource", 
+						"Document source :")));
 
 			cleanupdlg.add(doc);
 			doc.add(self._createElement("textarea", { readonly: "readonly" }));
@@ -6434,17 +6721,21 @@
 			buttons = self._createDiv(css_dlg_buttons);
 
 			finddlg.add(find);
-			find.add(self._createSpan(css_dlg_text, "Find:"));
+			find.add(self._createSpan(css_dlg_text, 
+					this.localizeString("findAndReplaceFind", "Find:")));
 			find.add(self._createElement("textarea", "text"));
 
 			finddlg.add(replace);
-			replace.add(self._createSpan(css_dlg_text, "Replace:"));
+			replace.add(self._createSpan(css_dlg_text, 
+					this.localizeString("findAndReplaceReplace", "Replace:")));
 			replace.add(self._createElement("textarea"));
 
 			finddlg.add(self._createSeparator());
 			finddlg.add(buttons);
-			buttons.add(self._createInputButton(css_dlg_button, "Find"));
-			buttons.add(self._createInputButton(css_dlg_button, "Replace"));
+			buttons.add(self._createInputButton(css_dlg_button, 
+					this.localizeString("findAndReplaceFindButton", "Find")));
+			buttons.add(self._createInputButton(css_dlg_button, 
+					this.localizeString("findAndReplaceReplaceButton", "Replace")));
 
 			return finddlg.render();
 		},
@@ -6455,12 +6746,21 @@
 			type = self._createDiv(css_mediadlg_type);
 
 			meddlg.add(type);
-			type.add(self._createSpan(css_dlg_text, "Media Type :"));
+			type.add(self._createSpan(css_dlg_text, 
+					this.localizeString("mediaDialogMediaType", "Media Type :")));
 			type.add(self._createSelect("", ["flash", "video", "applet", "other"]));
 
-			meddlg.add(self._createTextField("Media Url :", css_mediadlg_url));
-			meddlg.add(self._createTextField("Width :", css_mediadlg_width, "px", 200));
-			meddlg.add(self._createTextField("Height :", css_mediadlg_height, "px", 200));
+			meddlg.add(self._createTextField(this.localizeString("mediaDialogMediaUrl", 
+			"Media Url :"), 
+					css_mediadlg_url));
+			meddlg.add(self._createTextField(this.localizeString("mediaDialogWidth", 
+			"Width :"),
+					css_mediadlg_width, this.localizeString("dialogPixel",
+					 "px"), 200));
+			meddlg.add(self._createTextField(this.localizeString("mediaDialogHeight", 
+			"Height :"),
+					css_mediadlg_height, this.localizeString("dialogPixel",
+					 "px"), 200));
 			meddlg.add(self._createSeparator());
 			meddlg.add(self._createOKCancelButtons());
 
@@ -6633,7 +6933,8 @@
 					str += "If you are using firefox please do the following :\n ";
 					str += "1. Write in your url box : 'about:config'\n";
 					str += "2. Change signed.applets.codebase_principal_support = true\n";
-					wijAlert(str);
+					wijAlert(this.localizeString("errorMessageCopyToClipboardError", 
+					str));
 				}
 			}
 		},
@@ -6976,7 +7277,7 @@
 			
 			self.editor.width(width).height(height);
 			
-			$ribbon.wijribbon("updateRibbonSize");
+			this.$ribbon.wijribbon("updateRibbonSize");
 			contentHeight = self.editor.height() -
 			header.outerHeight(true) - footer.outerHeight(true);
 			
@@ -7004,6 +7305,14 @@
 			if (text) {
 				self._setDesignViewText(text);
 			}
+		},
+		
+		localizeString: function (key, defaultValue) {
+			var o = this.options;
+			if (o.localization && o.localization[key]) {
+				return o.localization[key];
+			}
+			return defaultValue;
 		}
 		//end of public method
 	});

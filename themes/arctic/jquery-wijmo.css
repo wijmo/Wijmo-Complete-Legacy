@@ -3,7 +3,7 @@
  * Wijmo Arctic Theme
  * http://wijmo.com/
  * 
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -2335,4 +2335,9 @@ div.wijmo-wijribbon .ui-icon, .wijmo-wijribbon-abbrevicon, div.wijmo-wijribbon-s
 .wijmo-wijribbon-font .wijmo-wijribbon-list .ui-button
 {
     width: 30px;
+}
+
+.wijmo-wijinput .wijmo-wijinput-input
+{
+    color: #222;
 }

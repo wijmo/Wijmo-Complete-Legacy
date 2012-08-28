@@ -8,10 +8,10 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -357,6 +357,13 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 			case 'culture':
 				this._textProvider._setFormat(this.options.dateFormat);
 				this._updateText();
+
+				// update the calendar 's culture
+				var calendar = this.element.data('calendar', calendar);
+				if (calendar) {
+					calendar.wijcalendar("option", key, value);				
+				}
+
 				break;
 
 			case 'activeField':
@@ -365,6 +372,18 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 				this.options.activeField = value;
 				this._highLightField();
 				this._resetTimeStamp();
+				break;
+			//add for localization(calendar's tooltip)
+			case 'nextTooltip':
+			case 'prevTooltip':
+			case 'titleFormat':
+			case 'toolTipFormat':
+				// update the calendar 's tooltip
+				var calendar = this.element.data('calendar', calendar);
+				if (calendar) {
+					calendar.wijcalendar("option", key, value);
+				}
+
 				break;
 			}
 		},
@@ -562,6 +581,7 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 				if (this._allowEdit()) {
 					selRange = this.element.wijtextselection();
 					if (selRange.end - selRange.start === this.element.val().length) {
+						this.isDeleteAll = true;
 						this._setOption('date', new Date('1970/1/1'));
 					} else {
 						this._clearField();
@@ -669,7 +689,7 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 		},
 
 		_initCalendar: function () {
-			var c = this.options.calendar, self = this, calendar;
+			var self =this, o = self.options, c= o.calendar, calendar;
 			if (c === undefined || c === null) {
 				return;
 			}
@@ -683,8 +703,13 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 				return;
 			}
 
-			this.element.data('calendar', calendar);
-			calendar.wijcalendar({ popupMode: true, culture: this.options.culture,
+			self.element.data('calendar', calendar);
+			calendar.wijcalendar({ popupMode: true, culture: o.culture,
+				//add for localization(tooltip)
+				nextTooltip: o.nextTooltip || 'Next',
+				prevTooltip: o.prevTooltip || 'Previous',
+				titleFormat: o.titleFormat || 'MMMM yyyy',
+				toolTipFormat: o.toolTipFormat || 'dddd, MMMM dd, yyyy',
 				selectedDatesChanged: function () {
 					var selDate = $(this).wijcalendar("getSelectedDate");
 					$(this).wijcalendar("close");
@@ -694,7 +719,7 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 					self._trySetFocus();
 				}
 			});
-			this._syncCalendar();
+			self._syncCalendar();
 			// the bind event can't trigger.!!!
 			//            calendar.bind('wijcalendarselectedDatesChanged', function () {
 			//                var selDate = $(this).wijcalendar("getSelectedDate");
@@ -1836,7 +1861,13 @@ _dateDescriptor60 _dateDescriptor61 Globalize jQuery*/
 		removeAt: function (start, end, rh) {
 			try {
 				var desPos = this.desPostions[start], curInsertTxt, pos,
-					resultObj, result;
+					resultObj, result, widget = this.inputWidget,
+					element = widget.element,
+					dateLength = element.val().length;
+
+				if (dateLength === end + 1 && start === 0) {
+					widget.isDeleteAll = true;
+				}
 				if (desPos.desc.needAdjustInsertPos()) {
 					curInsertTxt = '0';
 					pos = start;

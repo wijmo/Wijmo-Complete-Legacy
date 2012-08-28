@@ -54,6 +54,12 @@
 	margin: 5px 0;
 }
 
+.wijmo-wijcarousel .wijmo-wijcarousel-button-previous,.wijmo-wijcarousel .wijmo-wijcarousel-button-next 
+{
+    -webkit-user-select: none;
+    -khtml-user-select: none; /* webkit browsers */
+}
+
 .wijmo-wijcarousel-vertical .wijmo-wijcarousel-button-next,.wijmo-wijcarousel-vertical-multi .wijmo-wijcarousel-button-next
 {
     position: absolute;

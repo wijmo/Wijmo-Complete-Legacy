@@ -1,0 +1,295 @@
+/* BASE */
+* {
+	margin: 0;
+	padding: 0;
+}
+html, body {
+	font-family: Arial, Helvetica, sans-serif;
+	background: url(img/cartographer.png) repeat top left;
+	color: #fff;
+	font-size: 16px;
+	padding: 0px;
+	margin: 0px;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+}
+h3 {
+	font-size: 1em;
+	padding: 0.4em;
+}
+h4 {
+	font-size: 1.2em;
+}
+p {
+	margin-bottom: 0.4em;
+}
+a, a:link {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+a img {
+	border: none;
+}
+a, a:link, a:visited, a:hover, a:active {
+	color: #15ced0;
+}
+table {
+	border-collapse: collapse;
+	table-layout: fixed;
+	width: 100%;
+}
+header, section {
+	display: block;
+	position: relative;
+	z-index: 1;
+}
+/* MAP */
+.map {
+	position: relative;
+	width: 100%;
+	height: 400px;
+	overflow: hidden;
+	box-shadow: 0 3px 50px #000;
+}
+.abs-center {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: 1;
+	pointer-events: none;
+}
+.symbol {
+	text-align: center;
+	font-size: 3em;
+	position: relative;
+	top: 24px;
+	height: 60px;
+}
+.symbol h5 {
+	color: #fff;
+	position: relative;
+	top: -49px;
+	text-shadow: 0 0 10px rgba(0,0,0,0.75);
+	font-weight: bold;
+}
+header h1, header h2, header a {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 16px;
+}
+header h1 {
+	font-weight: bold;
+	text-shadow: 1px 1px 3px #000;
+}
+header h1 a {
+
+}
+.app-subtitle {
+
+}
+.app-link
+{
+	background: url(img/crosshair_16.png) no-repeat center center;
+	width: 16px;
+	height: auto;
+	text-indent: -9999px;
+	margin-right: 0.4em;
+}
+.app-link:hover
+{
+	background-image: url(img/crosshair_16-hover.png);
+}
+/* TILES */
+.tile-background
+{
+	background: url(img/overlay.png) no-repeat center bottom;
+}
+.tile-container {
+	margin: 0 0 1em 1em;
+	width: 960px;
+	margin: 1em auto 2em;
+}
+.tile {
+	background: url(img/dark_wall.png) repeat top left;
+	background: rgba(0,0,0,0.5);
+	float: left;
+	width: 31.6%;
+	min-height: 200px;
+	margin: 1em 1em 0 0;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.50);
+	position: relative;
+	-webkit-border-bottom-right-radius: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-moz-border-radius-bottomleft: 2px;
+	border-bottom-right-radius: 2px;
+	border-bottom-left-radius: 2px;
+	border-bottom: solid 5px transparent;
+}
+.tile-big {
+	width: 48.3%;
+}
+.clickable:hover {
+	border-bottom: solid 5px #15c1d0;
+	cursor: pointer;
+}
+.tile-caption {
+	background: #ffffff; /* Old browsers */
+	background: -moz-linear-gradient(top, #ffffff 0%, #dedede 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #dedede)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%, #dedede 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%, #dedede 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%, #dedede 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 0%, #dedede 100%); /* W3C */
+ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#dedede', GradientType=0 ); /* IE6-9 */
+	color: #333;
+	box-shadow: 0 1px 3px #000;
+	-webkit-border-top-left-radius: 2px;
+	-webkit-border-top-right-radius: 2px;
+	-moz-border-radius-topleft: 2px;
+	-moz-border-radius-topright: 2px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+.tile-value {
+}
+.tile h4 {
+	font-size: 2em;
+}
+.tile td {
+	padding: 0.4em;
+}
+.data-table {
+	margin-top: 0.4em;
+}
+.data-table td {
+	border-bottom: dotted 1px #333;
+	font-size: 14px;
+}
+.radial-gauge {
+	height: 100px;
+	width: 100px;
+	position: relative;
+	top: -20px;
+	left: 90px;
+}
+/* DATA */
+.histogram-bar {
+	width: 100%;
+	background: #15ced0;
+	display: block;
+	height: 16px;
+}
+/* Median Home Value */
+.gauge-frame {
+	height: 34px;
+}
+.gauge-track {
+	width: 100%;
+	height: 1px;
+	background: gray;
+	position: relative;
+	top: 50%;
+}
+.gauge-marker {
+	text-align: center;
+	border-radius: 24px;
+	width: 24px;
+	height: 24px;
+	color: #333;
+	background: #15ced0;
+	font-weight: bold;
+	top: -21px;
+	position: relative;
+	z-index: 1;
+	line-height: 24px;
+	font-size: 12px;
+}
+.gauge-center {
+	text-align: center;
+	border-radius: 5px;
+	width: 10px;
+	height: 10px;
+	background: #d2d1cf;
+	position: relative;
+	left: 50%;
+	top: -5px;
+}
+.odd {
+	background: #171717;
+}
+/* Framework */
+.padder {
+	padding: 1em;
+}
+.float-left {
+	float: left;
+}
+.float-right {
+	float: right;
+}
+.align-right {
+	text-align: right;
+}
+.purple {
+	color: #15ced0;
+}
+.blue {
+	color: #15c1d0;
+}
+.pink {
+	color: #cc0099;
+}
+.teal {
+	color: #15c1d0;
+	text-shadow: 1px 1px 3px #000;
+}
+.bold {
+	font-weight: bold;
+}
+/* Wide */
+@media screen and (min-width: 1200px) {
+.tile-container {
+	width: 1200px;
+}
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-width : 320px) and (max-width : 480px) {
+.tile-container {
+	width: 100%;
+}
+.tile {
+	float: none;
+	width: 90%;
+	height: auto;
+	margin: 1em;
+}
+header h1
+{
+	display: block;
+	font-size: 1.25em;
+}
+header .float-right
+{
+	float: none;
+
+}
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-width : 768px) and (max-width : 1024px) {
+.tile-container {
+	width: 100%;
+}
+.tile {
+	width: 45.5%;
+	margin-left: 1em;
+}
+.tile-big {
+	width: 95%;
+}
+}

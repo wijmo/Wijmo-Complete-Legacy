@@ -1,10 +1,10 @@
 /*globals $, Raphael, jQuery, document, window*/
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -183,6 +183,7 @@
 				o = self.options,
 				format = labelInfo.format,
 				style = labelInfo.style,
+				offset = labelInfo.offset,
 				text = value,
 				markOption = self.options.tickMajor,
 				position = markOption.position || "inside",
@@ -202,6 +203,8 @@
 				else {
 					point.y = markBbox.y + markBbox.width;
 				}
+
+				point.y += offset;
 			}
 			else {
 				if (position === "inside") {
@@ -210,6 +213,8 @@
 				else {
 					point.x = markBbox.x + markBbox.width + labelBBox.width / 2;
 				}
+
+				point.x += offset;
 			}
 			textEle = self.canvas.text(point.x, point.y, text);
 			textEle.attr(style);
@@ -373,7 +378,7 @@
 							height - length - offset + top, pointerInfo.width, length);
 					}
 					else {
-						pointer = self.canvas.isoTri(point.x - pointerInfo.width / 2,
+						pointer = self.canvas.isoTri(point.x,
 							height - length - offset + top, pointerInfo.width,
 							length, "north");
 					}
@@ -415,7 +420,7 @@
 				o = self.options,
 				startPoint = self._valueToPoint(0, 0),
 				endPoint = self._valueToPoint(value, 0),
-//				fromBbox = self.pointer.wijGetBBox(),
+			//				fromBbox = self.pointer.wijGetBBox(),
 				animation = o.animation,
 				translation = { x: 0, y: 0 };
 

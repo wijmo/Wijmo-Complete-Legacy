@@ -4,7 +4,14 @@
 {
     position: relative;
     display: inline-block;
+    /* 
+    *+display: inline;  uncomment for IE 9 Compatibility view */
 }
+.wijmo-wijcombobox:before, .wijmo-wijcombobox:after
+{
+    display: block;
+}
+
 .wijmo-wijcombobox-wrapper
 {
 }

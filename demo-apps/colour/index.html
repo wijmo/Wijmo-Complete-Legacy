@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Colorinator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=410">
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+    <!-- Wijmo CSS and script -->
+    <link type="text/css" href="http://cdn.wijmo.com/themes/metro/jquery-wijmo.css" rel="stylesheet" title="metro-jqueryui" />
+    <link type="text/css" href="http://cdn.wijmo.com/jquery.wijmo-complete.all.2.1.5.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="http://cdn.wijmo.com/jquery.wijmo-open.all.2.1.5.min.js"></script>
+    <!-- KnockoutJS for MVVM-->
+    <script type="text/javascript" src="http://cdn.wijmo.com/external/knockout-2.0.0.js"></script>
+    <script type="text/javascript" src="http://cdn.wijmo.com/external/knockout.wijmo.js"></script>
+    <script type="text/javascript">
+
+        //Create ViewModel
+        var viewModel = function () {
+            var self = this;
+            self.red = ko.observable(120);
+            self.green = ko.observable(120);
+            self.blue = ko.observable(120);
+            self.minRGB = ko.observable(0);
+            self.maxRGB = ko.observable(255);
+            self.rgbColor = ko.computed(function () {
+                // Knockout tracks dependencies automatically. It knows that rgbColor depends on hue, saturation and lightness, because these get called when evaluating rgbColor.
+                return "rgb(" + self.red() + ", " + self.green() + ", " + self.blue() + ")";
+            }, self);
+            self.hslColor = ko.computed(function () {
+                //Convert red, green and blue numbers to hue (degree), saturation (percentage) and lightness (percentage)
+                var r = self.red() / 255, g = self.green() / 255, b = self.blue() / 255;
+                var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                var h, s, l = (max + min) / 2;
+                var hue, saturation, lightness;
+
+                if (max == min) {
+                    h = s = 0;
+                } else {
+                    var d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                        case g: h = (b - r) / d + 2; break;
+                        case b: h = (r - g) / d + 4; break;
+                    }
+                    h /= 6;
+                }
+                hue = Math.round(h * 360);
+                saturation = Math.round(s * 100) + "%";
+                lightness = Math.round(l * 100) + "%";
+                return "hsl(" + hue + ", " + saturation + ", " + lightness + ")";
+            }, self);
+
+            self.hexColor = ko.computed({
+                read: function () {
+                    //Convert red, green and blue numbers to base 16 strings
+                    var r = self.red(), g = self.green(), b = self.blue();
+                    var hex = 1 << 24 | r << 16 | g << 8 | b;
+                    return '#' + hex.toString(16).substr(1);
+                },
+                write: function (value) {
+                    //This is a writable computed observable so that one can type in a hex color to update the RGB values.
+                    var r, g, b;
+                    if (value[0] === "#") {
+                        value = value.substr(1);
+                    }
+                    if (value.length < 3) {
+                        return;
+                    }
+                    else if (value.length > 6) {
+                        value = value.substr(0, 6);
+                    }
+                    else if (value.length === 3) {
+                        //Short code hex converted to full hex
+                        r = value.substr(0, 1) + value.substr(0, 1);
+                        g = value.substr(1, 1) + value.substr(1, 1);
+                        b = value.substr(2, 1) + value.substr(2, 1);
+                        value = r + g + b;
+                    }
+                    //Update ViewModel red, green and blue values
+                    self.red(parseInt(value.substr(0, 2), 16));
+                    self.green(parseInt(value.substr(2, 2), 16));
+                    self.blue(parseInt(value.substr(4, 2), 16));
+                },
+                owner: self
+            });
+        };
+
+        //Bind ViewModel and Event Handlers
+        $(document).ready(function () {
+            var vm = new viewModel();
+            //check for hex color passed in URL
+            getColorFromHash();
+            //Apply ViewModel bindings in markup
+            ko.applyBindings(vm);
+            //Trigger CSS3 animation to show color picker pane when ViewModel is initialized
+            $(".wait").addClass("show").removeClass("wait");
+
+            //Check if browser supports hashchange event
+            if ("onhashchange" in window) {
+                window.onhashchange = getColorFromHash;
+            }
+
+            //Get hex color from URL and update ViewModel with value
+            function getColorFromHash() {
+                if (window.location.hash && window.location.hash != vm.hexColor()) {
+                    vm.hexColor(window.location.hash);
+                }
+            }
+
+        });
+    </script>
+    <style type="text/css">
+        body
+        {
+            font-family: "Segoe UI Light" , Frutiger, "Frutiger Linotype" , "Dejavu Sans" , "Helvetica Neue" , Arial, sans-serif;
+            font-size: 14px;
+            background: #000;
+        }
+        h1
+        {
+            font-size: 2.4em;
+            color: #fff;
+            padding: 20px 0 0 6px;
+            margin: 0;
+        }
+        .container
+        {
+            margin: 0 auto;
+            width: 400px;
+        }
+        .wait
+        {
+            height: 1px;
+        }
+        .show
+        {
+            height: 530px;
+            -webkit-transition: all 1.2s ease-out;
+            -moz-transition: all 1.2s ease-out;
+            -o-transition: all 1.2s ease-out;
+            transition: all 1.2s ease-out;
+        }
+        .color-picker
+        {
+            overflow: hidden;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.5);
+        }
+        .swatch
+        {
+            margin: 20px;
+            width: 320px;
+            height: 200px;
+            box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.5) inset;
+        }
+        .color-section
+        {
+            padding: 6px 0 0 0;
+        }
+        .color-label
+        {
+            width: 70px;
+            display: inline-block;
+        }
+        .unit
+        {
+            width: 30px;
+        }
+        .color-value
+        {
+            width: 140px;
+        }
+        .color-slider
+        {
+            width: 200px;
+        }
+        .wijmo-wijslider-horizontal
+        {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body data-bind="style: { background: hexColor }">
+    <div class="container">
+        <h1>
+            Colorinator</h1>
+        <div class="color-picker wait">
+            <div class="swatch" data-bind="style: { background: hexColor }">
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    Red</label>
+                <div data-bind="wijslider: { value: red, min: minRGB, max: maxRGB }" class="color-slider">
+                </div>
+                <input type="text" data-bind="value: red, valueUpdate: 'keyup', wijtextbox: {}" class="unit" />
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    Green</label>
+                <div data-bind="wijslider: { value: green, min: minRGB, max: maxRGB }" class="color-slider">
+                </div>
+                <input type="text" data-bind="value: green, valueUpdate: 'keyup', wijtextbox: {}" class="unit" />
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    Blue</label>
+                <div data-bind="wijslider: { value: blue, min: minRGB, max: maxRGB }" class="color-slider">
+                </div>
+                <input type="text" data-bind="value: blue, valueUpdate: 'keyup', wijtextbox: {}" class="unit" />
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    RGB Color</label>
+                <input type="text" data-bind="value: rgbColor, disable: true, wijtextbox: { disabled: true }" class="color-value" />
+                <span data-bind="text: rgbColor"></span>
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    HSL Color</label>
+                <input type="text" data-bind="value: hslColor, disable: true, wijtextbox: { disabled: true }" class="color-value" />
+                <span data-bind="text: hslColor"></span>
+            </div>
+            <div class="color-section">
+                <label class="color-label">
+                    HEX Color</label>
+                <input type="text" data-bind="value: hexColor, wijtextbox: { }" class="color-value" />
+                <a data-bind="text: hexColor, attr: { href: hexColor }" title="Link to this color"></a>
+            </div>
+            <p>
+                Made with <a href="http://knockoutjs.com">KnockoutJS</a> and <a href="http://wijmo.com">Wijmo</a></p>
+        </div>
+    </div>
+</body>
+</html>

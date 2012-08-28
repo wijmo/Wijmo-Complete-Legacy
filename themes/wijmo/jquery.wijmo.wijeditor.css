@@ -204,6 +204,17 @@
     width: 80px;
     height: 26px;
 }
+
+.wijmo-wijeditor .wijmo-wijeditor-dialog-button.wijmo-wijeditor-dialog-uploadbutton
+{
+    width: 85px;
+}
+
+.wijmo-wijeditor .wijmo-wijeditor-dialog-button.wijmo-wijeditor-previewdlg-printone
+{
+    width: 86px;
+    height: 26px;
+}
 /* --------------------end of common dialog css ---------------------- */
 
 /* -------------------------- image dialog ------------------------*/
@@ -381,7 +392,7 @@
 
 .wijmo-wijeditor .wijmo-wijeditor-templatedlg-save
 {
-    width: 200px;
+    width: 230px;
 }
 /* ------------------------ end of template dialog ----------------------*/
 /* ------------------------code dialog ----------------------*/
@@ -472,6 +483,7 @@
 {
     margin-top: 5px;
 }
+
 /* --------------------- end of link dialog css --------------------- */
 
 /* ------------------tag inspector dialog css ----------------------- */
@@ -692,6 +704,7 @@
 {
     font-weight: bold;
     float: none;
+    width: 132px;
 }
 
 .wijmo-wijeditor .wijmo-wijeditor-cleanupdlg-document textarea

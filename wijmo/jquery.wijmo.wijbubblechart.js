@@ -1,10 +1,10 @@
 /*globals jQuery Raphael Globalize*/
 /*
 *
-* Wijmo Library 2.1.4
+* Wijmo Library 2.2.0
 * http://wijmo.com/
 *
-* Copyright(c) ComponentOne, LLC.  All rights reserved.
+* Copyright(c) GrapeCity, Inc.  All rights reserved.
 * 
 * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
 * licensing@wijmo.com
@@ -23,8 +23,7 @@
 (function ($) {
 	"use strict";
 
-	var maxSize = 10000,
-		bubMax = 0,
+	var bubMax = 0,
 		bubMin = 0,
 		bubDiff = 0;
 
@@ -457,9 +456,6 @@
 				if (isNaN(value) || value < 0) {
 					value = 0;
 				}
-				else if (value > maxSize) {
-					value = maxSize;
-				}
 				o[key] = value;
 				self.redraw();
 			}
@@ -584,7 +580,7 @@
 
 		_paintPlotArea: function () {
 			var self = this,
-				element = this.element,
+				element = this.chartElement,
 				o = self.options,
 				seriesList = o.seriesList,
 				nSeries = seriesList.length,
@@ -1098,7 +1094,7 @@
 
 		_paintTooltip: function () {
 			var self = this,
-				fields = self.element.data("fields");
+				fields = self.chartElement.data("fields");
 
 			$.wijmo.wijchartcore.prototype._paintTooltip.apply(this, arguments);
 
@@ -1166,7 +1162,7 @@
 			/// <returns type="Raphael element">
 			/// The bubble object.
 			/// </returns>
-			return this.element.data("fields").bubbles[index];
+			return this.chartElement.data("fields").bubbles[index];
 		}
 	});
 	$.fn.extend({
@@ -1351,18 +1347,18 @@
 					r = rf.r;
 
 				switch (compass) {
-				case "north":
-					rf.y -= (r + labelBox.height / 2);
-					break;
-				case "south":
-					rf.y += (r + labelBox.height / 2);
-					break;
-				case "east":
-					rf.x += (r + labelBox.width / 2);
-					break;
-				case "west":
-					rf.x -= (r + labelBox.width / 2);
-					break;
+					case "north":
+						rf.y -= (r + labelBox.height / 2);
+						break;
+					case "south":
+						rf.y += (r + labelBox.height / 2);
+						break;
+					case "east":
+						rf.x += (r + labelBox.width / 2);
+						break;
+					case "west":
+						rf.x -= (r + labelBox.width / 2);
+						break;
 				}
 			}
 
@@ -1476,12 +1472,14 @@
 
 					// in vml, if the tracker has a stroke, the boder is black.
 					if ($.browser.msie && $.browser.version < 9) {
-						tracker.attr({ opacity: 0.01, fill: "white", 
-						"stroke-width": 0, "fill-opacity": 0.01 });
+						tracker.attr({ opacity: 0.01, fill: "white",
+							"stroke-width": 0, "fill-opacity": 0.01
+						});
 					}
 					else {
-						tracker.attr({ opacity: 0.01, fill: "white", 
-						"fill-opacity": 0.01 });
+						tracker.attr({ opacity: 0.01, fill: "white",
+							"fill-opacity": 0.01
+						});
 					}
 
 					$(tracker.node).data("owner", $(bubble.node));
@@ -1669,12 +1667,18 @@
 				width = bounds.endX - bounds.startX,
 				height = bounds.endY - bounds.startY;
 
-			val -= bubMin;
+			// adjust the bubble size calculate.
+			//val -= bubMin;
+
+			if (val < 0) {
+				val = 0;
+			}
+
 			if (bubDiff === 0) {
 				val = 1;
 			}
 			else {
-				val /= bubDiff;
+				val /= bubMax;
 			}
 			val = $.wijbubble.transformByArea(val, sizingMethod, markerType);
 
@@ -1691,24 +1695,24 @@
 			var val = yval;
 			if (sizingMethod === "area") {
 				switch (markerType) {
-				case "circle":
-					val = Math.sqrt(val / Math.PI);
-					break;
-				case "tri":
-				case "invertedTri":
-					val = Math.sqrt(val / (3 * Math.sin(Math.PI / 6) *
+					case "circle":
+						val = Math.sqrt(val / Math.PI);
+						break;
+					case "tri":
+					case "invertedTri":
+						val = Math.sqrt(val / (3 * Math.sin(Math.PI / 6) *
 				Math.cos(Math.PI / 6)));
-					break;
-				case "box":
-					val = Math.sqrt(val / 2);
-					break;
-				case "diamond":
-				case "cross":
-					val = Math.sqrt(val / 2);
-					break;
-				default:
-					val = Math.sqrt(4 * val / Math.PI);
-					break;
+						break;
+					case "box":
+						val = Math.sqrt(val / 2);
+						break;
+					case "diamond":
+					case "cross":
+						val = Math.sqrt(val / 2);
+						break;
+					default:
+						val = Math.sqrt(4 * val / Math.PI);
+						break;
 				}
 			}
 			return val;

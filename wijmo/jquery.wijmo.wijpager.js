@@ -2,10 +2,10 @@
 /*jslint white: false */
 /*
  *
- * Wijmo Library 2.1.4
+ * Wijmo Library 2.2.0
  * http://wijmo.com/
  *
- * Copyright(c) ComponentOne, LLC.  All rights reserved.
+ * Copyright(c) GrapeCity, Inc.  All rights reserved.
  * 
  * Dual licensed under the Wijmo Commercial or GNU GPL Version 3 licenses.
  * licensing@wijmo.com
@@ -160,6 +160,12 @@
 		},
 
 		_create: function () {
+			
+			// enable touch support:
+			if (window.wijmoApplyWijTouchUtilEvents) {
+				$ = window.wijmoApplyWijTouchUtilEvents($);
+			}
+			
 			this.element.addClass("ui-widget wijmo-wijpager ui-helper-clearfix");
 
 			if (this.options.disabled) {
