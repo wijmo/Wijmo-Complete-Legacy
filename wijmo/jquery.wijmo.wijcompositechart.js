@@ -1249,6 +1249,7 @@
 								self.aniPathsAttr = [];
 							}
 							tmpOptions = $.extend(true, {}, options, {
+								stacked: o.stacked,
 								axis: o.axis,
 								isXTime: self.axisInfo.x.isTime,
 								isYTime: self.axisInfo.y[0].isTime,
